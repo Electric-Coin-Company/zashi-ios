@@ -133,7 +133,9 @@ public struct TransactionDetailsView: View {
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()
             }
-            .zashiBack(hidden: store.isCloseButtonRequired)
+            .zashiBack(hidden: store.isCloseButtonRequired) {
+                store.send(.closeDetailTapped)
+            }
             .zashiBackV2(hidden: !store.isCloseButtonRequired) {
                 store.send(.closeDetailTapped)
             }

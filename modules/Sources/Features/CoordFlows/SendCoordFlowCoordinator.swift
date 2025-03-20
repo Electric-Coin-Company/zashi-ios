@@ -6,6 +6,8 @@
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
+
 import Generated
 import AudioServices
 
@@ -26,6 +28,14 @@ extension SendCoordFlow {
                 state.path.removeAll()
                 audioServices.systemSoundVibrate()
                 return .send(.sendForm(.addressUpdated(address.redacted)))
+
+            case .path(.element(id: _, action: .addressBook(.walletAccountTapped(let contact)))):
+                if let address = contact.uAddress?.stringEncoded {
+                    state.path.removeAll()
+                    audioServices.systemSoundVibrate()
+                    return .send(.sendForm(.addressUpdated(address.redacted)))
+                }
+                return .none
 
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 var addressBookState = AddressBook.State.initial
@@ -51,6 +61,25 @@ extension SendCoordFlow {
                 }
                 return .none
                 
+                // MARK: - Request ZEC Confirmation
+                
+            case .path(.element(id: _, action: .requestZecConfirmation(.goBackTappedFromRequestZec))):
+                state.path.removeAll()
+                return .none
+
+            case .path(.element(id: _, action: .requestZecConfirmation(.sendTapped))):
+                for element in state.path {
+                    if case .requestZecConfirmation(let sendConfirmationState) = element {
+                        state.path.append(.sending(sendConfirmationState))
+                        break
+                    }
+                }
+                return .none
+                
+            case .path(.element(id: _, action: .requestZecConfirmation(.sendFailed))):
+                state.path.removeAll()
+                return .none
+                
                 // MARK: - Scan
                 
             case .path(.element(id: _, action: .scan(.foundAddress(let address)))):
@@ -70,6 +99,9 @@ extension SendCoordFlow {
                 let _ = state.path.popLast()
                 audioServices.systemSoundVibrate()
                 return .send(.sendForm(.addressUpdated(address)))
+
+            case .path(.element(id: _, action: .scan(.foundRequestZec(let requestPayment)))):
+                return .send(.sendForm(.requestZec(requestPayment)))
 
             case .path(.element(id: _, action: .scan(.cancelTapped))):
                 let _ = state.path.popLast()
@@ -96,9 +128,19 @@ extension SendCoordFlow {
                 sendConfirmationState.proposal = state.sendFormState.proposal
                 sendConfirmationState.feeRequired = state.sendFormState.feeRequired
                 sendConfirmationState.message = state.sendFormState.message
-                sendConfirmationState.currencyAmount = state.sendFormState.currencyConversion?.convert(state.sendFormState.amount).redacted ?? .empty
+                let currencyAmount = state.sendFormState.currencyConversion?.convert(state.sendFormState.amount).redacted ?? .empty
+                sendConfirmationState.currencyAmount = currencyAmount
+                
                 if confirmationType == .send {
                     state.path.append(.sendConfirmation(sendConfirmationState))
+                } else if confirmationType == .requestPayment {
+                    state.path.append(.requestZecConfirmation(sendConfirmationState))
+                }
+                return .none
+                
+            case let .sendForm(.sendFailed(_, confirmationType)):
+                if confirmationType == .requestPayment {
+                    state.path.removeAll()
                 }
                 return .none
                 
@@ -117,9 +159,10 @@ extension SendCoordFlow {
                 }
                 return .none
                 
-            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))):
+            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))),
+                    .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
                 for element in state.path {
-                    if case .sendConfirmation(let sendConfirmationState) = element {
+                    if case .sending(let sendConfirmationState) = element {
                         switch result {
                         case .failure:
                             state.path.append(.sendResultFailure(sendConfirmationState))
@@ -137,7 +180,6 @@ extension SendCoordFlow {
                             state.path.append(.sendResultSuccess(sendConfirmationState))
                         default: break
                         }
-                        break
                     }
                 }
                 return .none
@@ -169,7 +211,7 @@ extension SendCoordFlow {
                 return .none
                 
                 // MARK: - Self
-                
+
             case .dismissRequired:
                 return .none
 

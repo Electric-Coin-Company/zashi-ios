@@ -194,6 +194,15 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.transactionsCoordFlow)) {
+                            TransactionsCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.transactionsCoordFlowState,
+                                        action: \.transactionsCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {
