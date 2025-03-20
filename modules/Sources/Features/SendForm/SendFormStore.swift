@@ -21,6 +21,7 @@ import WalletBalances
 import NumberFormatter
 import UserPreferencesStorage
 import AddressBookClient
+import ZcashPaymentURI
 
 @Reducer
 public struct SendForm {
@@ -48,7 +49,7 @@ public struct SendForm {
         public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
         public var isNotAddressInAddressBook = false
-        public var isPaymentRequestInProgress = false
+//        public var isPaymentRequestInProgress = false
         public var isPopToRootBack = false
         public var isValidAddress = false
         public var isValidTransparentAddress = false
@@ -211,6 +212,7 @@ public struct SendForm {
         case onDisapear
         case proposal(Proposal)
         case requestsAddressFocusResolved
+        case requestZec(ParserResult)
         case resetForm
         case reviewTapped
         case scanTapped
@@ -390,28 +392,26 @@ public struct SendForm {
             case .memo:
                 return .none
                 
-//            case .scan(.foundRP(let requestPayment)):
-//                guard !state.isPaymentRequestInProgress else {
-//                    return .none
-//                }
-//                state.isPaymentRequestInProgress = true
-//                if case .legacy(let address) = requestPayment {
-//                    audioServices.systemSoundVibrate()
-//                    return .send(.scan(.found(address.value.redacted)))
-//                } else if case .request(let paymentRequest) = requestPayment {
-//                    if let payment = paymentRequest.payments.first {
-//                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
-//                            state.memoState.text = memo.toString() ?? ""
-//                        }
-//                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
-//                        state.address = payment.recipientAddress.value.redacted
-//                        state.zecAmountText = numberLocale.redacted
-//                        audioServices.systemSoundVibrate()
-//                        return .send(.getProposal(.requestPayment))
-//                    }
-//                }
-//                return .none
-//                
+            case .requestZec(let requestPayment):
+                if case .legacy(let address) = requestPayment {
+                    audioServices.systemSoundVibrate()
+                    return .send(.addressUpdated(address.value.redacted))
+                } else if case .request(let paymentRequest) = requestPayment {
+                    if let payment = paymentRequest.payments.first {
+                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+                            state.memoState.text = memo.toString() ?? ""
+                        }
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        audioServices.systemSoundVibrate()
+                        return .concatenate(
+                            .send(.zecAmountUpdated(numberLocale.redacted)),
+                            .send(.addressUpdated(payment.recipientAddress.value.redacted)),
+                            .send(.getProposal(.requestPayment))
+                        )
+                    }
+                }
+                return .none
+                
 //            case .scan(.found(let address)):
 //                state.address = address
 //                // The is valid Zcash address check is already covered in the scan feature
@@ -426,7 +426,6 @@ public struct SendForm {
 //                    zcashSDKEnvironment.network.networkType
 //                )
 //                audioServices.systemSoundVibrate()
-////                return .send(.updateDestination(nil))
 //                return .none
 //
 //            case .scan(.cancelTapped):
