@@ -65,7 +65,11 @@ public struct ScanCoordFlow {
         case onAppear
         case path(StackActionOf<Path>)
         case proposalResolved(Proposal)
+        case proposalResolvedExistingSendForm(Proposal)
+        case proposalResolvedNoSendForm(Proposal)
         case requestZecFailed
+        case requestZecFailedExistingSendForm
+        case requestZecFailedNoSendForm
         case scan(Scan.Action)
     }
 

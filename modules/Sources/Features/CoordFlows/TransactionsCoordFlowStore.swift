@@ -9,7 +9,10 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
+import Models
+
 // Path
+import AddressBook
 import TransactionDetails
 import TransactionsManager
 
@@ -17,6 +20,7 @@ import TransactionsManager
 public struct TransactionsCoordFlow {
     @Reducer
     public enum Path {
+        case addressBookContact(AddressBook)
         case transactionDetails(TransactionDetails)
     }
     
@@ -24,6 +28,7 @@ public struct TransactionsCoordFlow {
     public struct State {
         public var path = StackState<Path.State>()
         public var transactionDetailsState = TransactionDetails.State.initial
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transactionsManagerState = TransactionsManager.State.initial
         public var transactionToOpen: String?
         
