@@ -36,7 +36,7 @@ import AudioServices
 //import AddKeystoneHWWallet
 //import AddressBook
 //import AddressDetails
-//import CurrencyConversionSetup
+import CurrencyConversionSetup
 //import DeleteWallet
 //import ExportTransactionHistory
 import Home
@@ -113,6 +113,7 @@ public struct Root {
     public struct State {
         public enum Path {
             case addKeystoneHWWalletCoordFlow
+            case currencyConversionSetup
             case receive
             case requestZecCoordFlow
             case scanCoordFlow
@@ -166,6 +167,7 @@ public struct Root {
 
         // Path
         public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
+        public var currencyConversionSetupState = CurrencyConversionSetup.State.initial
         public var receiveState = Receive.State.initial
         public var requestZecCoordFlowState = RequestZecCoordFlow.State.initial
         public var scanCoordFlowState = ScanCoordFlow.State.initial
@@ -257,9 +259,11 @@ public struct Root {
         
         // Path
         case addKeystoneHWWalletCoordFlow(AddKeystoneHWWalletCoordFlow.Action)
+        case currencyConversionSetup(CurrencyConversionSetup.Action)
         case receive(Receive.Action)
         case requestZecCoordFlow(RequestZecCoordFlow.Action)
         case scanCoordFlow(ScanCoordFlow.Action)
+        case sendAgainRequested(TransactionState)
         case sendCoordFlow(SendCoordFlow.Action)
         case settings(Settings.Action)
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
@@ -377,6 +381,10 @@ public struct Root {
 
         Scope(state: \.transactionsCoordFlowState, action: \.transactionsCoordFlow) {
             TransactionsCoordFlow()
+        }
+
+        Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
+            CurrencyConversionSetup()
         }
 
         initializationReduce()

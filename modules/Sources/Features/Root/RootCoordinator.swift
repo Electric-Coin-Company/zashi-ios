@@ -69,6 +69,13 @@ extension Root {
                 }
                 .cancellable(id: CancelFlexaId, cancelInFlight: true)
                 
+                // MARK: - Currency Conversion Setup
+                
+            case .currencyConversionSetup(.skipTapped), .currencyConversionSetup(.enableTapped):
+                state.path = nil
+                state.homeState.isRateEducationEnabled = false
+                return .none
+                
                 // MARK: - Home
 
             case .home(.settingsTapped):
@@ -108,12 +115,20 @@ extension Root {
             case .home(.transactionList(.transactionTapped(let txId))):
                 state.transactionsCoordFlowState = .initial
                 state.transactionsCoordFlowState.transactionToOpen = txId
+                if let index = state.transactions.index(id: txId) {
+                    state.transactionsCoordFlowState.transactionDetailsState.transaction = state.transactions[index]
+                }
                 state.path = .transactionsCoordFlow
                 return .none
 
             case .home(.seeAllTransactionsTapped):
                 state.transactionsCoordFlowState = .initial
                 state.path = .transactionsCoordFlow
+                return .none
+                
+            case .home(.currencyConversionSetupTapped):
+                state.currencyConversionSetupState = .initial
+                state.path = .currencyConversionSetup
                 return .none
 
                 // MARK: - Integrations
@@ -152,6 +167,17 @@ extension Root {
                 state.path = nil
                 return .none
 
+                // MARK: - Self
+                
+            case .sendAgainRequested(let transactionState):
+                state.sendCoordFlowState = .initial
+                state.path = .sendCoordFlow
+                state.sendCoordFlowState.sendFormState.memoState.text = state.transactionMemos[transactionState.id]?.first ?? ""
+                return .merge(
+                    .send(.sendCoordFlow(.sendForm(.zecAmountUpdated(transactionState.amountWithoutFee.decimalString().redacted)))),
+                    .send(.sendCoordFlow(.sendForm(.addressUpdated(transactionState.address.redacted))))
+                )
+                
                 // MARK: - Send Coord Flow
                 
             case .sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
@@ -176,6 +202,26 @@ extension Root {
 
             case .transactionsCoordFlow(.transactionsManager(.dismissRequired)):
                 state.path = nil
+                return .none
+
+            case .transactionsCoordFlow(.transactionDetails(.sendAgainTapped)):
+                state.path = nil
+                let transactionState = state.transactionsCoordFlowState.transactionDetailsState.transaction
+                return .run { send in
+                    try? await mainQueue.sleep(for: .seconds(0.8))
+                    await send(.sendAgainRequested(transactionState))
+                }
+                
+            case .transactionsCoordFlow(.path(.element(id: _, action: .transactionDetails(.sendAgainTapped)))):
+                for element in state.transactionsCoordFlowState.path {
+                    if case .transactionDetails(let transactionDetailsState) = element {
+                        state.path = nil
+                        return .run { send in
+                            try? await mainQueue.sleep(for: .seconds(0.8))
+                            await send(.sendAgainRequested(transactionDetailsState.transaction))
+                        }
+                    }
+                }
                 return .none
 
             default: return .none

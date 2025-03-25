@@ -69,8 +69,15 @@ extension ScanCoordFlow {
                         return .none
                     }
                 }
-                
-                // handling the path in senf form
+
+                // handling the path in send confirmation
+                for element in state.path {
+                    if element.is(\.sendConfirmation) {
+                        return .none
+                    }
+                }
+
+                // handling the path in send form
                 for element in state.path {
                     if element.is(\.scan) {
                         let _ = state.path.popLast()
@@ -82,7 +89,11 @@ extension ScanCoordFlow {
                 // MARK: - Request ZEC Confirmation
                 
             case .path(.element(id: _, action: .requestZecConfirmation(.goBackTappedFromRequestZec))):
-                let _ = state.path.removeLast()
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        state.path.pop(to: id)
+                    }
+                }
                 return .none
 
             case .path(.element(id: _, action: .requestZecConfirmation(.sendTapped))):
@@ -94,19 +105,82 @@ extension ScanCoordFlow {
                 }
                 return .none
 
-                // MARK: - Self
+            case .path(.element(id: _, action: .requestZecConfirmation(.saveAddressTapped(let address)))):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isNameFocused = true
+                addressBookState.address = address.data
+                addressBookState.isValidZcashAddress = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
                 
-            case .scan(.foundAddress(let address)):
-                // Handling of scan on the root
-                if state.path.ids.isEmpty {
-                    audioServices.systemSoundVibrate()
-                    state.path.append(.sendForm(SendForm.State.initial))
-                    if let first = state.path.ids.first {
-                        return .send(.path(.element(id: first, action: .sendForm(.addressUpdated(address)))))
+            case .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
+                for element in state.path {
+                    if case .requestZecConfirmation(let sendConfirmationState) = element {
+                        switch result {
+                        case .failure:
+                            state.path.append(.sendResultFailure(sendConfirmationState))
+                            break
+                        case .partial:
+                            var partialProposalErrorState = PartialProposalError.State.initial
+                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
+                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
+                            state.path.append(.sendResultPartial(partialProposalErrorState))
+                            break
+                        case .resubmission:
+                            state.path.append(.sendResultResubmission(sendConfirmationState))
+                            break
+                        case .success:
+                            state.path.append(.sendResultSuccess(sendConfirmationState))
+                        default: break
+                        }
                     }
                 }
                 return .none
                 
+                // MARK: - Scan
+                
+            case .path(.element(id: _, action: .scan(.foundAddress(let address)))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        let _ = state.path.removeLast()
+                        audioServices.systemSoundVibrate()
+                        return .send(.path(.element(id: id, action: .sendForm(.addressUpdated(address)))))
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .scan(.cancelTapped))):
+                let _ = state.path.popLast()
+                return .none
+                
+            case .path(.element(id: _, action: .scan(.foundRequestZec(let requestPayment)))):
+                if case .legacy(let address) = requestPayment {
+                    for (id, element) in zip(state.path.ids, state.path) {
+                        if element.is(\.sendForm) {
+                            let _ = state.path.removeLast()
+                            audioServices.systemSoundVibrate()
+                            state.path[id: id, case: \.sendForm]?.memoState.text = ""
+                            return .merge(
+                                .send(.path(.element(id: id, action: .sendForm(.zecAmountUpdated("".redacted))))),
+                                .send(.path(.element(id: id, action: .sendForm(.addressUpdated(address.value.redacted)))))
+                            )
+                        }
+                    }
+                } else if case .request(let paymentRequest) = requestPayment {
+                    return .send(.getProposal(paymentRequest))
+                }
+                return .none
+                
+                // MARK: - Self
+                
+            case .scan(.foundAddress(let address)):
+                audioServices.systemSoundVibrate()
+                state.path.append(.sendForm(SendForm.State.initial))
+                if let first = state.path.ids.first {
+                    return .send(.path(.element(id: first, action: .sendForm(.addressUpdated(address)))))
+                }
+                return .none
+
             case .scan(.foundRequestZec(let requestPayment)):
                 if case .legacy(let address) = requestPayment {
                     return .send(.scan(.foundAddress(address.value.redacted)))
@@ -153,6 +227,39 @@ extension ScanCoordFlow {
                 }
                 
             case .proposalResolved(let proposal):
+                if state.path.ids.isEmpty {
+                    return .send(.proposalResolvedNoSendForm(proposal))
+                }
+                return .send(.proposalResolvedExistingSendForm(proposal))
+
+            case .proposalResolvedExistingSendForm(let proposal):
+                state.proposal = proposal
+                
+                guard let address = state.recipient?.stringEncoded else {
+                    return .send(.requestZecFailed)
+                }
+
+                var sendConfirmationState = SendConfirmation.State.initial
+                sendConfirmationState.amount = state.amount
+                sendConfirmationState.address = address
+                sendConfirmationState.proposal = proposal
+                sendConfirmationState.feeRequired = proposal.totalFeeRequired()
+                sendConfirmationState.message = state.memo?.toString() ?? ""
+                sendConfirmationState.currencyAmount = state.currencyConversion?.convert(state.amount).redacted ?? .empty
+                state.path.append(.requestZecConfirmation(sendConfirmationState))
+                
+                audioServices.systemSoundVibrate()
+                
+                if let first = state.path.ids.first {
+                    state.path[id: first, case: \.sendForm]?.memoState.text = sendConfirmationState.message
+                    return .merge(
+                        .send(.path(.element(id: first, action: .sendForm(.zecAmountUpdated(state.amount.decimalString().redacted))))),
+                        .send(.path(.element(id: first, action: .sendForm(.addressUpdated(address.redacted)))))
+                    )
+                }
+                return .none
+
+            case .proposalResolvedNoSendForm(let proposal):
                 state.proposal = proposal
                 
                 guard let address = state.recipient?.stringEncoded else {
@@ -183,6 +290,29 @@ extension ScanCoordFlow {
                 return .none
 
             case .requestZecFailed:
+                if state.path.ids.isEmpty {
+                    return .send(.requestZecFailedNoSendForm)
+                }
+                return .send(.requestZecFailedExistingSendForm)
+
+            case .requestZecFailedExistingSendForm:
+                let _ = state.path.removeLast()
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        audioServices.systemSoundVibrate()
+                        
+                        let address = state.recipient?.stringEncoded ?? ""
+                        let memo = state.memo?.toString() ?? ""
+                        state.path[id: id, case: \.sendForm]?.memoState.text = memo
+                        return .merge(
+                            .send(.path(.element(id: id, action: .sendForm(.zecAmountUpdated(state.amount.decimalString().redacted))))),
+                            .send(.path(.element(id: id, action: .sendForm(.addressUpdated(address.redacted)))))
+                        )
+                    }
+                }
+                return .none
+
+            case .requestZecFailedNoSendForm:
                 let address = state.recipient?.stringEncoded ?? ""
                 var sendFormState = SendForm.State.initial
                 sendFormState.memoState.text = state.memo?.toString() ?? ""
@@ -206,6 +336,14 @@ extension ScanCoordFlow {
                 state.path.append(.addressBook(addressBookState))
                 return .none
                 
+            case .path(.element(id: _, action: .sendForm(.addNewContactTapped(let address)))):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isNameFocused = true
+                addressBookState.address = address.data
+                addressBookState.isValidZcashAddress = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
+
             case .path(.element(id: _, action: .sendForm(.scanTapped))):
                 var scanState = Scan.State.initial
                 scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
@@ -230,10 +368,7 @@ extension ScanCoordFlow {
                     }
                 }
                 return .none
-                
-            case let .path(.element(id: _, action: .sendForm(.sendFailed(_, confirmationType)))):
-                return .none
-                
+
                 // MARK: - Send Confirmation
                 
             case .path(.element(id: _, action: .sendConfirmation(.cancelTapped))):
@@ -299,7 +434,7 @@ extension ScanCoordFlow {
                     }
                 }
                 return .none
-                
+
                 // MARK: - Transaction Details
                 
             case .path(.element(id: _, action: .transactionDetails(.saveAddressTapped))):
@@ -322,7 +457,7 @@ extension ScanCoordFlow {
                 }
                 return .none
                 
-                
+                // MARK: -
                 
                 
                 
@@ -347,7 +482,7 @@ extension ScanCoordFlow {
 //                return .send(.sendForm(.requestZec(requestPayment)))
 
                 /*
-                // MARK: - Address Book
+                // MARK: Address Book
                 
             case .path(.element(id: _, action: .addressBook(.editId(let address)))):
                 state.path.removeAll()
@@ -366,7 +501,7 @@ extension ScanCoordFlow {
                 state.path.append(.scan(scanState))
                 return .none
 
-                // MARK: - Address Book Contact
+                // MARK: Address Book Contact
 
             case .path(.element(id: _, action: .addressBookContact(.dismissAddContactRequired))):
                 let _ = state.path.popLast()
@@ -378,7 +513,7 @@ extension ScanCoordFlow {
                 }
                 return .none
                 
-                // MARK: - Request ZEC Confirmation
+                // MARK: Request ZEC Confirmation
                 
             case .path(.element(id: _, action: .requestZecConfirmation(.goBackTappedFromRequestZec))):
                 state.path.removeAll()
@@ -399,7 +534,7 @@ extension ScanCoordFlow {
                 
                 
 
-                // MARK: - Send
+                // MARK: Send
                 
             case .sendForm(.addressBookTapped):
                 var addressBookState = AddressBook.State.initial
@@ -436,7 +571,7 @@ extension ScanCoordFlow {
                 }
                 return .none
                 
-                // MARK: - Send Confirmation
+                // MARK: Send Confirmation
 
             case .path(.element(id: _, action: .sendConfirmation(.cancelTapped))):
                 let _ = state.path.popLast()
@@ -502,12 +637,12 @@ extension ScanCoordFlow {
                 }
                 return .none
                 
-                // MARK: - Self
+                // MARK: Self
 
             case .dismissRequired:
                 return .none
 
-                // MARK: - Transaction Details
+                // MARK: Transaction Details
                 
             case .path(.element(id: _, action: .transactionDetails(.saveAddressTapped))):
                 var addressBookState = AddressBook.State.initial

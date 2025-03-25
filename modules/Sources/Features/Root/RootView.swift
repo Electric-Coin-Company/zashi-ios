@@ -16,7 +16,7 @@ import OSStatusError
 //import AddKeystoneHWWallet
 //import AddressBook
 //import AddressDetails
-//import CurrencyConversionSetup
+import CurrencyConversionSetup
 //import DeleteWallet
 //import ExportTransactionHistory
 import Home
@@ -201,6 +201,14 @@ private extension RootView {
                                         state: \.transactionsCoordFlowState,
                                         action: \.transactionsCoordFlow),
                                 tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.currencyConversionSetup)) {
+                            CurrencyConversionSetupView(
+                                store:
+                                    store.scope(
+                                        state: \.currencyConversionSetupState,
+                                        action: \.currencyConversionSetup)
                             )
                         }
                     }

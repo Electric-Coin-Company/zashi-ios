@@ -80,6 +80,38 @@ extension SendCoordFlow {
                 state.path.removeAll()
                 return .none
                 
+            case .path(.element(id: _, action: .requestZecConfirmation(.saveAddressTapped(let address)))):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isNameFocused = true
+                addressBookState.address = address.data
+                addressBookState.isValidZcashAddress = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
+                
+            case .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
+                for element in state.path {
+                    if case .requestZecConfirmation(let sendConfirmationState) = element {
+                        switch result {
+                        case .failure:
+                            state.path.append(.sendResultFailure(sendConfirmationState))
+                            break
+                        case .partial:
+                            var partialProposalErrorState = PartialProposalError.State.initial
+                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
+                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
+                            state.path.append(.sendResultPartial(partialProposalErrorState))
+                            break
+                        case .resubmission:
+                            state.path.append(.sendResultResubmission(sendConfirmationState))
+                            break
+                        case .success:
+                            state.path.append(.sendResultSuccess(sendConfirmationState))
+                        default: break
+                        }
+                    }
+                }
+                return .none
+                
                 // MARK: - Scan
                 
             case .path(.element(id: _, action: .scan(.foundAddress(let address)))):
@@ -115,6 +147,14 @@ extension SendCoordFlow {
                 state.path.append(.addressBook(addressBookState))
                 return .none
                 
+            case .sendForm(.addNewContactTapped(let address)):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isNameFocused = true
+                addressBookState.address = address.data
+                addressBookState.isValidZcashAddress = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
+
             case .sendForm(.scanTapped):
                 var scanState = Scan.State.initial
                 scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
@@ -159,8 +199,7 @@ extension SendCoordFlow {
                 }
                 return .none
                 
-            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))),
-                    .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
+            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))):
                 for element in state.path {
                     if case .sendConfirmation(let sendConfirmationState) = element {
                         switch result {

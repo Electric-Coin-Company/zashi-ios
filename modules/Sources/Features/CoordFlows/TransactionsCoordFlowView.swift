@@ -12,6 +12,7 @@ import UIComponents
 import Generated
 
 // Path
+import AddressBook
 import TransactionDetails
 import TransactionsManager
 
@@ -52,6 +53,8 @@ public struct TransactionsCoordFlowView: View {
                 }
             } destination: { store in
                 switch store.case {
+                case let .addressBookContact(store):
+                    AddressBookContactView(store: store)
                 case let .transactionDetails(store):
                     TransactionDetailsView(store: store, tokenName: tokenName)
                 }

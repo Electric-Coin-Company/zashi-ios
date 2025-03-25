@@ -344,11 +344,8 @@ public struct SendForm {
                 }
                 
             case let .sendFailed(error, confirmationType):
-                if confirmationType == .requestPayment {
-//                    return .send(.updateDestination(nil))
-                } else {
+                if confirmationType == .send {
                     state.alert = AlertState.sendFailure(error)
-                    return .none
                 }
                 return .none
 
