@@ -62,6 +62,15 @@ extension ScanCoordFlow {
 
             case .path(.element(id: _, action: .addressBookContact(.dismissAddContactRequired))):
                 let _ = state.path.popLast()
+                
+                // handling the path in the transaction details
+                for element in state.path {
+                    if element.is(\.transactionDetails) {
+                        return .none
+                    }
+                }
+                
+                // handling the path in senf form
                 for element in state.path {
                     if element.is(\.scan) {
                         let _ = state.path.popLast()
@@ -204,30 +213,114 @@ extension ScanCoordFlow {
                 return .none
                 
             case .path(.element(id: _, action: .sendForm(.confirmationRequired(let confirmationType)))):
-//                var sendConfirmationState = SendConfirmation.State.initial
-//                sendConfirmationState.amount = state.sendFormState.amount
-//                sendConfirmationState.address = state.sendFormState.address.data
-//                sendConfirmationState.proposal = state.sendFormState.proposal
-//                sendConfirmationState.feeRequired = state.sendFormState.feeRequired
-//                sendConfirmationState.message = state.sendFormState.message
-//                let currencyAmount = state.sendFormState.currencyConversion?.convert(state.sendFormState.amount).redacted ?? .empty
-//                sendConfirmationState.currencyAmount = currencyAmount
-//                
-//                if confirmationType == .send {
-//                    state.path.append(.sendConfirmation(sendConfirmationState))
-//                } else if confirmationType == .requestPayment {
-//                    state.path.append(.requestZecConfirmation(sendConfirmationState))
-//                }
+                for element in state.path {
+                    if case .sendForm(let sendFormState) = element {
+                        var sendConfirmationState = SendConfirmation.State.initial
+                        sendConfirmationState.amount = sendFormState.amount
+                        sendConfirmationState.address = sendFormState.address.data
+                        sendConfirmationState.proposal = sendFormState.proposal
+                        sendConfirmationState.feeRequired = sendFormState.feeRequired
+                        sendConfirmationState.message = sendFormState.message
+                        let currencyAmount = sendFormState.currencyConversion?.convert(sendFormState.amount).redacted ?? .empty
+                        sendConfirmationState.currencyAmount = currencyAmount
+
+                        if confirmationType == .send {
+                            state.path.append(.sendConfirmation(sendConfirmationState))
+                        }
+                    }
+                }
                 return .none
                 
             case let .path(.element(id: _, action: .sendForm(.sendFailed(_, confirmationType)))):
                 return .none
                 
+                // MARK: - Send Confirmation
                 
+            case .path(.element(id: _, action: .sendConfirmation(.cancelTapped))):
+                let _ = state.path.removeLast()
+                return .none
+
+            case .path(.element(id: _, action: .sendConfirmation(.sendTapped))):
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        state.path.append(.sending(sendConfirmationState))
+                        break
+                    }
+                }
+                return .none
                 
+            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))):
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        switch result {
+                        case .failure:
+                            state.path.append(.sendResultFailure(sendConfirmationState))
+                            break
+                        case .partial:
+                            var partialProposalErrorState = PartialProposalError.State.initial
+                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
+                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
+                            state.path.append(.sendResultPartial(partialProposalErrorState))
+                            break
+                        case .resubmission:
+                            state.path.append(.sendResultResubmission(sendConfirmationState))
+                            break
+                        case .success:
+                            state.path.append(.sendResultSuccess(sendConfirmationState))
+                        default: break
+                        }
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped))),
+                    .path(.element(id: _, action: .preSendingFailure(.backFromPCZTFailureTapped))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        state.path.pop(to: id)
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
+                var transactionDetailsState = TransactionDetails.State.initial
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        if let txid = sendConfirmationState.txIdToExpand {
+                            if let index = state.transactions.index(id: txid) {
+                                transactionDetailsState.transaction = state.transactions[index]
+                                transactionDetailsState.isCloseButtonRequired = true
+                                state.path.append(.transactionDetails(transactionDetailsState))
+                                break
+                            }
+                        }
+                    }
+                }
+                return .none
                 
+                // MARK: - Transaction Details
                 
-                
+            case .path(.element(id: _, action: .transactionDetails(.saveAddressTapped))):
+                for element in state.path {
+                    if case .transactionDetails(let transactionDetailsState) = element {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = transactionDetailsState.transaction.address
+                        addressBookState.isNameFocused = true
+                        addressBookState.isValidZcashAddress = true
+                        state.path.append(.addressBookContact(addressBookState))
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .transactionDetails(.sendAgainTapped))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        state.path.pop(to: id)
+                    }
+                }
+                return .none
                 
                 
                 

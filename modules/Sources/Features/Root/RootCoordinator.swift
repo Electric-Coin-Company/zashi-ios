@@ -141,21 +141,16 @@ extension Root {
             case .scanCoordFlow(.path(.element(id: _, action: .sendForm(.dismissRequired)))):
                 state.path = nil
                 return .none
-                
-//
-//            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped))))),
-//                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped))))),
-//                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss))))):
-//                state.path = nil
-//                return .none
-//
-//            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped))))):
-//                state.path = nil
-//                return .none
-//
-//            case .scanCoordFlow(.sendCoordFlow(.dismissRequired)):
-//                state.path = nil
-//                return .none
+
+            case .scanCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
+                state.path = nil
+                return .none
+
+            case .scanCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .scanCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))),
+                    .scanCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss)))):
+                state.path = nil
+                return .none
 
                 // MARK: - Send Coord Flow
                 
