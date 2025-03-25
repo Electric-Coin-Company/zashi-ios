@@ -162,7 +162,7 @@ extension SendCoordFlow {
             case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))),
                     .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
                 for element in state.path {
-                    if case .sending(let sendConfirmationState) = element {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
                         switch result {
                         case .failure:
                             state.path.append(.sendResultFailure(sendConfirmationState))
