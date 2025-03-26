@@ -120,6 +120,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case signWithKeystoneCoordFlow
             case transactionsCoordFlow
         }
         
@@ -174,6 +175,7 @@ public struct Root {
         public var scanCoordFlowState = ScanCoordFlow.State.initial
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
+        public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
 
         //public var requestZecState = RequestZec.State.initial
@@ -267,6 +269,8 @@ public struct Root {
         case sendAgainRequested(TransactionState)
         case sendCoordFlow(SendCoordFlow.Action)
         case settings(Settings.Action)
+        case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
+        case signWithKeystoneRequested
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
 
         // Transactions
@@ -387,6 +391,10 @@ public struct Root {
 
         Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
             CurrencyConversionSetup()
+        }
+
+        Scope(state: \.signWithKeystoneCoordFlowState, action: \.signWithKeystoneCoordFlow) {
+            SignWithKeystoneCoordFlow()
         }
 
         initializationReduce()

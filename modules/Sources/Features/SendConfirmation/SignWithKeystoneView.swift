@@ -170,6 +170,9 @@ public struct SignWithKeystoneView: View {
                 previousBrightness = UIScreen.main.brightness
                 UIScreen.main.brightness = 1.0
             }
+//            .onDisappear {
+//                UIScreen.main.brightness = previousBrightness
+//            }
             .onChange(of: presentationMode.wrappedValue.isPresented) { isPresented in
                 if !isPresented {
                     UIScreen.main.brightness = previousBrightness

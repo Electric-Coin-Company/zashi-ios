@@ -175,7 +175,7 @@ public struct Balances {
                         
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
-                        await send(.walletBalances(.updateBalances))
+                        //await send(.walletBalances(.updateBalances))
                         
                         switch result {
                         case .grpcFailure:
@@ -217,7 +217,8 @@ public struct Balances {
 
             case .shieldFundsSuccess:
                 state.isShieldingFunds = false
-                state.walletBalancesState.transparentBalance = .zero
+                //state.walletBalancesState.transparentBalance = .zero
+                state.transparentBalance = .zero
                 return .none
 
             case let .shieldFundsPartial(txIds, statuses):
@@ -228,10 +229,10 @@ public struct Balances {
             case .synchronizerStateChanged(let latestState):
                 return .send(.updateBalances(latestState.data.accountsBalances))
 
-            case .walletBalances(.balanceUpdated(let accountBalance)):
-                state.shieldedBalance = state.walletBalancesState.shieldedBalance
-                state.transparentBalance = state.walletBalancesState.transparentBalance
-                return .send(.updateBalance(accountBalance))
+//            case .walletBalances(.balanceUpdated(let accountBalance)):
+//                state.shieldedBalance = state.walletBalancesState.shieldedBalance
+//                state.transparentBalance = state.walletBalancesState.transparentBalance
+//                return .send(.updateBalance(accountBalance))
 
             case .updateBalances(let accountsBalances):
                 guard let account = state.selectedWalletAccount else {
@@ -244,6 +245,8 @@ public struct Balances {
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +
                     (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
+                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
+                state.transparentBalance = accountBalance?.unshielded ?? .zero
                 return .none
 
             case .syncProgress:

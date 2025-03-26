@@ -47,6 +47,8 @@ public struct ScanCoordFlowView: View {
                     AddressBookView(store: store)
                 case let .addressBookContact(store):
                     AddressBookContactView(store: store)
+                case let .confirmWithKeystone(store):
+                    SignWithKeystoneView(store: store, tokenName: tokenName)
                 case let .preSendingFailure(store):
                     PreSendingFailureView(store: store, tokenName: tokenName)
                 case let .scan(store):

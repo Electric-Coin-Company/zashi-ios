@@ -411,6 +411,7 @@ let package = Package(
         .target(
             name: "Home",
             dependencies: [
+                "BalanceBreakdown",
                 "Generated",
                 "Models",
                 "PartnerKeys",

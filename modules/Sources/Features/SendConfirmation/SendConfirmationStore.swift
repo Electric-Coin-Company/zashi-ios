@@ -207,6 +207,7 @@ public struct SendConfirmation {
         case addProofsToPczt
         case backFromPCZTFailureTapped
         case createTransactionFromPCZT
+        case foundPCZT(Pczt)
         case pcztResolved(Pczt)
         case pcztSendFailed(ZcashError?)
         case pcztWithProofsResolved(Pczt)
@@ -501,28 +502,30 @@ public struct SendConfirmation {
                 return .send(.resetPCZTs)
                 
             case .confirmWithKeystoneTapped:
-                return .concatenate(
-                    .send(.resolvePCZT)
+                return .none
+                //return .send(.resolvePCZT)
+//                return .concatenate(
+//                    .send(.resolvePCZT)
                     //.send(.updateStackDestination(.signWithKeystone))
-                    )
+//                    )
                 
 //            case .scan(.cancelTapped):
 //                return .send(.updateStackDestination(.signWithKeystone))
 //
-//            case .scan(.foundPCZT(let pcztWithSigs)):
-//                guard !state.scanFailedPreScanBinding && !state.scanFailedDuringScanBinding else {
-//                    return .none
-//                }
-//                if !state.isKeystoneCodeFound {
-//                    state.isKeystoneCodeFound = true
-//                    state.pcztWithSigs = pcztWithSigs
-//                    return .run { send in
-//                        await send(.updateStackDestination(.sending))
-//                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
-//                        await send(.createTransactionFromPCZT)
-//                    }
-//                }
-//                return .none
+            case .foundPCZT(let pcztWithSigs):
+                guard !state.scanFailedPreScanBinding && !state.scanFailedDuringScanBinding else {
+                    return .none
+                }
+                if !state.isKeystoneCodeFound {
+                    state.isKeystoneCodeFound = true
+                    state.pcztWithSigs = pcztWithSigs
+                    return .run { send in
+                        //await send(.updateStackDestination(.sending))
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.createTransactionFromPCZT)
+                    }
+                }
+                return .none
 //                
 //            case .scan:
 //                return .none
