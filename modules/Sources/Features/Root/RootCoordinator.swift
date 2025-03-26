@@ -11,6 +11,7 @@ extension Root {
     public func coordinatorReduce() -> Reduce<Root.State, Root.Action> {
         Reduce { state, action in
             switch action {
+                
                 // MARK: - Accounts
 
             case .home(.walletAccountTapped(let walletAccount)):
@@ -136,6 +137,26 @@ extension Root {
             case .settings(.path(.element(id: _, action: .integrations(.flexaTapped)))):
                 return .send(.flexaOpenRequest)
                 
+                // MARK: - Keystone
+
+            case .sendCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))),
+                    .signWithKeystoneCoordFlow(.sendConfirmation(.rejectTapped)):
+                state.path = nil
+                return .none
+                
+            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))):
+                state.signWithKeystoneCoordFlowState = .initial
+                state.signWithKeystoneCoordFlowState.sendConfirmationState.proposal = proposal
+                state.homeState.balancesBinding = false
+                return .run { send in
+                    try? await mainQueue.sleep(for: .seconds(0.8))
+                    await send(.signWithKeystoneRequested)
+                }
+
+            case .signWithKeystoneRequested:
+                state.path = .signWithKeystoneCoordFlow
+                return .send(.signWithKeystoneCoordFlow(.sendConfirmation(.resolvePCZT)))
+                
                 // MARK: - Request Zec
 
             case .requestZecCoordFlow(.path(.element(id: _, action: .requestZecSummary(.cancelRequestTapped)))):
@@ -178,6 +199,14 @@ extension Root {
                     .send(.sendCoordFlow(.sendForm(.addressUpdated(transactionState.address.redacted))))
                 )
                 
+            case .deeplinkWarning(.rescanInZashi):
+                state = .initial
+                state.splashAppeared = true
+                return .merge(
+                    .send(.destination(.updateDestination(.home))),
+                    .send(.home(.scanTapped))
+                )
+
                 // MARK: - Send Coord Flow
                 
             case .sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
@@ -191,6 +220,17 @@ extension Root {
                 return .none
 
             case .sendCoordFlow(.dismissRequired):
+                state.path = nil
+                return .none
+
+                // MARK: - Sign with Keystone Coord Flow
+
+            case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
+                state.path = nil
+                return .none
+
+            case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
                 state.path = nil
                 return .none
 

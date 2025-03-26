@@ -32,23 +32,24 @@ public struct BalancesView: View {
     }
     
     public var body: some View {
-        ScrollView {
+        VStack(spacing: 0) {
             WithPerceptionTracking {
-                WalletBalancesView(
-                    store: store.scope(
-                        state: \.walletBalancesState,
-                        action: \.walletBalances
-                    ),
-                    tokenName: tokenName,
-                    underlinedAvailableBalance: false,
-                    couldBeHidden: true
-                )
+//                WalletBalancesView(
+//                    store: store.scope(
+//                        state: \.walletBalancesState,
+//                        action: \.walletBalances
+//                    ),
+//                    tokenName: tokenName,
+//                    underlinedAvailableBalance: false,
+//                    couldBeHidden: true
+//                )
 
-                Asset.Colors.primary.color
-                    .frame(height: 1)
-                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 10, trailing: 30))
+//                Asset.Colors.primary.color
+//                    .frame(height: 1)
+//                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 10, trailing: 30))
                 
                 balancesBlock()
+                    .padding(.top, 20)
                 
                 transparentBlock()
                     .frame(minHeight: 166)
@@ -85,7 +86,7 @@ public struct BalancesView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .padding(.vertical, 1)
+//        .padding(.vertical, 1)
         .applyScreenBackground()
         .zashiBack()
         .alert(

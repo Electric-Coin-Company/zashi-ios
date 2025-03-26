@@ -116,7 +116,7 @@ extension Root {
 
                     flexaHandler.updateBalance(shieldedWithPendingBalance, shieldedBalance)
                 }
-                
+
                 // handle possible service unavailability
                 if case .error(let error) = snapshot.syncStatus, checkUnavailableService(error) {
                     if state.walletStatus != .disconnected {

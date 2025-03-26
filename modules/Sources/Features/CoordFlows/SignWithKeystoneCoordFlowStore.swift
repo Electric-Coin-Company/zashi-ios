@@ -1,8 +1,8 @@
 //
-//  SendCoordFlowStore.swift
+//  SignWithKeystoneCoordFlowStore.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 2025-03-18.
+//  Created by Lukáš Korba on 2025-03-26.
 //
 
 import SwiftUI
@@ -11,30 +11,20 @@ import ZcashLightClientKit
 
 import AudioServices
 import Models
-import NumberFormatter
 
 // Path
-import AddressBook
-import PartialProposalError
-import Scan
 import SendConfirmation
-import SendForm
+import Scan
 import TransactionDetails
 
 @Reducer
-public struct SendCoordFlow {
+public struct SignWithKeystoneCoordFlow {
     @Reducer
     public enum Path {
-        case addressBook(AddressBook)
-        case addressBookContact(AddressBook)
-        case confirmWithKeystone(SendConfirmation)
         case preSendingFailure(SendConfirmation)
-        case requestZecConfirmation(SendConfirmation)
         case scan(Scan)
-        case sendConfirmation(SendConfirmation)
         case sending(SendConfirmation)
         case sendResultFailure(SendConfirmation)
-        case sendResultPartial(PartialProposalError)
         case sendResultResubmission(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case transactionDetails(TransactionDetails)
@@ -43,32 +33,28 @@ public struct SendCoordFlow {
     @ObservableState
     public struct State {
         public var path = StackState<Path.State>()
-        public var sendFormState = SendForm.State.initial
+        public var sendConfirmationState = SendConfirmation.State.initial
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
 
         public init() { }
     }
 
     public enum Action {
-        case dismissRequired
         case path(StackActionOf<Path>)
-        case resolveSendResult(SendConfirmation.State.Result?, SendConfirmation.State)
-        case sendForm(SendForm.Action)
-        case viewTransactionRequested(SendConfirmation.State)
+        case sendConfirmation(SendConfirmation.Action)
     }
 
     @Dependency(\.audioServices) var audioServices
-    @Dependency(\.numberFormatter) var numberFormatter
-
+    
     public init() { }
 
     public var body: some Reducer<State, Action> {
         coordinatorReduce()
 
-        Scope(state: \.sendFormState, action: \.sendForm) {
-            SendForm()
+        Scope(state: \.sendConfirmationState, action: \.sendConfirmation) {
+            SendConfirmation()
         }
-
+        
         Reduce { state, action in
             switch action {
             default: return .none
