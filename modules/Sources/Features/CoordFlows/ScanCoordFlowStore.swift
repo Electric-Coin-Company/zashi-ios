@@ -30,6 +30,7 @@ public struct ScanCoordFlow {
     public enum Path {
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
+        case confirmWithKeystone(SendConfirmation)
         case preSendingFailure(SendConfirmation)
         case requestZecConfirmation(SendConfirmation)
         case scan(Scan)
@@ -70,7 +71,9 @@ public struct ScanCoordFlow {
         case requestZecFailed
         case requestZecFailedExistingSendForm
         case requestZecFailedNoSendForm
+        case resolveSendResult(SendConfirmation.State.Result?, SendConfirmation.State)
         case scan(Scan.Action)
+        case viewTransactionRequested(SendConfirmation.State)
     }
 
     @Dependency(\.audioServices) var audioServices

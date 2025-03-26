@@ -10,6 +10,7 @@ import Utils
 import Models
 import WalletBalances
 import Scan
+import BalanceBreakdown
 
 public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -19,6 +20,7 @@ public struct HomeView: View {
     
     @State var accountSwitchSheetHeight: CGFloat = .zero
     @State var moreSheetHeight: CGFloat = .zero
+    @State var balancesSheetHeight: CGFloat = .zero
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -154,6 +156,24 @@ public struct HomeView: View {
                 }
                 //.padding(.top, 12)
             }
+//            .popover(
+//                isPresented:
+//                    Binding(
+//                        get: { store.balancesBinding },
+//                        set: { store.send(.balancesBindingUpdated($0)) }
+//                    )
+//            ) {
+//                //NavigationView {
+//                    BalancesView(
+//                        store:
+//                            store.scope(
+//                                state: \.balancesState,
+//                                action: \.balances
+//                            ),
+//                        tokenName: tokenName
+//                    )
+//                //}
+//            }
             .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
                 if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
                     InAppBrowserView(url: url)
@@ -163,6 +183,9 @@ public struct HomeView: View {
                 if let url = URL(string: store.inAppBrowserURLKeystone) {
                     InAppBrowserView(url: url)
                 }
+            }
+            .sheet(isPresented: $store.balancesBinding) {
+                balancesContent()
             }
             .sheet(isPresented: $store.accountSwitchRequest) {
                 accountSwitchContent()

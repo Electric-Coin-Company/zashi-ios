@@ -66,12 +66,12 @@ extension Root {
                 state.destinationState.destination = destination
                 return .none
 
-            case .deeplinkWarning(.gotItTapped):
-                state = .initial
-                state.splashAppeared = true
-//                state.tabsState.selectedTab = .send
-//                state.tabsState.sendState.destination = .scanQR
-                return .send(.destination(.updateDestination(.home)))
+//            case .deeplinkWarning(.rescanInZashi):
+//                state = .initial
+//                state.splashAppeared = true
+////                state.tabsState.selectedTab = .send
+////                state.tabsState.sendState.destination = .scanQR
+//                return .send(.destination(.updateDestination(.home)))
                 
             case .destination(.deeplink(let url)):
                 if let _ = uriParser.checkRP(url.absoluteString) {

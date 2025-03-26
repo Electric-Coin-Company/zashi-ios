@@ -86,6 +86,53 @@ extension ScanCoordFlow {
                 }
                 return .none
                 
+                // MARK: - Keystone
+                
+            case .path(.element(id: _, action: .sendConfirmation(.confirmWithKeystoneTapped))):
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        state.path.append(.confirmWithKeystone(sendConfirmationState))
+                        if let last = state.path.ids.last {
+                            return .send(.path(.element(id: last, action: .confirmWithKeystone(.resolvePCZT))))
+                        }
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .requestZecConfirmation(.confirmWithKeystoneTapped))):
+                for element in state.path {
+                    if case .requestZecConfirmation(let sendConfirmationState) = element {
+                        state.path.append(.confirmWithKeystone(sendConfirmationState))
+                        if let last = state.path.ids.last {
+                            return .send(.path(.element(id: last, action: .confirmWithKeystone(.resolvePCZT))))
+                        }
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .confirmWithKeystone(.getSignatureTapped))):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.keystonePCZTScanChecker]
+                state.path.append(.scan(scanState))
+                return .none
+
+            case .path(.element(id: _, action: .scan(.foundPCZT(let pcztWithSigs)))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        state.path.append(.sending(sendConfirmationState))
+                        return .send(.path(.element(id: id, action: .confirmWithKeystone(.foundPCZT(pcztWithSigs)))))
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .confirmWithKeystone(.updateResult(let result)))):
+                for element in state.path {
+                    if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        return .send(.resolveSendResult(result, sendConfirmationState))
+                    }
+                }
+                return .none
+                
                 // MARK: - Request ZEC Confirmation
                 
             case .path(.element(id: _, action: .requestZecConfirmation(.goBackTappedFromRequestZec))):
@@ -116,23 +163,7 @@ extension ScanCoordFlow {
             case .path(.element(id: _, action: .requestZecConfirmation(.updateResult(let result)))):
                 for element in state.path {
                     if case .requestZecConfirmation(let sendConfirmationState) = element {
-                        switch result {
-                        case .failure:
-                            state.path.append(.sendResultFailure(sendConfirmationState))
-                            break
-                        case .partial:
-                            var partialProposalErrorState = PartialProposalError.State.initial
-                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
-                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
-                            state.path.append(.sendResultPartial(partialProposalErrorState))
-                            break
-                        case .resubmission:
-                            state.path.append(.sendResultResubmission(sendConfirmationState))
-                            break
-                        case .success:
-                            state.path.append(.sendResultSuccess(sendConfirmationState))
-                        default: break
-                        }
+                        return .send(.resolveSendResult(result, sendConfirmationState))
                     }
                 }
                 return .none
@@ -328,6 +359,37 @@ extension ScanCoordFlow {
                 }
                 return .none
 
+            case let .resolveSendResult(result, sendConfirmationState):
+                switch result {
+                case .failure:
+                    state.path.append(.sendResultFailure(sendConfirmationState))
+                    break
+                case .partial:
+                    var partialProposalErrorState = PartialProposalError.State.initial
+                    partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
+                    partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
+                    state.path.append(.sendResultPartial(partialProposalErrorState))
+                    break
+                case .resubmission:
+                    state.path.append(.sendResultResubmission(sendConfirmationState))
+                    break
+                case .success:
+                    state.path.append(.sendResultSuccess(sendConfirmationState))
+                default: break
+                }
+                return .none
+                
+            case .viewTransactionRequested(let sendConfirmationState):
+                if let txid = sendConfirmationState.txIdToExpand {
+                    if let index = state.transactions.index(id: txid) {
+                        var transactionDetailsState = TransactionDetails.State.initial
+                        transactionDetailsState.transaction = state.transactions[index]
+                        transactionDetailsState.isCloseButtonRequired = true
+                        state.path.append(.transactionDetails(transactionDetailsState))
+                    }
+                }
+                return .none
+                
                 // MARK: - Send
 
             case .path(.element(id: _, action: .sendForm(.addressBookTapped))):
@@ -387,23 +449,7 @@ extension ScanCoordFlow {
             case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))):
                 for element in state.path {
                     if case .sendConfirmation(let sendConfirmationState) = element {
-                        switch result {
-                        case .failure:
-                            state.path.append(.sendResultFailure(sendConfirmationState))
-                            break
-                        case .partial:
-                            var partialProposalErrorState = PartialProposalError.State.initial
-                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
-                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
-                            state.path.append(.sendResultPartial(partialProposalErrorState))
-                            break
-                        case .resubmission:
-                            state.path.append(.sendResultResubmission(sendConfirmationState))
-                            break
-                        case .success:
-                            state.path.append(.sendResultSuccess(sendConfirmationState))
-                        default: break
-                        }
+                        return .send(.resolveSendResult(result, sendConfirmationState))
                     }
                 }
                 return .none
@@ -420,17 +466,13 @@ extension ScanCoordFlow {
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
                     .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
                     .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
-                var transactionDetailsState = TransactionDetails.State.initial
-                for element in state.path {
+                for element in state.path.reversed() {
                     if case .sendConfirmation(let sendConfirmationState) = element {
-                        if let txid = sendConfirmationState.txIdToExpand {
-                            if let index = state.transactions.index(id: txid) {
-                                transactionDetailsState.transaction = state.transactions[index]
-                                transactionDetailsState.isCloseButtonRequired = true
-                                state.path.append(.transactionDetails(transactionDetailsState))
-                                break
-                            }
-                        }
+                        return .send(.viewTransactionRequested(sendConfirmationState))
+                    } else if case .requestZecConfirmation(let sendConfirmationState) = element {
+                        return .send(.viewTransactionRequested(sendConfirmationState))
+                    } else if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        return .send(.viewTransactionRequested(sendConfirmationState))
                     }
                 }
                 return .none

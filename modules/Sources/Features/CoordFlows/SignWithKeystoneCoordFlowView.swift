@@ -1,8 +1,8 @@
 //
-//  SendCoordFlowView.swift
+//  SignWithKeystoneCoordFlowView.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 2023-03-18.
+//  Created by Lukáš Korba on 2023-03-26.
 //
 
 import SwiftUI
@@ -12,20 +12,17 @@ import UIComponents
 import Generated
 
 // Path
-import AddressBook
-import PartialProposalError
-import Scan
 import SendConfirmation
-import SendForm
+import Scan
 import TransactionDetails
 
-public struct SendCoordFlowView: View {
+public struct SignWithKeystoneCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
 
-    @Perception.Bindable var store: StoreOf<SendCoordFlow>
+    @Perception.Bindable var store: StoreOf<SignWithKeystoneCoordFlow>
     let tokenName: String
 
-    public init(store: StoreOf<SendCoordFlow>, tokenName: String) {
+    public init(store: StoreOf<SignWithKeystoneCoordFlow>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
@@ -33,37 +30,25 @@ public struct SendCoordFlowView: View {
     public var body: some View {
         WithPerceptionTracking {
             NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                SendFormView(
+                SignWithKeystoneView(
                     store:
                         store.scope(
-                            state: \.sendFormState,
-                            action: \.sendForm
+                            state: \.sendConfirmationState,
+                            action: \.sendConfirmation
                         ),
                     tokenName: tokenName
                 )
                 .navigationBarHidden(true)
             } destination: { store in
                 switch store.case {
-                case let .addressBook(store):
-                    AddressBookView(store: store)
-                case let .addressBookContact(store):
-                    AddressBookContactView(store: store)
-                case let .confirmWithKeystone(store):
-                    SignWithKeystoneView(store: store, tokenName: tokenName)
                 case let .preSendingFailure(store):
                     PreSendingFailureView(store: store, tokenName: tokenName)
                 case let .scan(store):
                     ScanView(store: store)
-                case let .sendConfirmation(store):
-                    SendConfirmationView(store: store, tokenName: tokenName)
                 case let .sending(store):
                     SendingView(store: store, tokenName: tokenName)
                 case let .sendResultFailure(store):
                     FailureView(store: store, tokenName: tokenName)
-                case let .sendResultPartial(store):
-                    PartialProposalErrorView(store: store)
-                case let .requestZecConfirmation(store):
-                    RequestPaymentConfirmationView(store: store, tokenName: tokenName)
                 case let .sendResultResubmission(store):
                     ResubmissionView(store: store, tokenName: tokenName)
                 case let .sendResultSuccess(store):
@@ -75,27 +60,27 @@ public struct SendCoordFlowView: View {
             .navigationBarHidden(!store.path.isEmpty)
         }
         .applyScreenBackground()
-        .zashiBack { store.send(.dismissRequired) }
-        .screenTitle(L10n.General.send)
+        .zashiBack()
+        //.screenTitle(L10n.General.send)
     }
 }
 
 #Preview {
     NavigationView {
-        SendCoordFlowView(store: SendCoordFlow.placeholder, tokenName: "ZEC")
+        SignWithKeystoneCoordFlowView(store: SignWithKeystoneCoordFlow.placeholder, tokenName: "ZEC")
     }
 }
 
 // MARK: - Placeholders
 
-extension SendCoordFlow.State {
-    public static let initial = SendCoordFlow.State()
+extension SignWithKeystoneCoordFlow.State {
+    public static let initial = SignWithKeystoneCoordFlow.State()
 }
 
-extension SendCoordFlow {
-    public static let placeholder = StoreOf<SendCoordFlow>(
+extension SignWithKeystoneCoordFlow {
+    public static let placeholder = StoreOf<SignWithKeystoneCoordFlow>(
         initialState: .initial
     ) {
-        SendCoordFlow()
+        SignWithKeystoneCoordFlow()
     }
 }

@@ -211,6 +211,15 @@ private extension RootView {
                                         action: \.currencyConversionSetup)
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.signWithKeystoneCoordFlow)) {
+                            SignWithKeystoneCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.signWithKeystoneCoordFlowState,
+                                        action: \.signWithKeystoneCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {

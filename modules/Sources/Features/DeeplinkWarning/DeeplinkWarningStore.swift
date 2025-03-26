@@ -18,7 +18,7 @@ public struct DeeplinkWarning {
     }
 
     public enum Action: Equatable {
-        case gotItTapped
+        case rescanInZashi
     }
 
     public init() { }
@@ -26,7 +26,7 @@ public struct DeeplinkWarning {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .gotItTapped:
+            case .rescanInZashi:
                 return .none
             }
         }
