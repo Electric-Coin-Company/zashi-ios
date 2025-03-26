@@ -123,6 +123,26 @@ extension SendCoordFlow {
                     }
                 }
                 return .none
+                
+            case .path(.element(id: _, action: .confirmWithKeystone(.pcztSendFailed(let error)))):
+                for element in state.path.reversed() {
+                    if element.is(\.sending) {
+                        for (id, element2) in zip(state.path.ids, state.path) {
+                            if element2.is(\.confirmWithKeystone) {
+                                return .send(.path(.element(id: id, action: .confirmWithKeystone(.sendFailed(error?.toZcashError(), true)))))
+                            }
+                        }
+                        break
+                    } else if element.is(\.scan) || element.is(\.confirmWithKeystone) {
+                        for element2 in state.path {
+                            if case .confirmWithKeystone(let sendConfirmationState) = element2 {
+                                state.path.append(.preSendingFailure(sendConfirmationState))
+                            }
+                        }
+                        break
+                    }
+                }
+                return .none
 
                 // MARK: - Request ZEC Confirmation
                 
