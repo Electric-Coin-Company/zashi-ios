@@ -662,13 +662,19 @@ public struct SendConfirmation {
                     }
                 }
 
-            case .pcztSendFailed(let error):
+//            case .pcztSendFailed(let error):
+            case .pcztSendFailed:
                 state.isSending = false
 //                state.scanFailedPreScanBinding = state.stackDestination == .signWithKeystone
 //                state.scanFailedDuringScanBinding = state.stackDestination == .scan
 //                if state.stackDestination == .sending {
 //                    return .send(.sendFailed(error?.toZcashError(), true))
 //                }
+                //        public enum StackDestination: Int, Equatable {
+                //            case signWithKeystone = 0
+                //            case scan
+                //            case sending
+                //        }
                 return .none
 
             case .backFromPCZTFailureTapped:

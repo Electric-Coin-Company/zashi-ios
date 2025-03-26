@@ -66,6 +66,21 @@ extension SignWithKeystoneCoordFlow {
                 }
                 return .none
                 
+            case .sendConfirmation(.pcztSendFailed(let error)):
+                if state.path.ids.isEmpty {
+                    state.path.append(.preSendingFailure(state.sendConfirmationState))
+                    return .none
+                }
+                for element in state.path.reversed() {
+                    if element.is(\.sending) {
+                        return .send(.sendConfirmation(.sendFailed(error?.toZcashError(), true)))
+                    } else if element.is(\.scan) {
+                        state.path.append(.preSendingFailure(state.sendConfirmationState))
+                        break
+                    }
+                }
+                return .none
+                
             default: return .none
             }
         }
