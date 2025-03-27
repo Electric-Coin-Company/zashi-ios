@@ -12,6 +12,7 @@ import ImportWallet
 import SecurityWarning
 import ZcashLightClientKit
 import UIComponents
+import CoordFlows
 
 public struct PlainOnboardingView: View {
     @Perception.Bindable var store: StoreOf<OnboardingFlow>
@@ -49,17 +50,17 @@ public struct PlainOnboardingView: View {
                 }
                 .padding(.bottom, 24)
             }
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.importExistingWallet),
-                destination: {
-                    ImportWalletView(
-                        store: store.scope(
-                            state: \.importWalletState,
-                            action: \.importWallet
-                        )
-                    )
-                }
-            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingFor(.importExistingWallet),
+//                destination: {
+//                    ImportWalletView(
+//                        store: store.scope(
+//                            state: \.importWalletState,
+//                            action: \.importWallet
+//                        )
+//                    )
+//                }
+//            )
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.createNewWallet),
                 destination: {
@@ -67,6 +68,17 @@ public struct PlainOnboardingView: View {
                         store: store.scope(
                             state: \.securityWarningState,
                             action: \.securityWarning
+                        )
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.importExistingWallet),
+                destination: {
+                    RestoreWalletCoordFlowView(
+                        store: store.scope(
+                            state: \.restoreWalletCoordFlowState,
+                            action: \.restoreWalletCoordFlow
                         )
                     )
                 }
@@ -84,7 +96,6 @@ public struct PlainOnboardingView: View {
             Store(
                 initialState: OnboardingFlow.State(
                     walletConfig: .initial,
-                    importWalletState: .initial,
                     securityWarningState: .initial
                 )
             ) {
@@ -110,7 +121,6 @@ extension OnboardingFlow.State {
     public static var initial: Self {
         .init(
             walletConfig: .initial,
-            importWalletState: .initial,
             securityWarningState: .initial
         )
     }

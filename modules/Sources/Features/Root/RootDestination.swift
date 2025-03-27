@@ -60,9 +60,10 @@ extension Root {
                         || (state.destinationState.destination == .deeplinkWarning && destination == .home) else {
                     return .none
                 }
-                guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
-                    return .none
-                }
+                // RESTORE
+//                guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
+//                    return .none
+//                }
                 state.destinationState.destination = destination
                 return .none
 

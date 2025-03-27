@@ -44,6 +44,7 @@ extension MnemonicClient {
             
             return mnemonic.components(separatedBy: " ")
         },
-        isValid: { _ in }
+        isValid: { _ in },
+        suggestWords: { _ in [] }
     )
 }

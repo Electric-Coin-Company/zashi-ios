@@ -555,10 +555,12 @@ extension Root {
                 }
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
-                    return .concatenate(
-                        .cancel(id: SynchronizerCancelId),
-                        .send(.onboarding(.importWallet(.updateDestination(.birthday))))
-                    )
+                    // RESTORE
+                    return .cancel(id: SynchronizerCancelId)
+//                    return .concatenate(
+//                        .cancel(id: SynchronizerCancelId),
+//                        .send(.onboarding(.importWallet(.updateDestination(.birthday))))
+//                    )
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
                     return .concatenate(
@@ -645,39 +647,43 @@ extension Root {
                     await send(.onboarding(.importExistingWallet))
                 }
                 
-            case .onboarding(.importWallet(.nextTapped)):
-                if state.appInitializationState == .keysMissing {
-                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
-                    return .run { send in
-                        do {
-                            let seedBytes = try mnemonic.toSeed(seedPhrase)
-                            let result = try await sdkSynchronizer.isSeedRelevantToAnyDerivedAccount(seedBytes)
-                            await send(.initialization(.seedValidationResult(result)))
-                        } catch {
-                            await send(.initialization(.seedValidationResult(false)))
-                        }
-                    }
-                } else {
-                    state.onboardingState.importWalletState.destination = .birthday
-                    return .none
-                }
+                // RESTORE
+//            case .onboarding(.importWallet(.nextTapped)):
+//                if state.appInitializationState == .keysMissing {
+//                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
+//                    return .run { send in
+//                        do {
+//                            let seedBytes = try mnemonic.toSeed(seedPhrase)
+//                            let result = try await sdkSynchronizer.isSeedRelevantToAnyDerivedAccount(seedBytes)
+//                            await send(.initialization(.seedValidationResult(result)))
+//                        } catch {
+//                            await send(.initialization(.seedValidationResult(false)))
+//                        }
+//                    }
+//                } else {
+//                    state.onboardingState.importWalletState.destination = .birthday
+//                    return .none
+//                }
 
-            case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
-                state.destinationState.destination = .home
-                return .none
+                // RESTORE
+//            case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
+//                state.destinationState.destination = .home
+//                return .none
 
-            case .onboarding(.importWallet(.initializeSDK)):
-                state.isRestoringWallet = true
-                userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                state.$walletStatus.withLock { $0 = .restoring }
-                return .concatenate(
-                    .send(.initialization(.initializeSDK(.restoreWallet))),
-                    .send(.initialization(.checkBackupPhraseValidation))
-                )
+                // RESTORE
+//            case .onboarding(.importWallet(.initializeSDK)):
+//                state.isRestoringWallet = true
+//                userDefaults.setValue(true, Constants.udIsRestoringWallet)
+//                state.$walletStatus.withLock { $0 = .restoring }
+//                return .concatenate(
+//                    .send(.initialization(.initializeSDK(.restoreWallet))),
+//                    .send(.initialization(.checkBackupPhraseValidation))
+//                )
 
             case .initialization(.seedValidationResult(let validSeed)):
                 if validSeed {
-                    state.onboardingState.importWalletState.destination = .birthday
+                    // RESTORE
+//                    state.onboardingState.importWalletState.destination = .birthday
                 } else {
                     state.alert = AlertState.differentSeed()
                 }

@@ -26,4 +26,6 @@ public struct MnemonicClient {
     public var asWords: (String) -> [String] = { _ in [] }
     /// Validates whether the given mnemonic is correct
     public var isValid: (String) throws -> Void
+    /// Suggests mnemonic words for a given prefix
+    public var suggestWords: (String) -> [String] = { _ in [] }
 }

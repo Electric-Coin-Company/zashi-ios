@@ -26,6 +26,9 @@ extension MnemonicClient: DependencyKey {
         },
         isValid: { mnemonic in
             try Mnemonic.validate(mnemonic: mnemonic)
+        },
+        suggestWords: { prefix in
+            MnemonicLanguageType.english.words().filter { $0.hasPrefix(prefix) }
         }
     )
 }
