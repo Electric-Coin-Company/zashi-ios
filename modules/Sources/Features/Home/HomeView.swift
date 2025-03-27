@@ -88,36 +88,36 @@ public struct HomeView: View {
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
                 .padding(.top, 24)
-                //.padding(.bottom, 32)
+                .padding(.bottom, 32)
                 .screenHorizontalPadding()
 
-                SmartBanner(isOpen: true) {
-//                    EmptyView()
-                    HStack(spacing: 0) {
-                        //VStack(alignment: .leading, spacing: 0) {
-                            Asset.Assets.infoCircle.image
-                                .zImage(size: 20, style: Design.Utility.Gray._900)
-                                .padding(.trailing, 12)
-                            //Spacer()
-                        //}
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Wallet Backup Required")
-                                .zFont(.medium, size: 14, style: Design.Utility.Gray._900)
-                            Text("Prevent potential loss of funds")
-                                .zFont(.medium, size: 12, style: Design.Utility.Gray._700)
-                        }
-                        .lineLimit(1)
-                        
-                        Spacer()
-                        
-                        ZashiButton("Get started") {
-                            
-                        }
-                        .frame(width: 106)
-                        .padding(.trailing, 6)
-                    }
-                }
+//                SmartBanner(isOpen: true) {
+////                    EmptyView()
+//                    HStack(spacing: 0) {
+//                        //VStack(alignment: .leading, spacing: 0) {
+//                            Asset.Assets.infoCircle.image
+//                                .zImage(size: 20, style: Design.Utility.Gray._900)
+//                                .padding(.trailing, 12)
+//                            //Spacer()
+//                        //}
+//                        
+//                        VStack(alignment: .leading, spacing: 0) {
+//                            Text("Wallet Backup Required")
+//                                .zFont(.medium, size: 14, style: Design.Utility.Gray._900)
+//                            Text("Prevent potential loss of funds")
+//                                .zFont(.medium, size: 12, style: Design.Utility.Gray._700)
+//                        }
+//                        .lineLimit(1)
+//                        
+//                        Spacer()
+//                        
+//                        ZashiButton("Get started") {
+//                            
+//                        }
+//                        .frame(width: 106)
+//                        .padding(.trailing, 6)
+//                    }
+//                }
 //                .padding(.bottom, 40)
 
 //                SmartBanner()

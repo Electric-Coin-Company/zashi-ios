@@ -163,6 +163,7 @@ public struct ReceiveView: View {
                     }
                 }
                 .padding(.vertical, 1)
+                .applyScreenBackground()
             } destination: { store in
                 switch store.case {
                 case let .addressDetails(store):

@@ -189,11 +189,13 @@ public struct SendConfirmation {
         case sendFailed(ZcashError?, Bool)
         case sendingScreenOnAppear
         case sendPartial([String], [String])
-        case sendTapped
+        case sendRequested
         case sendSupportMailFinished
+        case sendTapped
         case sendTriggered
         case shareFinished
         case showHideButtonTapped
+        case stopSending
 //        case transactionDetails(TransactionDetails.Action)
 //        case updateDestination(State.Destination?)
         case updateFailedData(Int, String, String)
@@ -302,9 +304,23 @@ public struct SendConfirmation {
             case .closeTapped, .backFromFailureTapped:
                 return .none
 
+            case .stopSending:
+                state.isSending = false
+                return .none
+
             case .sendTapped:
+                state.isSending = true
+                return .run { send in
+                    guard await localAuthentication.authenticate() else {
+                        await send(.stopSending)
+                        return
+                    }
+                    
+                    await send(.sendRequested)
+                }
+
+            case .sendRequested:
                 if state.featureFlags.sendingScreen {
-                    state.isSending = true
                     return .run { send in
 //                        await send(.updateDestination(.sending))
                         // delay here is necessary because we've just pushed the sending screen
@@ -326,10 +342,6 @@ public struct SendConfirmation {
                     return .none
                 }
                 return .run { send in
-                    guard await localAuthentication.authenticate() else {
-                        return
-                    }
-
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
