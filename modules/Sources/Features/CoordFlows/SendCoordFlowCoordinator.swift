@@ -150,7 +150,7 @@ extension SendCoordFlow {
                 state.path.removeAll()
                 return .none
 
-            case .path(.element(id: _, action: .requestZecConfirmation(.sendTapped))):
+            case .path(.element(id: _, action: .requestZecConfirmation(.sendRequested))):
                 for element in state.path {
                     if case .requestZecConfirmation(let sendConfirmationState) = element {
                         state.path.append(.sending(sendConfirmationState))
@@ -257,7 +257,7 @@ extension SendCoordFlow {
                 let _ = state.path.popLast()
                 return .none
 
-            case .path(.element(id: _, action: .sendConfirmation(.sendTapped))):
+            case .path(.element(id: _, action: .sendConfirmation(.sendRequested))):
                 for element in state.path {
                     if case .sendConfirmation(let sendConfirmationState) = element {
                         state.path.append(.sending(sendConfirmationState))
