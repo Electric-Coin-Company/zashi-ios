@@ -1,6 +1,6 @@
 //
 //  GlobalNavBar.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 26.11.2024.
 //
@@ -11,18 +11,16 @@ import Generated
 import UIComponents
 import Settings
 
-extension TabsView {
+extension HomeView {
     func settingsButton() -> some View {
-        Asset.Assets.Icons.menu.image
-            .zImage(size: 24, style: Design.Text.primary)
-            .padding(8)
-            .navigationLink(
-                isActive: store.bindingFor(.settings),
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
-            .tint(Asset.Colors.primary.color)
+        Button {
+            store.send(.settingsTapped)
+        } label: {
+            Asset.Assets.Icons.settings.image
+                .zImage(size: 24, style: Design.Text.primary)
+                .padding(8)
+                .tint(Asset.Colors.primary.color)
+        }
     }
     
     @ViewBuilder func hideBalancesButton() -> some View {

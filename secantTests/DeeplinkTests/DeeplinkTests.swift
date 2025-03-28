@@ -27,7 +27,7 @@ class DeeplinkTests: XCTestCase {
         }
         
         await store.send(.destination(.deeplinkHome)) { state in
-            state.destinationState.destination = .tabs
+            state.destinationState.destination = .home
         }
         
         await store.finish()
@@ -35,7 +35,7 @@ class DeeplinkTests: XCTestCase {
 
     func testActionDeeplinkHome_GeetingBack() async throws {
         var appState = Root.State.initial
-        appState.destinationState.destination = .tabs
+        appState.destinationState.destination = .home
         
         let store = TestStore(
             initialState: appState
@@ -44,7 +44,7 @@ class DeeplinkTests: XCTestCase {
         }
         
         await store.send(.destination(.deeplinkHome)) { state in
-            state.destinationState.destination = .tabs
+            state.destinationState.destination = .home
         }
         
         await store.finish()
@@ -65,11 +65,11 @@ class DeeplinkTests: XCTestCase {
         let memo = "testing some memo"
         
         await store.send(.destination(.deeplinkSend(amount, address, memo))) { state in
-            state.destinationState.destination = .tabs
-            state.tabsState.selectedTab = .send
-            state.tabsState.sendState.amount = amount
-            state.tabsState.sendState.address = address.redacted
-            state.tabsState.sendState.memoState.text = memo
+            state.destinationState.destination = .home
+//            state.tabsState.selectedTab = .send
+//            state.tabsState.sendState.amount = amount
+//            state.tabsState.sendState.address = address.redacted
+//            state.tabsState.sendState.memoState.text = memo
         }
         
         await store.finish()
@@ -115,7 +115,7 @@ class DeeplinkTests: XCTestCase {
         await store.send(.destination(.deeplink(url)))
         
         await store.receive(.destination(.deeplinkHome)) { state in
-            state.destinationState.destination = .tabs
+            state.destinationState.destination = .home
         }
         
         await store.finish()
@@ -164,11 +164,11 @@ class DeeplinkTests: XCTestCase {
         let memo = "some text"
 
         await store.receive(.destination(.deeplinkSend(amount, address, memo))) { state in
-            state.destinationState.destination = .tabs
-            state.tabsState.selectedTab = .send
-            state.tabsState.sendState.amount = amount
-            state.tabsState.sendState.address = address.redacted
-            state.tabsState.sendState.memoState.text = memo
+            state.destinationState.destination = .home
+//            state.tabsState.selectedTab = .send
+//            state.tabsState.sendState.amount = amount
+//            state.tabsState.sendState.address = address.redacted
+//            state.tabsState.sendState.memoState.text = memo
         }
         
         await store.finish()

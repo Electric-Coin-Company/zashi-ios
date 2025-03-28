@@ -72,6 +72,7 @@ public struct TransactionsManager {
         case asynchronousMemoSearchResult([String])
         case applyFiltersTapped
         case binding(BindingAction<TransactionsManager.State>)
+        case dismissRequired
         case eraseSearchTermTapped
         case filterTapped
         case onAppear
@@ -113,6 +114,9 @@ public struct TransactionsManager {
             case .binding:
                 return .none
 
+            case .dismissRequired:
+                return .none
+                
             case .applyFiltersTapped:
                 state.activeFilters = state.selectedFilters
                 state.filtersRequest = false

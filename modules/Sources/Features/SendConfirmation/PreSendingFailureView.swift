@@ -45,7 +45,7 @@ public struct PreSendingFailureView: View {
                 Spacer()
                 
                 ZashiButton(L10n.General.close) {
-                    store.send(.backFromPCZTFailurePressed)
+                    store.send(.backFromPCZTFailureTapped)
                 }
                 .padding(.bottom, 8)
 

@@ -14,7 +14,7 @@ import Generated
 import Receive
 import BalanceBreakdown
 import Home
-import SendFlow
+import SendForm
 import Settings
 import UIComponents
 import SendConfirmation
@@ -35,9 +35,11 @@ public struct TabsView: View {
     let tokenName: String
     @Namespace var tabsID
     @State var accountSwitchSheetHeight: CGFloat = .zero
+    @State var moreSheetHeight: CGFloat = .zero
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
-    
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
+
     public init(store: StoreOf<Tabs>, tokenName: String, networkType: NetworkType) {
         self.store = store
         self.tokenName = tokenName
@@ -46,263 +48,187 @@ public struct TabsView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ZStack {
-                TabView(selection: $store.selectedTab) {
-                    HomeView(
-                        store: self.store.scope(
-                            state: \.homeState,
-                            action: \.home
-                        ),
-                        tokenName: tokenName
-                    )
-                    .tag(Tabs.State.Tab.account)
-                    
-                    SendFlowView(
-                        store: self.store.scope(
-                            state: \.sendState,
-                            action: \.send
-                        ),
-                        tokenName: tokenName
-                    )
-                    .tag(Tabs.State.Tab.send)
-                    
-                    ReceiveView(
-                        store: self.store.scope(
-                            state: \.receiveState,
-                            action: \.receive
-                        ),
-                        networkType: networkType
-                    )
-                    .tag(Tabs.State.Tab.receive)
-                    
-                    BalancesView(
-                        store: self.store.scope(
-                            state: \.balanceBreakdownState,
-                            action: \.balanceBreakdown
-                        ),
-                        tokenName: tokenName
-                    )
-                    .tag(Tabs.State.Tab.balances)
+            //NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+                HomeView(
+                    store: self.store.scope(
+                        state: \.homeState,
+                        action: \.home
+                    ),
+                    tokenName: tokenName
+                )
+//                .navigationBarItems(
+//                    leading:
+//                        walletAccountSwitcher()
+//                )
+//                .navigationBarItems(
+//                    trailing:
+//                        HStack(spacing: 0) {
+//                            if store.selectedTab != .receive {
+//                                hideBalancesButton()
+//                            }
+//                            
+//                            settingsButton()
+//                        }
+//                        //.animation(nil, value: store.selectedTab)
+//                )
+//            } destination: { store in
+//                switch store.case {
+//                case let .sendFlow(store):
+//                    SendFormView(store: store, tokenName: tokenName)
+//                case let .receive(store):
+//                    ReceiveView(store: store, networkType: networkType)
+//                case let .scan(store):
+//                    ScanView(store: store)
+//                case let .sendConfirmation(store):
+//                    SendConfirmationView(store: store, tokenName: tokenName)
+//                }
+//            }
+            .onAppear { store.send(.onAppear) }
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.settings),
+                destination: {
+                    SettingsView(store: store.settingsStore())
                 }
-                .onAppear { store.send(.onAppear) }
-                
-                VStack(spacing: 0) {
-                    Spacer()
-                    
-                    HStack {
-                        ForEach((Tabs.State.Tab.allCases), id: \.self) { item in
-                            Button {
-                                store.send(.selectedTabChanged(item), animation: .easeInOut)
-                            } label: {
-                                VStack {
-                                    WithPerceptionTracking {
-                                        if store.selectedTab == item {
-                                            Text("\(item.title)")
-                                                .font(.custom(FontFamily.Inter.black.name, size: 12))
-                                                .foregroundColor(Asset.Colors.primary.color)
-                                            Rectangle()
-                                                .frame(height: 2)
-                                                .zForegroundColor(Design.Surfaces.brandBg)
-                                                .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
-                                        } else {
-                                            Text("\(item.title)")
-                                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                                                .foregroundColor(Asset.Colors.primary.color)
-                                            Rectangle()
-                                                .frame(height: 2)
-                                                .foregroundColor(.clear)
-                                        }
-                                    }
-                                }
-                                .frame(minHeight: 50)
-                            }
-                            
-                            if item.rawValue < Tabs.State.Tab.allCases.count-1 {
-                                Spacer()
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 40)
-                    .background(Asset.Colors.background.color)
-                }
-                .ignoresSafeArea(.keyboard)
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.sendConfirmation),
-                    destination: {
-                        SendConfirmationView(
-                            store: store.sendConfirmationStore(),
-                            tokenName: tokenName
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.sendConfirmationKeystone),
-                    destination: {
-                        SignWithKeystoneView(store: store.sendConfirmationStore(), tokenName: tokenName)
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.currencyConversionSetup),
-                    destination: {
-                        CurrencyConversionSetupView(
-                            store: store.currencyConversionSetupStore()
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.addressDetails),
-                    destination: {
-                        AddressDetailsView(store: store.addressDetailsStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
-                    destination: {
-                        AddKeystoneHWWalletView(
-                            store: store.addKeystoneHWWalletStore()
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
-                            destination: {
-                                ScanView(
-                                    store: store.scanStore()
-                                )
-                                .navigationLinkEmpty(
-                                    isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
-                                    destination: {
-                                        AccountsSelectionView(
-                                            store: store.addKeystoneHWWalletStore()
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
-                    destination: {
-                        ZecKeyboardView(
-                            store: store.zecKeyboardStore(),
-                            tokenName: tokenName
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackMaxPrivacy(.requestZec),
-                            destination: {
-                                RequestZecView(
-                                    store: store.requestZecStore(),
-                                    tokenName: tokenName
-                                )
-                                .navigationLinkEmpty(
-                                    isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
-                                    destination: {
-                                        RequestZecSummaryView(
-                                            store: store.requestZecStore(),
-                                            tokenName: tokenName
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
-                    destination: {
-                        ZecKeyboardView(
-                            store: store.zecKeyboardStore(),
-                            tokenName: tokenName
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
-                            destination: {
-                                RequestZecSummaryView(
-                                    store: store.requestZecStore(),
-                                    tokenName: tokenName
-                                )
-                            }
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackRequestPayment(.requestPaymentConfirmation),
-                    destination: {
-                        RequestPaymentConfirmationView(
-                            store: store.sendConfirmationStore(),
-                            tokenName: tokenName
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackRequestPayment(.addressBookNewContact),
-                            destination: {
-                                AddressBookContactView(store: store.addressBookStore())
-                            }
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackTransactions(.manager),
-                    destination: {
-                        TransactionsManagerView(
-                            store: store.transactionsManagerStore(),
-                            tokenName: tokenName
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackTransactions(.details),
-                            destination: {
-                                TransactionDetailsView(
-                                    store: store.transactionDetailsStore(),
-                                    tokenName: tokenName
-                                )
-                                .navigationLinkEmpty(
-                                    isActive: store.bindingForStackTransactions(.addressBook),
-                                    destination: {
-                                        AddressBookContactView(store: store.addressBookStore())
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingForStackTransactionsHP(.details),
-                    destination: {
-                        TransactionDetailsView(
-                            store: store.transactionDetailsStore(),
-                            tokenName: tokenName
-                        )
-                        .navigationLinkEmpty(
-                            isActive: store.bindingForStackTransactionsHP(.addressBook),
-                            destination: {
-                                AddressBookContactView(store: store.addressBookStore())
-                            }
-                        )
-                    }
-                )
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading:
-                    walletAccountSwitcher()
             )
-            .navigationBarItems(
-                trailing:
-                    HStack(spacing: 0) {
-                        if store.selectedTab != .receive {
-                            hideBalancesButton()
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.sendConfirmationKeystone),
+                destination: {
+                    SignWithKeystoneView(store: store.sendConfirmationStore(), tokenName: tokenName)
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.currencyConversionSetup),
+                destination: {
+                    CurrencyConversionSetupView(
+                        store: store.currencyConversionSetupStore()
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.addressDetails),
+                destination: {
+                    AddressDetailsView(store: store.addressDetailsStore())
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
+                destination: {
+                    AddKeystoneHWWalletView(
+                        store: store.addKeystoneHWWalletStore()
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
+                        destination: {
+                            ScanView(
+                                store: store.scanStore()
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
+                                destination: {
+                                    AccountsSelectionView(
+                                        store: store.addKeystoneHWWalletStore()
+                                    )
+                                }
+                            )
                         }
-                        
-                        settingsButton()
-                    }
-                    .animation(nil, value: store.selectedTab)
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
+                destination: {
+                    ZecKeyboardView(
+                        store: store.zecKeyboardStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackMaxPrivacy(.requestZec),
+                        destination: {
+                            RequestZecView(
+                                store: store.requestZecStore(),
+                                tokenName: tokenName
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
+                                destination: {
+                                    RequestZecSummaryView(
+                                        store: store.requestZecStore(),
+                                        tokenName: tokenName
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
+                destination: {
+                    ZecKeyboardView(
+                        store: store.zecKeyboardStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
+                        destination: {
+                            RequestZecSummaryView(
+                                store: store.requestZecStore(),
+                                tokenName: tokenName
+                            )
+                        }
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackTransactions(.manager),
+                destination: {
+                    TransactionsManagerView(
+                        store: store.transactionsManagerStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackTransactions(.details),
+                        destination: {
+                            TransactionDetailsView(
+                                store: store.transactionDetailsStore(),
+                                tokenName: tokenName
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStackTransactions(.addressBook),
+                                destination: {
+                                    AddressBookContactView(store: store.addressBookStore())
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackTransactionsHP(.details),
+                destination: {
+                    TransactionDetailsView(
+                        store: store.transactionDetailsStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackTransactionsHP(.addressBook),
+                        destination: {
+                            AddressBookContactView(store: store.addressBookStore())
+                        }
+                    )
+                }
             )
             .walletStatusPanel()
             .sheet(isPresented: $store.isInAppBrowserOn) {
-                if let url = URL(string: store.inAppBrowserURL) {
+                if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
                     InAppBrowserView(url: url)
                 }
             }
             .sheet(isPresented: $store.accountSwitchRequest) {
                 accountSwitchContent()
+            }
+            .sheet(isPresented: $store.moreRequest) {
+                moreContent()
             }
             .sheet(isPresented: $store.selectTextRequest) {
                 VStack(alignment: .leading) {
@@ -419,7 +345,383 @@ public struct TabsView: View {
             }
         }
     }
+    
+//    public var body: some View {
+//        WithPerceptionTracking {
+//            accountView()
+//                .navigationBarTitleDisplayMode(.inline)
+//                .navigationBarItems(
+//                    leading:
+//                        walletAccountSwitcher()
+//                )
+//                .navigationBarItems(
+//                    trailing:
+//                        HStack(spacing: 0) {
+//                            if store.selectedTab != .receive {
+//                                hideBalancesButton()
+//                            }
+//                            
+//                            settingsButton()
+//                        }
+//                        .animation(nil, value: store.selectedTab)
+//                )
+//        }
+//    }
+    
+//    public var body2: some View {
+//        WithPerceptionTracking {
+//            accountView()
+            //            .navigationLinkEmpty(
+            //                isActive: store.bindingFor(.sendConfirmation),
+            //                destination: {
+            //                    SendConfirmationView(
+            //                        store: store.sendConfirmationStore(),
+            //                        tokenName: tokenName
+            //                    )
+            //                }
+            //            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingFor(.sendConfirmationKeystone),
+//                destination: {
+//                    SignWithKeystoneView(store: store.sendConfirmationStore(), tokenName: tokenName)
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingFor(.currencyConversionSetup),
+//                destination: {
+//                    CurrencyConversionSetupView(
+//                        store: store.currencyConversionSetupStore()
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingFor(.addressDetails),
+//                destination: {
+//                    AddressDetailsView(store: store.addressDetailsStore())
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
+//                destination: {
+//                    AddKeystoneHWWalletView(
+//                        store: store.addKeystoneHWWalletStore()
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
+//                        destination: {
+//                            ScanView(
+//                                store: store.scanStore()
+//                            )
+//                            .navigationLinkEmpty(
+//                                isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
+//                                destination: {
+//                                    AccountsSelectionView(
+//                                        store: store.addKeystoneHWWalletStore()
+//                                    )
+//                                }
+//                            )
+//                        }
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
+//                destination: {
+//                    ZecKeyboardView(
+//                        store: store.zecKeyboardStore(),
+//                        tokenName: tokenName
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackMaxPrivacy(.requestZec),
+//                        destination: {
+//                            RequestZecView(
+//                                store: store.requestZecStore(),
+//                                tokenName: tokenName
+//                            )
+//                            .navigationLinkEmpty(
+//                                isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
+//                                destination: {
+//                                    RequestZecSummaryView(
+//                                        store: store.requestZecStore(),
+//                                        tokenName: tokenName
+//                                    )
+//                                }
+//                            )
+//                        }
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
+//                destination: {
+//                    ZecKeyboardView(
+//                        store: store.zecKeyboardStore(),
+//                        tokenName: tokenName
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
+//                        destination: {
+//                            RequestZecSummaryView(
+//                                store: store.requestZecStore(),
+//                                tokenName: tokenName
+//                            )
+//                        }
+//                    )
+//                }
+//            )
+                //            .navigationLinkEmpty(
+                //                isActive: store.bindingForStackRequestPayment(.requestPaymentConfirmation),
+                //                destination: {
+                //                    RequestPaymentConfirmationView(
+                //                        store: store.sendConfirmationStore(),
+                //                        tokenName: tokenName
+                //                    )
+                //                    .navigationLinkEmpty(
+                //                        isActive: store.bindingForStackRequestPayment(.addressBookNewContact),
+                //                        destination: {
+                //                            AddressBookContactView(store: store.addressBookStore())
+                //                        }
+                //                    )
+                //                }
+                //            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackTransactions(.manager),
+//                destination: {
+//                    TransactionsManagerView(
+//                        store: store.transactionsManagerStore(),
+//                        tokenName: tokenName
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackTransactions(.details),
+//                        destination: {
+//                            TransactionDetailsView(
+//                                store: store.transactionDetailsStore(),
+//                                tokenName: tokenName
+//                            )
+//                            .navigationLinkEmpty(
+//                                isActive: store.bindingForStackTransactions(.addressBook),
+//                                destination: {
+//                                    AddressBookContactView(store: store.addressBookStore())
+//                                }
+//                            )
+//                        }
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackTransactionsHP(.details),
+//                destination: {
+//                    TransactionDetailsView(
+//                        store: store.transactionDetailsStore(),
+//                        tokenName: tokenName
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackTransactionsHP(.addressBook),
+//                        destination: {
+//                            AddressBookContactView(store: store.addressBookStore())
+//                        }
+//                    )
+//                }
+//            )
+//            .navigationBarTitleDisplayMode(.inline)
+//            .navigationBarItems(
+//                leading:
+//                    walletAccountSwitcher()
+//            )
+//            .navigationBarItems(
+//                trailing:
+//                    HStack(spacing: 0) {
+//                        if store.selectedTab != .receive {
+//                            hideBalancesButton()
+//                        }
+//                        
+//                        settingsButton()
+//                    }
+//                    .animation(nil, value: store.selectedTab)
+//            )
+//            .walletStatusPanel()
+//            .sheet(isPresented: $store.isInAppBrowserOn) {
+//                if let url = URL(string: store.inAppBrowserURL) {
+//                    InAppBrowserView(url: url)
+//                }
+//            }
+//            .sheet(isPresented: $store.accountSwitchRequest) {
+//                accountSwitchContent()
+//            }
+//            .sheet(isPresented: $store.selectTextRequest) {
+//                VStack(alignment: .leading) {
+//                    HStack {
+//                        Spacer()
+//                        
+//                        Button {
+//                            store.send(.dismissSelectTextEditor)
+//                        } label: {
+//                            Asset.Assets.buttonCloseX.image
+//                                .zImage(size: 24, style: Design.Btns.Tertiary.fg)
+//                                .padding(8)
+//                                .background {
+//                                    RoundedRectangle(cornerRadius: 12)
+//                                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+//                                }
+//                        }
+//                    }
+//                    
+//                    TextEditor(text: $store.textToSelect)
+//                        .colorBackground(Asset.Colors.background.color)
+//                        .background(Asset.Colors.background.color)
+//                        .zFont(size: 14, style: Design.Text.primary)
+//                }
+//                .padding()
+//                .applyScreenBackground()
+//            }
+//            .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
+//                WithPerceptionTracking {
+//                    if store.isRateTooltipEnabled {
+//                        GeometryReader { geometry in
+//                            preferences.map {
+//                                Tooltip(
+//                                    title: L10n.Tooltip.ExchangeRate.title,
+//                                    desc: L10n.Tooltip.ExchangeRate.desc
+//                                ) {
+//                                    store.send(.rateTooltipTapped)
+//                                }
+//                                .frame(width: geometry.size.width - 40)
+//                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
+//                WithPerceptionTracking {
+//                    if store.isRateEducationEnabled && store.selectedTab != .receive {
+//                        GeometryReader { geometry in
+//                            preferences.map {
+//                                VStack(alignment: .leading, spacing: 0) {
+//                                    HStack(alignment: .top, spacing: 0) {
+//                                        Asset.Assets.coinsSwap.image
+//                                            .zImage(size: 20, style: Design.Text.primary)
+//                                            .padding(10)
+//                                            .background {
+//                                                Circle()
+//                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+//                                            }
+//                                            .padding(.trailing, 16)
+//                                        
+//                                        VStack(alignment: .leading, spacing: 5) {
+//                                            Text(L10n.CurrencyConversion.cardTitle)
+//                                                .zFont(size: 14, style: Design.Text.tertiary)
+//                                            
+//                                            Text(L10n.CurrencyConversion.title)
+//                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+//                                                .lineLimit(1)
+//                                                .minimumScaleFactor(0.5)
+//                                        }
+//                                        .padding(.trailing, 16)
+//                                        
+//                                        Spacer(minLength: 0)
+//                                        
+//                                        Button {
+//                                            store.send(.currencyConversionCloseTapped)
+//                                        } label: {
+//                                            Asset.Assets.buttonCloseX.image
+//                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
+//                                        }
+//                                        .padding(20)
+//                                        .offset(x: 20, y: -20)
+//                                    }
+//                                    
+//                                    Button {
+//                                        store.send(.updateDestination(.currencyConversionSetup))
+//                                    } label: {
+//                                        Text(L10n.CurrencyConversion.cardButton)
+//                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
+//                                            .frame(height: 24)
+//                                            .frame(maxWidth: .infinity)
+//                                            .padding(.vertical, 12)
+//                                            .background {
+//                                                RoundedRectangle(cornerRadius: 12)
+//                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+//                                            }
+//                                    }
+//                                }
+//                                .padding(24)
+//                                .background {
+//                                    RoundedRectangle(cornerRadius: 12)
+//                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+//                                        .background {
+//                                            RoundedRectangle(cornerRadius: 12)
+//                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+//                                        }
+//                                }
+//                                .frame(width: geometry.size.width - 40)
+//                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
+//
+//extension TabsView {
+//    @ViewBuilder func accountView() -> some View {
+//        WithPerceptionTracking {
+////            VStack {
+////                HStack {
+////                    Button("send") { store.send(.selectedTabChanged(.send)) }
+////                    Button("receive") { store.send(.selectedTabChanged(.receive)) }
+////                    Button("balances") { store.send(.selectedTabChanged(.balances)) }
+////                }
+//                HomeView(
+//                    store: self.store.scope(
+//                        state: \.homeState,
+//                        action: \.home
+//                    ),
+//                    tokenName: tokenName
+//                )
+////            }
+//            .onAppear { store.send(.onAppear) }
+//            .navigationLinkEmpty(
+//                isActive: store.bindingTabFor(.send),
+//                destination: {
+//                    SendFormView(
+//                        store: self.store.scope(
+//                            state: \.sendState,
+//                            action: \.send
+//                        ),
+//                        tokenName: tokenName
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingTabFor(.receive),
+//                destination: {
+//                    ReceiveView(
+//                        store: self.store.scope(
+//                            state: \.receiveState,
+//                            action: \.receive
+//                        ),
+//                        networkType: networkType
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingTabFor(.balances),
+//                destination: {
+//                    BalancesView(
+//                        store: self.store.scope(
+//                            state: \.balanceBreakdownState,
+//                            action: \.balanceBreakdown
+//                        ),
+//                        tokenName: tokenName
+//                    )
+//                }
+//            )
+//        }
+//    }
+//}
 
 #Preview {
     NavigationView {
@@ -523,6 +825,13 @@ extension StoreOf<Tabs> {
         Binding<Bool>(
             get: { self.destination == destination },
             set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+    
+    func bindingTabFor(_ selectedTab: Tabs.State.Tab) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.selectedTab == selectedTab },
+            set: { self.send(.selectedTabChanged($0 ? selectedTab : .account)) }
         )
     }
     
@@ -709,7 +1018,7 @@ extension Tabs.State {
         currencyConversionSetupState: .initial,
         destination: nil,
         homeState: .initial,
-        receiveState: .initial,
+//        receiveState: .initial,
         requestZecState: .initial,
         selectedTab: .account,
         sendConfirmationState: .initial,

@@ -97,6 +97,8 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
                         if let desc {
                             Text(desc)
                                 .zFont(size: 12, style: Design.Text.tertiary)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .multilineTextAlignment(.leading)
                                 .lineSpacing(1.2)
                                 .padding(.top, 2)
                         }
