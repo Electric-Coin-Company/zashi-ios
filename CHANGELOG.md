@@ -6,9 +6,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.5 build 2 (2025-03-28)
+
 ### Fixed
 - Crash in the background task during the overnight sync.
 - Tooltip font colors.
+- Note commitment tree fix.
+- Transparent gap limit handling. SDK can find all transparent funds and shield them. This has been tested to successfully recover Ledger funds.
 
 ## 1.4 build 2 (2025-03-06)
 
