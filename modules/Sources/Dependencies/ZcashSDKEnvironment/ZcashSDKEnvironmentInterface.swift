@@ -22,9 +22,9 @@ extension DependencyValues {
 extension ZcashSDKEnvironment {
     public enum ZcashSDKConstants {
         static let endpointMainnetAddress = "zec.rocks"
-        static let endpointTestnetAddress = "lightwalletd.testnet.electriccoin.co"
+        static let endpointTestnetAddress = "testnet.zec.rocks"
         static let endpointMainnetPort = 443
-        static let endpointTestnetPort = 9067
+        static let endpointTestnetPort = 443
         static let mnemonicWordsMaxCount = 24
         static let requiredTransactionConfirmations = 10
         public static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours

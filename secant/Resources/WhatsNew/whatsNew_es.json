@@ -1,6 +1,25 @@
 {
     "releases": [
         {
+            "version": "1.5",
+            "date": "03-27-2025",
+            "timestamp": 1742891140,
+            "sections": [
+                {
+                    "title": "Añadido:",
+                    "bulletpoints": [
+                        "Rescate de Fondos Transparentes: Zashi ahora puede ayudarte a recuperar fondos desde billeteras completamente transparentes como Ledger. Recomendamos importar la frase de recuperación de tu billetera hardware transparente en una billetera Keystone y luego emparejarla con Zashi usando la integración con Keystone."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Solucionamos un problema de larga data con el árbol de compromisos de notas que afectaba a un pequeño número de usuarios. Ahora Zashi permite gastar fondos que estaban atascados."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.4",
             "date": "03-03-2025",
             "timestamp": 1741028813,
@@ -8,9 +27,9 @@
                 {
                     "title": "Añadido:",
                     "bulletpoints": [
-                        "Exporta tus transacciones del ultimo año, con la nueva opción de ""Exporta Archivo de Impuestos"".",
+                        "Exporta tus transacciones del ultimo año, con la nueva opción de \"Exporta Archivo de Impuestos\".",
                         "Personaliza tus transacciones con notas privadas que te ayudan a recordar detalles de los pagos.",
-                        "Marca tus transacciones favoritas con la nueva opción de ""Favoritos"".",
+                        "Marca tus transacciones favoritas con la nueva opción de \"Favoritos\".",
                         "Utiliza los nuevos filtros de transacciones para filtrar Recibidas, Enviadas, Memos, Notas o Favoritas."
                     ]
                 },

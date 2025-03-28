@@ -169,8 +169,7 @@ public struct Balances {
                         
                         guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account.id) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
-                        let address = try uAddress.transparentReceiver()
-                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
                         
@@ -197,12 +196,9 @@ public struct Balances {
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
-                guard let address = try? account.uAddress?.transparentReceiver() else {
-                    return .none
-                }
                 return .run { send in
                     do {
-                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
                         await send(.proposalReadyForShieldingWithKeystone(proposal))

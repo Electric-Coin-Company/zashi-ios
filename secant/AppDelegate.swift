@@ -127,7 +127,9 @@ extension AppDelegate {
         task.expirationHandler = { [rootStore] in
             LoggerProxy.event("BGTask startBackgroundTask expirationHandler called")
             // stop the syncing because the allocated time is about to expire
-            rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
+            DispatchQueue.main.async {
+                rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
+            }
         }
     }
     
