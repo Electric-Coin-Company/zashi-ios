@@ -302,8 +302,11 @@ public struct Tabs {
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
                 
             case .walletAccountTapped(let walletAccount):
-                state.$selectedWalletAccount.withLock { $0 = walletAccount }
                 state.accountSwitchRequest = false
+                guard state.selectedWalletAccount != walletAccount else {
+                    return .none
+                }
+                state.$selectedWalletAccount.withLock { $0 = walletAccount }
                 state.homeState.transactionListState.isInvalidated = true
                 state.receiveState.currentFocus = .uaAddress
                 return .concatenate(
