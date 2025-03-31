@@ -168,6 +168,25 @@ extension Root {
             case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped)))):
                 return .send(.initialization(.resetZashiRequest))
 
+                // MARK: - Restore Wallet Coord Flow from Onboarding
+
+            case .onboarding(.restoreWalletCoordFlow(.path(.element(id: _, action: .restoreInfo(.gotItTapped))))):
+                var leavesScreenOpen = false
+                for element in state.onboardingState.restoreWalletCoordFlowState.path {
+                    if case .restoreInfo(let restoreInfoState) = element {
+                        leavesScreenOpen = restoreInfoState.isAcknowledged
+                    }
+                }
+                userDefaults.setValue(leavesScreenOpen, Constants.udLeavesScreenOpen)
+                state.isRestoringWallet = true
+                userDefaults.setValue(true, Constants.udIsRestoringWallet)
+                state.$walletStatus.withLock { $0 = .restoring }
+                return .concatenate(
+                    .send(.initialization(.initializeSDK(.restoreWallet))),
+                    .send(.initialization(.checkBackupPhraseValidation)),
+                    .send(.batteryStateChanged(nil))
+                )
+
                 // MARK: - Scan Coord Flow
                 
             case .scanCoordFlow(.scan(.cancelTapped)):

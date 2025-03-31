@@ -368,6 +368,12 @@ public enum L10n {
     /// Upgrading databases…
     public static let migratingDatabases = L10n.tr("Localizable", "home.migratingDatabases", fallback: "Upgrading databases…")
   }
+  public enum HomeScreen {
+    /// More
+    public static let more = L10n.tr("Localizable", "homeScreen.more", fallback: "More")
+    /// Scan
+    public static let scan = L10n.tr("Localizable", "homeScreen.scan", fallback: "Scan")
+  }
   public enum ImportWallet {
     /// Enter secret
     /// recovery phrase
@@ -669,24 +675,64 @@ public enum L10n {
     }
   }
   public enum RestoreInfo {
+    /// Keep screen on while restoring
+    public static let checkbox = L10n.tr("Localizable", "restoreInfo.checkbox", fallback: "Keep screen on while restoring")
     /// Got it!
     public static let gotIt = L10n.tr("Localizable", "restoreInfo.gotIt", fallback: "Got it!")
     /// Note: 
     public static let note = L10n.tr("Localizable", "restoreInfo.note", fallback: "Note: ")
-    /// During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.
-    public static let noteInfo = L10n.tr("Localizable", "restoreInfo.noteInfo", fallback: "During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.")
-    /// Your wallet has been successfully restored and is now syncing
-    public static let subTitle = L10n.tr("Localizable", "restoreInfo.subTitle", fallback: "Your wallet has been successfully restored and is now syncing")
-    /// Zashi needs to stay open in order to continue syncing.
-    public static let tip1 = L10n.tr("Localizable", "restoreInfo.tip1", fallback: "Zashi needs to stay open in order to continue syncing.")
-    /// To prevent interruption, plug your open phone into a power source.
-    public static let tip2 = L10n.tr("Localizable", "restoreInfo.tip2", fallback: "To prevent interruption, plug your open phone into a power source.")
-    /// Keep your open phone in a secure place.
-    public static let tip3 = L10n.tr("Localizable", "restoreInfo.tip3", fallback: "Keep your open phone in a secure place.")
-    /// Syncing Tips:
-    public static let tips = L10n.tr("Localizable", "restoreInfo.tips", fallback: "Syncing Tips:")
+    /// Your funds cannot be spent with Zashi until your wallet is fully restored.
+    public static let noteInfo = L10n.tr("Localizable", "restoreInfo.noteInfo", fallback: "Your funds cannot be spent with Zashi until your wallet is fully restored.")
+    /// Your wallet is being restored.
+    public static let subTitle = L10n.tr("Localizable", "restoreInfo.subTitle", fallback: "Your wallet is being restored.")
+    /// Keep the Zashi app open on an active phone screen.
+    public static let tip1 = L10n.tr("Localizable", "restoreInfo.tip1", fallback: "Keep the Zashi app open on an active phone screen.")
+    /// To prevent your phone screen from going dark, turn off power-saving mode and keep your phone plugged in.
+    public static let tip2 = L10n.tr("Localizable", "restoreInfo.tip2", fallback: "To prevent your phone screen from going dark, turn off power-saving mode and keep your phone plugged in.")
+    /// Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:
+    public static let tips = L10n.tr("Localizable", "restoreInfo.tips", fallback: "Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:")
     /// Keep Zashi open!
     public static let title = L10n.tr("Localizable", "restoreInfo.title", fallback: "Keep Zashi open!")
+  }
+  public enum RestoreWallet {
+    /// Please type in your 24-word secret recovery phrase in the correct order.
+    public static let info = L10n.tr("Localizable", "restoreWallet.info", fallback: "Please type in your 24-word secret recovery phrase in the correct order.")
+    /// Secret Recovery Phrase
+    public static let title = L10n.tr("Localizable", "restoreWallet.title", fallback: "Secret Recovery Phrase")
+    public enum Birthday {
+      /// Estimate my block height
+      public static let estimate = L10n.tr("Localizable", "restoreWallet.birthday.estimate", fallback: "Estimate my block height")
+      /// Wallet Birthday Height is the point in time when your wallet was created.
+      public static let fieldInfo = L10n.tr("Localizable", "restoreWallet.birthday.fieldInfo", fallback: "Wallet Birthday Height is the point in time when your wallet was created.")
+      /// Entering your Wallet Birthday Height helps speed up the restore process.
+      public static let info = L10n.tr("Localizable", "restoreWallet.birthday.info", fallback: "Entering your Wallet Birthday Height helps speed up the restore process.")
+      /// Enter number
+      public static let placeholder = L10n.tr("Localizable", "restoreWallet.birthday.placeholder", fallback: "Enter number")
+      /// Block Height
+      public static let title = L10n.tr("Localizable", "restoreWallet.birthday.title", fallback: "Block Height")
+      public enum EstimateDate {
+        /// Entering the block height at which your wallet was created reduces the number of blocks that need to be scanned to recover your wallet.
+        public static let info = L10n.tr("Localizable", "restoreWallet.birthday.estimateDate.info", fallback: "Entering the block height at which your wallet was created reduces the number of blocks that need to be scanned to recover your wallet.")
+        /// First Wallet Transaction
+        public static let title = L10n.tr("Localizable", "restoreWallet.birthday.estimateDate.title", fallback: "First Wallet Transaction")
+        /// If you’re not sure, choose an earlier date.
+        public static let warning = L10n.tr("Localizable", "restoreWallet.birthday.estimateDate.warning", fallback: "If you’re not sure, choose an earlier date.")
+      }
+      public enum Estimated {
+        /// Zashi will scan and recover all transactions made after the following block number.
+        public static let info = L10n.tr("Localizable", "restoreWallet.birthday.estimated.info", fallback: "Zashi will scan and recover all transactions made after the following block number.")
+        /// Estimated Block Height
+        public static let title = L10n.tr("Localizable", "restoreWallet.birthday.estimated.title", fallback: "Estimated Block Height")
+      }
+    }
+    public enum Help {
+      /// ^[The Wallet Birthday Height](style: 'boldPrimary') is the block height (block # in the blockchain) at which your wallet was created. If you ever lose access to your Zashi app and need to recover your funds, providing the block height along with your recovery phrase can significantly speed up the process.
+      public static let birthday = L10n.tr("Localizable", "restoreWallet.help.birthday", fallback: "^[The Wallet Birthday Height](style: 'boldPrimary') is the block height (block # in the blockchain) at which your wallet was created. If you ever lose access to your Zashi app and need to recover your funds, providing the block height along with your recovery phrase can significantly speed up the process.")
+      /// ^[The Secret Recovery Phrase](style: 'boldPrimary') is a unique set of 24 words, appearing in a precise order. It can be used to gain full control of your funds from any device via any Zcash wallet app. Think of it as the master key to your wallet. It is stored in Zashi’s Advanced Settings.
+      public static let phrase = L10n.tr("Localizable", "restoreWallet.help.phrase", fallback: "^[The Secret Recovery Phrase](style: 'boldPrimary') is a unique set of 24 words, appearing in a precise order. It can be used to gain full control of your funds from any device via any Zcash wallet app. Think of it as the master key to your wallet. It is stored in Zashi’s Advanced Settings.")
+      /// Need to know more?
+      public static let title = L10n.tr("Localizable", "restoreWallet.help.title", fallback: "Need to know more?")
+    }
   }
   public enum Root {
     public enum Debug {

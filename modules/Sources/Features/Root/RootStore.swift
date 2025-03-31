@@ -492,7 +492,8 @@ public struct Root {
                 return .none
                 
             case .batteryStateChanged:
-                autolockHandler.value(state.walletStatus == .restoring)
+                var leavesScreenOpen = userDefaults.objectForKey(Constants.udLeavesScreenOpen) as? Bool ?? false
+                autolockHandler.value(state.walletStatus == .restoring && leavesScreenOpen)
                 return .none
                 
             case .cancelAllRunningEffects:
@@ -646,15 +647,7 @@ extension AlertState where Action == Root.Action {
             TextState(L10n.Root.Initialization.Alert.Wipe.message)
         }
     }
-    
-    public static func successfullyRecovered() -> AlertState {
-        AlertState {
-            TextState(L10n.General.success)
-        } message: {
-            TextState(L10n.ImportWallet.Alert.Success.message)
-        }
-    }
-    
+
     public static func differentSeed() -> AlertState {
         AlertState {
             TextState(L10n.General.Alert.warning)

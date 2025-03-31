@@ -69,6 +69,8 @@ public struct SDKSynchronizerClient {
     
     public var walletAccounts: () async throws -> [WalletAccount] = { [] }
     
+    public var estimateBirthdayHeight: (Date) -> BlockHeight = { _ in BlockHeight(0) }
+    
     // PCZT
     public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Pczt
     public var addProofsToPCZT: (Pczt) async throws -> Pczt

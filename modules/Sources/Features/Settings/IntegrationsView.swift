@@ -87,7 +87,7 @@ public struct IntegrationsView: View {
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
-                .walletStatusPanel()
+                //..walletstatusPanel()
                 .sheet(isPresented: $store.isInAppBrowserOn) {
                     if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
                         InAppBrowserView(url: url)

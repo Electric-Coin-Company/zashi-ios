@@ -61,7 +61,7 @@ public struct AboutView: View {
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .screenTitle(L10n.Settings.about)
-            .walletStatusPanel(background: .transparent)
+            //..walletstatusPanel(background: .transparent)
         }
         //.navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()

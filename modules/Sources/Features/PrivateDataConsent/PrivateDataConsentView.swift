@@ -97,7 +97,7 @@ public struct PrivateDataConsentView: View {
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear { store.send(.onAppear)}
-            .walletStatusPanel()
+            //..walletstatusPanel()
 
             shareLogsView()
         }

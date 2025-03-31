@@ -19,6 +19,7 @@ import WalletStorage
 extension Root {
     public enum Constants {
         static let udIsRestoringWallet = "udIsRestoringWallet"
+        static let udLeavesScreenOpen = "udLeaves_screen_open"
         static let noAuthenticationWithinXMinutes = 15
     }
     
@@ -494,6 +495,7 @@ extension Root {
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
+                userDefaults.remove(Constants.udLeavesScreenOpen)
                 flexaHandler.signOut()
                 userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()

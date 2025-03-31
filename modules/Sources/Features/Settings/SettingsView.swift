@@ -167,7 +167,7 @@ public struct SettingsView: View {
             .zashiBack()
             .navigationBarHidden(!store.path.isEmpty)
             .screenTitle(L10n.Settings.title)
-            .walletStatusPanel()
+            //..walletstatusPanel()
         }
     }
 }

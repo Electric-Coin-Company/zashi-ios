@@ -206,6 +206,9 @@ extension SDKSynchronizerClient: DependencyKey {
 
                 return sortedWalletAccounts
             },
+            estimateBirthdayHeight: { date in
+                synchronizer.estimateBirthdayHeight(for: date)
+            },
             createPCZTFromProposal: { accountUUID, proposal in
                 try await synchronizer.createPCZTFromProposal(accountUUID: accountUUID, proposal: proposal)
             },

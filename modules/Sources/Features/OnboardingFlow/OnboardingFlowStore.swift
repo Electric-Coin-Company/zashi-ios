@@ -84,6 +84,7 @@ public struct OnboardingFlow {
                 return .none
 
             case .importExistingWallet:
+                state.restoreWalletCoordFlowState = .initial
                 state.destination = .importExistingWallet
                 return .none
                 

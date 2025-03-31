@@ -218,7 +218,7 @@ public struct TabsView: View {
                     )
                 }
             )
-            .walletStatusPanel()
+            //..walletstatusPanel()
             .sheet(isPresented: $store.isInAppBrowserOn) {
                 if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
                     InAppBrowserView(url: url)
@@ -539,7 +539,7 @@ public struct TabsView: View {
 //                    }
 //                    .animation(nil, value: store.selectedTab)
 //            )
-//            .walletStatusPanel()
+//            //..walletstatusPanel()
 //            .sheet(isPresented: $store.isInAppBrowserOn) {
 //                if let url = URL(string: store.inAppBrowserURL) {
 //                    InAppBrowserView(url: url)

@@ -73,14 +73,14 @@ public struct HomeView: View {
                     }
 
                     button(
-                        "Scan",
+                        L10n.HomeScreen.scan,
                         icon: Asset.Assets.Icons.scan.image
                     ) {
                         store.send(.scanTapped)
                     }
 
                     button(
-                        "More",
+                        L10n.HomeScreen.more,
                         icon: Asset.Assets.Icons.dotsMenu.image
                     ) {
                         store.send(.moreTapped)
@@ -292,7 +292,7 @@ public struct HomeView: View {
                     }
                 }
             }
-            .walletStatusPanel()
+            //..walletstatusPanel()
             .applyScreenBackground()
             .onAppear {
                 store.send(.onAppear)

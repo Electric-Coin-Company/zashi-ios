@@ -50,7 +50,7 @@ public struct ExportTransactionHistoryView: View {
                 }
             }
             .zashiBack()
-            .walletStatusPanel()
+            //..walletstatusPanel()
 
             shareLogsView()
         }

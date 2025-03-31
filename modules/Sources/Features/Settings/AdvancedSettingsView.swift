@@ -70,7 +70,7 @@ public struct AdvancedSettingsView: View {
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
-                .walletStatusPanel()
+                //..walletstatusPanel()
 
                 Spacer()
 
