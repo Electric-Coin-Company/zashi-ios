@@ -885,26 +885,6 @@ public enum L10n {
     /// This image holds several valid Zcash addresses.
     public static let severalCodesFound = L10n.tr("Localizable", "scan.severalCodesFound", fallback: "This image holds several valid Zcash addresses.")
   }
-  public enum SecurityWarning {
-    /// I acknowledge
-    public static let acknowledge = L10n.tr("Localizable", "securityWarning.acknowledge", fallback: "I acknowledge")
-    /// Confirm
-    public static let confirm = L10n.tr("Localizable", "securityWarning.confirm", fallback: "Confirm")
-    /// Privacy Notice
-    public static let screenTitle = L10n.tr("Localizable", "securityWarning.screenTitle", fallback: "Privacy Notice")
-    /// Security warning:
-    public static let title = L10n.tr("Localizable", "securityWarning.title", fallback: "Security warning:")
-    /// Zashi %@ (%@) is a Zcash-only, shielded wallet — built by Zcashers for Zcashers. Zashi has been engineered for your privacy and safety. By installing and using Zashi, you consent to share crash reports with Electric Coin Co. (the wallet developer), which will help us improve the Zashi user experience.*
-    public static func warningA(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "securityWarning.warningA", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only, shielded wallet — built by Zcashers for Zcashers. Zashi has been engineered for your privacy and safety. By installing and using Zashi, you consent to share crash reports with Electric Coin Co. (the wallet developer), which will help us improve the Zashi user experience.*")
-    }
-    /// Please acknowledge and confirm below to proceed.
-    public static let warningB = L10n.tr("Localizable", "securityWarning.warningB", fallback: "Please acknowledge and confirm below to proceed.")
-    /// *Note
-    public static let warningC = L10n.tr("Localizable", "securityWarning.warningC", fallback: "*Note")
-    /// : Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.
-    public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.")
-  }
   public enum Send {
     /// Add contact by tapping on Address Book icon.
     public static let addressNotInBook = L10n.tr("Localizable", "send.addressNotInBook", fallback: "Add contact by tapping on Address Book icon.")

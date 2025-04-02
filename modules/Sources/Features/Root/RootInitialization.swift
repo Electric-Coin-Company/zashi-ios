@@ -442,31 +442,31 @@ extension Root {
                 } catch {
                     return .send(.destination(.updateDestination(.osStatusError)))
                 }
-                var landingDestination = Root.DestinationState.Destination.home
+//                var landingDestination =
                 
-                if !storedWallet.hasUserPassedPhraseBackupTest {
-                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-                    
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseDisplayState.birthday = storedWallet.birthday
-                    if let value = storedWallet.birthday?.value() {
-                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
-                    }
-                    landingDestination = .phraseDisplay
-                }
+//                if !storedWallet.hasUserPassedPhraseBackupTest {
+//                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+//                    
+//                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
+//                    state.phraseDisplayState.phrase = recoveryPhrase
+//                    state.phraseDisplayState.birthday = storedWallet.birthday
+//                    if let value = storedWallet.birthday?.value() {
+//                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
+//                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+//                    }
+//                    landingDestination = .phraseDisplay
+//                }
                 
                 state.appInitializationState = .initialized
                 let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
                 
-                return .run { [landingDestination] send in
+                return .run { send in
 //                    if landingDestination == .home {
 //                        await send(.tabs(.home(.transactionList(.onAppear))))
 //                    }
                     try await mainQueue.sleep(for: .seconds(0.5))
                     if !isAtDeeplinkWarningScreen {
-                        await send(.destination(.updateDestination(landingDestination)))
+                        await send(.destination(.updateDestination(Root.DestinationState.Destination.home)))
                     }
                 }
                 .cancellable(id: CancelId, cancelInFlight: true)
@@ -567,7 +567,7 @@ extension Root {
                     state.appInitializationState = .uninitialized
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        .send(.onboarding(.securityWarning(.createNewWallet)))
+                        .send(.onboarding(.createNewWalletRequested))
                     )
                 } else {
                     return .concatenate(
@@ -619,13 +619,13 @@ extension Root {
                 state.alert = AlertState.wipeFailed(Int32.max)
                 return .cancel(id: SynchronizerCancelId)
 
-            case .phraseDisplay(.finishedTapped), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedTapped))):
-                do {
-                    try walletStorage.markUserPassedPhraseBackupTest(true)
+            case .phraseDisplay(.finishedTapped), .onboarding(.newWalletSuccessfulyCreated):
+//                do {
+//                    try walletStorage.markUserPassedPhraseBackupTest(true)
                     state.destinationState.destination = .home
-                } catch {
-                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
-                }
+//                } catch {
+//                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
+//                }
                 return .none
                 
             case .welcome(.debugMenuStartup)://, .tabs(.home(.walletBalances(.debugMenuStartup))):
@@ -634,12 +634,12 @@ extension Root {
                     .send(.destination(.updateDestination(.startup)))
                 )
 
-            case .onboarding(.securityWarning(.confirmTapped)):
+            case .onboarding(.createNewWalletTapped):
                 if state.appInitializationState == .keysMissing {
                     state.alert = AlertState.existingWallet()
                     return .none
                 } else {
-                    return .send(.onboarding(.securityWarning(.createNewWallet)))
+                    return .send(.onboarding(.createNewWalletRequested))
                 }
                 
             case .initialization(.restoreExistingWallet):
@@ -650,6 +650,7 @@ extension Root {
                 }
                 
                 // RESTORE
+
 //            case .onboarding(.importWallet(.nextTapped)):
 //                if state.appInitializationState == .keysMissing {
 //                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
@@ -702,9 +703,6 @@ extension Root {
                 state.alert = AlertState.initializationFailed(error)
                 return .none
 
-            case .onboarding(.securityWarning(.newWalletCreated)):
-                return .send(.initialization(.initializeSDK(.newWallet)))
-                
             default:
                 return .none
             }

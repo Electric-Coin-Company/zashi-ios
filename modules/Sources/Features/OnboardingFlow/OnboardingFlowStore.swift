@@ -10,10 +10,11 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import Models
-import ImportWallet
-import SecurityWarning
 import ZcashLightClientKit
 import CoordFlows
+import MnemonicSwift
+import ZcashSDKEnvironment
+import WalletStorage
 
 @Reducer
 public struct OnboardingFlow {
@@ -24,48 +25,40 @@ public struct OnboardingFlow {
             case importExistingWallet
         }
 
+        @Presents public var alert: AlertState<Action>?
         public var destination: Destination?
         public var walletConfig: WalletConfig
-//        public var importWalletState: ImportWallet.State
-        public var securityWarningState: SecurityWarning.State
         
         // Path
         public var restoreWalletCoordFlowState = RestoreWalletCoordFlow.State.initial
 
         public init(
             destination: Destination? = nil,
-            walletConfig: WalletConfig,
-//            importWalletState: ImportWallet.State,
-            securityWarningState: SecurityWarning.State
+            walletConfig: WalletConfig
         ) {
             self.destination = destination
             self.walletConfig = walletConfig
-//            self.importWalletState = importWalletState
-            self.securityWarningState = securityWarningState
         }
     }
 
     public enum Action {
-        case createNewWallet
+        case alert(PresentationAction<Action>)
+        case createNewWalletRequested
+        case createNewWalletTapped
         case importExistingWallet
-//        case importWallet(ImportWallet.Action)
+        case newWalletSuccessfulyCreated
         case onAppear
         case restoreWalletCoordFlow(RestoreWalletCoordFlow.Action)
-        case securityWarning(SecurityWarning.Action)
         case updateDestination(OnboardingFlow.State.Destination?)
     }
     
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
     public init() { }
     
     public var body: some Reducer<State, Action> {
-//        Scope(state: \.importWalletState, action: \.importWallet) {
-//            ImportWallet()
-//        }
-
-        Scope(state: \.securityWarningState, action: \.securityWarning) {
-            SecurityWarning()
-        }
-
         Scope(state: \.restoreWalletCoordFlowState, action: \.restoreWalletCoordFlow) {
             RestoreWalletCoordFlow()
         }
@@ -75,14 +68,39 @@ public struct OnboardingFlow {
             case .onAppear:
                 return .none
                 
+            case .alert(.presented(let action)):
+                return .send(action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
 
-            case .createNewWallet:
+            case .createNewWalletTapped:
                 state.destination = .createNewWallet
                 return .none
 
+            case .createNewWalletRequested:
+                do {
+                    // get the random english mnemonic
+                    let newRandomPhrase = try mnemonic.randomMnemonic()
+                    let birthday = zcashSDKEnvironment.latestCheckpoint
+                    
+                    // store the wallet to the keychain
+                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
+
+                    return .send(.newWalletSuccessfulyCreated)
+                } catch {
+                    state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
+                }
+                return .none
+                
+            case .newWalletSuccessfulyCreated:
+                return .none
+                
             case .importExistingWallet:
                 state.restoreWalletCoordFlowState = .initial
                 state.destination = .importExistingWallet
@@ -91,12 +109,24 @@ public struct OnboardingFlow {
 //            case .importWallet:
 //                return .none
                 
-            case .securityWarning:
-                return .none
+//            case .securityWarning:
+//                return .none
                 
             case .restoreWalletCoordFlow:
                 return .none
             }
+        }
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == OnboardingFlow.Action {
+    public static func cantCreateNewWallet(_ error: ZcashError) -> AlertState {
+        AlertState {
+            TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.detailedMessage))
         }
     }
 }
