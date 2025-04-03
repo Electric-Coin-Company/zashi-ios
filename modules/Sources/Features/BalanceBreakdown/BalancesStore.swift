@@ -166,8 +166,6 @@ public struct Balances {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
-                        
-                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account.id) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
                         let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
                         

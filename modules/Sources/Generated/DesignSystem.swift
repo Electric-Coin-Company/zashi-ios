@@ -303,6 +303,7 @@ public enum Design {
             case _700
             case _800
             case _900
+            case _950
         }
         
         public enum Brand: Colorable {
@@ -702,6 +703,7 @@ public extension Design.Utility.Purple {
         case ._700: return Design.col(Asset.Colors.ZDesign.purple700.color, Asset.Colors.ZDesign.purple300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.purple800.color, Asset.Colors.ZDesign.purple200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.purple900.color, Asset.Colors.ZDesign.purple100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.purple950.color, Asset.Colors.ZDesign.purple50.color, colorScheme)
         }
     }
 }

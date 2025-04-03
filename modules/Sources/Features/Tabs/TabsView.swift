@@ -281,7 +281,7 @@ public struct TabsView: View {
                             preferences.map {
                                 VStack(alignment: .leading, spacing: 0) {
                                     HStack(alignment: .top, spacing: 0) {
-                                        Asset.Assets.coinsSwap.image
+                                        Asset.Assets.Icons.coinsSwap.image
                                             .zImage(size: 20, style: Design.Text.primary)
                                             .padding(10)
                                             .background {

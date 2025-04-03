@@ -203,8 +203,8 @@ public enum L10n {
     public static let saveBtn = L10n.tr("Localizable", "currencyConversion.saveBtn", fallback: "Save changes")
     /// Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.
     public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.")
-    /// Skip for now
-    public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip for now")
+    /// Skip
+    public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip")
     /// Currency Conversion
     public static let title = L10n.tr("Localizable", "currencyConversion.title", fallback: "Currency Conversion")
   }
@@ -1092,6 +1092,134 @@ public enum L10n {
         public static let message = L10n.tr("Localizable", "settings.alert.cantSendEmail.message", fallback: "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.")
         /// Oh, no!
         public static let title = L10n.tr("Localizable", "settings.alert.cantSendEmail.title", fallback: "Oh, no!")
+      }
+    }
+  }
+  public enum SmartBanner {
+    public enum Content {
+      public enum AutoShielding {
+        /// Start
+        public static let button = L10n.tr("Localizable", "smartBanner.content.autoShielding.button", fallback: "Start")
+        /// Enable automatic shielding
+        public static let info = L10n.tr("Localizable", "smartBanner.content.autoShielding.info", fallback: "Enable automatic shielding")
+        /// Auto-Shielding
+        public static let title = L10n.tr("Localizable", "smartBanner.content.autoShielding.title", fallback: "Auto-Shielding")
+      }
+      public enum Backup {
+        /// Start
+        public static let button = L10n.tr("Localizable", "smartBanner.content.backup.button", fallback: "Start")
+        /// Prevent potential loss of funds
+        public static let info = L10n.tr("Localizable", "smartBanner.content.backup.info", fallback: "Prevent potential loss of funds")
+        /// Wallet Backup Required
+        public static let title = L10n.tr("Localizable", "smartBanner.content.backup.title", fallback: "Wallet Backup Required")
+      }
+      public enum CurrencyConversion {
+        /// Start
+        public static let button = L10n.tr("Localizable", "smartBanner.content.currencyConversion.button", fallback: "Start")
+        /// Enable to display USD values
+        public static let info = L10n.tr("Localizable", "smartBanner.content.currencyConversion.info", fallback: "Enable to display USD values")
+        /// Currency Conversion
+        public static let title = L10n.tr("Localizable", "smartBanner.content.currencyConversion.title", fallback: "Currency Conversion")
+      }
+      public enum Disconnected {
+        /// Check your connection and reload Zashi
+        public static let info = L10n.tr("Localizable", "smartBanner.content.disconnected.info", fallback: "Check your connection and reload Zashi")
+        /// Wallet Disconnected
+        public static let title = L10n.tr("Localizable", "smartBanner.content.disconnected.title", fallback: "Wallet Disconnected")
+      }
+      public enum Restore {
+        /// Keep Zashi open on active phone screen
+        public static let info = L10n.tr("Localizable", "smartBanner.content.restore.info", fallback: "Keep Zashi open on active phone screen")
+        /// Restoring Wallet • %@ Complete
+        public static func title(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "smartBanner.content.restore.title", String(describing: p1), fallback: "Restoring Wallet • %@ Complete")
+        }
+      }
+      public enum Shield {
+        /// Shield
+        public static let button = L10n.tr("Localizable", "smartBanner.content.shield.button", fallback: "Shield")
+        /// Transparent Balance Detected
+        public static let title = L10n.tr("Localizable", "smartBanner.content.shield.title", fallback: "Transparent Balance Detected")
+      }
+      public enum Sync {
+        /// Your wallet is getting updated
+        public static let info = L10n.tr("Localizable", "smartBanner.content.sync.info", fallback: "Your wallet is getting updated")
+        /// Syncing • %@ Complete
+        public static func title(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "smartBanner.content.sync.title", String(describing: p1), fallback: "Syncing • %@ Complete")
+        }
+      }
+      public enum SyncingError {
+        /// Attempting to resolve
+        public static let info = L10n.tr("Localizable", "smartBanner.content.syncingError.info", fallback: "Attempting to resolve")
+        /// Error encountered while syncing
+        public static let title = L10n.tr("Localizable", "smartBanner.content.syncingError.title", fallback: "Error encountered while syncing")
+      }
+      public enum UpdatingBalance {
+        /// Waiting for last transaction to process
+        public static let info = L10n.tr("Localizable", "smartBanner.content.updatingBalance.info", fallback: "Waiting for last transaction to process")
+        /// Updating Balance...
+        public static let title = L10n.tr("Localizable", "smartBanner.content.updatingBalance.title", fallback: "Updating Balance...")
+      }
+    }
+    public enum Help {
+      /// Remind me later
+      public static let remindMe = L10n.tr("Localizable", "smartBanner.help.remindMe", fallback: "Remind me later")
+      public enum Backup {
+        /// Prevent potential loss of funds by securely backing up your wallet.
+        public static let info1 = L10n.tr("Localizable", "smartBanner.help.backup.info1", fallback: "Prevent potential loss of funds by securely backing up your wallet.")
+        /// Back up access to your funds by backing up:
+        public static let info2 = L10n.tr("Localizable", "smartBanner.help.backup.info2", fallback: "Back up access to your funds by backing up:")
+        /// In case you lose access to the app or to your device, knowing the Secret Recovery Phrase is the only way to recover your funds. We cannot see it and cannot help you recover it.
+        public static let info3 = L10n.tr("Localizable", "smartBanner.help.backup.info3", fallback: "In case you lose access to the app or to your device, knowing the Secret Recovery Phrase is the only way to recover your funds. We cannot see it and cannot help you recover it.")
+        /// Anyone with access to your Secret Recovery Phrase will have full control of your wallet, so keep it secure and never show it to anyone.
+        public static let info4 = L10n.tr("Localizable", "smartBanner.help.backup.info4", fallback: "Anyone with access to your Secret Recovery Phrase will have full control of your wallet, so keep it secure and never show it to anyone.")
+        /// Secret Recovery Phrase (a unique set of 24 words in a precise order) 
+        public static let point1 = L10n.tr("Localizable", "smartBanner.help.backup.point1", fallback: "Secret Recovery Phrase (a unique set of 24 words in a precise order) ")
+        /// Wallet Birthday Height (block height at which your wallet was created)
+        public static let point2 = L10n.tr("Localizable", "smartBanner.help.backup.point2", fallback: "Wallet Birthday Height (block height at which your wallet was created)")
+        /// Backup Required
+        public static let title = L10n.tr("Localizable", "smartBanner.help.backup.title", fallback: "Backup Required")
+      }
+      public enum Diconnected {
+        /// You appear to be offline. Please restore your internet connection to use Zashi wallet.
+        public static let info = L10n.tr("Localizable", "smartBanner.help.diconnected.info", fallback: "You appear to be offline. Please restore your internet connection to use Zashi wallet.")
+        /// Wallet Disconnected
+        public static let title = L10n.tr("Localizable", "smartBanner.help.diconnected.title", fallback: "Wallet Disconnected")
+      }
+      public enum Restore {
+        /// Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:
+        public static let info = L10n.tr("Localizable", "smartBanner.help.restore.info", fallback: "Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:")
+        /// Keep the Zashi app open on an active phone screen.
+        public static let point1 = L10n.tr("Localizable", "smartBanner.help.restore.point1", fallback: "Keep the Zashi app open on an active phone screen.")
+        /// To prevent your phone screen from going dark, turn off power-saving mode and keep your phone plugged in.
+        public static let point2 = L10n.tr("Localizable", "smartBanner.help.restore.point2", fallback: "To prevent your phone screen from going dark, turn off power-saving mode and keep your phone plugged in.")
+        /// Wallet Restore in Progress
+        public static let title = L10n.tr("Localizable", "smartBanner.help.restore.title", fallback: "Wallet Restore in Progress")
+        /// Funds cannot be spent until your wallet is restored.
+        public static let warning = L10n.tr("Localizable", "smartBanner.help.restore.warning", fallback: "Funds cannot be spent until your wallet is restored.")
+      }
+      public enum Shield {
+        /// To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the "Shield" button below to make your transparent funds spendable and your total Zashi balance private. 
+        public static let info1 = L10n.tr("Localizable", "smartBanner.help.shield.info1", fallback: "To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the \"Shield\" button below to make your transparent funds spendable and your total Zashi balance private. ")
+        /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
+        public static let info2 = L10n.tr("Localizable", "smartBanner.help.shield.info2", fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
+        /// Always Shield Transparent Funds
+        public static let title = L10n.tr("Localizable", "smartBanner.help.shield.title", fallback: "Always Shield Transparent Funds")
+        /// Transparent
+        public static let transparent = L10n.tr("Localizable", "smartBanner.help.shield.transparent", fallback: "Transparent")
+      }
+      public enum Sync {
+        /// Zashi is scanning the blockchain for your latest transactions to make sure your balances are displayed correctly. Keep the Zashi app open on an active phone screen to avoid interruptions.
+        public static let info = L10n.tr("Localizable", "smartBanner.help.sync.info", fallback: "Zashi is scanning the blockchain for your latest transactions to make sure your balances are displayed correctly. Keep the Zashi app open on an active phone screen to avoid interruptions.")
+        /// Wallet Sync in Progress
+        public static let title = L10n.tr("Localizable", "smartBanner.help.sync.title", fallback: "Wallet Sync in Progress")
+      }
+      public enum UpdatingBalance {
+        /// Your last transaction is getting mined and confirmed.
+        public static let info = L10n.tr("Localizable", "smartBanner.help.updatingBalance.info", fallback: "Your last transaction is getting mined and confirmed.")
+        /// Updating Balance
+        public static let title = L10n.tr("Localizable", "smartBanner.help.updatingBalance.title", fallback: "Updating Balance")
       }
     }
   }

@@ -79,7 +79,7 @@ public struct ReceiveView: View {
                             
                             if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
                                 addressBlock(
-                                    prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                    prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
                                     title: L10n.Accounts.Keystone.transparentAddress,
                                     address: transparentAddress,
                                     iconFg: Design.Text.primary,
@@ -120,9 +120,9 @@ public struct ReceiveView: View {
                             .padding(.top, 24)
                             
                             addressBlock(
-                                prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
-                                title: L10n.Accounts.Keystone.transparentAddress,
-                                address: transparentAddress,
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                title: L10n.Accounts.Zashi.transparentAddress,
+                                address: store.transparentAddress,
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
                                 bcgColor: Design.Utility.Gray._50.color(colorScheme),

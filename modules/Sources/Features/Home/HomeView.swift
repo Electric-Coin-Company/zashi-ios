@@ -11,6 +11,7 @@ import Models
 import WalletBalances
 import Scan
 import BalanceBreakdown
+import SmartBanner
 
 public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -42,20 +43,23 @@ public struct HomeView: View {
                     couldBeHidden: true
                 )
                 .padding(.top, 1)
-
-                if walletStatus == .restoring {
-                    SyncProgressView(
-                        store: store.scope(
-                            state: \.syncProgressState,
-                            action: \.syncProgress
-                        )
-                    )
-                    .frame(height: 94)
-                    .frame(maxWidth: .infinity)
-                    .background(Asset.Colors.syncProgresBcg.color)
-                    .padding(.top, 7)
-                    .padding(.bottom, 20)
+                .onTapGesture {
+                    store.send(.debug)
                 }
+
+//                if walletStatus == .restoring {
+//                    SyncProgressView(
+//                        store: store.scope(
+//                            state: \.syncProgressState,
+//                            action: \.syncProgress
+//                        )
+//                    )
+//                    .frame(height: 94)
+//                    .frame(maxWidth: .infinity)
+//                    .background(Asset.Colors.syncProgresBcg.color)
+//                    .padding(.top, 7)
+//                    .padding(.bottom, 20)
+//                }
 
                 HStack(spacing: 8) {
                     button(
@@ -88,9 +92,15 @@ public struct HomeView: View {
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
                 .padding(.top, 24)
-                .padding(.bottom, 32)
+//                .padding(.bottom, 32)
                 .screenHorizontalPadding()
 
+                SmartBannerView(
+                    store: store.scope(
+                        state: \.smartBannerState,
+                        action: \.smartBanner
+                    )
+                )
 //                SmartBanner(isOpen: true) {
 ////                    EmptyView()
 //                    HStack(spacing: 0) {
@@ -156,6 +166,7 @@ public struct HomeView: View {
                 }
                 //.padding(.top, 12)
             }
+            
 //            .popover(
 //                isPresented:
 //                    Binding(
@@ -223,75 +234,75 @@ public struct HomeView: View {
                     }
                 }
             }
-            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
-                WithPerceptionTracking {
-                    if store.isRateEducationEnabled {
-                        GeometryReader { geometry in
-                            preferences.map {
-                                VStack(alignment: .leading, spacing: 0) {
-                                    HStack(alignment: .top, spacing: 0) {
-                                        Asset.Assets.coinsSwap.image
-                                            .zImage(size: 20, style: Design.Text.primary)
-                                            .padding(10)
-                                            .background {
-                                                Circle()
-                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                                            }
-                                            .padding(.trailing, 16)
-                                        
-                                        VStack(alignment: .leading, spacing: 5) {
-                                            Text(L10n.CurrencyConversion.cardTitle)
-                                                .zFont(size: 14, style: Design.Text.tertiary)
-                                            
-                                            Text(L10n.CurrencyConversion.title)
-                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                                                .lineLimit(1)
-                                                .minimumScaleFactor(0.5)
-                                        }
-                                        .padding(.trailing, 16)
-                                        
-                                        Spacer(minLength: 0)
-                                        
-                                        Button {
-                                            store.send(.currencyConversionCloseTapped)
-                                        } label: {
-                                            Asset.Assets.buttonCloseX.image
-                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
-                                        }
-                                        .padding(20)
-                                        .offset(x: 20, y: -20)
-                                    }
-                                    
-                                    Button {
-                                        store.send(.currencyConversionSetupTapped)
-                                    } label: {
-                                        Text(L10n.CurrencyConversion.cardButton)
-                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
-                                            .frame(height: 24)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
-                                            .background {
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
-                                            }
-                                    }
-                                }
-                                .padding(24)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                        .background {
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
-                                        }
-                                }
-                                .frame(width: geometry.size.width - 40)
-                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
-                            }
-                        }
-                    }
-                }
-            }
+//            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
+//                WithPerceptionTracking {
+//                    if store.isRateEducationEnabled {
+//                        GeometryReader { geometry in
+//                            preferences.map {
+//                                VStack(alignment: .leading, spacing: 0) {
+//                                    HStack(alignment: .top, spacing: 0) {
+//                                        Asset.Assets.Icons.coinsSwap.image
+//                                            .zImage(size: 20, style: Design.Text.primary)
+//                                            .padding(10)
+//                                            .background {
+//                                                Circle()
+//                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+//                                            }
+//                                            .padding(.trailing, 16)
+//                                        
+//                                        VStack(alignment: .leading, spacing: 5) {
+//                                            Text(L10n.CurrencyConversion.cardTitle)
+//                                                .zFont(size: 14, style: Design.Text.tertiary)
+//                                            
+//                                            Text(L10n.CurrencyConversion.title)
+//                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+//                                                .lineLimit(1)
+//                                                .minimumScaleFactor(0.5)
+//                                        }
+//                                        .padding(.trailing, 16)
+//                                        
+//                                        Spacer(minLength: 0)
+//                                        
+//                                        Button {
+//                                            store.send(.currencyConversionCloseTapped)
+//                                        } label: {
+//                                            Asset.Assets.buttonCloseX.image
+//                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
+//                                        }
+//                                        .padding(20)
+//                                        .offset(x: 20, y: -20)
+//                                    }
+//                                    
+//                                    Button {
+//                                        store.send(.currencyConversionSetupTapped)
+//                                    } label: {
+//                                        Text(L10n.CurrencyConversion.cardButton)
+//                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
+//                                            .frame(height: 24)
+//                                            .frame(maxWidth: .infinity)
+//                                            .padding(.vertical, 12)
+//                                            .background {
+//                                                RoundedRectangle(cornerRadius: 12)
+//                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+//                                            }
+//                                    }
+//                                }
+//                                .padding(24)
+//                                .background {
+//                                    RoundedRectangle(cornerRadius: 12)
+//                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+//                                        .background {
+//                                            RoundedRectangle(cornerRadius: 12)
+//                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+//                                        }
+//                                }
+//                                .frame(width: geometry.size.width - 40)
+//                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             //..walletstatusPanel()
             .applyScreenBackground()
             .onAppear {

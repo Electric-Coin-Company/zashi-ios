@@ -40,9 +40,11 @@ let package = Package(
         .library(name: "Home", targets: ["Home"]),
         .library(name: "KeystoneHandler", targets: ["KeystoneHandler"]),
         .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
+        .library(name: "LocalNotification", targets: ["LocalNotification"]),
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
+        .library(name: "NetworkMonitor", targets: ["NetworkMonitor"]),
         .library(name: "NotEnoughFreeSpace", targets: ["NotEnoughFreeSpace"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
@@ -67,6 +69,7 @@ let package = Package(
         .library(name: "SendForm", targets: ["SendForm"]),
         .library(name: "ServerSetup", targets: ["ServerSetup"]),
         .library(name: "Settings", targets: ["Settings"]),
+        .library(name: "SmartBanner", targets: ["SmartBanner"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
@@ -414,6 +417,7 @@ let package = Package(
                 "Scan",
                 "Settings",
                 "SDKSynchronizer",
+                "SmartBanner",
                 "SyncProgress",
                 "TransactionList",
                 "UIComponents",
@@ -443,6 +447,14 @@ let package = Package(
             path: "Sources/Dependencies/LocalAuthenticationHandler"
         ),
         .target(
+            name: "LocalNotification",
+            dependencies: [
+                "Generated",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/LocalNotification"
+        ),
+        .target(
             name: "LogsHandler",
             dependencies: [
                 "Utils",
@@ -467,6 +479,14 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Models"
+        ),
+        .target(
+            name: "NetworkMonitor",
+            dependencies: [
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/NetworkMonitor"
         ),
         .target(
             name: "NotEnoughFreeSpace",
@@ -655,6 +675,7 @@ let package = Package(
                 "Generated",
                 "Home",
                 "LocalAuthenticationHandler",
+                "LocalNotification",
                 "MnemonicClient",
                 "Models",
                 "NotEnoughFreeSpace",
@@ -837,6 +858,24 @@ let package = Package(
                 .product(name: "Flexa", package: "flexa-ios")
             ],
             path: "Sources/Features/Settings"
+        ),
+        .target(
+            name: "SmartBanner",
+            dependencies: [
+                "Generated",
+                "LocalNotification",
+                "Models",
+                "NetworkMonitor",
+                "SDKSynchronizer",
+                "UIComponents",
+                "UserPreferencesStorage",
+                "Utils",
+                "WalletStorage",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
+            ],
+            path: "Sources/Features/SmartBanner"
         ),
         .target(
             name: "SupportDataGenerator",

@@ -75,8 +75,8 @@ extension Root {
             case .currencyConversionSetup(.skipTapped), .currencyConversionSetup(.enableTapped):
                 state.path = nil
                 state.homeState.isRateEducationEnabled = false
-                return .none
-                
+                return .send(.home(.smartBanner(.closeAndCleanupBanner)))
+
                 // MARK: - Home
 
             case .home(.settingsTapped):

@@ -128,12 +128,12 @@ public struct CurrencyConversionSetupView: View {
             note()
                 .padding(.bottom, 20)
 
-            primaryButton(L10n.CurrencyConversion.enable) {
-                store.send(.enableTapped)
-            }
-
             secondaryButton(L10n.CurrencyConversion.skipBtn) {
                 store.send(.skipTapped)
+            }
+            
+            primaryButton(L10n.CurrencyConversion.enable) {
+                store.send(.enableTapped)
             }
         }
         .padding(.bottom, 24)

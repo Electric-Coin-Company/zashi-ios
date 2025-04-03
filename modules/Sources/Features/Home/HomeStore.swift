@@ -15,6 +15,7 @@ import PartnerKeys
 import UserPreferencesStorage
 import Utils
 import BalanceBreakdown
+import SmartBanner
 
 @Reducer
 public struct Home {
@@ -36,6 +37,7 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
+        public var smartBannerState = SmartBanner.State.initial
         public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
 //        public var scanBinding = false
@@ -67,7 +69,7 @@ public struct Home {
         public var inAppBrowserURLKeystone: String {
             "https://keyst.one/shop/products/keystone-3-pro?discount=Zashi"
         }
-        
+
         public init(
             canRequestReview: Bool = false,
             migratingDatabase: Bool = true,
@@ -86,6 +88,8 @@ public struct Home {
     }
 
     public enum Action: BindableAction, Equatable {
+        case debug
+        
         case accountSwitchTapped
         case addKeystoneHWWalletTapped
         case alert(PresentationAction<Action>)
@@ -112,6 +116,7 @@ public struct Home {
         case sendTapped
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
+        case smartBanner(SmartBanner.Action)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case syncProgress(SyncProgress.Action)
@@ -156,8 +161,15 @@ public struct Home {
             Balances()
         }
 
+        Scope(state: \.smartBannerState, action: \.smartBanner) {
+            SmartBanner()
+        }
+
         Reduce { state, action in
             switch action {
+            case .debug:
+                return .send(.smartBanner(.debug))
+                
             case .onAppear:
 //                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.appId = PartnerKeys.cbProjectId
@@ -334,6 +346,9 @@ public struct Home {
 //                )
                 return .none
                 
+            case .smartBanner(.currencyConversionScreenRequested):
+                return .send(.currencyConversionSetupTapped)
+                
                 // More actions
             case .coinbaseTapped:
                 state.moreRequest = false
@@ -355,6 +370,9 @@ public struct Home {
                 return .none
                 
             case .walletBalances:
+                return .none
+                
+            case .smartBanner:
                 return .none
             }
         }

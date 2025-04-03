@@ -47,8 +47,7 @@ extension SDKSynchronizerClient: DependencyKey {
         let synchronizer = SDKSynchronizer(initializer: initializer)
 
         return SDKSynchronizerClient(
-            stateStream: { synchronizer.stateStream
-            },
+            stateStream: { synchronizer.stateStream },
             eventStream: { synchronizer.eventStream },
             exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
