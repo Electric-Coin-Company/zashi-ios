@@ -1,6 +1,22 @@
 {
     "releases": [
         {
+            "version": "1.5.1",
+            "date": "04-03-2025",
+            "timestamp": 1743687047,
+            "sections": [
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "1.5 Bug Fix release!",
+                        "We fixed a migration issue impacting some users on 1.5 app version.",
+                        "We fixed an icon for Keystone transparent address.",
+                        "We also fixed an issue when the Home Screen would get stuck loading after tapping on the currently selected wallet."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5",
             "date": "03-27-2025",
             "timestamp": 1742891140,

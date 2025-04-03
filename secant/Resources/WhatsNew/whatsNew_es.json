@@ -1,6 +1,22 @@
 {
     "releases": [
         {
+            "version": "1.5.1",
+            "date": "04-03-2025",
+            "timestamp": 1743687047,
+            "sections": [
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "¡Corrección de errores 1.5!",
+                        "Solucionamos un problema de migración que afectaba a algunos usuarios de la versión 1.5 de la app.",
+                        "Corregimos el icono de la dirección transparente de Keystone.",
+                        "También solucionamos un problema por el cual la pantalla de inicio se bloqueaba al cargar tras tocar la billetera seleccionada."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5",
             "date": "03-27-2025",
             "timestamp": 1742891140,

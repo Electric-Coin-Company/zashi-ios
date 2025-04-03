@@ -71,7 +71,7 @@ public struct ReceiveView: View {
                         
                         if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
                             addressBlock(
-                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
                                 title: L10n.Accounts.Keystone.transparentAddress,
                                 address: transparentAddress,
                                 iconFg: Design.Text.primary,
