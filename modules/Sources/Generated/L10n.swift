@@ -496,6 +496,10 @@ public enum L10n {
     /// Your address is included in the memo
     public static let removeUA = L10n.tr("Localizable", "messageEditor.removeUA", fallback: "Your address is included in the memo")
   }
+  public enum More {
+    /// More Options
+    public static let options = L10n.tr("Localizable", "more.options", fallback: "More Options")
+  }
   public enum NotEnoughFreeSpace {
     /// %@ MB available. 
     public static func dataAvailable(_ p1: Any) -> String {

@@ -1,0 +1,76 @@
+//
+//  ReceiveCoordinator.swift
+//  modules
+//
+//  Created by Lukáš Korba on 2025-03-17.
+//
+
+import ComposableArchitecture
+import Generated
+
+import AddressDetails
+import RequestZec
+import ZecKeyboard
+
+extension Receive {
+    public func coordinatorReduce() -> Reduce<Receive.State, Receive.Action> {
+        Reduce { state, action in
+            switch action {
+                // MARK: Receive
+
+            case let .addressDetailsRequest(address, maxPrivacy):
+                var addressDetailsState = AddressDetails.State.initial
+                addressDetailsState.address = address
+                addressDetailsState.maxPrivacy = maxPrivacy
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Keystone.shieldedAddress
+                    : L10n.Accounts.Keystone.transparentAddress
+                } else {
+                    addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Zashi.shieldedAddress
+                    : L10n.Accounts.Zashi.transparentAddress
+                }
+                state.path.append(.addressDetails(addressDetailsState))
+                return .none
+                
+            case let .requestTapped(address, maxPrivacy):
+                state.path.append(.zecKeyboard(ZecKeyboard.State.initial))
+                state.memo = ""
+                state.requestZecState = RequestZec.State.initial
+                state.requestZecState.address = address
+                state.requestZecState.maxPrivacy = maxPrivacy
+                return .none
+                
+                // MARK: - Request Zec
+
+            case .path(.element(id: _, action: .requestZec(.requestTapped))):
+                state.path.append(.requestZecSummary(state.requestZecState))
+                return .none
+
+            case .path(.element(id: _, action: .requestZec(.onDisappearMemoStep(let memoText)))):
+                state.memo = memoText
+                return .none
+
+            case .path(.element(id: _, action: .requestZecSummary(.cancelRequestTapped))):
+                state.path.removeAll()
+                return .none
+
+                // MARK: - Zec Keyboard
+
+            case .path(.element(id: _, action: .zecKeyboard(.nextTapped))):
+                for element in state.path {
+                    if case .zecKeyboard(let zecKeyboardState) = element {
+                        state.requestZecState.memoState.text = state.memo
+                        state.requestZecState.requestedZec = zecKeyboardState.amount
+                        break
+                    }
+                }
+                state.path.append(.requestZec(state.requestZecState))
+                return .none
+                
+            default: return .none
+            }
+        }
+    }
+}

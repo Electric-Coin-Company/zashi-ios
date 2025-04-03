@@ -105,7 +105,7 @@ public struct ImportWalletView: View {
                         }
                         
                         ZashiButton(L10n.General.next) {
-                            store.send(.nextPressed)
+                            store.send(.nextTapped)
                         }
                         .disabled(!store.isValidForm)
                         .padding(.top, 50)

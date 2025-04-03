@@ -207,6 +207,10 @@ public struct TransactionState: Equatable, Identifiable {
         : zecAmount.decimalString()
     }
 
+    public var amountWithoutFee: Zatoshi {
+        Zatoshi(zecAmount.amount - (fee?.amount ?? 0))
+    }
+
     public init(
         errorMessage: String? = nil,
         expiryHeight: BlockHeight? = nil,

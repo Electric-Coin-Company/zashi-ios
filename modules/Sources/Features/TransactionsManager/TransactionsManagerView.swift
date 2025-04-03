@@ -154,7 +154,9 @@ public struct TransactionsManagerView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .zashiBack()
+        .zashiBack() {
+            store.send(.dismissRequired)
+        }
         .screenTitle(L10n.TransactionHistory.title.uppercased())
     }
     
