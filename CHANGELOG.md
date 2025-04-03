@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.5.1 build 2 (2025-04-03)
+
+### Fixed
+- Migration of the database failed in some cases, causing the SDK to not initialize.
+
 ## 1.5 build 2 (2025-03-28)
 
 ### Fixed
