@@ -179,9 +179,9 @@ public struct Balances {
                         
                         switch result {
                         case .grpcFailure:
-                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
-                        case .failure:
-                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
+                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError()))
+                        case let .failure(txIds, code, description):
+                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError()))
                         case let .partial(txIds: txIds, statuses: statuses):
                             await send(.shieldFundsPartial(txIds, statuses))
                         case .success:

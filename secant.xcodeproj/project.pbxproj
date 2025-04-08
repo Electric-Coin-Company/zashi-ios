@@ -12,8 +12,6 @@
 		0D26AF76299E8196005260EE /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 0D26AE89299E8196005260EE /* ComposableArchitecture */; };
 		0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */; };
-		0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
-		0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		9E00319C2A272BB6003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319B2A272BB6003DFCEB /* SDKSynchronizer */; };
@@ -72,7 +70,6 @@
 		9E41FFB12CB2814500783CFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E41FFB22CB2814500783CFD /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
 		9E41FFB32CB2814500783CFD /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
-		9E41FFB42CB2814500783CFD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		9E41FFB52CB2814500783CFD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9E41FFB62CB2814500783CFD /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E46919A2AD5735E0082D7DF /* TabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4691992AD5735E0082D7DF /* TabsTests.swift */; };
@@ -89,7 +86,6 @@
 		9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */; };
 		9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
-		9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		9E4AB2B32BA1BEE900F5D6DB /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
 		9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
@@ -108,7 +104,6 @@
 		9E5AB4782C94777800065483 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E5AB4792C94777800065483 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
 		9E5AB47A2C94777800065483 /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
-		9E5AB47B2C94777800065483 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		9E5AB47C2C94777800065483 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9E5AB47D2C94777800065483 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5B8E742B46E04E00CA3616 /* RestoreWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */; };
@@ -178,7 +173,6 @@
 
 /* Begin PBXFileReference section */
 		0D26AF94299E8196005260EE /* secant-mainnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-mainnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A0826B364170058B01E /* SecantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantApp.swift; sourceTree = "<group>"; };
 		0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -670,7 +664,6 @@
 				9EBAAAB52CD14889005B026F /* Lotties */,
 				9E6C98482BF4C65F00EACDCB /* WhatsNew */,
 				9E90751D2A269BE300269308 /* Assets.xcassets */,
-				0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */,
 				9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */,
 				9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */,
 				9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */,
@@ -786,7 +779,6 @@
 			buildConfigurationList = 0D26AF91299E8196005260EE /* Build configuration list for PBXNativeTarget "secant-mainnet" */;
 			buildPhases = (
 				9E599F2F2C3EEE5A000E4997 /* Generate PartnerKeys.plist */,
-				0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */,
 				9E89DF8A2CD3971E002E5317 /* Localizations */,
 				34968BEE2ABDC6FA0027F495 /* Swiftgen */,
 				0D26AE99299E8196005260EE /* SwiftLint */,
@@ -816,7 +808,6 @@
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
 				9E599F2E2C3EEE25000E4997 /* Generate PartnerKeys.plist */,
-				0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */,
 				9E89DF8D2CD39751002E5317 /* Localizations */,
 				34968BED2ABDC6310027F495 /* Swiftgen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
@@ -882,7 +873,6 @@
 			buildConfigurationList = 9E41FFB72CB2814500783CFD /* Build configuration list for PBXNativeTarget "zashi-testnet" */;
 			buildPhases = (
 				9E41FFA12CB2814500783CFD /* Generate PartnerKeys.plist */,
-				9E41FFA22CB2814500783CFD /* Generate GoogleService-Info.plist  */,
 				9E89DF8C2CD39740002E5317 /* Localizations */,
 				9E41FFA32CB2814500783CFD /* Swiftgen */,
 				9E41FFA42CB2814500783CFD /* SwiftLint */,
@@ -910,14 +900,12 @@
 			buildConfigurationList = 9E4AB2B42BA1BEE900F5D6DB /* Build configuration list for PBXNativeTarget "secant-distrib" */;
 			buildPhases = (
 				9E599F302C3EEE83000E4997 /* Generate PartnerKeys.plist */,
-				9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */,
 				9E89DF892CD382C7002E5317 /* Localizations */,
 				9E4AB29F2BA1BEE900F5D6DB /* Swiftgen */,
 				9E4AB2A02BA1BEE900F5D6DB /* SwiftLint */,
 				9E4AB2A12BA1BEE900F5D6DB /* Sources */,
 				9E4AB2A52BA1BEE900F5D6DB /* Frameworks */,
 				9E4AB2AC2BA1BEE900F5D6DB /* Resources */,
-				9E4AB2B92BA1BF1700F5D6DB /* dSYM upload */,
 			);
 			buildRules = (
 			);
@@ -941,7 +929,6 @@
 			buildConfigurationList = 9E5AB47E2C94777800065483 /* Build configuration list for PBXNativeTarget "zashi-internal" */;
 			buildPhases = (
 				9E5AB4682C94777800065483 /* Generate PartnerKeys.plist */,
-				9E5AB4692C94777800065483 /* Generate GoogleService-Info.plist  */,
 				9E89DF8B2CD3972F002E5317 /* Localizations */,
 				9E5AB46A2C94777800065483 /* Swiftgen */,
 				9E5AB46B2C94777800065483 /* SwiftLint */,
@@ -1026,7 +1013,6 @@
 				9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				9E5CFD132CE61B7200C95713 /* sending.json in Resources */,
-				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
 				9E5CFD182CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E9CE8AA2CEB2B64009EFFEB /* Localizable.strings in Resources */,
@@ -1046,7 +1032,6 @@
 				9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				9E5CFD102CE61B7200C95713 /* sending.json in Resources */,
-				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
 				9E5CFD162CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E9CE8A82CEB2B64009EFFEB /* Localizable.strings in Resources */,
@@ -1080,7 +1065,6 @@
 				9E41FFB22CB2814500783CFD /* PartnerKeys.plist in Resources */,
 				9E41FFB32CB2814500783CFD /* whatsNew.json in Resources */,
 				9E5CFD122CE61B7200C95713 /* sending.json in Resources */,
-				9E41FFB42CB2814500783CFD /* GoogleService-Info.plist in Resources */,
 				9E5CFD152CE6215500C95713 /* sending-dark.json in Resources */,
 				9E41FFB52CB2814500783CFD /* PrivacyInfo.xcprivacy in Resources */,
 				9E9CE8B02CEB2B64009EFFEB /* Localizable.strings in Resources */,
@@ -1100,7 +1084,6 @@
 				9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				9E5CFD112CE61B7200C95713 /* sending.json in Resources */,
-				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
 				9E5CFD192CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E9CE8AC2CEB2B64009EFFEB /* Localizable.strings in Resources */,
@@ -1120,7 +1103,6 @@
 				9E5AB4792C94777800065483 /* PartnerKeys.plist in Resources */,
 				9E5AB47A2C94777800065483 /* whatsNew.json in Resources */,
 				9E5CFD0F2CE61B7200C95713 /* sending.json in Resources */,
-				9E5AB47B2C94777800065483 /* GoogleService-Info.plist in Resources */,
 				9E5CFD172CE6215500C95713 /* sending-dark.json in Resources */,
 				9E5AB47C2C94777800065483 /* PrivacyInfo.xcprivacy in Resources */,
 				9E9CE8AE2CEB2B64009EFFEB /* Localizable.strings in Resources */,
@@ -1132,27 +1114,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Generate GoogleService-Info.plist ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
-				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
-		};
 		0D26AE99299E8196005260EE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1171,27 +1132,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Generate GoogleService-Info.plist ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
-				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
 		};
 		34968BED2ABDC6310027F495 /* Swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1271,27 +1211,6 @@
 			shellPath = /bin/zsh;
 			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
 		};
-		9E41FFA22CB2814500783CFD /* Generate GoogleService-Info.plist  */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Generate GoogleService-Info.plist ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
-				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
-		};
 		9E41FFA32CB2814500783CFD /* Swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1330,27 +1249,6 @@
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Generate GoogleService-Info.plist ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
-				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
-		};
 		9E4AB29F2BA1BEE900F5D6DB /* Swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1388,30 +1286,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		9E4AB2B92BA1BF1700F5D6DB /* dSYM upload */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
-				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
-				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
-			);
-			name = "dSYM upload";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		9E599F2E2C3EEE25000E4997 /* Generate PartnerKeys.plist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1496,27 +1370,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
-		};
-		9E5AB4692C94777800065483 /* Generate GoogleService-Info.plist  */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Generate GoogleService-Info.plist ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
-				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
 		};
 		9E5AB46A2C94777800065483 /* Swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2046,7 +1899,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2073,7 +1926,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = secantTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -2094,7 +1947,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = secantUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -2116,7 +1969,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = secantUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -2428,7 +2281,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = secantTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -2449,7 +2302,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = secantUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

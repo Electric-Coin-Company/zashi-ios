@@ -338,11 +338,11 @@ public struct SendConfirmation {
                         switch result {
                         case .grpcFailure(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError(), false))
                         case let .failure(txIds, code, description):
                             await send(.updateFailedData(code, description, ""))
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-failure".toZcashError(), true))
                         case let .partial(txIds: txIds, statuses: statuses):
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendPartial(txIds, statuses))

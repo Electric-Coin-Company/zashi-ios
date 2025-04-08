@@ -105,7 +105,6 @@ class RootTests: XCTestCase {
         }
 
         store.dependencies.mainQueue = .immediate
-        store.dependencies.crashReporter = .noOp
         store.dependencies.walletStorage = .noOp
         store.dependencies.databaseFiles = .noOp
 
@@ -127,7 +126,6 @@ class RootTests: XCTestCase {
         }
 
         store.dependencies.mainQueue = .immediate
-        store.dependencies.crashReporter = .noOp
         store.dependencies.walletStorage = .noOp
         store.dependencies.databaseFiles = .noOp
 

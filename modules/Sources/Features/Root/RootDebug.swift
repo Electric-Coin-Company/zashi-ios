@@ -26,7 +26,6 @@ extension Root {
         case rateTheApp
         case rescanBlockchain
         case rewindDone(ZcashError?, Root.Action)
-        case testCrashReporter // this will crash the app if live.
         case updateFlag(FeatureFlag, Bool)
         case walletConfigLoaded(WalletConfig)
     }
@@ -35,10 +34,6 @@ extension Root {
     public func debugReduce() -> Reduce<Root.State, Root.Action> {
         Reduce { state, action in
             switch action {
-            case .debug(.testCrashReporter):
-                crashReporter.testCrash()
-                return .none
-                
             case .debug(.rescanBlockchain):
                 state.confirmationDialog = ConfirmationDialogState.rescanRequest()
                 return .none
