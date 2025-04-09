@@ -31,9 +31,9 @@ public struct SyncProgress {
         }
         
         public var syncingPercentage: Float {
-            if case .syncing(let progress) = synchronizerStatusSnapshot.syncStatus {
+            if case let .syncing(syncProgress, recoveryProgress) = synchronizerStatusSnapshot.syncStatus {
                 // Report at most 99.9% until the wallet is fully ready.
-                return progress * 0.999
+                return syncProgress * 0.999
             }
             
             return lastKnownSyncPercentage
@@ -98,8 +98,9 @@ public struct SyncProgress {
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
 
-                    if case .syncing(let progress) = snapshot.syncStatus {
-                        state.lastKnownSyncPercentage = progress
+                    if case let .syncing(syncProgress, recoveryProgress) = snapshot.syncStatus {
+                        print("__LD \(syncProgress) \(recoveryProgress)")
+                        state.lastKnownSyncPercentage = syncProgress
                     }
 
                     state.lastKnownErrorMessage = nil

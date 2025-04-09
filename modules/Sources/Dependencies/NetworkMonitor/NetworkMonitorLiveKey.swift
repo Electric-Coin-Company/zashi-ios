@@ -20,10 +20,7 @@ extension NetworkMonitorClient: DependencyKey {
 
         return NetworkMonitorClient(
             networkMonitorStream: {
-                monitor.pathUpdateHandler = {
-                    print("__LD status \($0)")
-                    subject.send($0.status == .satisfied)
-                }
+                monitor.pathUpdateHandler = { subject.send($0.status == .satisfied) }
                 monitor.start(queue: queue)
 
                 return subject.eraseToAnyPublisher()

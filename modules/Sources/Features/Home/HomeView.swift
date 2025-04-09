@@ -452,7 +452,7 @@ struct HomeView_Previews: PreviewProvider {
                                 .init(
                                     syncProgressState: .init(
                                         lastKnownSyncPercentage: Float(0.43),
-                                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
+                                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41, 0)),
                                         syncStatusMessage: "Syncing"
                                     ),
                                     transactionListState: .initial,

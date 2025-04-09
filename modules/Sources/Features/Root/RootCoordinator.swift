@@ -15,9 +15,13 @@ extension Root {
                 // MARK: - Accounts
 
             case .home(.walletAccountTapped(let walletAccount)):
+                guard state.selectedWalletAccount != walletAccount else {
+                    return .none
+                }
                 state.$selectedWalletAccount.withLock { $0 = walletAccount }
                 state.homeState.transactionListState.isInvalidated = true
                 return .merge(
+                    .send(.home(.smartBanner(.walletAccountChanged))),
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.loadContacts),
                     .send(.resolveMetadataEncryptionKeys),
@@ -144,9 +148,11 @@ extension Root {
                 state.path = nil
                 return .none
                 
-            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))):
+            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))),
+                    .home(.shieldingProcessor(.proposalReadyForShieldingWithKeystone(let proposal))):
                 state.signWithKeystoneCoordFlowState = .initial
                 state.signWithKeystoneCoordFlowState.sendConfirmationState.proposal = proposal
+                state.signWithKeystoneCoordFlowState.sendConfirmationState.isShielding = true
                 state.homeState.balancesBinding = false
                 return .run { send in
                     try? await mainQueue.sleep(for: .seconds(0.8))

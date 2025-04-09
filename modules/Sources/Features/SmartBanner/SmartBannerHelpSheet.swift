@@ -72,7 +72,7 @@ extension SmartBannerView {
                 "Report",
                 type: .ghost
             ) {
-                
+                store.send(.reportTapped)
             }
             .padding(.bottom, 12)
 

@@ -40,7 +40,7 @@ extension LocalNotificationClient: DependencyKey {
                 }
             },
             scheduleShielding: {
-                guard let futureDate = Calendar.current.date(byAdding: .hour, value: 48, to: Date()) else {
+                guard let futureDate = Calendar.current.date(byAdding: .minute, value: 1, to: Date()) else {
                     return
                 }
               
@@ -52,7 +52,7 @@ extension LocalNotificationClient: DependencyKey {
                 )
             },
             scheduleWalletBackup: {
-                guard let futureDate = Calendar.current.date(byAdding: .hour, value: 48, to: Date()) else {
+                guard let futureDate = Calendar.current.date(byAdding: .minute, value: 1, to: Date()) else {
                     return
                 }
 

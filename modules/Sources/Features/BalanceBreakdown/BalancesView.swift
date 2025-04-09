@@ -281,7 +281,7 @@ extension BalancesView {
                     pendingTransactions: Zatoshi(25_234_000),
                     syncProgressState: .init(
                         lastKnownSyncPercentage: 0.43,
-                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
+                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41, 0)),
                         syncStatusMessage: "Syncing"
                     ),
                     walletBalancesState: .initial

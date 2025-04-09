@@ -19,6 +19,8 @@ import UIComponents
 import NetworkMonitor
 import ZcashSDKEnvironment
 import LocalNotification
+import SupportDataGenerator
+import MessageUI
 
 @Reducer
 public struct SmartBanner {
@@ -49,17 +51,20 @@ public struct SmartBanner {
 
         public var delay = 1.5
         public var isOpen = false
+        public var isShielding = false
         public var isSmartBannerSheetPresented = false
         public var lastKnownErrorMessage = ""
         public var lastKnownSyncPercentage = 0.0
+        public var messageToBeShared: String?
         public var priorityContent: PriorityContent? = nil
         public var priorityContentRequested: PriorityContent? = nil
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var supportData: SupportData?
         public var synchronizerStatusSnapshot: SyncStatusSnapshot = .snapshotFor(state: .unprepared)
         public var tokenName = "ZEC"
         public var transparentBalance = Zatoshi(0)
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
-        
+
         public init() { }
     }
     
@@ -86,10 +91,13 @@ public struct SmartBanner {
         case openBanner
         case openBannerRequest
         case remindMeLaterTapped(State.PriorityContent)
+        case reportTapped
+        case shareFinished
         case smartBannerContentTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case transparentBalanceUpdated(Zatoshi)
         case triggerPriority(State.PriorityContent)
+        case walletAccountChanged
 
         // Action buttons
         case autoShieldingTapped
@@ -152,6 +160,33 @@ public struct SmartBanner {
             case .binding:
                 return .none
                 
+            case .walletAccountChanged:
+                return .run { send in
+                    await send(.closeBanner(true), animation: .easeInOut(duration: Constants.easeInOutDuration))
+                    try? await mainQueue.sleep(for: .seconds(1))
+                    await send(.evaluatePriority1)
+                }
+
+            case .reportTapped:
+                var supportData = SupportDataGenerator.generate()
+                supportData.message =
+                """
+                code: -2000
+                \(state.lastKnownErrorMessage)
+                
+                \(supportData.message)
+                """
+                if MFMailComposeViewController.canSendMail() {
+                    state.supportData = supportData
+                } else {
+                    state.messageToBeShared = supportData.message
+                }
+                return .none
+                
+            case .shareFinished:
+                state.messageToBeShared = nil
+                return .none
+                
             case .networkMonitorChanged(let isConnected):
                 if state.priorityContent == .priority1 && isConnected {
                     return .run { send in
@@ -193,8 +228,8 @@ public struct SmartBanner {
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
 
-                    if case .syncing(let progress) = snapshot.syncStatus {
-                        state.lastKnownSyncPercentage = Double(progress)
+                    if case let .syncing(syncProgress, recoveryProgress) = snapshot.syncStatus {
+                        state.lastKnownSyncPercentage = Double(syncProgress)
                         
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
@@ -219,12 +254,14 @@ public struct SmartBanner {
                     let accountsBalances = latestState.data.accountsBalances
                     if let account = state.selectedWalletAccount, let accountBalance = accountsBalances[account.id] {
                         state.transparentBalance = accountBalance.unshielded
-                        
-                        if accountBalance.orchardBalance.spendableValue.amount == 0 && state.priorityContent != .priority5 {
-                            return .send(.triggerPriority(.priority5))
-                        } else if accountBalance.orchardBalance.spendableValue.amount > 0 && state.priorityContent == .priority5 {
-                            return .send(.closeAndCleanupBanner)
-                        }
+//                        let total = accountBalance.orchardBalance.total().amount + accountBalance.saplingBalance.total().amount
+//                        let spendable = accountBalance.orchardBalance.spendableValue.amount + accountBalance.saplingBalance.spendableValue.amount
+//                        
+//                        if spendable == 0 && total > 0 && state.priorityContent != .priority5 {
+//                            return .send(.triggerPriority(.priority5))
+//                        } else if spendable > 0 && state.priorityContent == .priority5 {
+//                            return .send(.closeAndCleanupBanner)
+//                        }
                     }
                 }
 
@@ -259,7 +296,6 @@ public struct SmartBanner {
 
                 // updating balance
             case .evaluatePriority5:
-                
                 return .send(.evaluatePriority6)
 
                 // wallet backup
@@ -338,8 +374,6 @@ public struct SmartBanner {
                 return .send(.openBannerRequest)
 
             case .closeAndCleanupBanner:
-//                state.priorityContentRequested = nil
-//                state.priorityContent = nil
                 return .run { send in
                     await send(.closeBanner(true), animation: .easeInOut(duration: Constants.easeInOutDuration))
                 }
@@ -361,7 +395,7 @@ public struct SmartBanner {
                 return .send(.smartBannerContentTapped)
 
             case .shieldTapped:
-                return .none
+                return .send(.closeAndCleanupBanner)
 
             case .walletBackupTapped:
                 return .none

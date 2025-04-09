@@ -57,6 +57,8 @@ public struct SmartBannerView: View {
                         .shadow(color: Design.Text.primary.color(colorScheme).opacity(0.1), radius: store.isOpen ? 1 : 0, y: -1)
                 }
                 .frame(minHeight: SBConstants.fixedHeight + SBConstants.shadowHeight)
+                
+                shareMessageView()
             }
             .zashiSheet(isPresented: $store.isSmartBannerSheetPresented) {
                 helpSheetContent()
@@ -75,6 +77,21 @@ public struct SmartBannerView: View {
                 )
             }
             .clipShape( Rectangle() )
+        }
+    }
+}
+
+extension SmartBannerView {
+    @ViewBuilder func shareMessageView() -> some View {
+        if let message = store.messageToBeShared {
+            UIShareDialogView(activityItems: [message]) {
+                store.send(.shareFinished)
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
         }
     }
 }
