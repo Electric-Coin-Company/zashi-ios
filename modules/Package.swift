@@ -21,7 +21,6 @@ let package = Package(
         .library(name: "BalanceBreakdown", targets: ["BalanceBreakdown"]),
         .library(name: "BalanceFormatter", targets: ["BalanceFormatter"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
-        .library(name: "CrashReporter", targets: ["CrashReporter"]),
         .library(name: "CurrencyConversionSetup", targets: ["CurrencyConversionSetup"]),
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
@@ -99,7 +98,6 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.11"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.6.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -233,14 +231,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/CaptureDevice"
-        ),
-        .target(
-            name: "CrashReporter",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk")
-            ],
-            path: "Sources/Dependencies/CrashReporter"
         ),
         .target(
             name: "CurrencyConversionSetup",
@@ -623,7 +613,6 @@ let package = Package(
             dependencies: [
                 "AddressBook",
                 "AutolockHandler",
-                "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
                 "DeeplinkWarning",

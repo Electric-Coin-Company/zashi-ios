@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.5.2 build 1 (2025-04-09)
+
+### Changed
+- Crash reporting has been updated to rely on Apple services only, allowing users to opt-in/out in their device settings. Firebase Crashlytics integration has been completely removed.
+
 ## 1.5.1 build 2 (2025-04-03)
 
 ### Fixed

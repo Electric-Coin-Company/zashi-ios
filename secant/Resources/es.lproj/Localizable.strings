@@ -379,7 +379,6 @@
 "root.debug.option.nukeWallet" = "[Ten cuidado] Borrar billetera";
 "root.debug.option.exportLogs" = "Exportar registros";
 "root.debug.option.appReview" = "Califica la aplicación";
-"root.debug.option.testCrashReporter" = "Probar Informador de Fallos";
 "root.debug.dialog.rescan.title" = "Reescanear";
 "root.debug.dialog.rescan.message" = "Selecciona el reescaneo que deseas";
 "root.debug.dialog.rescan.option.quick" = "Reescaneo rápido";

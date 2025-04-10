@@ -15,7 +15,6 @@ import Foundation
 import ExportLogs
 import OnboardingFlow
 import Tabs
-import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
@@ -190,7 +189,6 @@ public struct Root {
 
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.autolockHandler) var autolockHandler
-    @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool

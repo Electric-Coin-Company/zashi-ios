@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "1.5.2",
+            "date": "04-09-2025",
+            "timestamp": 1744196215,
+            "sections": [
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Actualizamos el reporte de fallos, de tal manera que ahora solo ocuparemos los servicios de Apple, y con esto permitir a los usuarios activarlo y/o desactivarlo respectivamente en la configuración de su dispositivo.",
+                        "Se ha eliminado por completo la integración con Firebase Crashlytics."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5.1",
             "date": "04-03-2025",
             "timestamp": 1743687047,

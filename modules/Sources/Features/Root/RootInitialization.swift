@@ -27,7 +27,6 @@ extension Root {
         case checkBackupPhraseValidation
         case checkRestoreWalletFlag(SyncStatus)
         case checkWalletInitialization
-        case configureCrashReporter
         case checkWalletConfig
         case initializeSDK(WalletInitMode)
         case initialSetups
@@ -53,14 +52,11 @@ extension Root {
                 state.appStartState = .didFinishLaunching
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
-                return .concatenate(
-                    .send(.initialization(.configureCrashReporter)),
-                    .run { send in
+                return .run { send in
                         try await mainQueue.sleep(for: .seconds(0.5))
                         await send(.initialization(.initialSetups))
                     }
                     .cancellable(id: DidFinishLaunchingId, cancelInFlight: true)
-                )
 
             case .initialization(.appDelegate(.willEnterForeground)):
                 if state.featureFlags.appLaunchBiometric {
@@ -665,11 +661,7 @@ extension Root {
                     state.alert = AlertState.differentSeed()
                 }
                 return .none
-                
-            case .initialization(.configureCrashReporter):
-                crashReporter.configure(true)
-                return .none
-                
+
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig

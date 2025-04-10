@@ -272,10 +272,6 @@ private extension RootView {
                     }
                     .disabled(store.exportLogsState.exportLogsDisabled)
 
-                    Button(L10n.Root.Debug.Option.testCrashReporter) {
-                        store.send(.debug(.testCrashReporter))
-                    }
-
 #if DEBUG
                     Button(L10n.Root.Debug.Option.appReview) {
                         store.send(.debug(.rateTheApp))

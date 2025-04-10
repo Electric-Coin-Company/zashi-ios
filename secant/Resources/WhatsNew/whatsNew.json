@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "1.5.2",
+            "date": "04-09-2025",
+            "timestamp": 1744196215,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "Crash reporting has been updated to rely on Apple services only, allowing users to opt-in/out in their device settings.",
+                        "Firebase Crashlytics integration has been completely removed."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5.1",
             "date": "04-03-2025",
             "timestamp": 1743687047,
