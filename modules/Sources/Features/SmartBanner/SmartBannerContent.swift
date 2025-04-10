@@ -74,7 +74,7 @@ extension SmartBannerView {
 
     @ViewBuilder func restoringContent() -> some View {
         HStack(spacing: 0) {
-            CircularProgressView(progress: store.lastKnownSyncPercentage)
+            CircularProgressView(progress: store.syncingPercentage)
                 .frame(width: 20, height: 20)
                 .padding(.trailing, 12)
             
@@ -92,7 +92,7 @@ extension SmartBannerView {
 
     @ViewBuilder func syncingContent() -> some View {
         HStack(spacing: 0) {
-            CircularProgressView(progress: store.lastKnownSyncPercentage)
+            CircularProgressView(progress: store.syncingPercentage)
                 .frame(width: 20, height: 20)
                 .padding(.trailing, 12)
             

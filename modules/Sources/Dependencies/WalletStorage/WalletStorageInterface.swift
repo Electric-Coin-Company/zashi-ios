@@ -80,4 +80,12 @@ public struct WalletStorageClient {
     
     public var importUserMetadataEncryptionKeys: (UserMetadataEncryptionKeys, Account) throws -> Void
     public var exportUserMetadataEncryptionKeys: (Account) throws -> UserMetadataEncryptionKeys
+
+    // Remind me
+    
+    public var importWalletBackupReminder: (ReminedMeTimestamp) throws -> Void
+    public var exportWalletBackupReminder: () -> ReminedMeTimestamp?
+    public var importShieldingReminder: (ReminedMeTimestamp, Account) throws -> Void
+    public var exportShieldingReminder: (Account) -> ReminedMeTimestamp?
+    public var resetShieldingReminder: (Account) -> Void
 }

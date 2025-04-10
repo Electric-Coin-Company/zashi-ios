@@ -217,6 +217,9 @@ public struct Balances {
                 state.isShieldingFunds = false
                 //state.walletBalancesState.transparentBalance = .zero
                 state.transparentBalance = .zero
+                if let account = state.selectedWalletAccount {
+                    walletStorage.resetShieldingReminder(account.account)
+                }
                 return .none
 
             case let .shieldFundsPartial(txIds, statuses):

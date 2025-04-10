@@ -607,7 +607,9 @@
 "smartBanner.help.shield.info2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
 "smartBanner.help.shield.transparent" = "Transparent";
 
-"smartBanner.help.remindMe" = "Remind me later";
+"smartBanner.help.remindMePhase1" = "Remind me in 2 days";
+"smartBanner.help.remindMePhase2" = "Remind me in 2 weeks";
+"smartBanner.help.remindMePhase3" = "Remind me in a month";
 
 "smartBanner.content.disconnected.title" = "Wallet Disconnected";
 "smartBanner.content.disconnected.info" = "Check your connection and reload Zashi";

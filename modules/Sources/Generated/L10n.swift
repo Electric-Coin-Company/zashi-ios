@@ -1163,8 +1163,12 @@ public enum L10n {
       }
     }
     public enum Help {
-      /// Remind me later
-      public static let remindMe = L10n.tr("Localizable", "smartBanner.help.remindMe", fallback: "Remind me later")
+      /// Remind me in 2 days
+      public static let remindMePhase1 = L10n.tr("Localizable", "smartBanner.help.remindMePhase1", fallback: "Remind me in 2 days")
+      /// Remind me in 2 weeks
+      public static let remindMePhase2 = L10n.tr("Localizable", "smartBanner.help.remindMePhase2", fallback: "Remind me in 2 weeks")
+      /// Remind me in a month
+      public static let remindMePhase3 = L10n.tr("Localizable", "smartBanner.help.remindMePhase3", fallback: "Remind me in a month")
       public enum Backup {
         /// Prevent potential loss of funds by securely backing up your wallet.
         public static let info1 = L10n.tr("Localizable", "smartBanner.help.backup.info1", fallback: "Prevent potential loss of funds by securely backing up your wallet.")

@@ -67,14 +67,19 @@ public struct SmartBannerView: View {
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
             .background {
-                LinearGradient(
-                    stops: [
-                        Gradient.Stop(color: Design.Utility.Purple._700.color(.light), location: 0.00),
-                        Gradient.Stop(color: Design.Utility.Purple._950.color(.light), location: 1.00)
-                    ],
-                    startPoint: UnitPoint(x: 0.5, y: 0.0),
-                    endPoint: UnitPoint(x: 0.5, y: 1.0)
-                )
+                VStack(spacing: 0) {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: Design.Utility.Purple._700.color(.light), location: 0.00),
+                            Gradient.Stop(color: Design.Utility.Purple._950.color(.light), location: 1.00)
+                        ],
+                        startPoint: UnitPoint(x: 0.5, y: 0.0),
+                        endPoint: UnitPoint(x: 0.5, y: 1.0)
+                    )
+                    Design.screenBackground.color(colorScheme)
+                        .frame(height: 2)
+                        .frame(maxWidth: .infinity)
+                }
             }
             .clipShape( Rectangle() )
         }

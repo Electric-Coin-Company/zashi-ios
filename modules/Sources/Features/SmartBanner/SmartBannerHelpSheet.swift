@@ -199,7 +199,7 @@ extension SmartBannerView {
                 .fixedSize(horizontal: false, vertical: true)
 
             ZashiButton(
-                L10n.SmartBanner.Help.remindMe,
+                store.remindMeWalletBackupText,
                 type: .ghost
             ) {
                 store.send(.remindMeLaterTapped(.priority6))
@@ -270,7 +270,7 @@ extension SmartBannerView {
             .padding(.bottom, 24)
 
             ZashiButton(
-                L10n.SmartBanner.Help.remindMe,
+                store.remindMeShieldedText,
                 type: .ghost
             ) {
                 store.send(.remindMeLaterTapped(.priority7))

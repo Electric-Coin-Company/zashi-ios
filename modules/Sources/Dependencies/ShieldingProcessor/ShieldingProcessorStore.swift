@@ -65,7 +65,7 @@ public struct ShieldingProcessor {
                         let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
-                        
+
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
 
                         switch result {
@@ -107,6 +107,9 @@ public struct ShieldingProcessor {
 
             case .shieldFundsSuccess:
                 state.isShieldingFunds = false
+                if let account = state.selectedWalletAccount {
+                    walletStorage.resetShieldingReminder(account.account)
+                }
                 return .none
             }
         }

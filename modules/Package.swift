@@ -40,7 +40,6 @@ let package = Package(
         .library(name: "Home", targets: ["Home"]),
         .library(name: "KeystoneHandler", targets: ["KeystoneHandler"]),
         .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
-        .library(name: "LocalNotification", targets: ["LocalNotification"]),
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
@@ -101,6 +100,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
 //        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.10"),
+//        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", revision: "870f092bf3f85a26772d1bc37b060f6b6b1c1698"),
         .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1537-Birthday-estimate-based-on-a-date"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
@@ -449,14 +449,6 @@ let package = Package(
             path: "Sources/Dependencies/LocalAuthenticationHandler"
         ),
         .target(
-            name: "LocalNotification",
-            dependencies: [
-                "Generated",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Dependencies/LocalNotification"
-        ),
-        .target(
             name: "LogsHandler",
             dependencies: [
                 "Utils",
@@ -677,7 +669,6 @@ let package = Package(
                 "Generated",
                 "Home",
                 "LocalAuthenticationHandler",
-                "LocalNotification",
                 "MnemonicClient",
                 "Models",
                 "NotEnoughFreeSpace",
@@ -882,7 +873,6 @@ let package = Package(
             name: "SmartBanner",
             dependencies: [
                 "Generated",
-                "LocalNotification",
                 "Models",
                 "NetworkMonitor",
                 "SDKSynchronizer",

@@ -16,7 +16,7 @@ import BackgroundTasks
 import UserNotifications
 
 // swiftlint:disable indentation_width
-final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate {
     private let bcgTaskId = "co.electriccoin.power_wifi_sync"
     private let bcgSchedulerTaskId = "co.electriccoin.scheduler"
     private var monitor: NWPathMonitor?
@@ -34,9 +34,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        
 #if DEBUG
         // Short-circuit if running unit tests to avoid side-effects from the app running.
         guard !_XCTIsTesting else { return true }
@@ -57,13 +54,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier
     ) -> Bool {
         return extensionPointIdentifier != UIApplication.ExtensionPointIdentifier.keyboard
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-
-        rootStore.send(.localNotificationTapped(response.notification.request.identifier))
-        
-        completionHandler()
     }
 }
 

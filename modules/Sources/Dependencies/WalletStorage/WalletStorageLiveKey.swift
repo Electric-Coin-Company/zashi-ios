@@ -50,6 +50,21 @@ extension WalletStorageClient: DependencyKey {
             },
             exportUserMetadataEncryptionKeys: { account in
                 try walletStorage.exportUserMetadataEncryptionKeys(account: account)
+            },
+            importWalletBackupReminder: { reminedMeTimestamp in
+                try walletStorage.importWalletBackupReminder(reminedMeTimestamp)
+            },
+            exportWalletBackupReminder: {
+                walletStorage.exportWalletBackupReminder()
+            },
+            importShieldingReminder: { reminedMeTimestamp, account in
+                try walletStorage.importShieldingReminder(reminedMeTimestamp, account: account)
+            },
+            exportShieldingReminder: { account in
+                walletStorage.exportShieldingReminder(account: account)
+            },
+            resetShieldingReminder: { account in
+                walletStorage.resetShieldingReminder(account: account)
             }
         )
     }

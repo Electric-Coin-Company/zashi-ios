@@ -18,7 +18,6 @@ import UserPreferencesStorage
 import UIComponents
 import NetworkMonitor
 import ZcashSDKEnvironment
-import LocalNotification
 import SupportDataGenerator
 import MessageUI
 
@@ -26,6 +25,9 @@ import MessageUI
 public struct SmartBanner {
     enum Constants: Equatable {
         static let easeInOutDuration = 0.85
+        static let remindMe2days: TimeInterval = 86_400 * 2
+        static let remindMe2weeks: TimeInterval = 86_400 * 14
+        static let remindMeMonth: TimeInterval = 86_400 * 30
     }
     
     @ObservableState
@@ -54,10 +56,12 @@ public struct SmartBanner {
         public var isShielding = false
         public var isSmartBannerSheetPresented = false
         public var lastKnownErrorMessage = ""
-        public var lastKnownSyncPercentage = 0.0
+        public var lastKnownSyncPercentage = -1.0
         public var messageToBeShared: String?
         public var priorityContent: PriorityContent? = nil
         public var priorityContentRequested: PriorityContent? = nil
+        public var remindMeShieldedPhaseCounter = 0
+        public var remindMeWalletBackupPhaseCounter = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var supportData: SupportData?
         public var synchronizerStatusSnapshot: SyncStatusSnapshot = .snapshotFor(state: .unprepared)
@@ -65,6 +69,26 @@ public struct SmartBanner {
         public var transparentBalance = Zatoshi(0)
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
+        public var syncingPercentage: Double {
+            lastKnownSyncPercentage >= 0 ? lastKnownSyncPercentage * 0.999 : 0
+        }
+        
+        public var remindMeShieldedText: String {
+            remindMeShieldedPhaseCounter == 0
+            ? L10n.SmartBanner.Help.remindMePhase1
+            : remindMeShieldedPhaseCounter == 1
+            ? L10n.SmartBanner.Help.remindMePhase2
+            : L10n.SmartBanner.Help.remindMePhase3
+        }
+
+        public var remindMeWalletBackupText: String {
+            remindMeWalletBackupPhaseCounter == 0
+            ? L10n.SmartBanner.Help.remindMePhase1
+            : remindMeWalletBackupPhaseCounter == 1
+            ? L10n.SmartBanner.Help.remindMePhase2
+            : L10n.SmartBanner.Help.remindMePhase3
+        }
+        
         public init() { }
     }
     
@@ -86,11 +110,11 @@ public struct SmartBanner {
         case evaluatePriority7
         case evaluatePriority8
         case evaluatePriority9
-        case localNotificationTapped(String)
         case networkMonitorChanged(Bool)
         case openBanner
         case openBannerRequest
         case remindMeLaterTapped(State.PriorityContent)
+        case reportPrepared
         case reportTapped
         case shareFinished
         case smartBannerContentTapped
@@ -107,7 +131,6 @@ public struct SmartBanner {
         case walletBackupTapped
     }
 
-    @Dependency(\.localNotification) var localNotification
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.networkMonitor) var networkMonitor
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -161,6 +184,7 @@ public struct SmartBanner {
                 return .none
                 
             case .walletAccountChanged:
+                state.remindMeShieldedPhaseCounter = 0
                 return .run { send in
                     await send(.closeBanner(true), animation: .easeInOut(duration: Constants.easeInOutDuration))
                     try? await mainQueue.sleep(for: .seconds(1))
@@ -168,6 +192,13 @@ public struct SmartBanner {
                 }
 
             case .reportTapped:
+                return .run { send in
+                    await send(.closeSheetTapped)
+                    try? await mainQueue.sleep(for: .seconds(1))
+                    await send(.reportPrepared)
+                }
+                
+            case .reportPrepared:
                 var supportData = SupportDataGenerator.generate()
                 supportData.message =
                 """
@@ -213,10 +244,29 @@ public struct SmartBanner {
             case .remindMeLaterTapped(let priority):
                 state.isSmartBannerSheetPresented = false
                 state.priorityContentRequested = nil
+                let now = Date().timeIntervalSince1970
+                // wallet backup = priority6
                 if priority == .priority6 {
-                    localNotification.scheduleWalletBackup()
+                    if var walletBackupReminder = walletStorage.exportWalletBackupReminder() {
+                        walletBackupReminder.occurence += 1
+                        walletBackupReminder.timestamp = now
+                        try? walletStorage.importWalletBackupReminder(walletBackupReminder)
+                    } else {
+                        let walletBackupReminder = ReminedMeTimestamp(timestamp: now, occurence: 1)
+                        try? walletStorage.importWalletBackupReminder(walletBackupReminder)
+                    }
                 } else if priority == .priority7 {
-                    localNotification.scheduleShielding()
+                    // shielding = priority7
+                    if let account = state.selectedWalletAccount {
+                        if var shieldingReminder = walletStorage.exportShieldingReminder(account.account) {
+                            shieldingReminder.occurence += 1
+                            shieldingReminder.timestamp = now
+                            try? walletStorage.importShieldingReminder(shieldingReminder, account.account)
+                        } else {
+                            let shieldingReminder = ReminedMeTimestamp(timestamp: now, occurence: 1)
+                            try? walletStorage.importShieldingReminder(shieldingReminder, account.account)
+                        }
+                    }
                 }
                 return .run { send in
                     try? await mainQueue.sleep(for: .seconds(1))
@@ -227,9 +277,13 @@ public struct SmartBanner {
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
-
+                    
                     if case let .syncing(syncProgress, recoveryProgress) = snapshot.syncStatus {
-                        state.lastKnownSyncPercentage = Double(syncProgress)
+                        if let recoveryProgress {
+                            state.lastKnownSyncPercentage = Double(syncProgress + recoveryProgress) / 2.0
+                        } else {
+                            state.lastKnownSyncPercentage = Double(syncProgress)
+                        }
                         
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
@@ -239,7 +293,7 @@ public struct SmartBanner {
                     // error syncing check
                     switch snapshot.syncStatus {
                     case .upToDate:
-                        if state.priorityContent == .priority3 {
+                        if state.priorityContent == .priority3 || state.priorityContent == .priority4 {
                             return .send(.closeAndCleanupBanner)
                         }
                     case .error, .unprepared:
@@ -249,32 +303,10 @@ public struct SmartBanner {
                         }
                     default: break
                     }
-                    
-                    // unavailable balance check
-                    let accountsBalances = latestState.data.accountsBalances
-                    if let account = state.selectedWalletAccount, let accountBalance = accountsBalances[account.id] {
-                        state.transparentBalance = accountBalance.unshielded
-//                        let total = accountBalance.orchardBalance.total().amount + accountBalance.saplingBalance.total().amount
-//                        let spendable = accountBalance.orchardBalance.spendableValue.amount + accountBalance.saplingBalance.spendableValue.amount
-//                        
-//                        if spendable == 0 && total > 0 && state.priorityContent != .priority5 {
-//                            return .send(.triggerPriority(.priority5))
-//                        } else if spendable > 0 && state.priorityContent == .priority5 {
-//                            return .send(.closeAndCleanupBanner)
-//                        }
-                    }
                 }
 
                 return .none
 
-            case .localNotificationTapped(let identifier):
-                if LocalNotificationClient.Constants.walletBackupUUID == identifier {
-                    return .send(.triggerPriority(.priority6))
-                } else if LocalNotificationClient.Constants.shieldingUUID == identifier {
-                    return .send(.triggerPriority(.priority7))
-                }
-                return .none
-                
                 // disconnected
             case .evaluatePriority1:
                 return .send(.evaluatePriority2)
@@ -292,6 +324,9 @@ public struct SmartBanner {
 
                 // syncing
             case .evaluatePriority4:
+                if state.walletStatus != .restoring && state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < 0.95 {
+                    return .send(.triggerPriority(.priority4))
+                }
                 return .send(.evaluatePriority5)
 
                 // updating balance
@@ -301,12 +336,18 @@ public struct SmartBanner {
                 // wallet backup
             case .evaluatePriority6:
                 if let storedWallet = try? walletStorage.exportWallet(), !storedWallet.hasUserPassedPhraseBackupTest {
-                    return .run { send in
-                        guard await !localNotification.isWalletBackupScheduled() else {
-                            await send(.evaluatePriority7)
-                            return
+                    if let walletBackupReminder = walletStorage.exportWalletBackupReminder() {
+                        state.remindMeWalletBackupPhaseCounter = walletBackupReminder.occurence
+                        let now = Date().timeIntervalSince1970
+
+                        if (state.remindMeWalletBackupPhaseCounter == 1 && walletBackupReminder.timestamp + Constants.remindMe2days < now)
+                            || (state.remindMeWalletBackupPhaseCounter == 2 && walletBackupReminder.timestamp + Constants.remindMe2weeks < now)
+                            || (state.remindMeWalletBackupPhaseCounter > 2 && walletBackupReminder.timestamp + Constants.remindMeMonth < now) {
+                            return .send(.triggerPriority(.priority6))
                         }
-                        await send(.triggerPriority(.priority6))
+                    } else {
+                        // phase 1
+                        return .send(.triggerPriority(.priority6))
                     }
                 }
                 return .send(.evaluatePriority7)
@@ -316,11 +357,24 @@ public struct SmartBanner {
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
-                return .run { send in
+                if let shieldedReminder = walletStorage.exportShieldingReminder(account.account) {
+                    state.remindMeShieldedPhaseCounter = shieldedReminder.occurence
+                }
+                return .run { [remindMeShieldedPhaseCounter = state.remindMeShieldedPhaseCounter] send in
                     if let accountBalance = try? await sdkSynchronizer.getAccountsBalances()[account.id],
-                       accountBalance.unshielded > zcashSDKEnvironment.shieldingThreshold {
+                       accountBalance.unshielded >= zcashSDKEnvironment.shieldingThreshold {
                         await send(.transparentBalanceUpdated(accountBalance.unshielded))
-                        if await !localNotification.isShieldingScheduled() {
+                        
+                        if let shieldedReminder = walletStorage.exportShieldingReminder(account.account) {
+                            let now = Date().timeIntervalSince1970
+
+                            if (remindMeShieldedPhaseCounter == 1 && shieldedReminder.timestamp + Constants.remindMe2days < now)
+                                || (remindMeShieldedPhaseCounter == 2 && shieldedReminder.timestamp + Constants.remindMe2weeks < now)
+                                || (remindMeShieldedPhaseCounter > 2 && shieldedReminder.timestamp + Constants.remindMeMonth < now) {
+                                await send(.triggerPriority(.priority7))
+                            }
+                        } else {
+                            // phase 1
                             await send(.triggerPriority(.priority7))
                         }
                     } else {

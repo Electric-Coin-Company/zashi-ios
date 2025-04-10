@@ -497,7 +497,6 @@ extension Root {
                 }
                 state.splashAppeared = true
                 state.isRestoringWallet = false
-                localNotification.clearNotifications()
                 userDefaults.remove(Constants.udIsRestoringWallet)
                 userDefaults.remove(Constants.udLeavesScreenOpen)
                 flexaHandler.signOut()
