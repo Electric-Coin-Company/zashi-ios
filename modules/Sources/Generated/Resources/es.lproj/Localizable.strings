@@ -282,6 +282,7 @@
 "general.back" = "Atrás";
 "general.next" = "Siguiente";
 "general.send" = "Enviar";
+"general.share" = "Compartir";
 "general.close" = "Cerrar";
 "general.max" = "Máx";
 "general.ok" = "Ok";
