@@ -8,7 +8,7 @@
                 {
                     "title": "Fixed:",
                     "bulletpoints": [
-                        ""
+                        "We fixed an issue with transaction flow getting stuck on the sending screen in case of failed biometric check. "
                     ]
                 }
             ]

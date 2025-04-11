@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.5.3 build 1 (2025-04-14)
+
+### Fixed
+- We fixed an issue with transaction flow getting stuck on the sending screen in case of failed biometric check. 
+
 ## 1.5.2 build 1 (2025-04-09)
 
 ### Changed

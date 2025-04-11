@@ -6,9 +6,9 @@
             "timestamp": 1744615242,
             "sections": [
                 {
-                    "title": "Fixed:",
+                    "title": "Corregido:",
                     "bulletpoints": [
-                        ""
+                        "Solucionamos un problema con el flujo de transacción que se quedaba bloqueado en la pantalla de envío en caso de una verificación biométrica fallida."
                     ]
                 }
             ]
