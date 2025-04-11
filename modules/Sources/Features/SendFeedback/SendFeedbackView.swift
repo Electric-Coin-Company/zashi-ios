@@ -88,7 +88,7 @@ public struct SendFeedbackView: View {
                     Spacer()
                     
                     ZashiButton(
-                        L10n.General.send
+                        L10n.General.share
                     ) {
                         store.send(.sendTapped)
                     }

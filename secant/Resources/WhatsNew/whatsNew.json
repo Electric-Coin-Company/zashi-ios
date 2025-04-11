@@ -1,6 +1,19 @@
 {
     "releases": [
         {
+            "version": "1.5.3",
+            "date": "04-14-2025",
+            "timestamp": 1744615242,
+            "sections": [
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed an issue with transaction flow getting stuck on the sending screen in case of failed biometric check. "
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5.2",
             "date": "04-09-2025",
             "timestamp": 1744196215,

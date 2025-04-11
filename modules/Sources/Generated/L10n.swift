@@ -341,6 +341,8 @@ public enum L10n {
     public static let save = L10n.tr("Localizable", "general.save", fallback: "Save")
     /// Send
     public static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
+    /// Share
+    public static let share = L10n.tr("Localizable", "general.share", fallback: "Share")
     /// Show
     public static let show = L10n.tr("Localizable", "general.show", fallback: "Show")
     /// Success
