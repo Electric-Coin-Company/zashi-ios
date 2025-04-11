@@ -50,6 +50,10 @@ public struct Home {
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
 
+        public var isSmartWidgetOpen: Bool {
+            smartBannerState.isOpen
+        }
+        
         public var isKeystoneConnected: Bool {
             for account in walletAccounts {
                 if account.vendor == .keystone {

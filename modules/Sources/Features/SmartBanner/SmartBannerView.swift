@@ -37,7 +37,7 @@ public struct SmartBannerView: View {
                 BottomRoundedRectangle(radius: SBConstants.fixedHeight)
                     .frame(height: SBConstants.fixedHeight)
                     .foregroundColor(Design.screenBackground.color(colorScheme))
-                    .shadow(color: Design.Text.primary.color(colorScheme).opacity(0.25), radius: 1)
+                    .shadow(color: Design.Text.primary.color(colorScheme).opacity(store.isOpen ? 0.25 : 0), radius: 1)
                     .zIndex(1)
                 
                 VStack(spacing: 0) {
@@ -68,6 +68,9 @@ public struct SmartBannerView: View {
             .onDisappear { store.send(.onDisappear) }
             .background {
                 VStack(spacing: 0) {
+                    Design.screenBackground.color(colorScheme)
+                        .frame(height: 2)
+                        .frame(maxWidth: .infinity)
                     LinearGradient(
                         stops: [
                             Gradient.Stop(color: Design.Utility.Purple._700.color(.light), location: 0.00),

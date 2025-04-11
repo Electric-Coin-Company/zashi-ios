@@ -36,6 +36,12 @@ public struct WalletBalances {
         public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
 
+        public var uiTotalBalanceText: String {
+            Zatoshi(
+                (totalBalance.amount / 100_000) * 100_000
+            ).decimalString()
+        }
+        
         public var isExchangeRateUSDInFlight: Bool {
             fiatCurrencyResult?.state == .fetching
         }

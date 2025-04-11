@@ -40,7 +40,8 @@ public struct HomeView: View {
                         action: \.walletBalances
                     ),
                     tokenName: tokenName,
-                    couldBeHidden: true
+                    couldBeHidden: true,
+                    shortened: true
                 )
                 .padding(.top, 1)
                 .onTapGesture {
@@ -145,7 +146,8 @@ public struct HomeView: View {
                 ScrollView {
                     if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
-                            .padding(.top, 12)
+//                            .padding(.top, store.isSmartWidgetOpen ? 0 : 100)//12)
+//                            .padding(.top, 12)
                     } else {
                         VStack(spacing: 0) {
 //                            noTransactionsView()
@@ -161,7 +163,7 @@ public struct HomeView: View {
                                 scrollable: false
                             )
                         }
-                        .padding(.top, 12)
+//                        .padding(.top, store.isSmartWidgetOpen ? 0 : 100)//12)
                     }
                 }
                 //.padding(.top, 12)
@@ -418,23 +420,86 @@ public struct HomeView: View {
         }
     }
     
-    private func button(_ title: String, icon: Image, action: @escaping () -> Void) -> some View {
-        Button {
-            action()
-        } label: {
-            VStack(spacing: 4) {
-                icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .frame(width: 24, height: 24)
-                
-                Text(title)
+    @ViewBuilder private func button(
+        _ title: String,
+        icon: Image,
+        action: @escaping () -> Void
+    ) -> some View {
+        if colorScheme == .light {
+            Button {
+                action()
+            } label: {
+                VStack(spacing: 4) {
+                    icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(title)
+                }
+                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .background {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Design.Utility.Gray._100.color(colorScheme))
+                        }
+                }
+                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+                .padding(.bottom, 4)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 76)
-            .background {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+        } else {
+            Button {
+                action()
+            } label: {
+                VStack(spacing: 4) {
+                    icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(title)
+                }
+                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .background(Design.Surfaces.bgPrimary.color(colorScheme))
+                .cornerRadius(20)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .inset(by: 0.25)
+                        .stroke(Color(red: 0.35, green: 0.33, blue: 0.33), lineWidth: 0.5)
+                )
+//                VStack(spacing: 4) {
+//                    icon
+//                        .resizable()
+//                        .renderingMode(.template)
+//                        .frame(width: 24, height: 24)
+//                    
+//                    Text(title)
+//                }
+//                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+//                .background {
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+//                        .background {
+//                            RoundedRectangle(cornerRadius: 20)
+//                                .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
+//                        }
+////                        .overlay {
+////                            LinearGradient(
+////                                stops: [
+////                                    Gradient.Stop(color: Design.Utility.Purple._700.color(.light), location: 0.00),
+////                                    Gradient.Stop(color: Design.Utility.Purple._950.color(.light), location: 1.00)
+////                                ],
+////                                startPoint: UnitPoint(x: 0.5, y: 0.0),
+////                                endPoint: UnitPoint(x: 0.5, y: 1.0)
+////                            )
+////                        }
+//                }
+//                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+//                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+//                .padding(.bottom, 4)
             }
         }
     }

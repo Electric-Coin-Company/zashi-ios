@@ -17,29 +17,31 @@ public struct WalletBalancesView: View {
     let tokenName: String
     let underlinedAvailableBalance: Bool
     let couldBeHidden: Bool
+    let shortened: Bool
 
     public init(
         store: StoreOf<WalletBalances>,
         tokenName: String,
         underlinedAvailableBalance: Bool = true,
-        couldBeHidden: Bool = false
+        couldBeHidden: Bool = false,
+        shortened: Bool = false
     ) {
         self.store = store
         self.tokenName = tokenName
         self.underlinedAvailableBalance = underlinedAvailableBalance
         self.couldBeHidden = couldBeHidden
+        self.shortened = shortened
     }
 
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
+                balanceContent()
                     .padding(.top, 40)
                     .anchorPreference(
                         key: ExchangeRateFeaturePreferenceKey.self,
                         value: .bounds
                     ) { $0 }
-
 #if !SECANT_DISTRIB
                     .accessDebugMenuWithHiddenGesture {
                         store.send(.debugMenuStartup)
@@ -85,6 +87,21 @@ public struct WalletBalancesView: View {
             .foregroundColor(Asset.Colors.primary.color)
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
+        }
+    }
+    
+    @ViewBuilder private func balanceContent() -> some View {
+        if shortened {
+            HStack(spacing: 0) {
+                ZcashSymbol()
+                    .frame(width: 32, height: 32)
+                    .zForegroundColor(Design.Text.primary)
+                
+                Text(store.uiTotalBalanceText)
+                    .zFont(.semiBold, size: 48, style: Design.Text.primary)
+            }
+        } else {
+            BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
         }
     }
     

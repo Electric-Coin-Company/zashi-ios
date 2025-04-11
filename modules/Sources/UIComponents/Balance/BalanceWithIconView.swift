@@ -19,24 +19,27 @@ public struct BalanceWithIconView: View {
     }
     
     public var body: some View {
-        HStack {
+        HStack(spacing: 0) {
+            ZcashSymbol()
+                .frame(width: 32, height: 32)
+                .zForegroundColor(Design.Text.primary)
+
             ZatoshiRepresentationView(
                 balance: balance,
                 fontName: FontFamily.Inter.semiBold.name,
-                mostSignificantFontSize: 42,
-                leastSignificantFontSize: 10,
+                mostSignificantFontSize: 48,
+                leastSignificantFontSize: 14,
                 format: .expanded,
                 couldBeHidden: couldBeHidden
             )
-            
-            Circle()
-                .frame(width: 25, height: 25)
-                .zForegroundColor(Design.Surfaces.brandBg)
-                .overlay {
-                    ZcashSymbol()
-                        .frame(width: 15, height: 15)
-                        .foregroundColor(Asset.Colors.secondary.color)
-                }
+//            Circle()
+//                .frame(width: 25, height: 25)
+//                .zForegroundColor(Design.Surfaces.brandBg)
+//                .overlay {
+//                    ZcashSymbol()
+//                        .frame(width: 15, height: 15)
+//                        .foregroundColor(Asset.Colors.secondary.color)
+//                }
         }
     }
 }
