@@ -74,7 +74,7 @@ public struct SyncProgressView: View {
             StoreOf<SyncProgress>(
                 initialState: .init(
                     lastKnownSyncPercentage: Float(0.43),
-                    synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41, 0)),
+                    synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41, false)),
                     syncStatusMessage: "Syncing"
                 )
             ) {

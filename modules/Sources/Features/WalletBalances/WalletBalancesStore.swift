@@ -37,9 +37,18 @@ public struct WalletBalances {
         public var transparentBalance: Zatoshi
 
         public var uiTotalBalanceText: String {
-            Zatoshi(
+            let formatter = NumberFormatter()
+            formatter.maximumFractionDigits = 8
+            formatter.minimumFractionDigits = 3
+            formatter.maximumIntegerDigits = 8
+            formatter.numberStyle = .decimal
+            formatter.usesGroupingSeparator = true
+
+            let balance = Zatoshi(
                 (totalBalance.amount / 100_000) * 100_000
-            ).decimalString()
+            )
+
+            return formatter.string(from: balance.decimalValue.roundedZec) ?? ""
         }
         
         public var isExchangeRateUSDInFlight: Bool {

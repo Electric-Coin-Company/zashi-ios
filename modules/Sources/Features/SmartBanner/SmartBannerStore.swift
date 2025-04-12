@@ -66,6 +66,7 @@ public struct SmartBanner {
         public var supportData: SupportData?
         public var synchronizerStatusSnapshot: SyncStatusSnapshot = .snapshotFor(state: .unprepared)
         public var tokenName = "ZEC"
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transparentBalance = Zatoshi(0)
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
@@ -278,12 +279,9 @@ public struct SmartBanner {
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
                     
-                    if case let .syncing(syncProgress, recoveryProgress) = snapshot.syncStatus {
-                        if let recoveryProgress {
-                            state.lastKnownSyncPercentage = Double(syncProgress + recoveryProgress) / 2.0
-                        } else {
-                            state.lastKnownSyncPercentage = Double(syncProgress)
-                        }
+                    if case let .syncing(syncProgress, areFundsSpendable) = snapshot.syncStatus {
+//                        print("__LD syncProgress \(syncProgress) areFundsSpendable \(areFundsSpendable)")
+                        state.lastKnownSyncPercentage = Double(syncProgress)
                         
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
@@ -335,6 +333,12 @@ public struct SmartBanner {
 
                 // wallet backup
             case .evaluatePriority6:
+                guard let account = state.selectedWalletAccount, account.vendor == .zcash else {
+                    return .send(.evaluatePriority7)
+                }
+                guard !state.transactions.isEmpty else {
+                    return .send(.evaluatePriority7)
+                }
                 if let storedWallet = try? walletStorage.exportWallet(), !storedWallet.hasUserPassedPhraseBackupTest {
                     if let walletBackupReminder = walletStorage.exportWalletBackupReminder() {
                         state.remindMeWalletBackupPhaseCounter = walletBackupReminder.occurence
@@ -449,6 +453,7 @@ public struct SmartBanner {
                 return .send(.smartBannerContentTapped)
 
             case .shieldTapped:
+                state.isSmartBannerSheetPresented = false
                 return .send(.closeAndCleanupBanner)
 
             case .walletBackupTapped:
