@@ -253,7 +253,7 @@ extension SmartBannerView {
                 }
                 .padding(.bottom, 4)
 
-                Text("\(store.transparentBalance.decimalString()) \(store.tokenName)")
+                ZatoshiText(store.transparentBalance, .expanded, store.tokenName)
                     .zFont(.semiBold, size: 20, style: Design.Text.primary)
             }
             .frame(maxWidth: .infinity)

@@ -87,6 +87,7 @@ public enum Asset {
       public static let delete = ImageAsset(name: "delete")
       public static let dotsMenu = ImageAsset(name: "dotsMenu")
       public static let downloadCloud = ImageAsset(name: "downloadCloud")
+      public static let expand = ImageAsset(name: "expand")
       public static let file = ImageAsset(name: "file")
       public static let filter = ImageAsset(name: "filter")
       public static let flashOff = ImageAsset(name: "flashOff")

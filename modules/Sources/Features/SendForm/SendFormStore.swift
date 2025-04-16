@@ -22,6 +22,7 @@ import NumberFormatter
 import UserPreferencesStorage
 import AddressBookClient
 import ZcashPaymentURI
+import BalanceBreakdown
 
 @Reducer
 public struct SendForm {
@@ -43,6 +44,8 @@ public struct SendForm {
         public var address: RedactableString = .empty
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
+        public var balancesBinding = false
+        public var balancesState = Balances.State.initial
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currencyText: RedactableString = .empty
 //        public var destination: Destination?
@@ -63,6 +66,8 @@ public struct SendForm {
         public var requestsAddressFocus = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAmountText: RedactableString = .empty
+        
+        public var sheetHeight: CGFloat = 0.0
 
         public var amount: Zatoshi {
             get {
@@ -196,11 +201,14 @@ public struct SendForm {
         }
     }
 
-    public enum Action {
+    public enum Action: BindableAction {
         case addNewContactTapped(RedactableString)
         case addressBookTapped
         case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
+        case balances(Balances.Action)
+        case balancesBindingUpdated(Bool)
+        case binding(BindingAction<SendForm.State>)
         case confirmationRequired(Confirmation)
         case dismissRequired
         case getProposal(Confirmation)
@@ -236,6 +244,8 @@ public struct SendForm {
     public init() { }
     
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Scope(state: \.memoState, action: \.memo) {
             MessageEditor()
         }
@@ -246,6 +256,10 @@ public struct SendForm {
 
         Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
+        }
+
+        Scope(state: \.balancesState, action: \.balances) {
+            Balances()
         }
 
         Reduce { state, action in
@@ -271,6 +285,13 @@ public struct SendForm {
             case .alert:
                 return .none
                 
+            case .binding:
+                return .none
+                
+            case .balances(.sheetHeightUpdated(let value)):
+                state.sheetHeight = value
+                return .none
+
             case .addressBookTapped:
                 return .none
 
@@ -436,6 +457,21 @@ public struct SendForm {
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 return .none
                 
+            case .walletBalances(.availableBalanceTapped):
+                state.balancesBinding = true
+                return .none
+                
+            case .balancesBindingUpdated(let newState):
+                state.balancesBinding = newState
+                return .none
+
+            case .balances(.dismissTapped):
+                state.balancesBinding = false
+                return .none
+                
+            case .balances:
+                return .none
+
             case .walletBalances:
                 return .none
                 

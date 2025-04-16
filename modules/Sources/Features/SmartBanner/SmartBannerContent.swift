@@ -162,7 +162,7 @@ extension SmartBannerView {
                 Text(L10n.SmartBanner.Content.Shield.title)
                     .zFont(.medium, size: 14, color: titleStyle())
                 
-                Text("\(store.transparentBalance.decimalString()) \(store.tokenName)")
+                ZatoshiText(store.transparentBalance, .expanded, store.tokenName)
                     .zFont(.medium, size: 12, color: infoStyle())
             }
             

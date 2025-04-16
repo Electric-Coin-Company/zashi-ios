@@ -14,7 +14,6 @@ import WalletBalances
 import PartnerKeys
 import UserPreferencesStorage
 import Utils
-import BalanceBreakdown
 import SmartBanner
 import ShieldingProcessor
 
@@ -28,8 +27,6 @@ public struct Home {
         public var accountSwitchRequest = false
         @Presents public var alert: AlertState<Action>?
         public var appId: String?
-        public var balancesBinding = false
-        public var balancesState = Balances.State.initial
         public var canRequestReview = false
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isInAppBrowserCoinbaseOn = false
@@ -99,8 +96,6 @@ public struct Home {
         case accountSwitchTapped
         case addKeystoneHWWalletTapped
         case alert(PresentationAction<Action>)
-        case balances(Balances.Action)
-        case balancesBindingUpdated(Bool)
         case binding(BindingAction<Home.State>)
         case currencyConversionCloseTapped
         case currencyConversionSetupTapped
@@ -166,10 +161,6 @@ public struct Home {
 
         Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
-        }
-
-        Scope(state: \.balancesState, action: \.balances) {
-            Balances()
         }
 
         Scope(state: \.smartBannerState, action: \.smartBanner) {
@@ -384,18 +375,7 @@ public struct Home {
                 
             case .flexaTapped:
                 return .none
-            
-            case .walletBalances(.availableBalanceTapped):
-                state.balancesBinding = true
-                return .none
-                
-            case .balancesBindingUpdated(let newState):
-                state.balancesBinding = newState
-                return .none
 
-            case .balances:
-                return .none
-                
             case .walletBalances:
                 return .none
                 

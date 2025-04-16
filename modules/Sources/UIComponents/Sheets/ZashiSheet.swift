@@ -7,16 +7,40 @@
 
 import SwiftUI
 
+public extension View {
+    @ViewBuilder
+    func heightChangePreference(_ completion: @escaping (CGFloat) -> Void) -> some View {
+        self
+            .overlay {
+                GeometryReader { geometry in
+                    Color.clear
+                        .preference(key: ContentHeightKey.self, value: geometry.size.height)
+                        .onPreferenceChange(ContentHeightKey.self) { height in
+                            completion(height)
+                        }
+                }
+            }
+    }
+}
+
+struct ContentHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 public struct ZashiSheetModifier<SheetContent: View>: ViewModifier {
     @Binding public var isPresented: Bool
     @State var sheetHeight: CGFloat = .zero
     var sheetContent: SheetContent
-    
+
     public func body(content: Content) -> some View {
         content
             .sheet(isPresented: $isPresented) {
                 if #available(iOS 16.0, *) {
                     mainBody()
+                        .id(sheetHeight)
                         .presentationDetents([.height(sheetHeight)])
                         .presentationDragIndicator(.visible)
                 } else {
@@ -30,7 +54,7 @@ public struct ZashiSheetModifier<SheetContent: View>: ViewModifier {
             if stickToBottom {
                Spacer()
             }
-            
+
             sheetContent
         }
         .background {

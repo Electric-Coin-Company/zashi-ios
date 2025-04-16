@@ -31,6 +31,8 @@ public struct SendFormView: View {
     @FocusState private var isCurrencyFocused
     @FocusState private var isMemoFocused
 
+        //@State var sheetHeight: CGFloat = .zero
+    
     public init(store: StoreOf<SendForm>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -220,6 +222,11 @@ public struct SendFormView: View {
                 state: \.$alert,
                 action: \.alert
             ))
+            .sheet(isPresented: $store.balancesBinding) {
+                balancesContent()
+                    .presentationDetents([.height(store.sheetHeight)])
+                    .presentationDragIndicator(.visible)
+            }
             .overlayPreferenceValue(UnknownAddressPreferenceKey.self) { preferences in
                 if isAddressFocused && store.isAddressBookHintVisible {
                     GeometryReader { geometry in
@@ -249,35 +256,37 @@ public struct SendFormView: View {
                     }
                 }
             }
-            .overlay(
-                VStack(spacing: 0) {
-                    Spacer()
-
-                    Asset.Colors.primary.color
-                        .frame(height: 1)
-                        .opacity(0.1)
-                    
-                    HStack(alignment: .center) {
+            .overlay {
+                if keyboardVisible {
+                    VStack(spacing: 0) {
                         Spacer()
                         
-                        Button {
-                            isAmountFocused = false
-                            isAddressFocused = false
-                            isCurrencyFocused = false
-                            isMemoFocused = false
-                        } label: {
-                            Text(L10n.General.done.uppercased())
-                                .zFont(.regular, size: 14, style: Design.Text.primary)
+                        Asset.Colors.primary.color
+                            .frame(height: 1)
+                            .opacity(0.1)
+                        
+                        HStack(alignment: .center) {
+                            Spacer()
+                            
+                            Button {
+                                isAmountFocused = false
+                                isAddressFocused = false
+                                isCurrencyFocused = false
+                                isMemoFocused = false
+                            } label: {
+                                Text(L10n.General.done.uppercased())
+                                    .zFont(.regular, size: 14, style: Design.Text.primary)
+                            }
+                            .padding(.bottom, 4)
                         }
-                        .padding(.bottom, 4)
+                        .applyScreenBackground()
+                        .padding(.horizontal, 20)
+                        .frame(height: keyboardVisible ? 38 : 0)
+                        .frame(maxWidth: .infinity)
+                        .opacity(keyboardVisible ? 1 : 0)
                     }
-                    .applyScreenBackground()
-                    .padding(.horizontal, 20)
-                    .frame(height: keyboardVisible ? 38 : 0)
-                    .frame(maxWidth: .infinity)
-                    .opacity(keyboardVisible ? 1 : 0)
                 }
-            )
+            }
         }
     }
     

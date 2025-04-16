@@ -15,20 +15,17 @@ public struct WalletBalancesView: View {
     
     @Perception.Bindable var store: StoreOf<WalletBalances>
     let tokenName: String
-    let underlinedAvailableBalance: Bool
     let couldBeHidden: Bool
     let shortened: Bool
 
     public init(
         store: StoreOf<WalletBalances>,
         tokenName: String,
-        underlinedAvailableBalance: Bool = true,
         couldBeHidden: Bool = false,
         shortened: Bool = false
     ) {
         self.store = store
         self.tokenName = tokenName
-        self.underlinedAvailableBalance = underlinedAvailableBalance
         self.couldBeHidden = couldBeHidden
         self.shortened = shortened
     }
@@ -54,32 +51,17 @@ public struct WalletBalancesView: View {
                     Text(L10n.Home.migratingDatabases)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .foregroundColor(Asset.Colors.primary.color)
-                        .padding(.top, 10)
+                        .padding(.top, 12)
                         .padding(.bottom, 30)
-                } else {
-                    if underlinedAvailableBalance {
-                        Button {
-                            store.send(.availableBalanceTapped)
-                        } label: {
-                            AvailableBalanceView(
-                                balance: store.shieldedBalance,
-                                tokenName: tokenName,
-                                showIndicator: store.isProcessingZeroAvailableBalance,
-                                underlined: underlinedAvailableBalance,
-                                couldBeHidden: couldBeHidden
-                            )
-                            .padding(.top, 10)
-                            .padding(.bottom, 30)
-                        }
-                    } else {
+                } else if store.spendability != .everything && !shortened {
+                    Button {
+                        store.send(.availableBalanceTapped)
+                    } label: {
                         AvailableBalanceView(
                             balance: store.shieldedBalance,
-                            tokenName: tokenName,
-                            showIndicator: store.isProcessingZeroAvailableBalance,
-                            underlined: underlinedAvailableBalance,
-                            couldBeHidden: couldBeHidden
+                            showIndicator: store.isProcessingZeroAvailableBalance
                         )
-                        .padding(.top, 10)
+                        .padding(.top, 12)
                         .padding(.bottom, 30)
                     }
                 }
@@ -91,18 +73,28 @@ public struct WalletBalancesView: View {
     }
     
     @ViewBuilder private func balanceContent() -> some View {
-        if shortened {
+//        if shortened {
             HStack(spacing: 0) {
                 ZcashSymbol()
                     .frame(width: 32, height: 32)
                     .zForegroundColor(Design.Text.primary)
-                
-                Text(store.uiTotalBalanceText)
-                    .zFont(.semiBold, size: 48, style: Design.Text.primary)
+
+                if shortened {
+                    ZatoshiText(store.totalBalance, .abbreviated)
+                        .zFont(.semiBold, size: 48, style: Design.Text.primary)
+                } else {
+                    ZatoshiRepresentationView(
+                        balance: store.totalBalance,
+                        fontName: FontFamily.Inter.semiBold.name,
+                        mostSignificantFontSize: 48,
+                        leastSignificantFontSize: 20,
+                        format: .expanded
+                    )
+                }
             }
-        } else {
-            BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
-        }
+//        } else {
+//            BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
+//        }
     }
     
     private func exchangeRate() -> some View {

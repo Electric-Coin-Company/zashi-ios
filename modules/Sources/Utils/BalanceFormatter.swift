@@ -20,4 +20,22 @@ extension Zatoshi {
     public func decimalZashiUSFormatted() -> String {
         NumberFormatter.zashiUSBalanceFormatter.string(from: decimalValue.roundedZec) ?? ""
     }
+    
+    public func threeDecimalsZashiFormatted() -> String {
+        let numberFormatter = NumberFormatter.zcashNumberFormatter
+        numberFormatter.minimumFractionDigits = 3
+        
+        let balance = Zatoshi(
+            (self.amount / 100_000) * 100_000
+        )
+        
+        return numberFormatter.string(from: balance.decimalValue.roundedZec) ?? ""
+    }
+    
+    public func atLeastThreeDecimalsZashiFormatted() -> String {
+        let numberFormatter = NumberFormatter.zcashNumberFormatter
+        numberFormatter.minimumFractionDigits = 3
+
+        return numberFormatter.string(from: decimalValue.roundedZec) ?? ""
+    }
 }

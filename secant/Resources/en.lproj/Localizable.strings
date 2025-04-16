@@ -114,9 +114,6 @@
 "serverSetup.refresh" = "Refresh";
 
 // MARK: - Balances
-"balances.spendableBalance" = "Shielded zec (spendable)";
-"balances.changePending" = "Change pending";
-"balances.pendingTransactions" = "Pending transactions";
 "balances.transparentBalance" = "Transparent balance";
 "balances.shieldButtonTitle" = "Shield and consolidate funds";
 "balances.shieldingInProgress" = "Shielding";
@@ -289,7 +286,6 @@
 "general.request" = "Request";
 "general.hide" = "Hide";
 "general.show" = "Show";
-"balance.availableTitle" = "Available Balance:";
 "qrCodeFor" = "QR Code for %@";
 "general.tapToCopy" = "Tap to copy";
 "general.fee" = "Typical Fee < %@";
@@ -642,3 +638,13 @@
 "smartBanner.content.autoShielding.button" = "Start";
 
 "currencyConversion.skipBtn" = "Skip";
+
+"balance.availableTitle" = "Spendable:";
+"balances.pending" = "Pending";
+"balances.dismiss" = "Dismiss";
+"balances.spendableBalance.title" = "Spendable Balance";
+"balances.spendableBalance" = "Shielded (Spendable)";
+"balances.infoPending1" = "Your last transaction is getting mined and confirmed.";
+"balances.infoPending2" = "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
+"balances.shieldInfo1" = "Shield your transparent balance to make your funds spendable and private.";
+"balances.shieldInfo2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";

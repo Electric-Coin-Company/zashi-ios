@@ -6,62 +6,64 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
+
 import Generated
 import ZcashLightClientKit
 
 public struct AvailableBalanceView: View {
-    let balance: Zatoshi
-    let tokenName: String
-    let showIndicator: Bool
-    let underlined: Bool
-    let couldBeHidden: Bool
+    @Environment(\.colorScheme) var colorScheme
     
+    let balance: Zatoshi
+    let showIndicator: Bool
+
     public init(
         balance: Zatoshi,
-        tokenName: String,
-        showIndicator: Bool = false,
-        underlined: Bool = true,
-        couldBeHidden: Bool = false
+        showIndicator: Bool = false
     ) {
         self.balance = balance
-        self.tokenName = tokenName
         self.showIndicator = showIndicator
-        self.underlined = underlined
-        self.couldBeHidden = couldBeHidden
     }
     
     public var body: some View {
-        HStack(spacing: 3) {
-            if underlined {
-                Text(L10n.Balance.availableTitle)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .underline()
-            } else {
-                Text(L10n.Balance.availableTitle)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-            }
+        HStack(spacing: 0) {
+            Asset.Assets.Icons.expand.image
+                .zImage(size: 16, style: Design.Text.tertiary)
+                .padding(.trailing, 4)
             
+            Text(L10n.Balance.availableTitle)
+                .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                .padding(.trailing, 6)
+
             if showIndicator {
                 ProgressView()
                     .scaleEffect(0.9)
-                    .padding(.horizontal, 3)
             } else {
-                ZatoshiRepresentationView(
-                    balance: balance,
-                    fontName: FontFamily.Inter.bold.name,
-                    mostSignificantFontSize: 14,
-                    leastSignificantFontSize: 7,
-                    format: .expanded,
-                    couldBeHidden: couldBeHidden
-                )
+                HStack(spacing: 0) {
+                    ZcashSymbol()
+                        .frame(width: 12, height: 12)
+                        .zForegroundColor(Design.Text.tertiary)
+                    
+                    ZatoshiText(balance)
+                        .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                }
             }
-            
-            Text(tokenName)
-                .font(.custom(FontFamily.Inter.bold.name, size: 14))
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                .background {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Design.Utility.Gray._100.color(colorScheme))
+                }
+        }
+        .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+        .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
     }
 }
 
 #Preview {
-    AvailableBalanceView(balance: Zatoshi(25_793_456), tokenName: "TAZ", showIndicator: true)
+    AvailableBalanceView(balance: Zatoshi(25_793_456), showIndicator: true)
 }

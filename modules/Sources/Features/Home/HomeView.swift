@@ -10,7 +10,6 @@ import Utils
 import Models
 import WalletBalances
 import Scan
-import BalanceBreakdown
 import SmartBanner
 
 public struct HomeView: View {
@@ -21,7 +20,6 @@ public struct HomeView: View {
     
     @State var accountSwitchSheetHeight: CGFloat = .zero
     @State var moreSheetHeight: CGFloat = .zero
-    @State var balancesSheetHeight: CGFloat = .zero
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -196,9 +194,6 @@ public struct HomeView: View {
                 if let url = URL(string: store.inAppBrowserURLKeystone) {
                     InAppBrowserView(url: url)
                 }
-            }
-            .sheet(isPresented: $store.balancesBinding) {
-                balancesContent()
             }
             .sheet(isPresented: $store.accountSwitchRequest) {
                 accountSwitchContent()

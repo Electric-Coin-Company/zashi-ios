@@ -148,16 +148,16 @@ extension Root {
                 state.path = nil
                 return .none
                 
-            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))),
-                    .home(.shieldingProcessor(.proposalReadyForShieldingWithKeystone(let proposal))):
-                state.signWithKeystoneCoordFlowState = .initial
-                state.signWithKeystoneCoordFlowState.sendConfirmationState.proposal = proposal
-                state.signWithKeystoneCoordFlowState.sendConfirmationState.isShielding = true
-                state.homeState.balancesBinding = false
-                return .run { send in
-                    try? await mainQueue.sleep(for: .seconds(0.8))
-                    await send(.signWithKeystoneRequested)
-                }
+//            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))),
+//                    .home(.shieldingProcessor(.proposalReadyForShieldingWithKeystone(let proposal))):
+//                state.signWithKeystoneCoordFlowState = .initial
+//                state.signWithKeystoneCoordFlowState.sendConfirmationState.proposal = proposal
+//                state.signWithKeystoneCoordFlowState.sendConfirmationState.isShielding = true
+//                state.homeState.balancesBinding = false
+//                return .run { send in
+//                    try? await mainQueue.sleep(for: .seconds(0.8))
+//                    await send(.signWithKeystoneRequested)
+//                }
 
             case .signWithKeystoneRequested:
                 state.path = .signWithKeystoneCoordFlow

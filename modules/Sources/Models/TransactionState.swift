@@ -203,8 +203,8 @@ public struct TransactionState: Equatable, Identifiable {
     
     public var netValue: String {
         isShieldingTransaction
-        ? Zatoshi(totalSpent?.amount ?? 0).decimalString()
-        : zecAmount.decimalString()
+        ? Zatoshi(totalSpent?.amount ?? 0).atLeastThreeDecimalsZashiFormatted()
+        : zecAmount.atLeastThreeDecimalsZashiFormatted()
     }
 
     public var amountWithoutFee: Zatoshi {

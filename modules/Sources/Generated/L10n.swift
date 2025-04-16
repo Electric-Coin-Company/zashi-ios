@@ -125,22 +125,30 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "annotation.title", fallback: "Note")
   }
   public enum Balance {
-    /// Available Balance:
-    public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance:")
+    /// Spendable:
+    public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Spendable:")
   }
   public enum Balances {
-    /// Change pending
-    public static let changePending = L10n.tr("Localizable", "balances.changePending", fallback: "Change pending")
-    /// Pending transactions
-    public static let pendingTransactions = L10n.tr("Localizable", "balances.pendingTransactions", fallback: "Pending transactions")
+    /// Dismiss
+    public static let dismiss = L10n.tr("Localizable", "balances.dismiss", fallback: "Dismiss")
+    /// Your last transaction is getting mined and confirmed.
+    public static let infoPending1 = L10n.tr("Localizable", "balances.infoPending1", fallback: "Your last transaction is getting mined and confirmed.")
+    /// Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
+    public static let infoPending2 = L10n.tr("Localizable", "balances.infoPending2", fallback: "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
+    /// Pending
+    public static let pending = L10n.tr("Localizable", "balances.pending", fallback: "Pending")
     /// The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.
     public static let restoringWalletWarning = L10n.tr("Localizable", "balances.restoringWalletWarning", fallback: "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.")
     /// Shield and consolidate funds
     public static let shieldButtonTitle = L10n.tr("Localizable", "balances.shieldButtonTitle", fallback: "Shield and consolidate funds")
+    /// Shield your transparent balance to make your funds spendable and private.
+    public static let shieldInfo1 = L10n.tr("Localizable", "balances.shieldInfo1", fallback: "Shield your transparent balance to make your funds spendable and private.")
+    /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
+    public static let shieldInfo2 = L10n.tr("Localizable", "balances.shieldInfo2", fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
     /// Shielding
     public static let shieldingInProgress = L10n.tr("Localizable", "balances.shieldingInProgress", fallback: "Shielding")
-    /// Shielded zec (spendable)
-    public static let spendableBalance = L10n.tr("Localizable", "balances.spendableBalance", fallback: "Shielded zec (spendable)")
+    /// Shielded (Spendable)
+    public static let spendableBalance = L10n.tr("Localizable", "balances.spendableBalance", fallback: "Shielded (Spendable)")
     /// Synced
     public static let synced = L10n.tr("Localizable", "balances.synced", fallback: "Synced")
     /// Syncing
@@ -166,6 +174,10 @@ public enum L10n {
       public static let dismiss = L10n.tr("Localizable", "balances.hintBox.dismiss", fallback: "I got it!")
       /// Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.
       public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.")
+    }
+    public enum SpendableBalance {
+      /// Spendable Balance
+      public static let title = L10n.tr("Localizable", "balances.spendableBalance.title", fallback: "Spendable Balance")
     }
   }
   public enum Component {

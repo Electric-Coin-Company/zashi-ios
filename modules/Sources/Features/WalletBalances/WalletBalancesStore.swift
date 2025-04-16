@@ -33,24 +33,10 @@ public struct WalletBalances {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var shieldedBalance: Zatoshi
         public var shieldedWithPendingBalance: Zatoshi
+        public var spendability: Spendability = .everything
         public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
 
-        public var uiTotalBalanceText: String {
-            let formatter = NumberFormatter()
-            formatter.maximumFractionDigits = 8
-            formatter.minimumFractionDigits = 3
-            formatter.maximumIntegerDigits = 8
-            formatter.numberStyle = .decimal
-            formatter.usesGroupingSeparator = true
-
-            let balance = Zatoshi(
-                (totalBalance.amount / 100_000) * 100_000
-            )
-
-            return formatter.string(from: balance.decimalValue.roundedZec) ?? ""
-        }
-        
         public var isExchangeRateUSDInFlight: Bool {
             fiatCurrencyResult?.state == .fetching
         }
@@ -127,12 +113,12 @@ public struct WalletBalances {
                         sdkSynchronizer.stateStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .map { $0.redacted }
-                            .map(WalletBalances.Action.synchronizerStateChanged)
+                            .map(Action.synchronizerStateChanged)
                     }
                     .cancellable(id: CancelStateId, cancelInFlight: true),
                     .publisher {
                         exchangeRate.exchangeRateEventStream()
-                            .map(WalletBalances.Action.exchangeRateEvent)
+                            .map(Action.exchangeRateEvent)
                             .receive(on: mainQueue)
                     }
                     .cancellable(id: CancelRateId, cancelInFlight: true)
@@ -198,6 +184,15 @@ public struct WalletBalances {
                 state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
                 state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
+                
+                // spendability
+                if state.isProcessingZeroAvailableBalance {
+                    state.spendability = .nothing
+                } else if state.shieldedBalance == state.totalBalance {
+                    state.spendability = .everything
+                } else {
+                    state.spendability = .something
+                }
                 return .none
 
             case .debugMenuStartup:
