@@ -45,7 +45,9 @@ public struct WalletBalancesView: View {
                     }
 #endif
 
-                exchangeRate()
+                if shortened {
+                    exchangeRate()
+                }
 
                 if store.migratingDatabase {
                     Text(L10n.Home.migratingDatabases)

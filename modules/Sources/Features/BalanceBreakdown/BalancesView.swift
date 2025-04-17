@@ -79,12 +79,12 @@ public struct BalancesView: View {
             }
             .screenHorizontalPadding()
             .applyScreenBackground()
-            .alert(
-                store: store.scope(
-                    state: \.$alert,
-                    action: \.alert
-                )
-            )
+//            .alert(
+//                store: store.scope(
+//                    state: \.$alert,
+//                    action: \.alert
+//                )
+//            )
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
         }

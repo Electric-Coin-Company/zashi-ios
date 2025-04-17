@@ -150,6 +150,7 @@ extension Root {
                 
 //            case .home(.balances(.proposalReadyForShieldingWithKeystone(let proposal))),
 //                    .home(.shieldingProcessor(.proposalReadyForShieldingWithKeystone(let proposal))):
+//            case .home(.shieldingProcessor(.proposalReadyForShieldingWithKeystone(let proposal))):
 //                state.signWithKeystoneCoordFlowState = .initial
 //                state.signWithKeystoneCoordFlowState.sendConfirmationState.proposal = proposal
 //                state.signWithKeystoneCoordFlowState.sendConfirmationState.isShielding = true

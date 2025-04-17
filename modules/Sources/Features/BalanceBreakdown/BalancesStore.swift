@@ -88,6 +88,7 @@ public struct Balances {
         case synchronizerStateChanged(RedactableSynchronizerState)
         case updateBalance(AccountBalance?)
         case updateBalances([AccountUUID: AccountBalance])
+        case updateBalancesOnAppear
     }
 
     @Dependency(\.derivationTool) var derivationTool
@@ -115,16 +116,31 @@ public struct Balances {
 
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                return .publisher {
-                    sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map { $0.redacted }
-                        .map(Action.synchronizerStateChanged)
-                }
-                .cancellable(id: CancelId, cancelInFlight: true)
+                return .merge(
+                    .publisher {
+                        sdkSynchronizer.stateStream()
+                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                            .map { $0.redacted }
+                            .map(Action.synchronizerStateChanged)
+                    }
+                    .cancellable(id: CancelId, cancelInFlight: true),
+                    .send(.updateBalancesOnAppear)
+                )
                 
             case .onDisappear:
                 return .cancel(id: CancelId)
+
+            case .updateBalancesOnAppear:
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                return .run { send in
+                    if let accountBalance = try? await sdkSynchronizer.getAccountsBalances()[account.id] {
+                        await send(.updateBalance(accountBalance))
+                    } else if let accountBalance = sdkSynchronizer.latestState().accountsBalances[account.id] {
+                        await send(.updateBalance(accountBalance))
+                    }
+                }
 
             case .sheetHeightUpdated:
                 return .none
@@ -188,9 +204,9 @@ public struct Balances {
             case .proposalReadyForShieldingWithKeystone:
                 return .none
 
-            case .shieldFundsFailure(let error):
+            case .shieldFundsFailure:
                 state.isShieldingFunds = false
-                state.alert = AlertState.shieldFundsFailure(error)
+                //state.alert = AlertState.shieldFundsFailure(error)
                 return .none
 
             case .shieldFundsSuccess:
@@ -234,15 +250,15 @@ public struct Balances {
         }
     }
 }
-
-// MARK: Alerts
-
-extension AlertState where Action == Balances.Action {
-    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-        } message: {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-        }
-    }
-}
+//
+//// MARK: Alerts
+//
+//extension AlertState where Action == Balances.Action {
+//    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+//        AlertState {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
+//        } message: {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
+//        }
+//    }
+//}
