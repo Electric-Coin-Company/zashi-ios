@@ -223,9 +223,16 @@ public struct SendFormView: View {
                 action: \.alert
             ))
             .sheet(isPresented: $store.balancesBinding) {
-                balancesContent()
-                    .presentationDetents([.height(store.sheetHeight)])
-                    .presentationDragIndicator(.visible)
+                if #available(iOS 16.4, *) {
+                    balancesContent()
+                        .presentationDetents([.height(store.sheetHeight)])
+                        .presentationDragIndicator(.visible)
+                        .presentationCornerRadius(Design.CornerRadius.sheet)
+                } else {
+                    balancesContent()
+                        .presentationDetents([.height(store.sheetHeight)])
+                        .presentationDragIndicator(.visible)
+                }
             }
             .overlayPreferenceValue(UnknownAddressPreferenceKey.self) { preferences in
                 if isAddressFocused && store.isAddressBookHintVisible {

@@ -13,7 +13,12 @@ import UIComponents
 extension HomeView {
     @ViewBuilder func moreContent() -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                moreMainBody()
+                    .presentationDetents([.height(moreSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.CornerRadius.sheet)
+            } else if #available(iOS 16.0, *) {
                 moreMainBody()
                     .presentationDetents([.height(moreSheetHeight)])
                     .presentationDragIndicator(.visible)

@@ -66,7 +66,12 @@ public struct FilterView: View {
 extension TransactionsManagerView {
     @ViewBuilder func filtersContent() -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                mainBody()
+                    .presentationDetents([.height(filtersSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.CornerRadius.sheet)
+            } else if #available(iOS 16.0, *) {
                 mainBody()
                     .presentationDetents([.height(filtersSheetHeight)])
                     .presentationDragIndicator(.visible)

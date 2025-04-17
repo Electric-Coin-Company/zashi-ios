@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Generated
 
 public extension View {
     @ViewBuilder
@@ -38,7 +39,13 @@ public struct ZashiSheetModifier<SheetContent: View>: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .sheet(isPresented: $isPresented) {
-                if #available(iOS 16.0, *) {
+                if #available(iOS 16.4, *) {
+                    mainBody()
+                        .id(sheetHeight)
+                        .presentationDetents([.height(sheetHeight)])
+                        .presentationDragIndicator(.visible)
+                        .presentationCornerRadius(Design.CornerRadius.sheet)
+                } else if #available(iOS 16.0, *) {
                     mainBody()
                         .id(sheetHeight)
                         .presentationDetents([.height(sheetHeight)])

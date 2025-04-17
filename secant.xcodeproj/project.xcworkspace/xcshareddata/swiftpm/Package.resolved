@@ -464,8 +464,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "branch" : "1537-Birthday-estimate-based-on-a-date",
-        "revision" : "e2956a190e24743249d8ed6a4efa85780fbea387"
+        "revision" : "16a80d2efb2fbb4921a8c6be528e6a8644d4a6d8"
       }
     }
   ],

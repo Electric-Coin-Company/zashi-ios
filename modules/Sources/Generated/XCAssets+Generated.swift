@@ -146,10 +146,12 @@ public enum Asset {
   public enum Colors {
     public enum ZDesign {
       public enum Base {
+        public static let black = ColorAsset(name: "Black")
         public static let bone = ColorAsset(name: "Bone")
         public static let brand = ColorAsset(name: "Brand")
         public static let concrete = ColorAsset(name: "Concrete")
         public static let espresso = ColorAsset(name: "Espresso")
+        public static let midnight = ColorAsset(name: "Midnight")
         public static let obsidian = ColorAsset(name: "Obsidian")
       }
       public static let brand100 = ColorAsset(name: "Brand100")

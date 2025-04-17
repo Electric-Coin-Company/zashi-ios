@@ -26,9 +26,11 @@ public enum Design {
         case bgQuaternary
         case strokePrimary
         case strokeSecondary
+        case strokeTertiary
         case bgAlt
         case bgHide
-        case brandBg
+        case brandPrimary
+        case brandSecondary
         case brandFg
         case divider
     }
@@ -319,6 +321,12 @@ public enum Design {
             case _900
         }
     }
+    
+    // MARK: - Corner Radius Constants
+
+    public enum CornerRadius {
+        public static let sheet: CGFloat = 24
+    }
 }
 
 public extension Design {
@@ -334,17 +342,19 @@ public extension Design {
 public extension Design.Surfaces {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bgPrimary: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .bgAdjust: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
-        case .bgSecondary: return Design.col(Asset.Colors.ZDesign.Base.concrete.color, Asset.Colors.ZDesign.sharkShades06dp.color, colorScheme)
+        case .bgPrimary: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .bgAdjust: return Design.col(Asset.Colors.ZDesign.Base.concrete.color, Asset.Colors.ZDesign.sharkShades02dp.color, colorScheme)
+        case .bgSecondary: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .bgTertiary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         case .bgQuaternary: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .strokePrimary: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .strokeSecondary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .strokeTertiary: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .bgAlt: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.bone.color, colorScheme)
-        case .bgHide: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .brandBg: return Design.col(Asset.Colors.ZDesign.Base.brand.color, Asset.Colors.ZDesign.Base.brand.color, colorScheme)
-        case .brandFg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .bgHide: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .brandPrimary: return Design.col(Asset.Colors.ZDesign.Base.brand.color, Asset.Colors.ZDesign.Base.brand.color, colorScheme)
+        case .brandSecondary: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand600.color, colorScheme)
+        case .brandFg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
         case .divider: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         }
     }

@@ -13,7 +13,12 @@ import UIComponents
 extension HomeView {
     @ViewBuilder func accountSwitchContent() -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                mainBody()
+                    .presentationDetents([.height(accountSwitchSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.CornerRadius.sheet)
+            } else if #available(iOS 16.0, *) {
                 mainBody()
                     .presentationDetents([.height(accountSwitchSheetHeight)])
                     .presentationDragIndicator(.visible)

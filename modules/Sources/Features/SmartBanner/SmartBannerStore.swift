@@ -388,6 +388,17 @@ public struct SmartBanner {
 
                 // currency conversion
             case .evaluatePriority8:
+                if let account = state.selectedWalletAccount {
+                    if let accountBalance = sdkSynchronizer.latestState().accountsBalances[account.id] {
+                        let orchard = accountBalance.orchardBalance.total().amount
+                        let sapling = accountBalance.saplingBalance.total().amount
+                        let unshielded = accountBalance.unshielded.amount
+                        
+                        if orchard + sapling + unshielded == 0 {
+                            return .send(.evaluatePriority9)
+                        }
+                    }
+                }
                 if userStoredPreferences.exchangeRate() == nil {
                     return .send(.triggerPriority(.priority8))
                 }

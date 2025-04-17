@@ -171,7 +171,7 @@ public struct ServerSetupView: View {
                                 WithPerceptionTracking {
                                     if server.value(for: store.network) == store.activeServer && store.selectedServer == nil {
                                         Circle()
-                                            .fill(Design.Surfaces.brandBg.color(colorScheme))
+                                            .fill(Design.Surfaces.brandPrimary.color(colorScheme))
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image

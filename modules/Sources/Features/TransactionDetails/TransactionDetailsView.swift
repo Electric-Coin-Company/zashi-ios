@@ -195,7 +195,7 @@ extension TransactionDetailsView {
             HStack(spacing: 0) {
                 Circle()
                     .frame(width: 48, height: 48)
-                    .zForegroundColor(Design.Surfaces.brandBg)
+                    .zForegroundColor(Design.Surfaces.brandPrimary)
                     .overlay {
                         ZcashSymbol()
                             .frame(width: 34, height: 34)
@@ -213,7 +213,7 @@ extension TransactionDetailsView {
                                     .frame(width: 51, height: 51)
 
                                 Asset.Assets.Icons.shieldTickFilled.image
-                                    .zImage(size: 24, style: Design.Text.primary)
+                                    .zImage(size: 24, style: Design.Text.opposite)
                             }
                         }
                         .offset(x: -4)

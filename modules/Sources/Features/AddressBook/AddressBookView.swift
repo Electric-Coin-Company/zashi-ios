@@ -127,7 +127,7 @@ public struct AddressBookView: View {
                 .zForegroundColor(Design.Surfaces.bgPrimary)
                 .background {
                     Circle()
-                        .fill(Design.Surfaces.brandBg.color(colorScheme))
+                        .fill(Design.Surfaces.brandPrimary.color(colorScheme))
                         .frame(width: 32, height: 32)
                         .background {
                             Circle()
