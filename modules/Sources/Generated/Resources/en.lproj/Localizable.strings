@@ -282,6 +282,7 @@
 "general.back" = "Back";
 "general.next" = "Next";
 "general.send" = "Send";
+"general.share" = "Share";
 "general.close" = "Close";
 "general.max" = "Max";
 "general.ok" = "Ok";
