@@ -510,6 +510,7 @@ public struct SmartBanner {
                 return .send(.closeAndCleanupBanner)
 
             case .walletBackupTapped:
+                state.isSmartBannerSheetPresented = false
                 return .none
             }
         }

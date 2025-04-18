@@ -85,7 +85,6 @@ extension Settings {
                 switch operation {
                 case .recoveryPhrase:
                     var recoveryPhraseDisplayState = RecoveryPhraseDisplay.State.initial
-                    recoveryPhraseDisplayState.showBackButton = true
                     state.path.append(.recoveryPhrase(recoveryPhraseDisplayState))
                 case .exportPrivateData:
                     state.path.append(.exportPrivateData(PrivateDataConsent.State.initial))

@@ -22,29 +22,66 @@ public struct RecoveryPhraseDisplay {
         public var birthday: Birthday?
         public var birthdayValue: String?
         public var isBirthdayHintVisible = false
+        public var isHelpSheetPreseted = false
         public var isRecoveryPhraseHidden = true
+        public var isWalletBackup = false
         public var phrase: RecoveryPhrase?
-        public var showBackButton = false
-        
+
+        public enum LearnMoreOptions: CaseIterable {
+            case control
+            case keep
+            case store
+            case height
+
+            public func title() -> String {
+                switch self {
+                case .control: return L10n.RecoveryPhraseDisplay.WarningControl.title
+                case .keep: return L10n.RecoveryPhraseDisplay.WarningKeep.title
+                case .store: return L10n.RecoveryPhraseDisplay.WarningStore.title
+                case .height: return L10n.RecoveryPhraseDisplay.WarningHeight.title
+                }
+            }
+
+            public func subtitle() -> String {
+                switch self {
+                case .control: return L10n.RecoveryPhraseDisplay.WarningControl.info
+                case .keep: return L10n.RecoveryPhraseDisplay.WarningKeep.info
+                case .store: return L10n.RecoveryPhraseDisplay.WarningStore.info
+                case .height: return L10n.RecoveryPhraseDisplay.WarningHeight.info
+                }
+            }
+
+            public func icon() -> ImageAsset {
+                switch self {
+                case .control: return Asset.Assets.Icons.cryptocurrency
+                case .keep: return Asset.Assets.Icons.emptyShield
+                case .store: return Asset.Assets.Icons.archive
+                case .height: return Asset.Assets.Icons.calendar
+                }
+            }
+        }
         
         public init(
             birthday: Birthday? = nil,
             birthdayValue: String? = nil,
-            phrase: RecoveryPhrase? = nil,
-            showBackButton: Bool = false
+            phrase: RecoveryPhrase? = nil
         ) {
             self.birthday = birthday
             self.birthdayValue = birthdayValue
             self.phrase = phrase
-            self.showBackButton = showBackButton
         }
     }
     
-    public enum Action: Equatable {
+    public enum Action: BindableAction, Equatable {
+        case binding(BindingAction<RecoveryPhraseDisplay.State>)
         case alert(PresentationAction<Action>)
         case finishedTapped
+        case helpSheetRequested
         case onAppear
         case recoveryPhraseTapped
+        case remindMeLaterTapped
+        case securityWarningNextTapped
+        case seedSavedTapped
         case tooltipTapped
     }
     
@@ -54,6 +91,8 @@ public struct RecoveryPhraseDisplay {
     public init() {}
     
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -63,8 +102,7 @@ public struct RecoveryPhraseDisplay {
                     state.birthday = storedWallet.birthday
                     
                     if let value = state.birthday?.value() {
-                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                        state.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                        state.birthdayValue = String(value)
                     }
                     
                     let seedWords = storedWallet.seedPhrase.value().split(separator: " ").map { RedactableString(String($0)) }
@@ -82,6 +120,9 @@ public struct RecoveryPhraseDisplay {
                 state.alert = nil
                 return .none
                 
+            case .binding:
+                return .none
+                
             case .finishedTapped:
                 return .none
                 
@@ -91,6 +132,19 @@ public struct RecoveryPhraseDisplay {
                 
             case .recoveryPhraseTapped:
                 state.isRecoveryPhraseHidden.toggle()
+                return .none
+                
+            case .securityWarningNextTapped:
+                return .none
+                
+            case .helpSheetRequested:
+                state.isHelpSheetPreseted.toggle()
+                return .none
+                
+            case .seedSavedTapped:
+                return .none
+                
+            case .remindMeLaterTapped:
                 return .none
             }
         }

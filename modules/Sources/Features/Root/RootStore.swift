@@ -123,6 +123,7 @@ public struct Root {
             case settings
             //case signWithKeystoneCoordFlow
             case transactionsCoordFlow
+            case walletBackup
         }
         
         public var CancelEventId = UUID()
@@ -183,6 +184,7 @@ public struct Root {
         public var settingsState = Settings.State.initial
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
+        public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
 
         //public var requestZecState = RequestZec.State.initial
 
@@ -278,6 +280,7 @@ public struct Root {
         case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
         case signWithKeystoneRequested
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
+        case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
 
         // Transactions
         case observeTransactions
@@ -399,6 +402,10 @@ public struct Root {
 
         Scope(state: \.transactionsCoordFlowState, action: \.transactionsCoordFlow) {
             TransactionsCoordFlow()
+        }
+        
+        Scope(state: \.walletBackupCoordFlowState, action: \.walletBackupCoordFlow) {
+            WalletBackupCoordFlow()
         }
 
         Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {

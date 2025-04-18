@@ -247,6 +247,7 @@ let package = Package(
                 "NumberFormatter",
                 "PartialProposalError",
                 "Pasteboard",
+                "RecoveryPhraseDisplay",
                 "RequestZec",
                 "RestoreInfo",
                 "Scan",

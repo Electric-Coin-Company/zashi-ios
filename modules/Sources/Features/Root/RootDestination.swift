@@ -23,7 +23,7 @@ extension Root {
             case notEnoughFreeSpace
             case onboarding
             case osStatusError
-            case phraseDisplay
+            //case phraseDisplay
             case startup
             case home
             case welcome

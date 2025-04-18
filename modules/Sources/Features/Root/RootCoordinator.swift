@@ -135,6 +135,11 @@ extension Root {
                 state.currencyConversionSetupState = .initial
                 state.path = .currencyConversionSetup
                 return .none
+                
+            case .home(.smartBanner(.walletBackupTapped)):
+                state.walletBackupCoordFlowState = .initial
+                state.path = .walletBackup
+                return .none
 
                 // MARK: - Integrations
 
@@ -290,6 +295,24 @@ extension Root {
                     }
                 }
                 return .none
+
+                // MARK: - Wallet Backup Coord Flow
+
+            case .walletBackupCoordFlow(.path(.element(id: _, action: .phrase(.remindMeLaterTapped)))):
+                state.path = nil
+                return .send(.home(.smartBanner(.remindMeLaterTapped(.priority6))))
+
+            case .walletBackupCoordFlow(.path(.element(id: _, action: .phrase(.seedSavedTapped)))):
+                state.path = nil
+                do {
+                    try walletStorage.markUserPassedPhraseBackupTest(true)
+                } catch {
+                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
+                }
+                return .merge(
+                    .send(.home(.smartBanner(.closeAndCleanupBanner))),
+                    .send(.home(.smartBanner(.closeSheetTapped)))
+                )
 
             default: return .none
             }

@@ -203,6 +203,14 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.walletBackup)) {
+                            WalletBackupCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.walletBackupCoordFlowState,
+                                        action: \.walletBackupCoordFlow)
+                            )
+                        }
                         .navigationLinkEmpty(isActive: store.bindingFor(.currencyConversionSetup)) {
                             CurrencyConversionSetupView(
                                 store:
@@ -308,18 +316,18 @@ private extension RootView {
 //                    }
                 //}
 
-                case .phraseDisplay:
-                    NavigationView {
-                        RecoveryPhraseDisplayView(
-                            store: store.scope(
-                                state: \.phraseDisplayState,
-                                action: \.phraseDisplay
-                            )
-                        )
-                    }
-                    .overlayedWithSplash(store.splashAppeared) {
-                        store.send(.splashRemovalRequested)
-                    }
+//                case .phraseDisplay:
+//                    NavigationView {
+//                        RecoveryPhraseDisplayView(
+//                            store: store.scope(
+//                                state: \.phraseDisplayState,
+//                                action: \.phraseDisplay
+//                            )
+//                        )
+//                    }
+//                    .overlayedWithSplash(store.splashAppeared) {
+//                        store.send(.splashRemovalRequested)
+//                    }
 
                 case .onboarding:
                     NavigationView {

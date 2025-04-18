@@ -631,20 +631,28 @@ public enum L10n {
     public static let birthdayDesc = L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayDesc", fallback: "Wallet Birthday Height determines the birth (chain) height of your wallet and facilitates faster wallet restore process. Save this number together with your seed phrase in a safe place.")
     /// Wallet Birthday Height
     public static let birthdayTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayTitle", fallback: "Wallet Birthday Height")
-    /// The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device.
-    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device.")
+    /// These words are the only way to recover your funds! Make sure to save them in the correct order.
+    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "These words are the only way to recover your funds! Make sure to save them in the correct order.")
     /// Hide security details
     public static let hide = L10n.tr("Localizable", "recoveryPhraseDisplay.hide", fallback: "Hide security details")
+    /// Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!
+    public static let note = L10n.tr("Localizable", "recoveryPhraseDisplay.note", fallback: "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!")
     /// The keys are missing. No backup phrase is stored in the keychain.
     public static let noWords = L10n.tr("Localizable", "recoveryPhraseDisplay.noWords", fallback: "The keys are missing. No backup phrase is stored in the keychain.")
+    /// Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!
+    public static let proceedWarning = L10n.tr("Localizable", "recoveryPhraseDisplay.proceedWarning", fallback: "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!")
     /// Reveal security details
     public static let reveal = L10n.tr("Localizable", "recoveryPhraseDisplay.reveal", fallback: "Reveal security details")
-    /// Recovery Phrase
-    public static let screenTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.screenTitle", fallback: "Recovery Phrase")
-    /// Secure Your Zashi Wallet
-    public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Secure Your Zashi Wallet")
+    /// Wallet Backup
+    public static let screenTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.screenTitle", fallback: "Wallet Backup")
+    /// Secret Recovery Phrase
+    public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Secret Recovery Phrase")
     /// Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!
     public static let warning = L10n.tr("Localizable", "recoveryPhraseDisplay.warning", fallback: "Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!")
+    /// Your secret recovery phrase is a unique set of 24 words, appearing in a precise order. It protects access to your funds.
+    public static let warningInfo = L10n.tr("Localizable", "recoveryPhraseDisplay.warningInfo", fallback: "Your secret recovery phrase is a unique set of 24 words, appearing in a precise order. It protects access to your funds.")
+    /// Your Secret Recovery Phrase
+    public static let warningTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.warningTitle", fallback: "Your Secret Recovery Phrase")
     public enum Alert {
       public enum Failed {
         /// Attempt to load the stored wallet from the keychain failed. Error: %@
@@ -656,8 +664,34 @@ public enum L10n {
       }
     }
     public enum Button {
+      /// Remind me later
+      public static let remindMeLater = L10n.tr("Localizable", "recoveryPhraseDisplay.button.remindMeLater", fallback: "Remind me later")
       /// I've saved it
       public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I've saved it")
+    }
+    public enum WarningControl {
+      /// Use it to access your funds from other devices and Zcash wallets.
+      public static let info = L10n.tr("Localizable", "recoveryPhraseDisplay.warningControl.info", fallback: "Use it to access your funds from other devices and Zcash wallets.")
+      /// Control your wallet
+      public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.warningControl.title", fallback: "Control your wallet")
+    }
+    public enum WarningHeight {
+      /// The block height at which your wallet was created can significantly speed up the wallet recovery process.
+      public static let info = L10n.tr("Localizable", "recoveryPhraseDisplay.warningHeight.info", fallback: "The block height at which your wallet was created can significantly speed up the wallet recovery process.")
+      /// Wallet birthday height
+      public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.warningHeight.title", fallback: "Wallet birthday height")
+    }
+    public enum WarningKeep {
+      /// Don't share it with anyone! It can be used to gain full control of your funds.
+      public static let info = L10n.tr("Localizable", "recoveryPhraseDisplay.warningKeep.info", fallback: "Don't share it with anyone! It can be used to gain full control of your funds.")
+      /// Keep it private
+      public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.warningKeep.title", fallback: "Keep it private")
+    }
+    public enum WarningStore {
+      /// We don’t have access to it and will never ask for it. If you lose it, it cannot be recovered.
+      public static let info = L10n.tr("Localizable", "recoveryPhraseDisplay.warningStore.info", fallback: "We don’t have access to it and will never ask for it. If you lose it, it cannot be recovered.")
+      /// Store it securely
+      public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.warningStore.title", fallback: "Store it securely")
     }
   }
   public enum RequestZec {
