@@ -17,7 +17,7 @@ extension HomeView {
                 moreMainBody()
                     .presentationDetents([.height(moreSheetHeight)])
                     .presentationDragIndicator(.visible)
-                    .presentationCornerRadius(Design.CornerRadius.sheet)
+                    .presentationCornerRadius(Design.Radius._4xl)
             } else if #available(iOS 16.0, *) {
                 moreMainBody()
                     .presentationDetents([.height(moreSheetHeight)])

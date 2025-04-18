@@ -165,10 +165,10 @@ extension BalancesView {
         .padding(.vertical, 12)
         .padding(.horizontal, 20)
         .background {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: Design.Radius._2xl)
                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 .background {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: Design.Radius._2xl)
                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
         }

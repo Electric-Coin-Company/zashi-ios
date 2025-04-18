@@ -75,14 +75,14 @@ public struct RestoreWalletCoordFlowView: View {
                                         }
                                         .padding(6)
                                         .background {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .fill(
                                                     focusedField == .field(j * 3 + i)
                                                     ? Design.Surfaces.bgPrimary.color(colorScheme)
                                                     : Design.Surfaces.bgSecondary.color(colorScheme)
                                                 )
                                                 .background {
-                                                    RoundedRectangle(cornerRadius: 12)
+                                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                         .stroke(
                                                             !store.wordsValidity[j * 3 + i]
                                                             ? Design.Inputs.ErrorFilled.stroke.color(colorScheme)
@@ -157,7 +157,7 @@ public struct RestoreWalletCoordFlowView: View {
                                                 .fixedSize()
                                                 .padding(8)
                                                 .background {
-                                                    RoundedRectangle(cornerRadius: 12)
+                                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                                                 }
                                         }

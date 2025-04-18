@@ -187,7 +187,7 @@ public struct AddressBookView: View {
                     .padding(.bottom, 40)
                     .padding(.top, 70)
                     .background {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
                             .stroke(Design.Surfaces.strokeSecondary.color(colorScheme), style: StrokeStyle(lineWidth: 2.0, dash: [8, 6]))
                     }
                     .padding(.top, 24)
@@ -268,7 +268,7 @@ public struct AddressBookView: View {
                 .padding(.vertical, 12)
                 .background {
                     if selected {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                 }

@@ -242,7 +242,7 @@ public struct TabsView: View {
                                 .zImage(size: 24, style: Design.Btns.Tertiary.fg)
                                 .padding(8)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                 }
                         }
@@ -322,17 +322,17 @@ public struct TabsView: View {
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 12)
                                             .background {
-                                                RoundedRectangle(cornerRadius: 12)
+                                                RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                     .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                             }
                                     }
                                 }
                                 .padding(24)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                         .background {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                         }
                                 }
@@ -560,7 +560,7 @@ public struct TabsView: View {
 //                                .zImage(size: 24, style: Design.Btns.Tertiary.fg)
 //                                .padding(8)
 //                                .background {
-//                                    RoundedRectangle(cornerRadius: 12)
+//                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
 //                                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
 //                                }
 //                        }
@@ -640,17 +640,17 @@ public struct TabsView: View {
 //                                            .frame(maxWidth: .infinity)
 //                                            .padding(.vertical, 12)
 //                                            .background {
-//                                                RoundedRectangle(cornerRadius: 12)
+//                                                RoundedRectangle(cornerRadius: Design.Radius._xl)
 //                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
 //                                            }
 //                                    }
 //                                }
 //                                .padding(24)
 //                                .background {
-//                                    RoundedRectangle(cornerRadius: 12)
+//                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
 //                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
 //                                        .background {
-//                                            RoundedRectangle(cornerRadius: 12)
+//                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
 //                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
 //                                        }
 //                                }

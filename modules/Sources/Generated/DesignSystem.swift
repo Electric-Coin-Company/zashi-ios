@@ -324,8 +324,41 @@ public enum Design {
     
     // MARK: - Corner Radius Constants
 
-    public enum CornerRadius {
-        public static let sheet: CGFloat = 24
+    public enum Radius {
+        public static let _none: CGFloat = 0
+        public static let _xxs: CGFloat = 2
+        public static let _xs: CGFloat = 4
+        public static let _sm: CGFloat = 6
+        public static let _md: CGFloat = 8
+        public static let _lg: CGFloat = 10
+        public static let _xl: CGFloat = 12
+        public static let _2xl: CGFloat = 16
+        public static let _3xl: CGFloat = 20
+        public static let _4xl: CGFloat = 24
+        public static let _5xl: CGFloat = 32
+        public static let _full: CGFloat = 9999
+    }
+    
+    // MARK: - Spacing Constants
+
+    public enum Spacing {
+        public static let _none: CGFloat = 0
+        public static let _xxs: CGFloat = 2
+        public static let _xs: CGFloat = 4
+        public static let _sm: CGFloat = 6
+        public static let _md: CGFloat = 8
+        public static let _lg: CGFloat = 12
+        public static let _xl: CGFloat = 16
+        public static let _2xl: CGFloat = 20
+        public static let _3xl: CGFloat = 24
+        public static let _4xl: CGFloat = 32
+        public static let _5xl: CGFloat = 40
+        public static let _6xl: CGFloat = 48
+        public static let _7xl: CGFloat = 64
+        public static let _8xl: CGFloat = 80
+        public static let _9xl: CGFloat = 96
+        public static let _10xl: CGFloat = 128
+        public static let _11xl: CGFloat = 160
     }
 }
 

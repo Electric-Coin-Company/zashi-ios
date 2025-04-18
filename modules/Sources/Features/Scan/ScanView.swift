@@ -140,7 +140,7 @@ public struct ScanView: View {
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                         .fill(Asset.Colors.ZDesign.Base.bone.color)
                 }
         }
@@ -160,7 +160,7 @@ public struct ScanView: View {
                         .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                         .padding(12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Asset.Colors.ZDesign.shark900.color)
                         }
                 } else {
@@ -168,7 +168,7 @@ public struct ScanView: View {
                         .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                         .padding(12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Asset.Colors.ZDesign.shark900.color)
                         }
                 }
@@ -192,7 +192,7 @@ public struct ScanView: View {
                     .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                     .padding(12)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(Asset.Colors.ZDesign.shark900.color)
                     }
             }

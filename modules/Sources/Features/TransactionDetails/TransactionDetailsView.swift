@@ -203,7 +203,7 @@ extension TransactionDetailsView {
                     }
                 
                 if store.transaction.isShieldingTransaction {
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
                         .fill(Design.Utility.Purple._500.color(colorScheme))
                         .frame(width: 48, height: 48)
                         .overlay {
@@ -219,7 +219,7 @@ extension TransactionDetailsView {
                         .offset(x: -4)
                 }
                 
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
                     .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                     .frame(width: 48, height: 48)
                     .overlay {
@@ -579,7 +579,7 @@ extension TransactionDetailsView {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(12)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                     .onTapGesture {
@@ -611,7 +611,7 @@ extension TransactionDetailsView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
                 .background {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }

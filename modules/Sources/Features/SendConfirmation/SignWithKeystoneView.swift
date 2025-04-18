@@ -68,10 +68,10 @@ public struct SignWithKeystoneView: View {
                                 .padding(.vertical, 2)
                                 .padding(.horizontal, 8)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 16)
+                                    RoundedRectangle(cornerRadius: Design.Radius._2xl)
                                         .fill(Design.Utility.HyperBlue._50.color(colorScheme))
                                         .background {
-                                            RoundedRectangle(cornerRadius: 16)
+                                            RoundedRectangle(cornerRadius: Design.Radius._2xl)
                                                 .stroke(Design.Utility.HyperBlue._200.color(colorScheme))
                                         }
                                 }
@@ -79,7 +79,7 @@ public struct SignWithKeystoneView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background {
-                            RoundedRectangle(cornerRadius: 16)
+                            RoundedRectangle(cornerRadius: Design.Radius._2xl)
                                 .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                         }
                         .padding(.top, 40)
@@ -89,10 +89,10 @@ public struct SignWithKeystoneView: View {
                                 .frame(width: 216, height: 216)
                                 .padding(24)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .fill(Asset.Colors.ZDesign.Base.bone.color)
                                         .background {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                         }
                                 }
@@ -109,10 +109,10 @@ public struct SignWithKeystoneView: View {
                             .frame(width: 216, height: 216)
                             .padding(24)
                             .background {
-                                RoundedRectangle(cornerRadius: 12)
+                                RoundedRectangle(cornerRadius: Design.Radius._xl)
                                     .fill(Asset.Colors.ZDesign.Base.bone.color)
                                     .background {
-                                        RoundedRectangle(cornerRadius: 12)
+                                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                                             .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                     }
                             }
@@ -223,7 +223,7 @@ public struct SignWithKeystoneView: View {
                 AnimatedQRCode(urEncoder: encoder, size: UIScreen.main.bounds.width - 64)
                     .padding()
                     .background {
-                        RoundedRectangle(cornerRadius: 24)
+                        RoundedRectangle(cornerRadius: Design.Radius._4xl)
                             .fill(Color.white)
                     }
                     .onTapGesture {

@@ -166,7 +166,7 @@ public struct SendFormView: View {
                                                 }
                                                 .padding(10)
                                                 .background {
-                                                    RoundedRectangle(cornerRadius: 8)
+                                                    RoundedRectangle(cornerRadius: Design.Radius._md)
                                                         .fill(Design.Utility.Gray._50.color(colorScheme))
                                                 }
                                             }
@@ -227,7 +227,7 @@ public struct SendFormView: View {
                     balancesContent()
                         .presentationDetents([.height(store.sheetHeight)])
                         .presentationDragIndicator(.visible)
-                        .presentationCornerRadius(Design.CornerRadius.sheet)
+                        .presentationCornerRadius(Design.Radius._4xl)
                 } else {
                     balancesContent()
                         .presentationDetents([.height(store.sheetHeight)])
@@ -254,7 +254,7 @@ public struct SendFormView: View {
                             .padding(.horizontal, 10)
                             .frame(height: 40)
                             .background {
-                                RoundedRectangle(cornerRadius: 8)
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
                                     .fill(Design.HintTooltips.surfacePrimary.color(colorScheme))
                             }
                             .frame(width: geometry.size.width - 48)
@@ -306,10 +306,10 @@ public struct SendFormView: View {
         }
         .padding(8)
         .background {
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Design.Radius._md)
                 .fill(Design.Btns.Secondary.bg.color(colorScheme))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Design.Radius._md)
                         .stroke(Design.Btns.Secondary.border.color(colorScheme))
                 }
         }

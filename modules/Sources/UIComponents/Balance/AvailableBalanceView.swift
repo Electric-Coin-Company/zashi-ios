@@ -52,10 +52,10 @@ public struct AvailableBalanceView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: Design.Radius._lg)
                 .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                 .background {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: Design.Radius._lg)
                         .stroke(Design.Utility.Gray._100.color(colorScheme))
                 }
         }

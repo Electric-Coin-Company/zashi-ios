@@ -59,7 +59,7 @@ public struct PartialProposalErrorView: View {
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 10)
+                                    RoundedRectangle(cornerRadius: Design.Radius._lg)
                                         .fill(Design.Inputs.Default.bg.color(colorScheme))
                                 }
                                 .padding(.bottom, 8)

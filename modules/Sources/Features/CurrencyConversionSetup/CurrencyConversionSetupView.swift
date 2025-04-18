@@ -85,7 +85,7 @@ public struct CurrencyConversionSetupView: View {
                     .frame(minHeight: 40)
                     .padding(20)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                     }
                 }
@@ -161,7 +161,7 @@ extension CurrencyConversionSetupView {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                         .fill(
                             disabled
                             ? Design.Btns.Primary.bgDisabled.color(colorScheme)

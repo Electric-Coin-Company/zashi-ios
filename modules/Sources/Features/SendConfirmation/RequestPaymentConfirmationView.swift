@@ -158,7 +158,7 @@ public struct RequestPaymentConfirmationView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background {
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: Design.Radius._lg)
                                     .fill(Design.Inputs.Filled.bg.color(colorScheme))
                             }
                         }

@@ -72,7 +72,7 @@ public struct RecoveryPhraseDisplayView: View {
                     .padding(.vertical, 24)
                     .padding(.horizontal, 16)
                     .background {
-                        RoundedRectangle(cornerRadius: 24)
+                        RoundedRectangle(cornerRadius: Design.Radius._4xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                     .onTapGesture {
@@ -125,7 +125,7 @@ public struct RecoveryPhraseDisplayView: View {
                             Spacer()
                         }
                         .background {
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: Design.Radius._lg)
                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                         .padding(.top, 6)

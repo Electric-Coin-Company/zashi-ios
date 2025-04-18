@@ -93,10 +93,10 @@ public struct AdvancedSettingsView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Design.Btns.Destructive1.bg.color(colorScheme))
                                 .overlay {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .stroke(Design.Btns.Destructive1.border.color(colorScheme))
                                 }
                         }

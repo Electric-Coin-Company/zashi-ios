@@ -152,7 +152,7 @@ public struct WalletBalancesView: View {
                             .padding(8)
                             .padding(.horizontal, 6)
                             .background {
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: Design.Radius._lg)
                                     .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                                     .background {
                                         Design.Surfaces.bgSecondary.color(colorScheme)

@@ -51,10 +51,10 @@ public struct TransactionsManagerView: View {
                                 .zImage(size: 24, style: Design.Text.primary)
                                 .padding(10)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .fill(Design.Btns.Secondary.bg.color(colorScheme))
                                         .overlay {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .stroke(store.activeFilters.count > 0
                                                         ? Design.Utility.Gray._900.color(colorScheme)
                                                         : Design.Utility.Gray._100.color(colorScheme),

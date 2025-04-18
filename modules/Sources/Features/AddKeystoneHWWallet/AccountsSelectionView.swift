@@ -89,7 +89,7 @@ public struct AccountsSelectionView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }

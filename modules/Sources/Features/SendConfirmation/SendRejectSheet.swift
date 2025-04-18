@@ -17,7 +17,7 @@ extension SignWithKeystoneView {
                 mainBody(colorScheme: colorScheme)
                     .presentationDetents([.height(accountSwitchSheetHeight)])
                     .presentationDragIndicator(.visible)
-                    .presentationCornerRadius(Design.CornerRadius.sheet)
+                    .presentationCornerRadius(Design.Radius._4xl)
             } else if #available(iOS 16.0, *) {
                 mainBody(colorScheme: colorScheme)
                     .presentationDetents([.height(accountSwitchSheetHeight)])

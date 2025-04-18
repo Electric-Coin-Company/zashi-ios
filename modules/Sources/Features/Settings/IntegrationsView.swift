@@ -111,7 +111,7 @@ public struct IntegrationsView: View {
                 .frame(maxWidth: .infinity)
                 .padding(24)
                 .background {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
                 .padding(.bottom, 24)

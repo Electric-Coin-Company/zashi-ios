@@ -257,7 +257,7 @@ public struct ReceiveView: View {
         }
         .padding(.vertical, 20)
         .background {
-            RoundedRectangle(cornerRadius: 24)
+            RoundedRectangle(cornerRadius: Design.Radius._4xl)
                 .fill(bcgColor)
         }
     }
@@ -275,7 +275,7 @@ public struct ReceiveView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 64)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(fill)
                     }
                 

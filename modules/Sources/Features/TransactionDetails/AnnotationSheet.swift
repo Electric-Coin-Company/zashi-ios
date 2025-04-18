@@ -17,7 +17,7 @@ extension TransactionDetailsView {
                 mainBodyUM(isEditMode: isEditMode)
                     .presentationDetents([.height(filtersSheetHeight)])
                     .presentationDragIndicator(.visible)
-                    .presentationCornerRadius(Design.CornerRadius.sheet)
+                    .presentationCornerRadius(Design.Radius._4xl)
             } else if #available(iOS 16.0, *) {
                 mainBodyUM(isEditMode: isEditMode)
                     .presentationDetents([.height(filtersSheetHeight)])

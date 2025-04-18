@@ -44,7 +44,7 @@ public struct ZashiSheetModifier<SheetContent: View>: ViewModifier {
                         .id(sheetHeight)
                         .presentationDetents([.height(sheetHeight)])
                         .presentationDragIndicator(.visible)
-                        .presentationCornerRadius(Design.CornerRadius.sheet)
+                        .presentationCornerRadius(Design.Radius._4xl)
                 } else if #available(iOS 16.0, *) {
                     mainBody()
                         .id(sheetHeight)

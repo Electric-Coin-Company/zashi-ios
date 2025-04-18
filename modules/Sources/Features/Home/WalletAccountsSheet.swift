@@ -17,7 +17,7 @@ extension HomeView {
                 mainBody()
                     .presentationDetents([.height(accountSwitchSheetHeight)])
                     .presentationDragIndicator(.visible)
-                    .presentationCornerRadius(Design.CornerRadius.sheet)
+                    .presentationCornerRadius(Design.Radius._4xl)
             } else if #available(iOS 16.0, *) {
                 mainBody()
                     .presentationDetents([.height(accountSwitchSheetHeight)])
@@ -120,7 +120,7 @@ extension HomeView {
                 .padding(.vertical, 12)
                 .background {
                     if selected {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                 }
@@ -163,7 +163,7 @@ extension HomeView {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .background {
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
                     .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
             }
         }
@@ -194,7 +194,7 @@ extension HomeView {
             }
             .frame(maxWidth: .infinity)
             .background {
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
                     .fill(Design.Surfaces.bgTertiary.color(colorScheme))
             }
         }
