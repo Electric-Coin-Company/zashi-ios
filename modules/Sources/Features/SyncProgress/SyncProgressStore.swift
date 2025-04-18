@@ -99,7 +99,6 @@ public struct SyncProgress {
                     state.synchronizerStatusSnapshot = snapshot
 
                     if case let .syncing(syncProgress, recoveryProgress) = snapshot.syncStatus {
-                        print("__LD \(syncProgress) \(recoveryProgress)")
                         state.lastKnownSyncPercentage = syncProgress
                     }
 

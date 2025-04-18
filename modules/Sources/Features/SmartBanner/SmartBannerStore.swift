@@ -20,6 +20,7 @@ import NetworkMonitor
 import ZcashSDKEnvironment
 import SupportDataGenerator
 import MessageUI
+import ShieldingProcessor
 
 @Reducer
 public struct SmartBanner {
@@ -50,6 +51,7 @@ public struct SmartBanner {
         
         public var CancelNetworkMonitorId = UUID()
         public var CancelStateStreamId = UUID()
+        public var CancelShieldingProcessorId = UUID()
 
         public var delay = 1.5
         public var isOpen = false
@@ -118,6 +120,7 @@ public struct SmartBanner {
         case reportPrepared
         case reportTapped
         case shareFinished
+        case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
         case smartBannerContentTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case transparentBalanceUpdated(Zatoshi)
@@ -128,13 +131,14 @@ public struct SmartBanner {
         case autoShieldingTapped
         case currencyConversionScreenRequested
         case currencyConversionTapped
-        case shieldTapped
+        case shieldFundsTapped
         case walletBackupTapped
     }
 
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.networkMonitor) var networkMonitor
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.shieldingProcessor) var shieldingProcessor
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -172,16 +176,40 @@ public struct SmartBanner {
                             .map { $0.redacted }
                             .map(Action.synchronizerStateChanged)
                     }
-                    .cancellable(id: state.CancelStateStreamId, cancelInFlight: true)
+                    .cancellable(id: state.CancelStateStreamId, cancelInFlight: true),
+                    .publisher {
+                        shieldingProcessor.observe()
+                            .map(Action.shieldingProcessorStateChanged)
+                    }
+                    .cancellable(id: state.CancelShieldingProcessorId, cancelInFlight: true)
                 )
                 
             case .onDisappear:
                 return .merge(
                     .cancel(id: state.CancelNetworkMonitorId),
-                    .cancel(id: state.CancelStateStreamId)
+                    .cancel(id: state.CancelStateStreamId),
+                    .cancel(id: state.CancelShieldingProcessorId)
                 )
                 
             case .binding:
+                return .none
+                
+            case .shieldingProcessorStateChanged(let shieldingProcessorState):
+                state.isShielding = shieldingProcessorState == .requested
+                if state.isOpen || state.isSmartBannerSheetPresented {
+                    var hideEverything = false
+                    if case .proposal = shieldingProcessorState {
+                        hideEverything = true
+                    } else if shieldingProcessorState == .succeeded {
+                        hideEverything = true
+                    }
+                    if hideEverything {
+                        return .merge(
+                            .send(.closeAndCleanupBanner),
+                            .send(.closeSheetTapped)
+                        )
+                    }
+                }
                 return .none
                 
             case .walletAccountChanged:
@@ -259,13 +287,13 @@ public struct SmartBanner {
                 } else if priority == .priority7 {
                     // shielding = priority7
                     if let account = state.selectedWalletAccount {
-                        if var shieldingReminder = walletStorage.exportShieldingReminder(account.account) {
+                        if var shieldingReminder = walletStorage.exportShieldingReminder(account.vendor.name()) {
                             shieldingReminder.occurence += 1
                             shieldingReminder.timestamp = now
-                            try? walletStorage.importShieldingReminder(shieldingReminder, account.account)
+                            try? walletStorage.importShieldingReminder(shieldingReminder, account.vendor.name())
                         } else {
                             let shieldingReminder = ReminedMeTimestamp(timestamp: now, occurence: 1)
-                            try? walletStorage.importShieldingReminder(shieldingReminder, account.account)
+                            try? walletStorage.importShieldingReminder(shieldingReminder, account.vendor.name())
                         }
                     }
                 }
@@ -300,6 +328,19 @@ public struct SmartBanner {
                             return .send(.triggerPriority(.priority2))
                         }
                     default: break
+                    }
+                    
+                    if state.priorityContent == .priority7 {
+                        if let account = state.selectedWalletAccount, let accountBalance = latestState.data.accountsBalances[account.id] {
+                            if accountBalance.unshielded.amount > 0 {
+                                return .send(.transparentBalanceUpdated(accountBalance.unshielded))
+                            } else {
+                                return .merge(
+                                    .send(.closeAndCleanupBanner),
+                                    .send(.closeSheetTapped)
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -361,7 +402,7 @@ public struct SmartBanner {
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
-                if let shieldedReminder = walletStorage.exportShieldingReminder(account.account) {
+                if let shieldedReminder = walletStorage.exportShieldingReminder(account.vendor.name()) {
                     state.remindMeShieldedPhaseCounter = shieldedReminder.occurence
                 }
                 return .run { [remindMeShieldedPhaseCounter = state.remindMeShieldedPhaseCounter] send in
@@ -369,7 +410,7 @@ public struct SmartBanner {
                        accountBalance.unshielded >= zcashSDKEnvironment.shieldingThreshold {
                         await send(.transparentBalanceUpdated(accountBalance.unshielded))
                         
-                        if let shieldedReminder = walletStorage.exportShieldingReminder(account.account) {
+                        if let shieldedReminder = walletStorage.exportShieldingReminder(account.vendor.name()) {
                             let now = Date().timeIntervalSince1970
 
                             if (remindMeShieldedPhaseCounter == 1 && shieldedReminder.timestamp + Constants.remindMe2days < now)
@@ -463,8 +504,9 @@ public struct SmartBanner {
             case .currencyConversionTapped:
                 return .send(.smartBannerContentTapped)
 
-            case .shieldTapped:
+            case .shieldFundsTapped:
                 state.isSmartBannerSheetPresented = false
+                shieldingProcessor.shieldFunds()
                 return .send(.closeAndCleanupBanner)
 
             case .walletBackupTapped:

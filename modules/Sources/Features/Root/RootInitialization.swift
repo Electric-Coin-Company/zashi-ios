@@ -378,7 +378,8 @@ extension Root {
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
                     .send(.batteryStateChanged(nil)),
-                    .send(.observeTransactions)
+                    .send(.observeTransactions),
+                    .send(.observeShieldingProcessor)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):

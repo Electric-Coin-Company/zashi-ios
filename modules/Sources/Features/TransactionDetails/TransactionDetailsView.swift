@@ -365,7 +365,9 @@ extension TransactionDetailsView {
                 }
                 
                 detailView(
-                    title: L10n.TransactionHistory.completed,
+                    title: store.transaction.listDateYearString == nil
+                    ? L10n.TransactionHistory.status
+                    : L10n.TransactionHistory.completed,
                     value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                     rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                 )
@@ -471,7 +473,9 @@ extension TransactionDetailsView {
                     }
 
                     detailView(
-                        title: L10n.TransactionHistory.completed,
+                        title: store.transaction.listDateYearString == nil
+                        ? L10n.TransactionHistory.status
+                        : L10n.TransactionHistory.completed,
                         value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )

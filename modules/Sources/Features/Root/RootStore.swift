@@ -30,6 +30,8 @@ import OSStatusError
 import AddressBookClient
 import UserMetadataProvider
 import AudioServices
+import ShieldingProcessor
+import SupportDataGenerator
 
 // Screens
 //import About
@@ -119,12 +121,13 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
-            case signWithKeystoneCoordFlow
+            //case signWithKeystoneCoordFlow
             case transactionsCoordFlow
         }
         
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
+        public var shieldingProcessorCancelId = UUID()
 
         //        public var addressBookBinding: Bool = false
 //        public var addressBookContactBinding: Bool = false
@@ -146,6 +149,8 @@ public struct Root {
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
         public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
         public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
+        public var messageToBeShared = ""
+        public var messageShareBinding: String?
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
@@ -155,7 +160,9 @@ public struct Root {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding = false
+        public var signWithKeystoneCoordFlowBinding = false
         public var splashAppeared = false
+        public var supportData: SupportData?
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -287,6 +294,12 @@ public struct Root {
         // UserMetadata
         case loadUserMetadata
         case resolveMetadataEncryptionKeys
+        
+        // Shielding
+        case observeShieldingProcessor
+        case reportShieldingFailure
+        case shareFinished
+        case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -304,6 +317,7 @@ public struct Root {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.shieldingProcessor) var shieldingProcessor
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userMetadataProvider) var userMetadataProvider
@@ -408,6 +422,8 @@ public struct Root {
         userMetadataReduce()
         
         coordinatorReduce()
+        
+        shieldingProcessorReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -693,6 +709,29 @@ extension AlertState where Action == Root.Action {
             }
         } message: {
             TextState(L10n.Root.ServiceUnavailable.message)
+        }
+    }
+    
+    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+        AlertState {
+            TextState(L10n.ShieldFunds.Error.title)
+        } actions: {
+            ButtonState(action: .alert(.dismiss)) {
+                TextState(L10n.General.ok)
+            }
+            ButtonState(action: .reportShieldingFailure) {
+                TextState(L10n.Send.report)
+            }
+        } message: {
+            TextState(L10n.ShieldFunds.Error.Failure.message(error.detailedMessage))
+        }
+    }
+    
+    public static func shieldFundsGrpc() -> AlertState {
+        AlertState {
+            TextState(L10n.ShieldFunds.Error.title)
+        } message: {
+            TextState(L10n.ShieldFunds.Error.Gprc.message)
         }
     }
 }

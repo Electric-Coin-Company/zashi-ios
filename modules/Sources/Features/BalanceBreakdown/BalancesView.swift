@@ -39,7 +39,9 @@ public struct BalancesView: View {
                     .padding(.top, 40)
 
                 Text(
-                    store.isPendingInProcess
+                    store.spendability == .everything
+                    ? L10n.Balances.everythingDone
+                    : store.isPendingInProcess
                     ? L10n.Balances.infoPending1
                     : L10n.Balances.shieldInfo1
                 )
@@ -47,6 +49,11 @@ public struct BalancesView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 8)
+                .multilineTextAlignment(
+                    store.spendability == .everything || !store.isShieldableBalanceAvailable
+                    ? .center
+                    : .leading
+                )
 
                 if store.isShieldableBalanceAvailable {
                     Text(
@@ -150,8 +157,9 @@ extension BalancesView {
                 L10n.SmartBanner.Content.Shield.button,
                 infinityWidth: false
             ) {
-                store.send(.shieldFunds)
+                store.send(.shieldFundsTapped)
             }
+            .disabled(store.isShielding)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
@@ -182,7 +190,7 @@ extension BalancesView {
                 initialState: Balances.State(
                     autoShieldingThreshold: Zatoshi(1_000_000),
                     changePending: Zatoshi(25_234_000),
-                    isShieldingFunds: true,
+                    isShielding: true,
                     pendingTransactions: Zatoshi(25_234_000)
                 )
             ) {
@@ -200,14 +208,14 @@ extension Balances.State {
     public static let placeholder = Balances.State(
         autoShieldingThreshold: .zero,
         changePending: .zero,
-        isShieldingFunds: false,
+        isShielding: false,
         pendingTransactions: .zero
     )
     
     public static let initial = Balances.State(
         autoShieldingThreshold: .zero,
         changePending: .zero,
-        isShieldingFunds: false,
+        isShielding: false,
         pendingTransactions: .zero
     )
 }

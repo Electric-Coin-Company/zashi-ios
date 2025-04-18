@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Generated
 import AudioServices
+import Models
 
 // Path
 import SendConfirmation
@@ -48,6 +49,9 @@ extension SignWithKeystoneCoordFlow {
                     state.path.append(.sendResultResubmission(state.sendConfirmationState))
                     break
                 case .success:
+                    if state.sendConfirmationState.isShielding {
+                        walletStorage.resetShieldingReminder(WalletAccount.Vendor.keystone.name())
+                    }
                     state.path.append(.sendResultSuccess(state.sendConfirmationState))
                 default: break
                 }

@@ -11,6 +11,7 @@ import ZcashLightClientKit
 
 import AudioServices
 import Models
+import WalletStorage
 
 // Path
 import SendConfirmation
@@ -45,7 +46,8 @@ public struct SignWithKeystoneCoordFlow {
     }
 
     @Dependency(\.audioServices) var audioServices
-    
+    @Dependency(\.walletStorage) var walletStorage
+
     public init() { }
 
     public var body: some Reducer<State, Action> {

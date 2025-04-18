@@ -161,7 +161,8 @@ extension Root {
 //                }
 
             case .signWithKeystoneRequested:
-                state.path = .signWithKeystoneCoordFlow
+                //state.path = .signWithKeystoneCoordFlow
+                state.signWithKeystoneCoordFlowBinding = true
                 return .send(.signWithKeystoneCoordFlow(.sendConfirmation(.resolvePCZT)))
                 
                 // MARK: - Request Zec
@@ -253,11 +254,11 @@ extension Root {
 
             case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
                     .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
-                state.path = nil
+                state.signWithKeystoneCoordFlowBinding = false
                 return .none
 
             case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
-                state.path = nil
+                state.signWithKeystoneCoordFlowBinding = false
                 return .none
 
                 // MARK: - Transactions Coord Flow

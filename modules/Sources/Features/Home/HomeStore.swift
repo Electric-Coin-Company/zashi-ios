@@ -15,7 +15,7 @@ import PartnerKeys
 import UserPreferencesStorage
 import Utils
 import SmartBanner
-import ShieldingProcessor
+//import ShieldingProcessor
 
 @Reducer
 public struct Home {
@@ -35,7 +35,7 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
-        public var shieldingProcessorState = ShieldingProcessor.State()
+//        public var shieldingProcessorState = ShieldingProcessor.State()
         public var smartBannerState = SmartBanner.State.initial
         public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
@@ -116,7 +116,7 @@ public struct Home {
         case seeAllTransactionsTapped
         case sendTapped
         case settingsTapped
-        case shieldingProcessor(ShieldingProcessor.Action)
+//        case shieldingProcessor(ShieldingProcessor.Action)
         case showSynchronizerErrorAlert(ZcashError)
         case smartBanner(SmartBanner.Action)
         case synchronizerStateChanged(RedactableSynchronizerState)
@@ -147,9 +147,9 @@ public struct Home {
             TransactionList()
         }
 
-        Scope(state: \.shieldingProcessorState, action: \.shieldingProcessor) {
-            ShieldingProcessor()
-        }
+//        Scope(state: \.shieldingProcessorState, action: \.shieldingProcessor) {
+//            ShieldingProcessor()
+//        }
 
 //        Scope(state: \.scanState, action: \.scan) {
 //            Scan()
@@ -358,14 +358,15 @@ public struct Home {
             case .smartBanner(.currencyConversionScreenRequested):
                 return .send(.currencyConversionSetupTapped)
                 
-            case .smartBanner(.shieldTapped):
-                return .send(.shieldingProcessor(.shieldFunds))
+            case .smartBanner(.shieldFundsTapped):
+                //return .send(.shieldingProcessor(.shieldFunds))
+                return .none
 
                 // Shielding processor
 
-            case .shieldingProcessor(.shieldFundsFailure(let error)):
-                state.alert = AlertState.shieldFundsFailure(error)
-                return .none
+//            case .shieldingProcessor(.shieldFundsFailure(let error)):
+//                state.alert = AlertState.shieldFundsFailure(error)
+//                return .none
                 
                 // More actions
             case .coinbaseTapped:
@@ -382,8 +383,8 @@ public struct Home {
             case .smartBanner:
                 return .none
                 
-            case .shieldingProcessor:
-                return .none
+//            case .shieldingProcessor:
+//                return .none
             }
         }
     }
@@ -391,12 +392,12 @@ public struct Home {
 
 // MARK: Alerts
 
-extension AlertState where Action == Home.Action {
-    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-        } message: {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-        }
-    }
-}
+//extension AlertState where Action == Home.Action {
+//    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+//        AlertState {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
+//        } message: {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
+//        }
+//    }
+//}

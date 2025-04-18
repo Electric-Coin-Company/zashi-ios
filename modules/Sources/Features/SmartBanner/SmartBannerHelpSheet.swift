@@ -278,8 +278,9 @@ extension SmartBannerView {
             .padding(.bottom, 12)
 
             ZashiButton(L10n.SmartBanner.Content.Shield.button) {
-                store.send(.shieldTapped)
+                store.send(.shieldFundsTapped)
             }
+            .disabled(store.isShielding)
             .padding(.bottom, 32)
         }
     }

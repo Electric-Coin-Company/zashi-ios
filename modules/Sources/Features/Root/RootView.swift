@@ -211,7 +211,7 @@ private extension RootView {
                                         action: \.currencyConversionSetup)
                             )
                         }
-                        .navigationLinkEmpty(isActive: store.bindingFor(.signWithKeystoneCoordFlow)) {
+                        .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {
                             SignWithKeystoneCoordFlowView(
                                 store:
                                     store.scope(
@@ -220,12 +220,22 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
+
+//                        .navigationLinkEmpty(isActive: store.bindingFor(.signWithKeystoneCoordFlow)) {
+//                            SignWithKeystoneCoordFlowView(
+//                                store:
+//                                    store.scope(
+//                                        state: \.signWithKeystoneCoordFlowState,
+//                                        action: \.signWithKeystoneCoordFlow),
+//                                tokenName: tokenName
+//                            )
+//                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {
                         store.send(.splashRemovalRequested)
                     }
-                        
+
 //                    } destination: { store in
 //                        switch store.case {
 //                        case let .about(store):
@@ -339,6 +349,18 @@ private extension RootView {
                         )
                     )
                 }
+                
+//                if let supportData = store.supportData {
+//                    UIMailDialogView(
+//                        supportData: supportData,
+//                        completion: {
+//                            store.send(.sendSupportMailFinished)
+//                        }
+//                    )
+//                    // UIMailDialogView only wraps MFMailComposeViewController presentation
+//                    // so frame is set to 0 to not break SwiftUIs layout
+//                    .frame(width: 0, height: 0)
+//                }
             }
             .onOpenURL(perform: { store.goToDeeplink($0) })
             .alert(
@@ -373,6 +395,7 @@ private extension RootView {
             }
 
             shareLogsView(store)
+            shareView()
         }
         .toast()
     }
@@ -385,6 +408,25 @@ private extension RootView {
                 activityItems: store.exportLogsState.zippedLogsURLs
             ) {
                 store.send(.exportLogs(.shareFinished))
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder func shareView() -> some View {
+        if let message = store.messageShareBinding {
+            UIShareDialogView(activityItems: [
+                ShareableMessage(
+                    title: L10n.SendFeedback.Share.title,
+                    message: message,
+                    desc: L10n.SendFeedback.Share.desc
+                ),
+            ]) {
+                store.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
             // so frame is set to 0 to not break SwiftUIs layout

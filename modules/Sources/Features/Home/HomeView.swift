@@ -166,7 +166,6 @@ public struct HomeView: View {
                 }
                 //.padding(.top, 12)
             }
-            
 //            .popover(
 //                isPresented:
 //                    Binding(
@@ -174,15 +173,16 @@ public struct HomeView: View {
 //                        set: { store.send(.balancesBindingUpdated($0)) }
 //                    )
 //            ) {
+//                
 //                //NavigationView {
-//                    BalancesView(
-//                        store:
-//                            store.scope(
-//                                state: \.balancesState,
-//                                action: \.balances
-//                            ),
-//                        tokenName: tokenName
-//                    )
+////                    BalancesView(
+////                        store:
+////                            store.scope(
+////                                state: \.balancesState,
+////                                action: \.balances
+////                            ),
+////                        tokenName: tokenName
+////                    )
 //                //}
 //            }
             .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {

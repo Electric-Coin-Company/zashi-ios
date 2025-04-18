@@ -469,13 +469,13 @@ public struct SendForm {
                 state.balancesBinding = false
                 return .none
                 
-            case .balances(.shieldFunds):
+            case .balances(.shieldFundsTapped):
                 state.balancesBinding = false
                 return .none
 
-            case .balances(.shieldFundsFailure(let error)):
-                state.alert = AlertState.shieldFundsFailure(error)
-                return .none
+//            case .balances(.shieldFundsFailure(let error)):
+//                state.alert = AlertState.shieldFundsFailure(error)
+//                return .none
 
             case .balances:
                 return .none
@@ -555,11 +555,11 @@ extension AlertState where Action == SendForm.Action {
         }
     }
     
-    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-        } message: {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-        }
-    }
+//    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+//        AlertState {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
+//        } message: {
+//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
+//        }
+//    }
 }

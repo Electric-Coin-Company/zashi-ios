@@ -123,8 +123,6 @@
 "balances.hintBox.message" = "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.";
 "balances.hintBox.dismiss" = "I got it!";
 "balances.restoringWalletWarning" = "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.";
-"balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
-"balances.alert.shieldFunds.failure.message" = "Error: %@";
 
 // MARK: - Scan
 "scan.invalidQR" = "This QR code doesn't hold a valid Zcash address.";
@@ -627,6 +625,7 @@
 "smartBanner.content.backup.button" = "Start";
 
 "smartBanner.content.shield.title" = "Transparent Balance Detected";
+"smartBanner.content.shield.titleShorter" = "Transparent Balance";
 "smartBanner.content.shield.button" = "Shield";
 
 "smartBanner.content.currencyConversion.title" = "Currency Conversion";
@@ -644,7 +643,14 @@
 "balances.dismiss" = "Dismiss";
 "balances.spendableBalance.title" = "Spendable Balance";
 "balances.spendableBalance" = "Shielded (Spendable)";
-"balances.infoPending1" = "Your last transaction is getting mined and confirmed.";
+"balances.infoPending1" = "Pending transactions are getting mined and confirmed.";
 "balances.infoPending2" = "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
 "balances.shieldInfo1" = "Shield your transparent balance to make your funds spendable and private.";
 "balances.shieldInfo2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
+"balances.everythingDone" = "All your funds are shielded and spendable.";
+
+"shieldFunds.error.title" = "Shielding Error";
+"shieldFunds.error.failure.message" = "An error happened during the last shielding transaction. You can try again later or report this issue if the problem persists. \n\n %@";
+"shieldFunds.error.gprc.message" = "An error happened during the last shielding transaction. We will try to resubmit the transaction later. If it fails, you may need to repeat the shielding attempt at a later time.";
+
+"transactionHistory.status" = "Status";

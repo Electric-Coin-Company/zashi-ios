@@ -159,8 +159,13 @@ extension SmartBannerView {
                 .padding(.trailing, 12)
             
             VStack(alignment: .leading, spacing: 2) {
-                Text(L10n.SmartBanner.Content.Shield.title)
-                    .zFont(.medium, size: 14, color: titleStyle())
+                ViewThatFits {
+                    Text(L10n.SmartBanner.Content.Shield.title)
+                        .zFont(.medium, size: 14, color: titleStyle())
+
+                    Text(L10n.SmartBanner.Content.Shield.titleShorter)
+                        .zFont(.medium, size: 14, color: titleStyle())
+                }
                 
                 ZatoshiText(store.transparentBalance, .expanded, store.tokenName)
                     .zFont(.medium, size: 12, color: infoStyle())
@@ -173,8 +178,9 @@ extension SmartBannerView {
                 type: .ghost,
                 infinityWidth: false
             ) {
-                store.send(.shieldTapped)
+                store.send(.shieldFundsTapped)
             }
+            .disabled(store.isShielding)
         }
     }
 

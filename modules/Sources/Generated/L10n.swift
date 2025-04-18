@@ -131,8 +131,10 @@ public enum L10n {
   public enum Balances {
     /// Dismiss
     public static let dismiss = L10n.tr("Localizable", "balances.dismiss", fallback: "Dismiss")
-    /// Your last transaction is getting mined and confirmed.
-    public static let infoPending1 = L10n.tr("Localizable", "balances.infoPending1", fallback: "Your last transaction is getting mined and confirmed.")
+    /// All your funds are shielded and spendable.
+    public static let everythingDone = L10n.tr("Localizable", "balances.everythingDone", fallback: "All your funds are shielded and spendable.")
+    /// Pending transactions are getting mined and confirmed.
+    public static let infoPending1 = L10n.tr("Localizable", "balances.infoPending1", fallback: "Pending transactions are getting mined and confirmed.")
     /// Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
     public static let infoPending2 = L10n.tr("Localizable", "balances.infoPending2", fallback: "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
     /// Pending
@@ -157,18 +159,6 @@ public enum L10n {
     public static let syncingError = L10n.tr("Localizable", "balances.syncingError", fallback: "Zashi encountered an error while syncing, attempting to resolve...")
     /// Transparent balance
     public static let transparentBalance = L10n.tr("Localizable", "balances.transparentBalance", fallback: "Transparent balance")
-    public enum Alert {
-      public enum ShieldFunds {
-        public enum Failure {
-          /// Error: %@
-          public static func message(_ p1: Any) -> String {
-            return L10n.tr("Localizable", "balances.alert.shieldFunds.failure.message", String(describing: p1), fallback: "Error: %@")
-          }
-          /// Failed to shield funds
-          public static let title = L10n.tr("Localizable", "balances.alert.shieldFunds.failure.title", fallback: "Failed to shield funds")
-        }
-      }
-    }
     public enum HintBox {
       /// I got it!
       public static let dismiss = L10n.tr("Localizable", "balances.hintBox.dismiss", fallback: "I got it!")
@@ -1107,6 +1097,24 @@ public enum L10n {
       }
     }
   }
+  public enum ShieldFunds {
+    public enum Error {
+      /// Shielding Error
+      public static let title = L10n.tr("Localizable", "shieldFunds.error.title", fallback: "Shielding Error")
+      public enum Failure {
+        /// An error happened during the last shielding transaction. You can try again later or report this issue if the problem persists. 
+        /// 
+        ///  %@
+        public static func message(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "shieldFunds.error.failure.message", String(describing: p1), fallback: "An error happened during the last shielding transaction. You can try again later or report this issue if the problem persists. \n\n %@")
+        }
+      }
+      public enum Gprc {
+        /// An error happened during the last shielding transaction. We will try to resubmit the transaction later. If it fails, you may need to repeat the shielding attempt at a later time.
+        public static let message = L10n.tr("Localizable", "shieldFunds.error.gprc.message", fallback: "An error happened during the last shielding transaction. We will try to resubmit the transaction later. If it fails, you may need to repeat the shielding attempt at a later time.")
+      }
+    }
+  }
   public enum SmartBanner {
     public enum Content {
       public enum AutoShielding {
@@ -1152,6 +1160,8 @@ public enum L10n {
         public static let button = L10n.tr("Localizable", "smartBanner.content.shield.button", fallback: "Shield")
         /// Transparent Balance Detected
         public static let title = L10n.tr("Localizable", "smartBanner.content.shield.title", fallback: "Transparent Balance Detected")
+        /// Transparent Balance
+        public static let titleShorter = L10n.tr("Localizable", "smartBanner.content.shield.titleShorter", fallback: "Transparent Balance")
       }
       public enum Sync {
         /// Your wallet is getting updated
@@ -1402,6 +1412,8 @@ public enum L10n {
     public static let sendAgain = L10n.tr("Localizable", "transactionHistory.sendAgain", fallback: "Send again")
     /// Sent to
     public static let sentTo = L10n.tr("Localizable", "transactionHistory.sentTo", fallback: "Sent to")
+    /// Status
+    public static let status = L10n.tr("Localizable", "transactionHistory.status", fallback: "Status")
     /// %@...
     public static func threeDots(_ p1: Any) -> String {
       return L10n.tr("Localizable", "transactionHistory.threeDots", String(describing: p1), fallback: "%@...")

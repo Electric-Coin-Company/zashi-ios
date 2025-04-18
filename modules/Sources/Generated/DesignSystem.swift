@@ -332,7 +332,7 @@ public enum Design {
 public extension Design {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
         }
     }
 }

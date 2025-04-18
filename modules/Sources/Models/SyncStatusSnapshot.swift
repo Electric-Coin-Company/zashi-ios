@@ -33,7 +33,7 @@ public struct SyncStatusSnapshot: Equatable {
         case .stopped:
             return SyncStatusSnapshot(state, L10n.Sync.Message.stopped)
 
-        case let .syncing(syncProgress, recoveryProgress):
+        case let .syncing(syncProgress, _):
             return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", syncProgress * 100)))
         }
     }

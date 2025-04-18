@@ -57,14 +57,14 @@ extension WalletStorageClient: DependencyKey {
             exportWalletBackupReminder: {
                 walletStorage.exportWalletBackupReminder()
             },
-            importShieldingReminder: { reminedMeTimestamp, account in
-                try walletStorage.importShieldingReminder(reminedMeTimestamp, account: account)
+            importShieldingReminder: { reminedMeTimestamp, accountName in
+                try walletStorage.importShieldingReminder(reminedMeTimestamp, accountName: accountName)
             },
-            exportShieldingReminder: { account in
-                walletStorage.exportShieldingReminder(account: account)
+            exportShieldingReminder: { accountName in
+                walletStorage.exportShieldingReminder(accountName: accountName)
             },
-            resetShieldingReminder: { account in
-                walletStorage.resetShieldingReminder(account: account)
+            resetShieldingReminder: { accountName in
+                walletStorage.resetShieldingReminder(accountName: accountName)
             }
         )
     }
