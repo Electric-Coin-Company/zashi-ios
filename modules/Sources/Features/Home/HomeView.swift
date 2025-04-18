@@ -446,37 +446,6 @@ public struct HomeView: View {
                 .padding(.bottom, 4)
             }
         } else {
-            /*
-
-             val darkBgGradient =
-                 Brush.verticalGradient(
-                     0f to ZashiColors.Surfaces.strokeSecondary,
-                     .66f to ZashiColors.Surfaces.strokeSecondary.copy(alpha = 0.5f),
-                     1f to ZashiColors.Surfaces.strokeSecondary.copy(alpha = 0.25f),
-                 )
-
-             val darkBorderGradient =
-                 Brush.verticalGradient(
-                     0f to ZashiColors.Surfaces.strokePrimary,
-                     1f to ZashiColors.Surfaces.strokePrimary.copy(alpha = 0f),
-                 )
-
-
-
-
-
-
-             4:25
-             border =
-                 BorderStroke(.5.dp, ZashiColors.Utility.Gray.utilityGray100) orDark
-                     BorderStroke(.5.dp, darkBorderGradient),
-             4:25
-             shadowElevation = 2.dp orDark 4.dp
-             
-             */
-            
-            
-            
             Button {
                 action()
             } label: {
@@ -491,55 +460,33 @@ public struct HomeView: View {
                 .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._3xl)
-                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                        .background {
+                        .fill(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades12dp.color, location: 0.00),
+                                    Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades01dp.color, location: 1.00)
+                                ],
+                                startPoint: UnitPoint(x: 0.5, y: 0.0),
+                                endPoint: UnitPoint(x: 0.5, y: 1.0)
+                            )
+                        )
+                        .overlay {
                             RoundedRectangle(cornerRadius: Design.Radius._3xl)
-                                .stroke(Design.Utility.Gray._100.color(colorScheme))
+                                .stroke(
+                                    LinearGradient(
+                                        stops: [
+                                            Gradient.Stop(color: Design.Utility.Gray._200.color(colorScheme), location: 0.00),
+                                            Gradient.Stop(color: Design.Utility.Gray._200.color(colorScheme).opacity(0.15), location: 1.00)
+                                        ],
+                                        startPoint: UnitPoint(x: 0.5, y: 0.0),
+                                        endPoint: UnitPoint(x: 0.5, y: 1.0)
+                                    )
+                                )
                         }
                 }
                 .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
                 .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
-                
-//                .background(Design.Surfaces.bgPrimary.color(colorScheme))
-//                .cornerRadius(20)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
-//                        .inset(by: 0.25)
-//                        .stroke(Color(red: 0.35, green: 0.33, blue: 0.33), lineWidth: 0.5)
-//                )
-                
-                
-                
-//                VStack(spacing: 4) {
-//                    icon
-//                        .resizable()
-//                        .renderingMode(.template)
-//                        .frame(width: 24, height: 24)
-//                    
-//                    Text(title)
-//                }
-//                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
-//                .background {
-//                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
-//                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-//                        .background {
-//                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
-//                                .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
-//                        }
-////                        .overlay {
-////                            LinearGradient(
-////                                stops: [
-////                                    Gradient.Stop(color: Design.Utility.Purple._700.color(.light), location: 0.00),
-////                                    Gradient.Stop(color: Design.Utility.Purple._950.color(.light), location: 1.00)
-////                                ],
-////                                startPoint: UnitPoint(x: 0.5, y: 0.0),
-////                                endPoint: UnitPoint(x: 0.5, y: 1.0)
-////                            )
-////                        }
-//                }
-//                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
-//                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
-//                .padding(.bottom, 4)
+                .padding(.bottom, 4)
             }
         }
     }
