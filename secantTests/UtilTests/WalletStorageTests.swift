@@ -291,7 +291,7 @@ class WalletStorageTests: XCTestCase {
 
 // MARK: - Misc
 
-/// The followings methods are here purposely to not rely on `WalletStorage` in order to test functionality of JUST ONE method at a time
+/// The following methods are here purposely to not rely on `WalletStorage` in order to test functionality of JUST ONE method at a time
 private extension WalletStorageTests {
     private func setData(
         account: String = "",
