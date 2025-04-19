@@ -1,6 +1,6 @@
 //
 //  RootInitialization.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 01.12.2022.
 //
@@ -365,11 +365,6 @@ extension Root {
                 state.homeState.uAddress = uAddress
                 state.settingsState.uAddress = uAddress
                 state.requestZecCoordFlowState.uAddress = uAddress
-//                state.tabsState.settingsState.integrationsState.uAddress = uAddress
-//                state.tabsState.uAddress = uAddress
-//                if let uAddress = uAddress?.stringEncoded {
-//                    state.tabsState.sendState.memoState.uAddress = uAddress
-//                }
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -398,12 +393,6 @@ extension Root {
                     .send(.loadUserMetadata)
                 )
 
-//            case .tabs(.addKeystoneHWWallet(.loadedWalletAccounts)), .tabs(.settings(.integrations(.addKeystoneHWWallet(.loadedWalletAccounts)))):
-//                return .merge(
-//                    .send(.resolveMetadataEncryptionKeys),
-//                    .send(.loadUserMetadata)
-//                )
-                
             case .resolveMetadataEncryptionKeys:
                 do {
                     let storedWallet: StoredWallet
@@ -440,34 +429,16 @@ extension Root {
                 return .none
                 
             case .initialization(.checkBackupPhraseValidation):
-                let storedWallet: StoredWallet
                 do {
-                    storedWallet = try walletStorage.exportWallet()
+                    let _ = try walletStorage.exportWallet()
                 } catch {
                     return .send(.destination(.updateDestination(.osStatusError)))
                 }
-//                var landingDestination =
-                
-//                if !storedWallet.hasUserPassedPhraseBackupTest {
-//                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-//                    
-//                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-//                    state.phraseDisplayState.phrase = recoveryPhrase
-//                    state.phraseDisplayState.birthday = storedWallet.birthday
-//                    if let value = storedWallet.birthday?.value() {
-//                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-//                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
-//                    }
-//                    landingDestination = .phraseDisplay
-//                }
-                
+
                 state.appInitializationState = .initialized
                 let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
                 
                 return .run { send in
-//                    if landingDestination == .home {
-//                        await send(.tabs(.home(.transactionList(.onAppear))))
-//                    }
                     try await mainQueue.sleep(for: .seconds(0.5))
                     if !isAtDeeplinkWarningScreen {
                         await send(.destination(.updateDestination(Root.DestinationState.Destination.home)))
@@ -561,12 +532,7 @@ extension Root {
                 }
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
-                    // RESTORE
                     return .cancel(id: SynchronizerCancelId)
-//                    return .concatenate(
-//                        .cancel(id: SynchronizerCancelId),
-//                        .send(.onboarding(.importWallet(.updateDestination(.birthday))))
-//                    )
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
                     return .concatenate(
@@ -624,12 +590,7 @@ extension Root {
                 return .cancel(id: SynchronizerCancelId)
 
             case .phraseDisplay(.finishedTapped), .onboarding(.newWalletSuccessfulyCreated):
-//                do {
-//                    try walletStorage.markUserPassedPhraseBackupTest(true)
-                    state.destinationState.destination = .home
-//                } catch {
-//                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
-//                }
+                state.destinationState.destination = .home
                 return .none
                 
             case .welcome(.debugMenuStartup)://, .tabs(.home(.walletBalances(.debugMenuStartup))):
@@ -652,46 +613,9 @@ extension Root {
                     try await mainQueue.sleep(for: .seconds(1))
                     await send(.onboarding(.importExistingWallet))
                 }
-                
-                // RESTORE
-
-//            case .onboarding(.importWallet(.nextTapped)):
-//                if state.appInitializationState == .keysMissing {
-//                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
-//                    return .run { send in
-//                        do {
-//                            let seedBytes = try mnemonic.toSeed(seedPhrase)
-//                            let result = try await sdkSynchronizer.isSeedRelevantToAnyDerivedAccount(seedBytes)
-//                            await send(.initialization(.seedValidationResult(result)))
-//                        } catch {
-//                            await send(.initialization(.seedValidationResult(false)))
-//                        }
-//                    }
-//                } else {
-//                    state.onboardingState.importWalletState.destination = .birthday
-//                    return .none
-//                }
-
-                // RESTORE
-//            case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
-//                state.destinationState.destination = .home
-//                return .none
-
-                // RESTORE
-//            case .onboarding(.importWallet(.initializeSDK)):
-//                state.isRestoringWallet = true
-//                userDefaults.setValue(true, Constants.udIsRestoringWallet)
-//                state.$walletStatus.withLock { $0 = .restoring }
-//                return .concatenate(
-//                    .send(.initialization(.initializeSDK(.restoreWallet))),
-//                    .send(.initialization(.checkBackupPhraseValidation))
-//                )
 
             case .initialization(.seedValidationResult(let validSeed)):
-                if validSeed {
-                    // RESTORE
-//                    state.onboardingState.importWalletState.destination = .birthday
-                } else {
+                if !validSeed {
                     state.alert = AlertState.differentSeed()
                 }
                 return .none
@@ -699,7 +623,6 @@ extension Root {
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig
-//                state.tabsState.homeState.walletConfig = walletConfig
                 return .none
 
             case .initialization(.initializationFailed(let error)):

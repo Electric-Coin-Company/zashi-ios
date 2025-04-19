@@ -1,6 +1,6 @@
 //
 //  TransactionState.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 26.04.2022.
 //

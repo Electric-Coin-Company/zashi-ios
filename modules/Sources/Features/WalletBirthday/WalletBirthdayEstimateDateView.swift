@@ -49,6 +49,17 @@ public struct WalletBirthdayEstimateDateView: View {
                 
                 Spacer()
                 
+                HStack(spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .zImage(size: 20, style: Design.Utility.Indigo._500)
+                        .padding(.trailing, 12)
+
+                    Text(L10n.RestoreWallet.dateTip)
+                }
+                .zFont(size: 12, style: Design.Utility.Indigo._700)
+                .padding(.bottom, 20)
+                .screenHorizontalPadding()
+                
                 ZashiButton(L10n.General.next) {
                     store.send(.estimateHeightRequested)
                 }

@@ -10,8 +10,6 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import AudioServices
 import Utils
-//import Scan
-//import PartialProposalError
 import MnemonicClient
 import SDKSynchronizer
 import WalletStorage
@@ -37,10 +35,6 @@ public struct SendConfirmation {
     
     @ObservableState
     public struct State: Equatable {
-//        public enum Destination: Equatable {
-//            case sending
-//        }
-        
         public enum Result: Equatable {
             case failure
             case partial
@@ -48,26 +42,13 @@ public struct SendConfirmation {
             case success
         }
 
-//        public enum StackDestination: Int, Equatable {
-//            case signWithKeystone = 0
-//            case scan
-//            case sending
-//        }
-//
-//        public enum StackDestinationTransactions: Int, Equatable {
-//            case details = 0
-//            case addressBook
-//        }
-
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-//        public var addressBookState: AddressBook.State = .initial
         public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
         public var canSendMail = false
         public var currencyAmount: RedactableString
-//        public var destination: Destination?
         public var failedCode: Int?
         public var failedDescription: String?
         public var failedPcztMsg: String?
@@ -80,8 +61,6 @@ public struct SendConfirmation {
         public var isTransparentAddress = false
         public var message: String
         public var messageToBeShared: String?
-//        public var partialProposalErrorState: PartialProposalError.State
-//        public var partialProposalErrorViewBinding = false
         public var partialFailureTxIds: [String] = []
         public var partialFailureStatuses: [String] = []
         public var pczt: Pczt?
@@ -95,17 +74,11 @@ public struct SendConfirmation {
         public var redactedPcztForSigner: Pczt?
         public var rejectSendRequest = false
         public var result: Result?
-//        public var scanState: Scan.State = .initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var scanFailedDuringScanBinding = false
         public var scanFailedPreScanBinding = false
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
-//        public var stackDestination: StackDestination?
-//        public var stackDestinationBindingsAlive = 0
-//        public var stackDestinationTransactions: StackDestinationTransactions?
-//        public var stackDestinationTransactionsBindingsAlive = 0
         public var supportData: SupportData?
-//        public var transactionDetailsState: TransactionDetails.State = .initial
         public var txIdToExpand: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
@@ -150,8 +123,6 @@ public struct SendConfirmation {
             feeRequired: Zatoshi,
             isSending: Bool = false,
             message: String,
-//            partialProposalErrorState: PartialProposalError.State,
-//            partialProposalErrorViewBinding: Bool = false,
             proposal: Proposal?
         ) {
             self.address = address
@@ -160,14 +131,11 @@ public struct SendConfirmation {
             self.feeRequired = feeRequired
             self.isSending = isSending
             self.message = message
-//            self.partialProposalErrorState = partialProposalErrorState
-//            self.partialProposalErrorViewBinding = partialProposalErrorViewBinding
             self.proposal = proposal
         }
     }
     
     public enum Action: BindableAction, Equatable {
-//        case addressBook(AddressBook.Action)
         case alert(PresentationAction<Action>)
         case backFromFailureTapped
         case binding(BindingAction<SendConfirmation.State>)
@@ -177,14 +145,11 @@ public struct SendConfirmation {
         case getSignatureTapped
         case goBackTappedFromRequestZec
         case onAppear
-//        case partialProposalError(PartialProposalError.Action)
-//        case partialProposalErrorDismiss
         case rejectRequestCanceled
         case rejectRequested
         case rejectTapped
         case reportTapped
         case saveAddressTapped(RedactableString)
-//        case scan(Scan.Action)
         case sendDone
         case sendFailed(ZcashError?, Bool)
         case sendingScreenOnAppear
@@ -196,12 +161,8 @@ public struct SendConfirmation {
         case shareFinished
         case showHideButtonTapped
         case stopSending
-//        case transactionDetails(TransactionDetails.Action)
-//        case updateDestination(State.Destination?)
         case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
-//        case updateStackDestination(SendConfirmation.State.StackDestination?)
-//        case updateStackDestinationTransactions(SendConfirmation.State.StackDestinationTransactions?)
         case updateTxIdToExpand(String?)
         case viewTransactionTapped
         
@@ -235,32 +196,13 @@ public struct SendConfirmation {
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
-        
-//        Scope(state: \.addressBookState, action: \.addressBook) {
-//            AddressBook()
-//        }
-//
-//        Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
-//            PartialProposalError()
-//        }
-//
-//        Scope(state: \.scanState, action: \.scan) {
-//            Scan()
-//        }
-//        
-//        Scope(state: \.transactionDetailsState, action: \.transactionDetails) {
-//            TransactionDetails()
-//        }
-        
+
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.pcztForUI = nil
                 state.rejectSendRequest = false
                 state.txIdToExpand = nil
-//                state.scanState.checkers = [.keystonePCZTScanChecker]
-//                state.scanState.instructions = L10n.Keystone.scanInfoTransaction
-//                state.scanState.forceLibraryToHide = true
                 state.randomSuccessIconIndex = Int.random(in: 1...2)
                 state.randomFailureIconIndex = Int.random(in: 1...3)
                 state.randomResubmissionIconIndex = Int.random(in: 1...2)
@@ -401,9 +343,6 @@ public struct SendConfirmation {
 
             case let .sendPartial(txIds, statuses):
                 state.isSending = false
-//                state.partialProposalErrorViewBinding = true
-//                state.partialProposalErrorState.txIds = txIds
-//                state.partialProposalErrorState.statuses = statuses
                 state.partialFailureTxIds = txIds
                 state.partialFailureStatuses = statuses
                 return .send(.updateResult(.partial))
@@ -411,17 +350,6 @@ public struct SendConfirmation {
             case .updateTxIdToExpand(let txId):
                 state.txIdToExpand = txId
                 return .none
-            
-//            case .partialProposalError:
-//                return .none
-//                
-//            case .partialProposalErrorDismiss:
-//                state.partialProposalErrorViewBinding = false
-//                return .none
-//                
-//            case .updateDestination(let destination):
-//                state.destination = destination
-//                return .none
 
             case .updateResult(let result):
                 state.result = result
@@ -447,20 +375,6 @@ public struct SendConfirmation {
                 state.failedPcztMsg = pcztMsg
                 #endif
                 return .none
-                
-//            case .updateStackDestination(let destination):
-//                if let destination {
-//                    state.stackDestinationBindingsAlive = destination.rawValue
-//                }
-//                state.stackDestination = destination
-//                return .none
-//                
-//            case .updateStackDestinationTransactions(let destination):
-//                if let destination {
-//                    state.stackDestinationTransactionsBindingsAlive = destination.rawValue
-//                }
-//                state.stackDestinationTransactions = destination
-//                return .none
 
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
@@ -513,13 +427,6 @@ public struct SendConfirmation {
                 
             case .confirmWithKeystoneTapped:
                 return .none
-//                return .concatenate(
-//                    .send(.resolvePCZT),
-//                    .send(.updateStackDestination(.signWithKeystone))
-//                    )
-                
-//            case .scan(.cancelPressed):
-//                return .send(.updateStackDestination(.signWithKeystone))
 
             case .foundPCZT(let pcztWithSigs):
                 guard !state.scanFailedPreScanBinding && !state.scanFailedDuringScanBinding else {
@@ -529,16 +436,12 @@ public struct SendConfirmation {
                     state.isKeystoneCodeFound = true
                     state.pcztWithSigs = pcztWithSigs
                     return .run { send in
-//                        await send(.updateStackDestination(.sending))
                         try? await mainQueue.sleep(for: .seconds(Constants.delay))
                         await send(.createTransactionFromPCZT)
                     }
                 }
                 return .none
-                
-//            case .scan:
-//                return .none
-                
+
             case .resolvePCZT:
                 guard let proposal = state.proposal, let account = state.selectedWalletAccount else {
                     return .run { send in
@@ -671,14 +574,8 @@ public struct SendConfirmation {
                     }
                 }
 
-//            case .pcztSendFailed(let error):
             case .pcztSendFailed:
                 state.isSending = false
-//                state.scanFailedPreScanBinding = state.stackDestination == .signWithKeystone
-//                state.scanFailedDuringScanBinding = state.stackDestination == .scan
-//                if state.stackDestination == .sending {
-//                    return .send(.sendFailed(error?.toZcashError(), true))
-//                }
                 return .none
 
             case .backFromPCZTFailureTapped:
@@ -692,12 +589,6 @@ public struct SendConfirmation {
                 state.proposal = nil
                 state.redactedPcztForSigner = nil
                 return .none
-
-//            case .addressBook:
-//                return .none
-                
-//            case .transactionDetails:
-//                return .none
             }
         }
     }

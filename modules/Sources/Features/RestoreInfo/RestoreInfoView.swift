@@ -60,14 +60,6 @@ public struct RestoreInfoView: View {
                     Spacer()
                 }
                 .padding(.leading, 1)
-                
-//                Group {
-//                    Text(L10n.RestoreInfo.note)
-//                        .font(.custom(FontFamily.Inter.bold.name, size: 12))
-//                    + Text(L10n.RestoreInfo.noteInfo)
-//                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
-//                }
-//                .foregroundColor(Design.Text.primary.color(colorScheme))
 
                 ZashiButton(L10n.RestoreInfo.gotIt) {
                     store.send(.gotItTapped)

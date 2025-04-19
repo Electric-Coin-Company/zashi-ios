@@ -1,6 +1,6 @@
 //
 //  WalletStorage.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 03/10/2022.
 //

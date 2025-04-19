@@ -60,18 +60,18 @@ extension Root {
                 
                 \(supportData.message)
                 """
-//                if MFMailComposeViewController.canSendMail() {
-//                    state.supportData = supportData
-//                } else {
+                if MFMailComposeViewController.canSendMail() {
+                    state.supportData = supportData
+                } else {
                     state.messageShareBinding = supportData.message
-//                }
+                }
                 return .none
                 
             case .shareFinished:
                 state.messageShareBinding = nil
                 state.messageToBeShared = ""
                 return .none
-                
+
             default: return .none
             }
         }

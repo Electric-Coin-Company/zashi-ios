@@ -84,21 +84,6 @@ public struct FailureView: View {
                 
                 shareMessageView()
             }
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForStackTransactions(.details),
-//                destination: {
-//                    TransactionDetailsView(
-//                        store: store.transactionDetailsStore(),
-//                        tokenName: tokenName
-//                    )
-//                    .navigationLinkEmpty(
-//                        isActive: store.bindingForStackTransactions(.addressBook),
-//                        destination: {
-//                            AddressBookContactView(store: store.addressBookStore())
-//                        }
-//                    )
-//                }
-//            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

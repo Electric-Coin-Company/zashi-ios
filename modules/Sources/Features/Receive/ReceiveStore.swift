@@ -1,6 +1,6 @@
 //
 //  ReceiveStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 05.07.2022.
 //

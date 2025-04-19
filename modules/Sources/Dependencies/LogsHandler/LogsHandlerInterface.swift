@@ -1,6 +1,6 @@
 //
 //  LogsHandlerInterface.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 30.01.2023.
 //

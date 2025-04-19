@@ -71,7 +71,6 @@ let package = Package(
         .library(name: "ShieldingProcessor", targets: ["ShieldingProcessor"]),
         .library(name: "SmartBanner", targets: ["SmartBanner"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
-        .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "TaxExporter", targets: ["TaxExporter"]),
         .library(name: "TransactionDetails", targets: ["TransactionDetails"]),
@@ -208,7 +207,6 @@ let package = Package(
                 "PartialProposalError",
                 "SDKSynchronizer",
                 "ShieldingProcessor",
-                "SyncProgress",
                 "UIComponents",
                 "Utils",
                 "WalletBalances",
@@ -420,7 +418,6 @@ let package = Package(
                 "Settings",
                 "ShieldingProcessor",
                 "SmartBanner",
-                "SyncProgress",
                 "TransactionList",
                 "UIComponents",
                 "UserPreferencesStorage",
@@ -899,18 +896,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/SupportDataGenerator"
-        ),
-        .target(
-            name: "SyncProgress",
-            dependencies: [
-                "Generated",
-                "Models",
-                "SDKSynchronizer",
-                "UIComponents",
-                "Utils",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Features/SyncProgress"
         ),
         .target(
             name: "ReadTransactionsStorage",

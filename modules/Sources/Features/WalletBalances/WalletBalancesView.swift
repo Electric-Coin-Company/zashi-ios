@@ -1,6 +1,6 @@
 //
 //  WalletBalancesView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04-02-2024
 //
@@ -66,6 +66,9 @@ public struct WalletBalancesView: View {
                         .padding(.top, 12)
                         .padding(.bottom, 30)
                     }
+                } else if !shortened {
+                    Color.clear
+                        .padding(.bottom, 30)
                 }
             }
             .foregroundColor(Asset.Colors.primary.color)
@@ -75,28 +78,24 @@ public struct WalletBalancesView: View {
     }
     
     @ViewBuilder private func balanceContent() -> some View {
-//        if shortened {
-            HStack(spacing: 0) {
-                ZcashSymbol()
-                    .frame(width: 32, height: 32)
-                    .zForegroundColor(Design.Text.primary)
-
-                if shortened {
-                    ZatoshiText(store.totalBalance, .abbreviated)
-                        .zFont(.semiBold, size: 48, style: Design.Text.primary)
-                } else {
-                    ZatoshiRepresentationView(
-                        balance: store.totalBalance,
-                        fontName: FontFamily.Inter.semiBold.name,
-                        mostSignificantFontSize: 48,
-                        leastSignificantFontSize: 20,
-                        format: .expanded
-                    )
-                }
+        HStack(spacing: 0) {
+            ZcashSymbol()
+                .frame(width: 32, height: 32)
+                .zForegroundColor(Design.Text.primary)
+            
+            if shortened {
+                ZatoshiText(store.totalBalance, .abbreviated)
+                    .zFont(.semiBold, size: 48, style: Design.Text.primary)
+            } else {
+                ZatoshiRepresentationView(
+                    balance: store.totalBalance,
+                    fontName: FontFamily.Inter.semiBold.name,
+                    mostSignificantFontSize: 48,
+                    leastSignificantFontSize: 20,
+                    format: .expanded
+                )
             }
-//        } else {
-//            BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
-//        }
+        }
     }
     
     private func exchangeRate() -> some View {

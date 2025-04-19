@@ -153,7 +153,6 @@ public struct TransactionDetailsView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        //..walletstatusPanel(background: .transparent)
         .applyDefaultGradientScreenBackground()
     }
 }

@@ -1,6 +1,6 @@
 //
 //  MnemonicTestKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.11.2022.
 //

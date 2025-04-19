@@ -46,20 +46,6 @@ public struct HomeView: View {
                     store.send(.debug)
                 }
 
-//                if walletStatus == .restoring {
-//                    SyncProgressView(
-//                        store: store.scope(
-//                            state: \.syncProgressState,
-//                            action: \.syncProgress
-//                        )
-//                    )
-//                    .frame(height: 94)
-//                    .frame(maxWidth: .infinity)
-//                    .background(Asset.Colors.syncProgresBcg.color)
-//                    .padding(.top, 7)
-//                    .padding(.bottom, 20)
-//                }
-
                 HStack(spacing: 8) {
                     button(
                         L10n.Tabs.receive,
@@ -91,7 +77,6 @@ public struct HomeView: View {
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
                 .padding(.top, 24)
-//                .padding(.bottom, 32)
                 .screenHorizontalPadding()
 
                 SmartBannerView(
@@ -100,55 +85,12 @@ public struct HomeView: View {
                         action: \.smartBanner
                     )
                 )
-//                SmartBanner(isOpen: true) {
-////                    EmptyView()
-//                    HStack(spacing: 0) {
-//                        //VStack(alignment: .leading, spacing: 0) {
-//                            Asset.Assets.infoCircle.image
-//                                .zImage(size: 20, style: Design.Utility.Gray._900)
-//                                .padding(.trailing, 12)
-//                            //Spacer()
-//                        //}
-//                        
-//                        VStack(alignment: .leading, spacing: 0) {
-//                            Text("Wallet Backup Required")
-//                                .zFont(.medium, size: 14, style: Design.Utility.Gray._900)
-//                            Text("Prevent potential loss of funds")
-//                                .zFont(.medium, size: 12, style: Design.Utility.Gray._700)
-//                        }
-//                        .lineLimit(1)
-//                        
-//                        Spacer()
-//                        
-//                        ZashiButton("Get started") {
-//                            
-//                        }
-//                        .frame(width: 106)
-//                        .padding(.trailing, 6)
-//                    }
-//                }
-//                .padding(.bottom, 40)
 
-//                SmartBanner()
-//                    .padding(.bottom, 40)
-
-//                SmartBanner {
-//                    Text("content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger ")
-//                        .fixedSize(horizontal: false, vertical: true)
-//                }
-//                SmartBanner {
-//                    Text("ch bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger ")
-//                }
-
-                //VStack(spacing: 0) {
                 ScrollView {
                     if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
-//                            .padding(.top, store.isSmartWidgetOpen ? 0 : 100)//12)
-//                            .padding(.top, 12)
                     } else {
                         VStack(spacing: 0) {
-//                            noTransactionsView()
                             transactionsView()
                             
                             TransactionListView(
@@ -161,30 +103,9 @@ public struct HomeView: View {
                                 scrollable: false
                             )
                         }
-//                        .padding(.top, store.isSmartWidgetOpen ? 0 : 100)//12)
                     }
                 }
-                //.padding(.top, 12)
             }
-//            .popover(
-//                isPresented:
-//                    Binding(
-//                        get: { store.balancesBinding },
-//                        set: { store.send(.balancesBindingUpdated($0)) }
-//                    )
-//            ) {
-//                
-//                //NavigationView {
-////                    BalancesView(
-////                        store:
-////                            store.scope(
-////                                state: \.balancesState,
-////                                action: \.balances
-////                            ),
-////                        tokenName: tokenName
-////                    )
-//                //}
-//            }
             .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
                 if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
                     InAppBrowserView(url: url)
@@ -231,89 +152,10 @@ public struct HomeView: View {
                     }
                 }
             }
-//            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
-//                WithPerceptionTracking {
-//                    if store.isRateEducationEnabled {
-//                        GeometryReader { geometry in
-//                            preferences.map {
-//                                VStack(alignment: .leading, spacing: 0) {
-//                                    HStack(alignment: .top, spacing: 0) {
-//                                        Asset.Assets.Icons.coinsSwap.image
-//                                            .zImage(size: 20, style: Design.Text.primary)
-//                                            .padding(10)
-//                                            .background {
-//                                                Circle()
-//                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-//                                            }
-//                                            .padding(.trailing, 16)
-//                                        
-//                                        VStack(alignment: .leading, spacing: 5) {
-//                                            Text(L10n.CurrencyConversion.cardTitle)
-//                                                .zFont(size: 14, style: Design.Text.tertiary)
-//                                            
-//                                            Text(L10n.CurrencyConversion.title)
-//                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
-//                                                .lineLimit(1)
-//                                                .minimumScaleFactor(0.5)
-//                                        }
-//                                        .padding(.trailing, 16)
-//                                        
-//                                        Spacer(minLength: 0)
-//                                        
-//                                        Button {
-//                                            store.send(.currencyConversionCloseTapped)
-//                                        } label: {
-//                                            Asset.Assets.buttonCloseX.image
-//                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
-//                                        }
-//                                        .padding(20)
-//                                        .offset(x: 20, y: -20)
-//                                    }
-//                                    
-//                                    Button {
-//                                        store.send(.currencyConversionSetupTapped)
-//                                    } label: {
-//                                        Text(L10n.CurrencyConversion.cardButton)
-//                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
-//                                            .frame(height: 24)
-//                                            .frame(maxWidth: .infinity)
-//                                            .padding(.vertical, 12)
-//                                            .background {
-//                                                RoundedRectangle(cornerRadius: Design.Radius._xl)
-//                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
-//                                            }
-//                                    }
-//                                }
-//                                .padding(24)
-//                                .background {
-//                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
-//                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-//                                        .background {
-//                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
-//                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
-//                                        }
-//                                }
-//                                .frame(width: geometry.size.width - 40)
-//                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-            //..walletstatusPanel()
             .applyScreenBackground()
             .onAppear {
                 store.send(.onAppear)
             }
-//            .popover(isPresented: $store.scanBinding) {
-//                ScanView(
-//                    store:
-//                        store.scope(
-//                            state: \.scanState,
-//                            action: \.scan
-//                        )
-//                )
-//            }
             .onChange(of: store.canRequestReview) { canRequestReview in
                 if canRequestReview {
                     if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
@@ -502,11 +344,6 @@ struct HomeView_Previews: PreviewProvider {
                     StoreOf<Home>(
                         initialState:
                                 .init(
-                                    syncProgressState: .init(
-                                        lastKnownSyncPercentage: Float(0.43),
-                                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41, false)),
-                                        syncStatusMessage: "Syncing"
-                                    ),
                                     transactionListState: .initial,
                                     walletBalancesState: .initial,
                                     walletConfig: .initial
@@ -530,7 +367,6 @@ struct HomeView_Previews: PreviewProvider {
 extension Home.State {
     public static var initial: Self {
         .init(
-            syncProgressState: .initial,
             transactionListState: .initial,
             walletBalancesState: .initial,
             walletConfig: .initial
@@ -550,7 +386,6 @@ extension Home {
     public static var error: StoreOf<Home> {
         StoreOf<Home>(
             initialState: .init(
-                syncProgressState: .initial,
                 transactionListState: .initial,
                 walletBalancesState: .initial,
                 walletConfig: .initial

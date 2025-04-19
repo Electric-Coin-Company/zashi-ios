@@ -144,7 +144,6 @@ public struct TransactionsManagerView: View {
                 }
             }
             .disabled(store.transactions.isEmpty)
-            //..walletstatusPanel()
             .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }

@@ -1,6 +1,6 @@
 //
 //  ScanStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 16.05.2022.
 //

@@ -105,13 +105,7 @@ public struct OnboardingFlow {
                 state.restoreWalletCoordFlowState = .initial
                 state.destination = .importExistingWallet
                 return .none
-                
-//            case .importWallet:
-//                return .none
-                
-//            case .securityWarning:
-//                return .none
-                
+
             case .restoreWalletCoordFlow:
                 return .none
             }

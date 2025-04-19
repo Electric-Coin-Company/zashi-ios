@@ -369,6 +369,8 @@ public enum L10n {
   public enum Home {
     /// Upgrading databases…
     public static let migratingDatabases = L10n.tr("Localizable", "home.migratingDatabases", fallback: "Upgrading databases…")
+    /// More Options
+    public static let moreOptions = L10n.tr("Localizable", "home.moreOptions", fallback: "More Options")
   }
   public enum HomeScreen {
     /// More
@@ -731,6 +733,8 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "restoreInfo.title", fallback: "Keep Zashi open!")
   }
   public enum RestoreWallet {
+    /// If you’re not sure, choose an earlier date.
+    public static let dateTip = L10n.tr("Localizable", "restoreWallet.dateTip", fallback: "If you’re not sure, choose an earlier date.")
     /// Please type in your 24-word secret recovery phrase in the correct order.
     public static let info = L10n.tr("Localizable", "restoreWallet.info", fallback: "Please type in your 24-word secret recovery phrase in the correct order.")
     /// Secret Recovery Phrase
@@ -1274,6 +1278,10 @@ public enum L10n {
         public static let info = L10n.tr("Localizable", "smartBanner.help.sync.info", fallback: "Zashi is scanning the blockchain for your latest transactions to make sure your balances are displayed correctly. Keep the Zashi app open on an active phone screen to avoid interruptions.")
         /// Wallet Sync in Progress
         public static let title = L10n.tr("Localizable", "smartBanner.help.sync.title", fallback: "Wallet Sync in Progress")
+      }
+      public enum SyncError {
+        /// Syncing Error
+        public static let title = L10n.tr("Localizable", "smartBanner.help.syncError.title", fallback: "Syncing Error")
       }
       public enum UpdatingBalance {
         /// Your last transaction is getting mined and confirmed.

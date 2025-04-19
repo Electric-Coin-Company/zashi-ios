@@ -1,6 +1,6 @@
 //
 //  RootDestination.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 01.12.2022.
 //
@@ -60,20 +60,9 @@ extension Root {
                         || (state.destinationState.destination == .deeplinkWarning && destination == .home) else {
                     return .none
                 }
-                // RESTORE
-//                guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
-//                    return .none
-//                }
                 state.destinationState.destination = destination
                 return .none
 
-//            case .deeplinkWarning(.rescanInZashi):
-//                state = .initial
-//                state.splashAppeared = true
-////                state.tabsState.selectedTab = .send
-////                state.tabsState.sendState.destination = .scanQR
-//                return .send(.destination(.updateDestination(.home)))
-                
             case .destination(.deeplink(let url)):
                 if let _ = uriParser.checkRP(url.absoluteString) {
                     // The deeplink is some zip321, we ignore it and let users know in a warning screen
@@ -82,16 +71,9 @@ extension Root {
                 return .none
 
             case .destination(.deeplinkHome):
-//                state.destinationState.destination = .home
-////                state.tabsState.destination = nil
                 return .none
-//
+
             case .destination(.deeplinkSend):
-//                state.destinationState.destination = .home
-//                state.tabsState.selectedTab = .send
-//                state.tabsState.sendState.amount = amount
-//                state.tabsState.sendState.address = address.redacted
-//                state.tabsState.sendState.memoState.text = memo
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):

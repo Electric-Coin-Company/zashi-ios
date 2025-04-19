@@ -70,7 +70,7 @@ public struct SendFeedback {
                     state.supportData = SupportDataGenerator.generate(prefixMessage)
                     return .none
                 } else {
-                    var sharePrefix =
+                    let sharePrefix =
                     """
                     ===
                     \(L10n.SendFeedback.Share.notAppleMailInfo) \(SupportDataGenerator.Constants.email)

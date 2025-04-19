@@ -84,8 +84,7 @@ extension Settings {
             case .path(.element(id: _, action: .advancedSettings(.operationAccessGranted(let operation)))):
                 switch operation {
                 case .recoveryPhrase:
-                    var recoveryPhraseDisplayState = RecoveryPhraseDisplay.State.initial
-                    state.path.append(.recoveryPhrase(recoveryPhraseDisplayState))
+                    state.path.append(.recoveryPhrase(RecoveryPhraseDisplay.State.initial))
                 case .exportPrivateData:
                     state.path.append(.exportPrivateData(PrivateDataConsent.State.initial))
                 case .exportTaxFile:

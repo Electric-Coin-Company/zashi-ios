@@ -1,6 +1,6 @@
 //
 //  SDKSynchronizerClient.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.04.2022.
 //

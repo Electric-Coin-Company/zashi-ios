@@ -1,6 +1,6 @@
 //
 //  SyncStatusSnapshot.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 07.07.2022.
 //

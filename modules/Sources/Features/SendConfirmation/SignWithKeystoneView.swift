@@ -170,9 +170,6 @@ public struct SignWithKeystoneView: View {
                 previousBrightness = UIScreen.main.brightness
                 UIScreen.main.brightness = 1.0
             }
-//            .onDisappear {
-//                UIScreen.main.brightness = previousBrightness
-//            }
             .onChange(of: presentationMode.wrappedValue.isPresented) { isPresented in
                 if !isPresented {
                     UIScreen.main.brightness = previousBrightness
@@ -180,32 +177,6 @@ public struct SignWithKeystoneView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 20)
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForStack(.scan),
-//                destination: {
-//                    ScanView(
-//                        store: store.scanStore()
-//                    )
-//                    .navigationLinkEmpty(
-//                        isActive: store.bindingForStack(.sending),
-//                        destination: {
-//                            SendingView(store: store, tokenName: tokenName)
-//                        }
-//                    )
-//                    .navigationLinkEmpty(
-//                        isActive: $store.scanFailedDuringScanBinding,
-//                        destination: {
-//                            PreSendingFailureView(store: store, tokenName: tokenName)
-//                        }
-//                    )
-//                }
-//            )
-//            .navigationLinkEmpty(
-//                isActive: $store.scanFailedPreScanBinding,
-//                destination: {
-//                    PreSendingFailureView(store: store, tokenName: tokenName)
-//                }
-//            )
         }
         .screenHorizontalPadding()
         .applyScreenBackground()

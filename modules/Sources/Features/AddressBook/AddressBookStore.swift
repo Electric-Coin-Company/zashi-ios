@@ -109,18 +109,10 @@ public struct AddressBook {
         Reduce { state, action in
             switch action {
             case .onAppear:
-//                state.originalName = ""
-//                state.originalAddress = ""
                 state.isValidForm = false
-//                state.isValidZcashAddress = false
                 state.deleteIdToConfirm = nil
-//                state.name = ""
-//                state.address = ""
                 state.nameAlreadyExists = false
                 state.addressAlreadyExists = false
-//                state.isAddressFocused = false
-//                state.isNameFocused = false
-//                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 if let editId = state.editId {
                     return .concatenate(
                         .send(.editId(editId)),
@@ -145,7 +137,6 @@ public struct AddressBook {
                 state.isValidForm = false
                 state.isAddressFocused = true
                 return .none
-//                return .send(.updateDestination(.add))
 
             case .checkDuplicates:
                 state.nameAlreadyExists = false
@@ -161,24 +152,7 @@ public struct AddressBook {
                 return .none
                 
             case .scanButtonTapped:
-//                state.scanViewBinding = true
                 return .none
-
-//            case .scan(.found(let address)):
-//                state.address = address.data
-//                state.name = ""
-//                audioServices.systemSoundVibrate()
-//                state.scanViewBinding = false
-//                state.isNameFocused = true
-////                return .send(.updateDestination(.add))
-//                return .none
-
-//            case .scan(.cancelTapped):
-//                state.scanViewBinding = false
-//                return .none
-
-//            case .scan:
-//                return .none
 
             case .binding:
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
@@ -256,7 +230,6 @@ public struct AddressBook {
                     )
                 } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-//                    return .send(.updateDestination(nil))
                 }
                 return .none
 
@@ -265,7 +238,6 @@ public struct AddressBook {
                 state.name = ""
                 state.isAddressFocused = false
                 state.isNameFocused = false
-//                return .send(.updateDestination(nil))
                 return .none
 
             case .fetchABContactsRequested:

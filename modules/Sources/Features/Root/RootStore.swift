@@ -33,31 +33,14 @@ import AudioServices
 import ShieldingProcessor
 import SupportDataGenerator
 
-// Screens
-//import About
-//import AddKeystoneHWWallet
-//import AddressBook
-//import AddressDetails
+// Path
 import CurrencyConversionSetup
-//import DeleteWallet
-//import ExportTransactionHistory
 import Home
-//import PartialProposalError
-//import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
 import CoordFlows
-//import RequestZec
-//import Scan
-//import SendConfirmation
-//import SendFeedback
-//import SendForm
 import ServerSetup
 import Settings
-//import TransactionDetails
-//import TransactionsManager
-//import WhatsNew
-//import ZecKeyboard
 
 @Reducer
 public struct Root {
@@ -65,43 +48,6 @@ public struct Root {
         static let maxResetZashiAppAttempts = 3
         static let maxResetZashiSDKAttempts = 3
     }
-    
-//    @Reducer
-//    public enum Path {
-//            case about(About)
-//            case accountHWWalletSelection(AddKeystoneHWWallet)
-//            case addKeystoneHWWallet(AddKeystoneHWWallet)
-//            case addressBook(AddressBook)
-//            case addressBookContact(AddressBook)
-//        case addressDetails(AddressDetails)
-//            case advancedSettings(AdvancedSettings)
-//            case chooseServerSetup(ServerSetup)
-//            case currencyConversionSetup(CurrencyConversionSetup)
-//            case exportPrivateData(PrivateDataConsent)
-//            case exportTransactionHistory(ExportTransactionHistory)
-//            case integrations(Integrations)
-////        case preSendingFailure(SendConfirmation)
-//        case receive(Receive)
-//        case recoveryPhrase(RecoveryPhraseDisplay)
-//        case requestZec(RequestZec)
-////        case requestZecConfirmation(SendConfirmation)
-//        case requestZecSummary(RequestZec)
-//            case resetZashi(DeleteWallet)
-//        case scan(Scan)
-//        case sendConfirmation(SendConfirmation)
-//        case sendForm(SendForm)
-//        case sending(SendConfirmation)
-//        case sendResultFailure(SendConfirmation)
-//        case sendResultPartial(PartialProposalError)
-//        case sendResultResubmission(SendConfirmation)
-//        case sendResultSuccess(SendConfirmation)
-//            case sendUsFeedback(SendFeedback)
-//        case settings(Settings)
-//        case transactionDetails(TransactionDetails)
-//        case transactionsManager(TransactionsManager)
-//            case whatsNew(WhatsNew)
-//        case zecKeyboard(ZecKeyboard)
-//    }
 
     let CancelId = UUID()
     let CancelStateId = UUID()
@@ -121,7 +67,6 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
-            //case signWithKeystoneCoordFlow
             case transactionsCoordFlow
             case walletBackup
         }
@@ -130,10 +75,7 @@ public struct Root {
         public var CancelStateId = UUID()
         public var shieldingProcessorCancelId = UUID()
 
-        //        public var addressBookBinding: Bool = false
-//        public var addressBookContactBinding: Bool = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-//        public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
@@ -155,7 +97,6 @@ public struct Root {
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
-//        public var path = StackState<Path.State>()
         public var path: Path? = nil
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -186,10 +127,7 @@ public struct Root {
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
 
-        //public var requestZecState = RequestZec.State.initial
-
         public init(
-//            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
@@ -205,7 +143,6 @@ public struct Root {
             walletConfig: WalletConfig,
             welcomeState: Welcome.State
         ) {
-//            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
@@ -229,10 +166,6 @@ public struct Root {
             case quickRescan
         }
 
-        //        case addressBook(AddressBook.Action)
-//        case addressBookBinding(Bool)
-//        case addressBookContactBinding(Bool)
-//        case addressBookAccessGranted
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification?)
         case binding(BindingAction<Root.State>)
@@ -248,7 +181,6 @@ public struct Root {
         case home(Home.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
-//        case path(StackActionOf<Path>)
         case resetZashiFinishProcessing
         case resetZashiKeychainFailed(OSStatus)
         case resetZashiKeychainFailedWithCorruptedData(String)
@@ -258,10 +190,10 @@ public struct Root {
         case onboarding(OnboardingFlow.Action)
         case osStatusError(OSStatusError.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
-        case splashFinished
-        case splashRemovalRequested
         case serverSetup(ServerSetup.Action)
         case serverSetupBindingUpdated(Bool)
+        case splashFinished
+        case splashRemovalRequested
         case synchronizerStateChanged(RedactableSynchronizerState)
         case transactionDetailsOpen(String)
         case updateStateAfterConfigUpdate(WalletConfig)
@@ -339,11 +271,7 @@ public struct Root {
         Scope(state: \.deeplinkWarningState, action: \.deeplinkWarning) {
             DeeplinkWarning()
         }
-        
-//        Scope(state: \.addressBookState, action: \.addressBook) {
-//            AddressBook()
-//        }
-        
+
         Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
@@ -444,69 +372,7 @@ public struct Root {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
-            
-//            case .addressBookBinding(let newValue):
-//                state.addressBookBinding = newValue
-//                return .none
-//
-//            case .addressBookContactBinding(let newValue):
-//                state.addressBookContactBinding = newValue
-//                return .none
 
-//            case .tabs(.send(.addNewContactTapped(let address))):
-//                state.addressBookContactBinding = true
-//                state.addressBookState.isValidZcashAddress = true
-//                state.addressBookState.isNameFocused = true
-//                state.addressBookState.address = address.data
-//                return .none
-                
-//            case .addressBook(.saveButtonTapped):
-////                if state.addressBookBinding {
-////                    state.addressBookBinding = false
-////                }
-//                if state.addressBookContactBinding {
-//                    state.addressBookContactBinding = false
-//                }
-//                return .none
-
-//            case .addressBookAccessGranted:
-//                state.addressBookBinding = true
-//                state.addressBookState.isInSelectMode = true
-//                return .none
-
-            //case .tabs(.send(.addressBookTapped)):
-//            case .tabs(.path(.element(id: _, action: .sendFlow(.addressBookTapped)))):
-//                return .run { send in
-//                    if await !localAuthentication.authenticate() {
-//                        return
-//                    }
-//                    await send(.addressBookAccessGranted)
-//                }
-
-//            case .addressBook(.walletAccountTapped(let walletAccount)):
-//                guard let address = walletAccount.uAddress?.stringEncoded else {
-//                    return .none
-//                }
-//                state.addressBookBinding = false
-////                return .send(.tabs(.send(.scan(.found(address.redacted)))))
-//                return .none
-//
-//            case .addressBook(.editId(let address)):
-//                state.addressBookBinding = false
-//                guard let first = state.tabsState.path.ids.first else {
-//                    return .none
-//                }
-//                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.addressUpdated(address.redacted))))))
-//                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.scan(.found(address.redacted)))))))
-//                for (_, element) in zip(state.path.ids, state.path) {
-//                    switch element {
-//                    case .sendFlow(let sendState):
-//                    }
-//                }
-                //return .send(.tabs(.send(.scan(.found(address.redacted)))))
-                //return
-//                return .none
-            
             case .serverSetup:
                 return .none
                 
@@ -535,8 +401,6 @@ public struct Root {
             default: return .none
             }
         }
-        //.forEach(\.path, action: \.path)
-        //.ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }
 

@@ -1,6 +1,6 @@
 //
 //  WalletBalancesStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04-02-2024
 //

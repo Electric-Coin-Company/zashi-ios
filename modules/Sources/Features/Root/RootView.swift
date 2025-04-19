@@ -12,30 +12,14 @@ import UIComponents
 import DeeplinkWarning
 import OSStatusError
 
-//import About
-//import AddKeystoneHWWallet
-//import AddressBook
-//import AddressDetails
+// Path
 import CurrencyConversionSetup
-//import DeleteWallet
-//import ExportTransactionHistory
 import Home
-//import PartialProposalError
-//import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
 import CoordFlows
-//import RequestZec
-//import Scan
-//import SendConfirmation
-//import SendFeedback
-//import SendForm
 import ServerSetup
 import Settings
-//import TransactionDetails
-//import TransactionsManager
-//import WhatsNew
-//import ZecKeyboard
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -131,7 +115,6 @@ private extension RootView {
                     }
 
                 case .home:
-//                    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                     NavigationView {
                         HomeView(
                             store: store.scope(
@@ -228,106 +211,11 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
-
-//                        .navigationLinkEmpty(isActive: store.bindingFor(.signWithKeystoneCoordFlow)) {
-//                            SignWithKeystoneCoordFlowView(
-//                                store:
-//                                    store.scope(
-//                                        state: \.signWithKeystoneCoordFlowState,
-//                                        action: \.signWithKeystoneCoordFlow),
-//                                tokenName: tokenName
-//                            )
-//                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {
                         store.send(.splashRemovalRequested)
                     }
-
-//                    } destination: { store in
-//                        switch store.case {
-//                        case let .about(store):
-//                            AboutView(store: store)
-//                        case let .accountHWWalletSelection(store):
-//                            AccountsSelectionView(store: store)
-//                        case let .addKeystoneHWWallet(store):
-//                            AddKeystoneHWWalletView(store: store)
-//                        case let .addressBook(store):
-//                            AddressBookView(store: store)
-//                        case let .addressBookContact(store):
-//                            AddressBookContactView(store: store)
-//                        case let .addressDetails(store):
-//                            AddressDetailsView(store: store)
-//                        case let .advancedSettings(store):
-//                            AdvancedSettingsView(store: store)
-//                        case let .chooseServerSetup(store):
-//                            ServerSetupView(store: store)
-//                        case let .currencyConversionSetup(store):
-//                            CurrencyConversionSetupView(store: store)
-//                        case let .exportPrivateData(store):
-//                            PrivateDataConsentView(store: store)
-//                        case let .exportTransactionHistory(store):
-//                            ExportTransactionHistoryView(store: store)
-//                        case let .integrations(store):
-//                            IntegrationsView(store: store)
-////                        case let .preSendingFailure(store):
-////                            PreSendingFailureView(store: store, tokenName: tokenName)
-//                        case let .receive(store):
-//                            ReceiveView(store: store, networkType: networkType)
-//                        case let .recoveryPhrase(store):
-//                            RecoveryPhraseDisplayView(store: store)
-//                        case let .requestZec(store):
-//                            RequestZecView(store: store, tokenName: tokenName)
-////                        case let .requestZecConfirmation(store):
-////                            RequestPaymentConfirmationView(store: store, tokenName: tokenName)
-//                        case let .requestZecSummary(store):
-//                            RequestZecSummaryView(store: store, tokenName: tokenName)
-//                        case let .resetZashi(store):
-//                            DeleteWalletView(store: store)
-//                        case let .scan(store):
-//                            ScanView(store: store)
-//                        case let .sendConfirmation(store):
-//                            SendConfirmationView(store: store, tokenName: tokenName)
-//                        case let .sending(store):
-//                            SendingView(store: store, tokenName: tokenName)
-//                        case let .sendUsFeedback(store):
-//                            SendFeedbackView(store: store)
-//                        case let .sendForm(store):
-//                            SendFormView(store: store, tokenName: tokenName)
-//                        case let .sendResultFailure(store):
-//                            FailureView(store: store, tokenName: tokenName)
-//                        case let .sendResultPartial(store):
-//                            PartialProposalErrorView(store: store)
-//                        case let .sendResultResubmission(store):
-//                            ResubmissionView(store: store, tokenName: tokenName)
-//                        case let .sendResultSuccess(store):
-//                            SuccessView(store: store, tokenName: tokenName)
-//                        case let .settings(store):
-//                            SettingsView(store: store)
-//                        case let .transactionDetails(store):
-//                            TransactionDetailsView(store: store, tokenName: tokenName)
-//                        case let .transactionsManager(store):
-//                            TransactionsManagerView(store: store, tokenName: tokenName)
-//                        case let .whatsNew(store):
-//                            WhatsNewView(store: store)
-//                        case let .zecKeyboard(store):
-//                            ZecKeyboardView(store: store, tokenName: tokenName)
-//                        }
-//                    }
-                //}
-
-//                case .phraseDisplay:
-//                    NavigationView {
-//                        RecoveryPhraseDisplayView(
-//                            store: store.scope(
-//                                state: \.phraseDisplayState,
-//                                action: \.phraseDisplay
-//                            )
-//                        )
-//                    }
-//                    .overlayedWithSplash(store.splashAppeared) {
-//                        store.send(.splashRemovalRequested)
-//                    }
 
                 case .onboarding:
                     NavigationView {
@@ -357,18 +245,6 @@ private extension RootView {
                         )
                     )
                 }
-                
-//                if let supportData = store.supportData {
-//                    UIMailDialogView(
-//                        supportData: supportData,
-//                        completion: {
-//                            store.send(.sendSupportMailFinished)
-//                        }
-//                    )
-//                    // UIMailDialogView only wraps MFMailComposeViewController presentation
-//                    // so frame is set to 0 to not break SwiftUIs layout
-//                    .frame(width: 0, height: 0)
-//                }
             }
             .onOpenURL(perform: { store.goToDeeplink($0) })
             .alert(
@@ -404,6 +280,18 @@ private extension RootView {
 
             shareLogsView(store)
             shareView()
+            
+            if let supportData = store.supportData {
+                UIMailDialogView(
+                    supportData: supportData,
+                    completion: {
+                        store.send(.shareFinished)
+                    }
+                )
+                // UIMailDialogView only wraps MFMailComposeViewController presentation
+                // so frame is set to 0 to not break SwiftUIs layout
+                .frame(width: 0, height: 0)
+            }
         }
         .toast()
     }

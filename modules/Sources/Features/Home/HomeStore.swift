@@ -9,13 +9,11 @@ import Generated
 import ReviewRequest
 import TransactionList
 import Scan
-import SyncProgress
 import WalletBalances
 import PartnerKeys
 import UserPreferencesStorage
 import Utils
 import SmartBanner
-//import ShieldingProcessor
 
 @Reducer
 public struct Home {
@@ -35,12 +33,8 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
-//        public var shieldingProcessorState = ShieldingProcessor.State()
         public var smartBannerState = SmartBanner.State.initial
-        public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
-//        public var scanBinding = false
-//        public var scanState = Scan.State.initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionListState: TransactionList.State
         public var uAddress: UnifiedAddress? = nil
@@ -76,14 +70,12 @@ public struct Home {
         public init(
             canRequestReview: Bool = false,
             migratingDatabase: Bool = true,
-            syncProgressState: SyncProgress.State,
             transactionListState: TransactionList.State,
             walletBalancesState: WalletBalances.State,
             walletConfig: WalletConfig
         ) {
             self.canRequestReview = canRequestReview
             self.migratingDatabase = migratingDatabase
-            self.syncProgressState = syncProgressState
             self.transactionListState = transactionListState
             self.walletConfig = walletConfig
             self.walletBalancesState = walletBalancesState
@@ -111,17 +103,14 @@ public struct Home {
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
-//        case scan(Scan.Action)
         case scanTapped
         case seeAllTransactionsTapped
         case sendTapped
         case settingsTapped
-//        case shieldingProcessor(ShieldingProcessor.Action)
         case showSynchronizerErrorAlert(ZcashError)
         case smartBanner(SmartBanner.Action)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
-        case syncProgress(SyncProgress.Action)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
         case walletAccountTapped(WalletAccount)
@@ -147,18 +136,6 @@ public struct Home {
             TransactionList()
         }
 
-//        Scope(state: \.shieldingProcessorState, action: \.shieldingProcessor) {
-//            ShieldingProcessor()
-//        }
-
-//        Scope(state: \.scanState, action: \.scan) {
-//            Scan()
-//        }
-
-        Scope(state: \.syncProgressState, action: \.syncProgress) {
-            SyncProgress()
-        }
-
         Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
         }
@@ -173,7 +150,6 @@ public struct Home {
                 return .send(.smartBanner(.debug))
                 
             case .onAppear:
-//                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.appId = PartnerKeys.cbProjectId
                 state.walletBalancesState.migratingDatabase = state.migratingDatabase
                 state.migratingDatabase = false
@@ -200,7 +176,6 @@ public struct Home {
                 return .none
                 
             case .scanTapped:
-//                state.scanBinding = true
                 return .none
 
             case .moreTapped:
@@ -243,9 +218,6 @@ public struct Home {
                 default:
                     return .none
                 }
-
-            case .syncProgress:
-                return .none
 
             case .foundTransactions:
                 return .run { _ in
@@ -294,10 +266,6 @@ public struct Home {
                 state.alert = nil
                 return .none
 
-//            case .scan(.cancelTapped):
-//                state.scanBinding = false
-//                return .none
-                
             case .alert:
                 return .none
                 
@@ -309,9 +277,6 @@ public struct Home {
                 
             case .currencyConversionSetupTapped:
                 return .none
-
-//            case .scan:
-//                return .none
 
                 // Accounts
                 
@@ -338,37 +303,14 @@ public struct Home {
             case .walletAccountTapped:
                 state.accountSwitchRequest = false
                 return .none
-//                guard state.selectedWalletAccount != walletAccount else {
-//                    return .none
-//                }
-//                state.$selectedWalletAccount.withLock { $0 = walletAccount }
-//                return .send(.smartBanner(.walletAccountChanged))
-                //state.homeState.transactionListState.isInvalidated = true
-//                state.receiveState.currentFocus = .uaAddress
-//                return .concatenate(
-//                    .send(.home(.walletBalances(.updateBalances))),
-//                    .send(.send(.walletBalances(.updateBalances))),
-//                    .send(.balanceBreakdown(.walletBalances(.updateBalances))),
-//                    .send(.transactionsManager(.resetFiltersTapped))
-//                )
-//                return .none
-                
+
                 // Smart Banner
 
             case .smartBanner(.currencyConversionScreenRequested):
                 return .send(.currencyConversionSetupTapped)
-                
-            case .smartBanner(.shieldFundsTapped):
-                //return .send(.shieldingProcessor(.shieldFunds))
-                return .none
 
-                // Shielding processor
-
-//            case .shieldingProcessor(.shieldFundsFailure(let error)):
-//                state.alert = AlertState.shieldFundsFailure(error)
-//                return .none
-                
                 // More actions
+                
             case .coinbaseTapped:
                 state.moreRequest = false
                 state.isInAppBrowserCoinbaseOn = true
@@ -382,22 +324,7 @@ public struct Home {
                 
             case .smartBanner:
                 return .none
-                
-//            case .shieldingProcessor:
-//                return .none
             }
         }
     }
 }
-
-// MARK: Alerts
-
-//extension AlertState where Action == Home.Action {
-//    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-//        AlertState {
-//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-//        } message: {
-//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-//        }
-//    }
-//}

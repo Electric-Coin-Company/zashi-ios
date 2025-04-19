@@ -1,6 +1,6 @@
 //
 //  PrivateDataConsentView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 01.10.2023.
 //
@@ -97,7 +97,6 @@ public struct PrivateDataConsentView: View {
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear { store.send(.onAppear)}
-            //..walletstatusPanel()
 
             shareLogsView()
         }

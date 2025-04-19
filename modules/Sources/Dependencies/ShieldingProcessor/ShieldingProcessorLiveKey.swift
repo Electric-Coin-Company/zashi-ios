@@ -61,13 +61,7 @@ extension ShieldingProcessorClient: DependencyKey {
                             let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
                             
                             let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
-                            
-//                            try? await Task.sleep(for: .seconds(4))
-                            //subject.send(.succeeded)
-//                            subject.send(.failed("parada".toZcashError()))
-//                            subject.send(.grpc)
-//                            return
-                            
+
                             guard let proposal else { throw "shieldFunds nil proposal" }
                             
                             let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)

@@ -557,10 +557,13 @@
 "restoreWallet.birthday.estimated.title" = "Estimated Block Height";
 "restoreWallet.birthday.estimated.info" = "Zashi will scan and recover all transactions made after the following block number.";
 "restoreInfo.checkbox" = "Keep screen on while restoring";
+"restoreWallet.dateTip" = "If you’re not sure, choose an earlier date.";
 
 // Smart Banner
 "smartBanner.help.diconnected.title" = "Wallet Disconnected";
 "smartBanner.help.diconnected.info" = "You appear to be offline. Please restore your internet connection to use Zashi wallet.";
+
+"smartBanner.help.syncError.title" = "Syncing Error";
 
 "smartBanner.help.restore.title" = "Wallet Restore in Progress";
 "smartBanner.help.restore.info" = "Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:";
@@ -676,3 +679,5 @@
 "recoveryPhraseDisplay.warningHeight.info" = "The block height at which your wallet was created can significantly speed up the wallet recovery process.";
 
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
+
+"home.moreOptions" = "More Options";

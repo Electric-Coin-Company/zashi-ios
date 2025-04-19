@@ -1,6 +1,6 @@
 //
 //  ReviewRequestTestKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 3.4.2023.
 //

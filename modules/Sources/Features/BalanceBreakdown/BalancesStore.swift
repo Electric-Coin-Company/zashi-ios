@@ -1,6 +1,6 @@
 //
 //  BalancesStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04.08.2022.
 //
@@ -25,8 +25,7 @@ public struct Balances {
     public struct State: Equatable {
         public var stateStreamCancelId = UUID()
         public var shieldingProcessorCancelId = UUID()
-        
-        @Presents public var alert: AlertState<Action>?
+
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
         public var isShielding: Bool
@@ -77,18 +76,12 @@ public struct Balances {
 
     @CasePathable
     public enum Action: Equatable {
-        case alert(PresentationAction<Action>)
         case dismissTapped
         case onAppear
         case onDisappear
-//        case proposalReadyForShieldingWithKeystone(Proposal)
         case sheetHeightUpdated(CGFloat)
         case shieldFundsTapped
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
-//        case shieldFunds
-//        case shieldFundsFailure(ZcashError)
-//        case shieldFundsSuccess
-//        case shieldFundsWithKeystone
         case synchronizerStateChanged(RedactableSynchronizerState)
         case updateBalance(AccountBalance?)
         case updateBalances([AccountUUID: AccountBalance])
@@ -109,16 +102,6 @@ public struct Balances {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .alert(.presented(let action)):
-                return .send(action)
-
-            case .alert(.dismiss):
-                state.alert = nil
-                return .none
-
-            case .alert:
-                return .none
-
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
                 return .merge(
@@ -171,75 +154,6 @@ public struct Balances {
             case .shieldFundsTapped:
                 shieldingProcessor.shieldFunds()
                 return .none
-                
-//            case .shieldFunds:
-//                guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
-//                    return .none
-//                }
-//                if account.vendor == .keystone {
-//                    return .send(.shieldFundsWithKeystone)
-//                }
-//                // Regular path only for Zashi account
-//                state.isShieldingFunds = true
-//                return .run { send in
-//                    do {
-//                        let storedWallet = try walletStorage.exportWallet()
-//                        let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-//                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
-//
-//                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
-//                        
-//                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
-//                        
-//                        let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-//                        
-//                        //await send(.walletBalances(.updateBalances))
-//                        
-//                        switch result {
-//                        case .grpcFailure:
-//                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError()))
-//                        case let.failure(_, code, description):
-//                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError()))
-//                        case .partial:
-//                            return
-//                        case .success:
-//                            await send(.shieldFundsSuccess)
-//                        }
-//                    } catch {
-//                        await send(.shieldFundsFailure(error.toZcashError()))
-//                    }
-//                }
-//                
-//            case .shieldFundsWithKeystone:
-//                guard let account = state.selectedWalletAccount else {
-//                    return .none
-//                }
-//                return .run { send in
-//                    do {
-//                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
-//                        
-//                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
-//                        await send(.proposalReadyForShieldingWithKeystone(proposal))
-//                    } catch {
-//                        await send(.shieldFundsFailure(error.toZcashError()))
-//                    }
-//                }
-//                
-//            case .proposalReadyForShieldingWithKeystone:
-//                return .none
-//
-//            case .shieldFundsFailure:
-//                state.isShieldingFunds = false
-//                //state.alert = AlertState.shieldFundsFailure(error)
-//                return .none
-//
-//            case .shieldFundsSuccess:
-//                state.isShieldingFunds = false
-//                state.transparentBalance = .zero
-//                if let account = state.selectedWalletAccount {
-//                    walletStorage.resetShieldingReminder(account.account)
-//                }
-//                return .none
 
             case .synchronizerStateChanged(let latestState):
                 return .send(.updateBalances(latestState.data.accountsBalances))
@@ -274,15 +188,3 @@ public struct Balances {
         }
     }
 }
-//
-//// MARK: Alerts
-//
-//extension AlertState where Action == Balances.Action {
-//    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-//        AlertState {
-//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-//        } message: {
-//            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-//        }
-//    }
-//}

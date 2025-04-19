@@ -60,35 +60,6 @@ public struct SendingView: View {
                 }
             }
             .onAppear { store.send(.sendingScreenOnAppear) }
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForResult(.success),
-//                destination: {
-//                    SuccessView(store: store, tokenName: tokenName)
-//                }
-//            )
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForResult(.failure),
-//                destination: {
-//                    FailureView(store: store, tokenName: tokenName)
-//                }
-//            )
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForResult(.resubmission),
-//                destination: {
-//                    ResubmissionView(store: store, tokenName: tokenName)
-//                }
-//            )
-//            .navigationLinkEmpty(
-//                isActive: store.bindingForResult(.partial),
-//                destination: {
-//                    PartialProposalErrorView(
-//                        store: store.scope(
-//                            state: \.partialProposalErrorState,
-//                            action: \.partialProposalError
-//                        )
-//                    )
-//                }
-//            )
         }
         .navigationBarBackButtonHidden()
         .screenHorizontalPadding()

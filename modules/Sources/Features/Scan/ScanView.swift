@@ -1,6 +1,6 @@
 //
 //  ScanView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 16.05.2022.
 //
@@ -116,16 +116,6 @@ public struct ScanView: View {
                     store.send(.libraryImage(img))
                 }
             }
-//            .navigationLinkEmpty(isActive: $showSheet) {
-//                ZashiImagePicker(selectedImage: $image, showSheet: $showSheet)
-//                    //.ignoresSafeArea()
-//            }
-//            .overlay {
-//                if showSheet {
-//                    ZashiImagePicker(selectedImage: $image, showSheet: $showSheet)
-//                        .ignoresSafeArea()
-//                }
-//            }
         }
     }
     

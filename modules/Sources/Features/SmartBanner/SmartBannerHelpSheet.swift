@@ -58,7 +58,7 @@ extension SmartBannerView {
 
     @ViewBuilder func syncingErrorHelpContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Error during sync")
+            Text(L10n.SmartBanner.Help.SyncError.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.top, 32)
                 .padding(.bottom, 12)
@@ -69,7 +69,7 @@ extension SmartBannerView {
                 .fixedSize(horizontal: false, vertical: true)
 
             ZashiButton(
-                "Report",
+                L10n.Send.report,
                 type: .ghost
             ) {
                 store.send(.reportTapped)

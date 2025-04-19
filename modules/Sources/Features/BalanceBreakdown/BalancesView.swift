@@ -1,6 +1,6 @@
 //
 //  BalancesView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04.08.2022.
 //
@@ -86,12 +86,6 @@ public struct BalancesView: View {
             }
             .screenHorizontalPadding()
             .applyScreenBackground()
-//            .alert(
-//                store: store.scope(
-//                    state: \.$alert,
-//                    action: \.alert
-//                )
-//            )
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
         }

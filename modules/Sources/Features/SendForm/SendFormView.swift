@@ -1,6 +1,6 @@
 //
 //  SendFormView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04/25/2022.
 //
@@ -205,12 +205,6 @@ public struct SendFormView: View {
                             }
                         }
                         .applyScreenBackground()
-//                        .navigationLinkEmpty(
-//                            isActive: store.bindingFor(.scanQR),
-//                            destination: {
-//                                ScanView(store: store.scanStore())
-//                            }
-//                        )
                     }
                 }
             }
@@ -337,9 +331,7 @@ public struct SendFormView: View {
             store: .init(
                 initialState: .init(
                     addMemoState: true,
-//                    destination: nil,
                     memoState: .initial,
-//                    scanState: .initial,
                     walletBalancesState: .initial
                 )
             ) {
@@ -360,25 +352,11 @@ extension StoreOf<SendForm> {
             action: \.memo
         )
     }
-//    
-//    func scanStore() -> StoreOf<Scan> {
-//        self.scope(
-//            state: \.scanState,
-//            action: \.scan
-//        )
-//    }
 }
 
 // MARK: - ViewStore
 
 extension StoreOf<SendForm> {
-//    func bindingFor(_ destination: SendForm.State.Destination) -> Binding<Bool> {
-//        Binding<Bool>(
-//            get: { self.destination == destination },
-//            set: { self.send(.updateDestination($0 ? destination : nil)) }
-//        )
-//    }
-
     var bindingForAddress: Binding<String> {
         Binding(
             get: { self.address.data },
@@ -407,9 +385,7 @@ extension SendForm.State {
     public static var initial: Self {
         .init(
             addMemoState: true,
-//            destination: nil,
             memoState: .initial,
-//            scanState: .initial,
             walletBalancesState: .initial
         )
     }
