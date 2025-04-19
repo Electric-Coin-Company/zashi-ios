@@ -43,38 +43,24 @@ public struct SettingsView: View {
                                 ActionRow(
                                     icon: Asset.Assets.Icons.integrations.image,
                                     title: L10n.Settings.integrations,
-                                    desc: store.isKeystoneAccount
-                                    ? L10n.Keystone.settings
-                                    : nil,
                                     accessoryView:
                                         HStack(spacing: 0) {
-                                            if store.isKeystoneAccount {
-                                                Asset.Assets.Partners.coinbaseSeeklogoDisabled.image
+                                            Asset.Assets.Partners.coinbaseSeeklogo.image
+                                                .seekOutline(colorScheme)
+                                            
+                                            if store.featureFlags.flexa && !store.isKeystoneAccount {
+                                                Asset.Assets.Partners.flexaSeekLogo.image
                                                     .seekOutline(colorScheme)
-                                                
-                                                if store.featureFlags.flexa {
-                                                    Asset.Assets.Partners.flexaSeeklogoDisabled.image
-                                                        .seekOutline(colorScheme)
-                                                }
-                                            } else {
-                                                Asset.Assets.Partners.coinbaseSeeklogo.image
+                                            }
+                                            
+                                            if !store.isKeystoneConnected {
+                                                Asset.Assets.Partners.keystoneSeekLogo.image
                                                     .seekOutline(colorScheme)
-                                                
-                                                if store.featureFlags.flexa {
-                                                    Asset.Assets.Partners.flexaSeekLogo.image
-                                                        .seekOutline(colorScheme)
-                                                }
-                                                
-                                                if !store.isKeystoneConnected {
-                                                    Asset.Assets.Partners.keystoneSeekLogo.image
-                                                        .seekOutline(colorScheme)
-                                                }
                                             }
                                         }
                                 ) {
                                     store.send(.integrationsTapped)
                                 }
-                                .disabled(store.isKeystoneAccount)
                             }
                             
                             ActionRow(

@@ -55,8 +55,8 @@ public struct WalletBirthdayEstimateDateView: View {
                         .padding(.trailing, 12)
 
                     Text(L10n.RestoreWallet.dateTip)
+                        .zFont(.medium, size: 12, style: Design.Utility.Indigo._700)
                 }
-                .zFont(size: 12, style: Design.Utility.Indigo._700)
                 .padding(.bottom, 20)
                 .screenHorizontalPadding()
                 

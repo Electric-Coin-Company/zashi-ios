@@ -8,7 +8,6 @@
 import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
-import SyncProgress
 import Models
 import Generated
 @testable import secant_testnet

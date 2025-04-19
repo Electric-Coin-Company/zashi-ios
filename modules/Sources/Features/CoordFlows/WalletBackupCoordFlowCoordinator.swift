@@ -19,6 +19,7 @@ extension WalletBackupCoordFlow {
 
             case .recoveryPhraseDisplay(.securityWarningNextTapped):
                 var recoveryPhraseDisplayState = RecoveryPhraseDisplay.State.initial
+                recoveryPhraseDisplayState.isWalletBackup = true
                 state.path.append(.phrase(recoveryPhraseDisplayState))
                 return .none
                 

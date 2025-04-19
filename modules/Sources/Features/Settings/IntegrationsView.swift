@@ -43,7 +43,7 @@ public struct IntegrationsView: View {
                             }
                         }
 
-                        if store.featureFlags.flexa {
+                        if store.featureFlags.flexa && !store.isKeystoneAccountActive {
                             ActionRow(
                                 icon: walletStatus == .restoring
                                 ? Asset.Assets.Partners.flexaDisabled.image

@@ -539,6 +539,8 @@
 // Home screen
 "homeScreen.scan" = "Scan";
 "homeScreen.more" = "More";
+"homeScreen.buy" = "Buy";
+"homeScreen.moreWarning" = "Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.";
 
 // Onboarding: Restore Wallet
 "restoreWallet.title" = "Secret Recovery Phrase";

@@ -44,6 +44,10 @@ public struct Home {
         public var isSmartWidgetOpen: Bool {
             smartBannerState.isOpen
         }
+
+        public var isKeystoneAccountActive: Bool {
+            selectedWalletAccount?.vendor == .keystone
+        }
         
         public var isKeystoneConnected: Bool {
             for account in walletAccounts {
@@ -56,7 +60,7 @@ public struct Home {
         }
 
         public var inAppBrowserURLCoinbase: String? {
-            if let address = try? uAddress?.transparentReceiver().stringEncoded, let appId {
+            if let address = try? selectedWalletAccount?.uAddress?.transparentReceiver().stringEncoded, let appId {
                 return L10n.Partners.coinbaseOnrampUrl(appId, address)
             }
             
@@ -89,6 +93,7 @@ public struct Home {
         case addKeystoneHWWalletTapped
         case alert(PresentationAction<Action>)
         case binding(BindingAction<Home.State>)
+        case buyTapped
         case currencyConversionCloseTapped
         case currencyConversionSetupTapped
         case foundTransactions
@@ -181,6 +186,9 @@ public struct Home {
             case .moreTapped:
                 state.moreRequest = true
                 return .none
+                
+            case .buyTapped:
+                return .send(.coinbaseTapped)
 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {

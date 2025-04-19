@@ -78,6 +78,19 @@ extension HomeView {
                 }
                 .padding(.bottom, 24)
             }
+            
+            HStack(alignment: .top, spacing: 0) {
+                Asset.Assets.infoOutline.image
+                    .zImage(size: 20, style: Design.Text.tertiary)
+                    .padding(.trailing, 12)
+
+                Text(L10n.HomeScreen.moreWarning)
+                    .zFont(size: 12, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom, 24)
+            .padding(.top, 16)
+            .screenHorizontalPadding()
         }
         .padding(.horizontal, 4)
         .background {

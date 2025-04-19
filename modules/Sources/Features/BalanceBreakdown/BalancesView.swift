@@ -14,7 +14,6 @@ import UIComponents
 import Utils
 import Models
 import BalanceFormatter
-import SyncProgress
 import WalletBalances
 import Combine
 

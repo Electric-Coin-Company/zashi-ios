@@ -5,7 +5,6 @@ import Generated
 import TransactionList
 import Settings
 import UIComponents
-import SyncProgress
 import Utils
 import Models
 import WalletBalances
@@ -68,11 +67,20 @@ public struct HomeView: View {
                         store.send(.scanTapped)
                     }
 
-                    button(
-                        L10n.HomeScreen.more,
-                        icon: Asset.Assets.Icons.dotsMenu.image
-                    ) {
-                        store.send(.moreTapped)
+                    if store.isKeystoneAccountActive {
+                        button(
+                            L10n.HomeScreen.buy,
+                            icon: Asset.Assets.Icons.shoppingBag.image
+                        ) {
+                            store.send(.buyTapped)
+                        }
+                    } else {
+                        button(
+                            L10n.HomeScreen.more,
+                            icon: Asset.Assets.Icons.dotsMenu.image
+                        ) {
+                            store.send(.moreTapped)
+                        }
                     }
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)

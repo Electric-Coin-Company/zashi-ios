@@ -65,7 +65,7 @@ public struct Settings {
         }
 
         public var isKeystoneAccount: Bool {
-            selectedWalletAccount?.vendor == .keystone ? true : false
+            selectedWalletAccount?.vendor == .keystone
         }
         
         public init() { }

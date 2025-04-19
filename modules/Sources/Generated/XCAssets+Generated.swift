@@ -122,6 +122,7 @@ public enum Asset {
       public static let shieldOff = ImageAsset(name: "shieldOff")
       public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let shieldZap = ImageAsset(name: "shieldZap")
+      public static let shoppingBag = ImageAsset(name: "shoppingBag")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")

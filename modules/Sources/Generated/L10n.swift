@@ -373,8 +373,12 @@ public enum L10n {
     public static let moreOptions = L10n.tr("Localizable", "home.moreOptions", fallback: "More Options")
   }
   public enum HomeScreen {
+    /// Buy
+    public static let buy = L10n.tr("Localizable", "homeScreen.buy", fallback: "Buy")
     /// More
     public static let more = L10n.tr("Localizable", "homeScreen.more", fallback: "More")
+    /// Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.
+    public static let moreWarning = L10n.tr("Localizable", "homeScreen.moreWarning", fallback: "Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.")
     /// Scan
     public static let scan = L10n.tr("Localizable", "homeScreen.scan", fallback: "Scan")
   }
