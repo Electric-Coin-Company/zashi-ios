@@ -13,6 +13,7 @@ import Network
 import Utils
 import Root
 import BackgroundTasks
+import UserNotifications
 
 // swiftlint:disable indentation_width
 final class AppDelegate: NSObject, UIApplicationDelegate {

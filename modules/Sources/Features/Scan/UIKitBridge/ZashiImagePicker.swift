@@ -30,8 +30,7 @@ struct ZashiImagePicker: UIViewControllerRepresentable {
             parent.showSheet = false
         }
     }
-    
-    @Environment(\.presentationMode) private var presentationMode
+
     @Binding var selectedImage: UIImage?
     @Binding var showSheet: Bool
 
@@ -39,7 +38,7 @@ struct ZashiImagePicker: UIViewControllerRepresentable {
         context: UIViewControllerRepresentableContext<ZashiImagePicker>
     ) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
-        
+
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = context.coordinator

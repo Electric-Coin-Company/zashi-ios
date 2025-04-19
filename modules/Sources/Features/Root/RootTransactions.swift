@@ -80,14 +80,6 @@ extension Root {
                     }
                 }
                 return .none
-            
-                // MARK: - External Signals
-            
-            case .tabs(.walletAccountTapped):
-                return .merge(
-                    .send(.fetchTransactionsForTheSelectedAccount),
-                    .send(.loadUserMetadata)
-                )
 
             default: return .none
             }

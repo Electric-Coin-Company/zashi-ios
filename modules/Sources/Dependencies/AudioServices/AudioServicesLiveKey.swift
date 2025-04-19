@@ -1,6 +1,6 @@
 //
 //  AudioServicesLiveKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 11.11.2022.
 //

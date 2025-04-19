@@ -1,6 +1,6 @@
 //
 //  Wedge.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Michal Fousek on 24.09.2022.
 //

@@ -1,6 +1,6 @@
 //
 //  ScanView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 16.05.2022.
 //
@@ -27,79 +27,83 @@ public struct ScanView: View {
     public var body: some View {
         WithPerceptionTracking {
             ZStack {
-                GeometryReader { proxy in
-                    QRCodeScanView(
-                        rectOfInterest: ScanView.normalizedRectsOfInterest().real,
-                        onQRScanningDidFail: { store.send(.scanFailed(.invalidQRCode)) },
-                        onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
-                    )
-                    
-                    frameOfInterest(proxy.size)
-                    
-                    WithPerceptionTracking {
-                        if store.isTorchAvailable {
-                            torchButton(size: proxy.size)
-                        }
+                if showSheet {
+                    ZashiImagePicker(selectedImage: $image, showSheet: $showSheet)
+                } else {
+                    GeometryReader { proxy in
+                        QRCodeScanView(
+                            rectOfInterest: ScanView.normalizedRectsOfInterest().real,
+                            onQRScanningDidFail: { store.send(.scanFailed(.invalidQRCode)) },
+                            onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
+                        )
                         
-                        if !store.forceLibraryToHide {
-                            libraryButton(size: proxy.size)
-                        }
-                    }
-                    
-                    WithPerceptionTracking {
-                        if store.progress != nil {
-                            WithPerceptionTracking {
-                                progress(size: proxy.size, progress: store.countedProgress)
+                        frameOfInterest(proxy.size)
+                        
+                        WithPerceptionTracking {
+                            if store.isTorchAvailable {
+                                torchButton(size: proxy.size)
+                            }
+                            
+                            if !store.forceLibraryToHide {
+                                libraryButton(size: proxy.size)
                             }
                         }
-                    }
-                }
-
-                VStack {
-                    WithPerceptionTracking {
-                        if let instructions = store.instructions {
-                            Text(instructions)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
-                                .foregroundColor(Asset.Colors.ZDesign.shark200.color)
-                                .padding(.top, 64)
-                                .lineLimit(nil)
-                                .multilineTextAlignment(.center)
-                                .lineSpacing(3)
-                                .screenHorizontalPadding()
-                        }
-
-                        Spacer()
-
-                        HStack(alignment: .top, spacing: 0) {
-                            if !store.info.isEmpty {
-                                Asset.Assets.infoOutline.image
-                                    .zImage(size: 20, color: Asset.Colors.ZDesign.shark200.color)
-                                    .padding(.trailing, 12)
-                                
-                                Text(store.info)
-                                    .font(.custom(FontFamily.Inter.medium.name, size: 12))
-                                    .foregroundColor(Asset.Colors.ZDesign.shark200.color)
-                                    .padding(.top, 2)
-                                
-                                Spacer(minLength: 0)
-                            }
-                        }
-                        .padding(.bottom, 15)
                         
-                        if !store.isCameraEnabled {
-                            primaryButton(L10n.Scan.openSettings) {
-                                if let url = URL(string: UIApplication.openSettingsURLString) {
-                                    openURL(url)
+                        WithPerceptionTracking {
+                            if store.progress != nil {
+                                WithPerceptionTracking {
+                                    progress(size: proxy.size, progress: store.countedProgress)
                                 }
                             }
-                        } else {
-                            primaryButton(L10n.General.cancel) {
-                                store.send(.cancelPressed)
+                        }
+                    }
+                    
+                    VStack {
+                        WithPerceptionTracking {
+                            if let instructions = store.instructions {
+                                Text(instructions)
+                                    .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
+                                    .foregroundColor(Asset.Colors.ZDesign.shark200.color)
+                                    .padding(.top, 64)
+                                    .lineLimit(nil)
+                                    .multilineTextAlignment(.center)
+                                    .lineSpacing(3)
+                                    .screenHorizontalPadding()
+                            }
+                            
+                            Spacer()
+                            
+                            HStack(alignment: .top, spacing: 0) {
+                                if !store.info.isEmpty {
+                                    Asset.Assets.infoOutline.image
+                                        .zImage(size: 20, color: Asset.Colors.ZDesign.shark200.color)
+                                        .padding(.trailing, 12)
+                                    
+                                    Text(store.info)
+                                        .font(.custom(FontFamily.Inter.medium.name, size: 12))
+                                        .foregroundColor(Asset.Colors.ZDesign.shark200.color)
+                                        .padding(.top, 2)
+                                    
+                                    Spacer(minLength: 0)
+                                }
+                            }
+                            .padding(.bottom, 15)
+                            
+                            if !store.isCameraEnabled {
+                                primaryButton(L10n.Scan.openSettings) {
+                                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                                        openURL(url)
+                                    }
+                                }
+                            } else {
+                                primaryButton(L10n.General.cancel) {
+                                    store.send(.cancelTapped)
+                                }
                             }
                         }
                     }
+                    .screenHorizontalPadding()
                 }
-                .screenHorizontalPadding()
             }
             .edgesIgnoringSafeArea(.all)
             .ignoresSafeArea()
@@ -110,12 +114,6 @@ public struct ScanView: View {
             .onChange(of: image) { img in
                 if let img {
                     store.send(.libraryImage(img))
-                }
-            }
-            .overlay {
-                if showSheet {
-                    ZashiImagePicker(selectedImage: $image, showSheet: $showSheet)
-                        .ignoresSafeArea()
                 }
             }
         }
@@ -132,7 +130,7 @@ public struct ScanView: View {
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                         .fill(Asset.Colors.ZDesign.Base.bone.color)
                 }
         }
@@ -145,14 +143,14 @@ public struct ScanView: View {
 
         return WithPerceptionTracking {
             Button {
-                store.send(.torchPressed)
+                store.send(.torchTapped)
             } label: {
                 if store.isTorchOn {
                     Asset.Assets.Icons.flashOff.image
                         .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                         .padding(12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Asset.Colors.ZDesign.shark900.color)
                         }
                 } else {
@@ -160,7 +158,7 @@ public struct ScanView: View {
                         .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                         .padding(12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Asset.Colors.ZDesign.shark900.color)
                         }
                 }
@@ -184,7 +182,7 @@ public struct ScanView: View {
                     .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                     .padding(12)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(Asset.Colors.ZDesign.shark900.color)
                     }
             }

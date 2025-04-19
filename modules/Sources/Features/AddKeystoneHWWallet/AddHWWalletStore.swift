@@ -53,12 +53,13 @@ public struct AddKeystoneHWWallet {
     public enum Action: BindableAction, Equatable {
         case accountImported(AccountUUID)
         case accountImportFailed
+        case accountImportSucceeded
         case accountTapped
         case binding(BindingAction<AddKeystoneHWWallet.State>)
-        case continueTapped
         case forgetThisDeviceTapped
         case loadedWalletAccounts([WalletAccount], AccountUUID)
         case onAppear
+        case readyToScanTapped
         case unlockTapped
         case viewTutorialTapped
     }
@@ -104,7 +105,7 @@ public struct AddKeystoneHWWallet {
                         )
                         if let uuid {
                             await send(.accountImported(uuid))
-                            await send(.forgetThisDeviceTapped)
+                            await send(.accountImportSucceeded)
                         }
                     } catch {
                         // TODO: error handling
@@ -120,6 +121,9 @@ public struct AddKeystoneHWWallet {
                 
             case .accountImportFailed:
                 return .none
+                
+            case .accountImportSucceeded:
+                return .none
 
             case let .loadedWalletAccounts(walletAccounts, uuid):
                 state.$walletAccounts.withLock { $0 = walletAccounts }
@@ -131,7 +135,7 @@ public struct AddKeystoneHWWallet {
                 }
                 return .none
                 
-            case .continueTapped:
+            case .readyToScanTapped:
                 keystoneHandler.resetQRDecoder()
                 return .none
                 

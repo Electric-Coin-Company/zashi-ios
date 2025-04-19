@@ -4,23 +4,28 @@ import ComposableArchitecture
 import Generated
 import Models
 import NotEnoughFreeSpace
-import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
 import OnboardingFlow
-import Tabs
 import ZcashLightClientKit
 import UIComponents
-import ServerSetup
-import AddressBook
 import DeeplinkWarning
 import OSStatusError
+
+// Path
+import CurrencyConversionSetup
+import Home
+import Receive
+import RecoveryPhraseDisplay
+import CoordFlows
+import ServerSetup
+import Settings
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @State var covered = false
     
-    let store: StoreOf<Root>
+    @Perception.Bindable var store: StoreOf<Root>
     let tokenName: String
     let networkType: NetworkType
 
@@ -109,65 +114,105 @@ private extension RootView {
                         store.send(.splashRemovalRequested)
                     }
 
-                case .tabs:
+                case .home:
                     NavigationView {
-                        TabsView(
+                        HomeView(
                             store: store.scope(
-                                state: \.tabsState,
-                                action: \.tabs
+                                state: \.homeState,
+                                action: \.home
                             ),
-                            tokenName: tokenName,
-                            networkType: networkType
+                            tokenName: tokenName
                         )
-                        .navigationLinkEmpty(
-                            isActive: Binding<Bool>(
-                                get: {
-                                    store.addressBookBinding
-                                }, set: {
-                                    store.send(.addressBookBinding($0))
-                                }
-                            ),
-                            destination: {
-                                AddressBookView(
-                                    store: store.scope(
-                                        state: \.addressBookState,
-                                        action: \.addressBook
-                                    )
-                                )
-                            }
-                        )
-                        .navigationLinkEmpty(
-                            isActive: Binding<Bool>(
-                                get: {
-                                    store.addressBookContactBinding
-                                }, set: {
-                                    store.send(.addressBookContactBinding($0))
-                                }
-                            ),
-                            destination: {
-                                AddressBookContactView(
-                                    store: store.scope(
-                                        state: \.addressBookState,
-                                        action: \.addressBook
-                                    )
-                                )
-                            }
-                        )
+                        .navigationLinkEmpty(isActive: store.bindingFor(.settings)) {
+                            SettingsView(
+                                store:
+                                    store.scope(
+                                        state: \.settingsState,
+                                        action: \.settings)
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.receive)) {
+                            ReceiveView(
+                                store:
+                                    store.scope(
+                                        state: \.receiveState,
+                                        action: \.receive),
+                                networkType: networkType,
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.requestZecCoordFlow)) {
+                            RequestZecCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.requestZecCoordFlowState,
+                                        action: \.requestZecCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.sendCoordFlow)) {
+                            SendCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.sendCoordFlowState,
+                                        action: \.sendCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.scanCoordFlow)) {
+                            ScanCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.scanCoordFlowState,
+                                        action: \.scanCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.addKeystoneHWWalletCoordFlow)) {
+                            AddKeystoneHWWalletCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.addKeystoneHWWalletCoordFlowState,
+                                        action: \.addKeystoneHWWalletCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.transactionsCoordFlow)) {
+                            TransactionsCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.transactionsCoordFlowState,
+                                        action: \.transactionsCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.walletBackup)) {
+                            WalletBackupCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.walletBackupCoordFlowState,
+                                        action: \.walletBackupCoordFlow)
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.currencyConversionSetup)) {
+                            CurrencyConversionSetupView(
+                                store:
+                                    store.scope(
+                                        state: \.currencyConversionSetupState,
+                                        action: \.currencyConversionSetup)
+                            )
+                        }
+                        .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {
+                            SignWithKeystoneCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.signWithKeystoneCoordFlowState,
+                                        action: \.signWithKeystoneCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash(store.splashAppeared) {
-                        store.send(.splashRemovalRequested)
-                    }
-
-                case .phraseDisplay:
-                    NavigationView {
-                        RecoveryPhraseDisplayView(
-                            store: store.scope(
-                                state: \.phraseDisplayState,
-                                action: \.phraseDisplay
-                            )
-                        )
-                    }
                     .overlayedWithSplash(store.splashAppeared) {
                         store.send(.splashRemovalRequested)
                     }
@@ -234,6 +279,19 @@ private extension RootView {
             }
 
             shareLogsView(store)
+            shareView()
+            
+            if let supportData = store.supportData {
+                UIMailDialogView(
+                    supportData: supportData,
+                    completion: {
+                        store.send(.shareFinished)
+                    }
+                )
+                // UIMailDialogView only wraps MFMailComposeViewController presentation
+                // so frame is set to 0 to not break SwiftUIs layout
+                .frame(width: 0, height: 0)
+            }
         }
         .toast()
     }
@@ -254,12 +312,31 @@ private extension RootView {
             EmptyView()
         }
     }
+    
+    @ViewBuilder func shareView() -> some View {
+        if let message = store.messageShareBinding {
+            UIShareDialogView(activityItems: [
+                ShareableMessage(
+                    title: L10n.SendFeedback.Share.title,
+                    message: message,
+                    desc: L10n.SendFeedback.Share.desc
+                ),
+            ]) {
+                store.send(.shareFinished)
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
+        }
+    }
 
     @ViewBuilder func debugView(_ store: StoreOf<Root>) -> some View {
         VStack(alignment: .leading) {
-            if store.destinationState.previousDestination == .tabs {
+            if store.destinationState.previousDestination == .home {
                 ZashiButton(L10n.General.back) {
-                    store.goToDestination(.tabs)
+                    store.goToDestination(.home)
                 }
                 .frame(width: 150)
                 .padding()
@@ -321,6 +398,17 @@ private extension RootView {
     }
 }
 
+// MARK: - Binding
+
+extension StoreOf<Root> {
+    func bindingFor(_ path: Root.State.Path) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.path == path },
+            set: { self.path = $0 ? path : nil }
+        )
+    }
+}
+
 // MARK: Placeholders
 
 extension Root.State {
@@ -331,7 +419,7 @@ extension Root.State {
             exportLogsState: .initial,
             onboardingState: .initial,
             phraseDisplayState: .initial,
-            tabsState: .initial,
+            //tabsState: .initial,
             walletConfig: .initial,
             welcomeState: .initial
         )
@@ -344,7 +432,7 @@ extension Root {
             initialState: .initial
         ) {
             Root()
-                .logging()
+                //.logging()
         }
     }
 }

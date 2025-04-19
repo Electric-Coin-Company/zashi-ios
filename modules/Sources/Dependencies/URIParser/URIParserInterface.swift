@@ -1,6 +1,6 @@
 //
 //  URIParserClient.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 17.05.2022.
 //

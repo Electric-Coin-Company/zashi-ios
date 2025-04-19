@@ -42,10 +42,10 @@ public struct FilterView: View {
                 .padding(.vertical, 10)
                 .padding(.horizontal, 14)
                 .background {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Btns.Secondary.bg.color(colorScheme))
                         .overlay {
-                            RoundedRectangle(cornerRadius: 20)
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
                                 .stroke(Design.Btns.Secondary.border.color(colorScheme))
                         }
                 }
@@ -55,7 +55,7 @@ public struct FilterView: View {
                     .padding(.vertical, 10)
                     .padding(.horizontal, 14)
                     .background {
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: Design.Radius._3xl)
                             .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                     }
             }
@@ -66,7 +66,12 @@ public struct FilterView: View {
 extension TransactionsManagerView {
     @ViewBuilder func filtersContent() -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                mainBody()
+                    .presentationDetents([.height(filtersSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.Radius._4xl)
+            } else if #available(iOS 16.0, *) {
                 mainBody()
                     .presentationDetents([.height(filtersSheetHeight)])
                     .presentationDragIndicator(.visible)

@@ -40,7 +40,7 @@ public struct Toast: ViewModifier {
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(Design.Btns.Primary.bg.color(colorScheme))
                         }
                     

@@ -1,6 +1,6 @@
 //
 //  NotEnoughFreeSpaceView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Michal Fousek on 28.09.2022.
 //
@@ -67,10 +67,10 @@ public struct NotEnoughFreeSpaceView: View {
     }
     
     func settingsButton() -> some View {
-        return Image(systemName: "line.3.horizontal")
-            .resizable()
-            .frame(width: 21, height: 15)
-            .padding(15)
+        Asset.Assets.Icons.settings.image
+            .zImage(size: 24, style: Design.Text.primary)
+            .padding(8)
+            .tint(Asset.Colors.primary.color)
             .navigationLink(
                 isActive: $store.isSettingsOpen,
                 destination: {
@@ -83,7 +83,6 @@ public struct NotEnoughFreeSpaceView: View {
                     )
                 }
             )
-            .tint(Asset.Colors.primary.color)
     }
 }
 

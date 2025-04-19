@@ -1,6 +1,6 @@
 //
 //  RootDestination.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 01.12.2022.
 //
@@ -17,15 +17,15 @@ import SwiftUI
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `Root` with a connection to the UI navigation.
 extension Root {
-    public struct DestinationState: Equatable {
-        public enum Destination: Equatable {
+    public struct DestinationState {
+        public enum Destination {
             case deeplinkWarning
             case notEnoughFreeSpace
             case onboarding
             case osStatusError
-            case phraseDisplay
+            //case phraseDisplay
             case startup
-            case tabs
+            case home
             case welcome
         }
         
@@ -42,7 +42,7 @@ extension Root {
         }
     }
     
-    public enum DestinationAction: Equatable {
+    public enum DestinationAction {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
@@ -57,22 +57,12 @@ extension Root {
             switch action {
             case let .destination(.updateDestination(destination)):
                 guard (state.destinationState.destination != .deeplinkWarning)
-                        || (state.destinationState.destination == .deeplinkWarning && destination == .tabs) else {
-                    return .none
-                }
-                guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
+                        || (state.destinationState.destination == .deeplinkWarning && destination == .home) else {
                     return .none
                 }
                 state.destinationState.destination = destination
                 return .none
 
-            case .deeplinkWarning(.gotItTapped):
-                state = .initial
-                state.splashAppeared = true
-                state.tabsState.selectedTab = .send
-                state.tabsState.sendState.destination = .scanQR
-                return .send(.destination(.updateDestination(.tabs)))
-                
             case .destination(.deeplink(let url)):
                 if let _ = uriParser.checkRP(url.absoluteString) {
                     // The deeplink is some zip321, we ignore it and let users know in a warning screen
@@ -81,16 +71,9 @@ extension Root {
                 return .none
 
             case .destination(.deeplinkHome):
-                state.destinationState.destination = .tabs
-                state.tabsState.destination = nil
                 return .none
 
-            case let .destination(.deeplinkSend(amount, address, memo)):
-                state.destinationState.destination = .tabs
-                state.tabsState.selectedTab = .send
-                state.tabsState.sendState.amount = amount
-                state.tabsState.sendState.address = address.redacted
-                state.tabsState.sendState.memoState.text = memo
+            case .destination(.deeplinkSend):
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):
@@ -112,15 +95,6 @@ extension Root {
                 state.$lastAuthenticationTimestamp.withLock { $0 = Int(Date().timeIntervalSince1970) }
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
-
-            case .tabs(.settings(.integrations(.flexaTapped))):
-                flexaHandler.open()
-                return .publisher {
-                    flexaHandler.onTransactionRequest()
-                        .map(Root.Action.flexaOnTransactionRequest)
-                        .receive(on: mainQueue)
-                }
-                .cancellable(id: CancelFlexaId, cancelInFlight: true)
 
             case .flexaOnTransactionRequest(let transaction):
                 guard let transaction else {
@@ -165,9 +139,7 @@ extension Root {
                 flexaHandler.flexaAlert(L10n.Partners.Flexa.transactionFailedTitle, message)
                 return .none
 
-            case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
-                    .welcome, .binding, .resetZashiSDKFailed, .resetZashiSDKSucceeded, .resetZashiKeychainFailed, .resetZashiKeychainRequest, .resetZashiFinishProcessing, .resetZashiKeychainFailedWithCorruptedData, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata, .resolveMetadataEncryptionKeys:
+            default:
                 return .none
             }
         }

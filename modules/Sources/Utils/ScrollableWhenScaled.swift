@@ -1,6 +1,6 @@
 //
 //  ScrollableWhenScaled.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 12/27/21.
 //

@@ -8,10 +8,9 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
-import ImportWallet
-import SecurityWarning
 import ZcashLightClientKit
 import UIComponents
+import CoordFlows
 
 public struct PlainOnboardingView: View {
     @Perception.Bindable var store: StoreOf<OnboardingFlow>
@@ -37,7 +36,7 @@ public struct PlainOnboardingView: View {
                 Spacer()
                 
                 ZashiButton(L10n.PlainOnboarding.Button.createNewWallet) {
-                    store.send(.createNewWallet)
+                    store.send(.createNewWalletTapped)
                 }
                 .padding(.bottom, 8)
 
@@ -52,25 +51,15 @@ public struct PlainOnboardingView: View {
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.importExistingWallet),
                 destination: {
-                    ImportWalletView(
+                    RestoreWalletCoordFlowView(
                         store: store.scope(
-                            state: \.importWalletState,
-                            action: \.importWallet
+                            state: \.restoreWalletCoordFlowState,
+                            action: \.restoreWalletCoordFlow
                         )
                     )
                 }
             )
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.createNewWallet),
-                destination: {
-                    SecurityWarningView(
-                        store: store.scope(
-                            state: \.securityWarningState,
-                            action: \.securityWarning
-                        )
-                    )
-                }
-            )
+            .alert($store.scope(state: \.alert, action: \.alert))
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
@@ -83,9 +72,7 @@ public struct PlainOnboardingView: View {
         store:
             Store(
                 initialState: OnboardingFlow.State(
-                    walletConfig: .initial,
-                    importWalletState: .initial,
-                    securityWarningState: .initial
+                    walletConfig: .initial
                 )
             ) {
                 OnboardingFlow()
@@ -109,9 +96,7 @@ extension StoreOf<OnboardingFlow> {
 extension OnboardingFlow.State {
     public static var initial: Self {
         .init(
-            walletConfig: .initial,
-            importWalletState: .initial,
-            securityWarningState: .initial
+            walletConfig: .initial
         )
     }
 }

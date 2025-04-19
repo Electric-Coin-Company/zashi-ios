@@ -50,13 +50,13 @@ public struct PrivacyBadge: View {
         .padding(.vertical, 2)
         .padding(.horizontal, 10)
         .background {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: Design.Radius._2xl)
                 .fill(privacy == .max
                       ? Design.Utility.Purple._50.color(colorScheme)
                       : Design.Utility.WarningYellow._50.color(colorScheme)
                 )
                 .background {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: Design.Radius._2xl)
                         .stroke(privacy == .max
                                 ? Design.Utility.Purple._200.color(colorScheme)
                                 : Design.Utility.WarningYellow._200.color(colorScheme)

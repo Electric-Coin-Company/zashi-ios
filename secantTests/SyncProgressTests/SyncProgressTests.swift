@@ -8,7 +8,6 @@
 import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
-import SyncProgress
 import Models
 import Generated
 @testable import secant_testnet
@@ -19,7 +18,7 @@ final class SyncProgressTests: XCTestCase {
         let store = TestStore(
             initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.0,
-                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
+                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513, 0))
             )
         ) {
             SyncProgress()
@@ -61,7 +60,7 @@ final class SyncProgressTests: XCTestCase {
         let store = TestStore(
             initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.15,
-                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
+                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513, 0))
             )
         ) {
             SyncProgress()
@@ -82,14 +81,14 @@ final class SyncProgressTests: XCTestCase {
         let store = TestStore(
             initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.15,
-                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
+                synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513, 0))
             )
         ) {
             SyncProgress()
         }
 
         var syncState: SynchronizerState = .zero
-        syncState.syncStatus = .syncing(0.545)
+        syncState.syncStatus = .syncing(0.545, 0)
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
         await store.send(.synchronizerStateChanged(syncState.redacted)) { state in

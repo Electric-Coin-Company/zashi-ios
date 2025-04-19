@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- Restore wallet flow has been fully redesigned. New option to estimate Birthday of the wallet based on a date has been implemented.
+
 ## 1.5.3 build 1 (2025-04-14)
 
 ### Fixed

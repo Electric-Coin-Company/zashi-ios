@@ -1,6 +1,6 @@
 //
 //  MnemonicMocks.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.11.2022.
 //
@@ -44,6 +44,7 @@ extension MnemonicClient {
             
             return mnemonic.components(separatedBy: " ")
         },
-        isValid: { _ in }
+        isValid: { _ in },
+        suggestWords: { _ in [] }
     )
 }

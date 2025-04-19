@@ -46,7 +46,7 @@ public struct SendFeedbackView: View {
                                         .padding(.vertical, 12)
                                         .frame(maxWidth: .infinity)
                                         .background {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                                         }
                                         .padding(3)

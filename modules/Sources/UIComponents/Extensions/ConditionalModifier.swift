@@ -1,6 +1,6 @@
 //
 //  ConditionalModifier.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by ANTOINE VAN DER LEE
 //

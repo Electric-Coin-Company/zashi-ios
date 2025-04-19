@@ -14,6 +14,44 @@ import BalanceFormatter
 import XCTestDynamicOverlay
 import Combine
 
+public struct ZatoshiText: View {
+    let balance: Zatoshi
+    let format: ZatoshiStringRepresentation.Format
+    let postfix: String?
+
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+    
+    public init(
+        _ balance: Zatoshi,
+        _ format: ZatoshiStringRepresentation.Format = .expanded,
+        _ postfix: String? = nil
+    ) {
+        self.balance = balance
+        self.format = format
+        self.postfix = postfix
+    }
+    
+    public var body: some View {
+        if isSensitiveContentHidden {
+            Text(L10n.General.hideBalancesMost)
+        } else {
+            if format == .abbreviated {
+                if let postfix {
+                    Text("\(balance.threeDecimalsZashiFormatted()) \(postfix)")
+                } else {
+                    Text("\(balance.threeDecimalsZashiFormatted())")
+                }
+            } else {
+                if let postfix {
+                    Text("\(balance.atLeastThreeDecimalsZashiFormatted()) \(postfix)")
+                } else {
+                    Text("\(balance.atLeastThreeDecimalsZashiFormatted())")
+                }
+            }
+        }
+    }
+}
+
 public struct ZatoshiRepresentationView: View {
     let zatoshiStringRepresentation: ZatoshiStringRepresentation
     let fontName: String

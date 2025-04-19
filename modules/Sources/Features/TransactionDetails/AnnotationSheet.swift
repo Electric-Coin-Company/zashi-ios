@@ -13,7 +13,12 @@ import UIComponents
 extension TransactionDetailsView {
     @ViewBuilder func annotationContent(_ isEditMode: Bool) -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                mainBodyUM(isEditMode: isEditMode)
+                    .presentationDetents([.height(filtersSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.Radius._4xl)
+            } else if #available(iOS 16.0, *) {
                 mainBodyUM(isEditMode: isEditMode)
                     .presentationDetents([.height(filtersSheetHeight)])
                     .presentationDragIndicator(.visible)

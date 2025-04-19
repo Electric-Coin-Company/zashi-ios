@@ -1,6 +1,6 @@
 //
 //  DeleteWalletStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 03-27-2024
 //

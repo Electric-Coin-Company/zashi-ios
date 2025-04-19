@@ -39,7 +39,7 @@ struct ZashiBackV2Modifier: ViewModifier {
                                     .zImage(size: 24, color: Asset.Colors.ZDesign.shark100.color)
                                     .padding(8)
                                     .background {
-                                        RoundedRectangle(cornerRadius: 12)
+                                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                                             .fill(Asset.Colors.ZDesign.shark900.color)
                                     }
                             } else {
@@ -48,7 +48,7 @@ struct ZashiBackV2Modifier: ViewModifier {
                                     .padding(8)
                                     .background {
                                         if background {
-                                            RoundedRectangle(cornerRadius: 12)
+                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                                 .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                         }
                                     }

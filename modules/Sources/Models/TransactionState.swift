@@ -1,6 +1,6 @@
 //
 //  TransactionState.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 26.04.2022.
 //
@@ -203,8 +203,12 @@ public struct TransactionState: Equatable, Identifiable {
     
     public var netValue: String {
         isShieldingTransaction
-        ? Zatoshi(totalSpent?.amount ?? 0).decimalString()
-        : zecAmount.decimalString()
+        ? Zatoshi(totalSpent?.amount ?? 0).atLeastThreeDecimalsZashiFormatted()
+        : zecAmount.atLeastThreeDecimalsZashiFormatted()
+    }
+
+    public var amountWithoutFee: Zatoshi {
+        Zatoshi(zecAmount.amount - (fee?.amount ?? 0))
     }
 
     public init(

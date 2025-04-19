@@ -26,9 +26,11 @@ public enum Design {
         case bgQuaternary
         case strokePrimary
         case strokeSecondary
+        case strokeTertiary
         case bgAlt
         case bgHide
-        case brandBg
+        case brandPrimary
+        case brandSecondary
         case brandFg
         case divider
     }
@@ -303,6 +305,7 @@ public enum Design {
             case _700
             case _800
             case _900
+            case _950
         }
         
         public enum Brand: Colorable {
@@ -318,12 +321,51 @@ public enum Design {
             case _900
         }
     }
+    
+    // MARK: - Corner Radius Constants
+
+    public enum Radius {
+        public static let _none: CGFloat = 0
+        public static let _xxs: CGFloat = 2
+        public static let _xs: CGFloat = 4
+        public static let _sm: CGFloat = 6
+        public static let _md: CGFloat = 8
+        public static let _lg: CGFloat = 10
+        public static let _xl: CGFloat = 12
+        public static let _2xl: CGFloat = 16
+        public static let _3xl: CGFloat = 20
+        public static let _4xl: CGFloat = 24
+        public static let _5xl: CGFloat = 32
+        public static let _full: CGFloat = 9999
+    }
+    
+    // MARK: - Spacing Constants
+
+    public enum Spacing {
+        public static let _none: CGFloat = 0
+        public static let _xxs: CGFloat = 2
+        public static let _xs: CGFloat = 4
+        public static let _sm: CGFloat = 6
+        public static let _md: CGFloat = 8
+        public static let _lg: CGFloat = 12
+        public static let _xl: CGFloat = 16
+        public static let _2xl: CGFloat = 20
+        public static let _3xl: CGFloat = 24
+        public static let _4xl: CGFloat = 32
+        public static let _5xl: CGFloat = 40
+        public static let _6xl: CGFloat = 48
+        public static let _7xl: CGFloat = 64
+        public static let _8xl: CGFloat = 80
+        public static let _9xl: CGFloat = 96
+        public static let _10xl: CGFloat = 128
+        public static let _11xl: CGFloat = 160
+    }
 }
 
 public extension Design {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
         }
     }
 }
@@ -333,17 +375,19 @@ public extension Design {
 public extension Design.Surfaces {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bgPrimary: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .bgAdjust: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
-        case .bgSecondary: return Design.col(Asset.Colors.ZDesign.Base.concrete.color, Asset.Colors.ZDesign.sharkShades06dp.color, colorScheme)
+        case .bgPrimary: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .bgAdjust: return Design.col(Asset.Colors.ZDesign.Base.concrete.color, Asset.Colors.ZDesign.sharkShades02dp.color, colorScheme)
+        case .bgSecondary: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .bgTertiary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         case .bgQuaternary: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .strokePrimary: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .strokeSecondary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .strokeTertiary: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .bgAlt: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.bone.color, colorScheme)
-        case .bgHide: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .brandBg: return Design.col(Asset.Colors.ZDesign.Base.brand.color, Asset.Colors.ZDesign.Base.brand.color, colorScheme)
-        case .brandFg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .bgHide: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .brandPrimary: return Design.col(Asset.Colors.ZDesign.Base.brand.color, Asset.Colors.ZDesign.Base.brand.color, colorScheme)
+        case .brandSecondary: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand600.color, colorScheme)
+        case .brandFg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
         case .divider: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         }
     }
@@ -702,6 +746,7 @@ public extension Design.Utility.Purple {
         case ._700: return Design.col(Asset.Colors.ZDesign.purple700.color, Asset.Colors.ZDesign.purple300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.purple800.color, Asset.Colors.ZDesign.purple200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.purple900.color, Asset.Colors.ZDesign.purple100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.purple950.color, Asset.Colors.ZDesign.purple50.color, colorScheme)
         }
     }
 }

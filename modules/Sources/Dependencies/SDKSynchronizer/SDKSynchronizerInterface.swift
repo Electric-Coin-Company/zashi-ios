@@ -1,6 +1,6 @@
 //
 //  SDKSynchronizerClient.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.04.2022.
 //
@@ -68,6 +68,8 @@ public struct SDKSynchronizerClient {
     public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _,_,_,_,_,_ in [] }
     
     public var walletAccounts: () async throws -> [WalletAccount] = { [] }
+    
+    public var estimateBirthdayHeight: (Date) -> BlockHeight = { _ in BlockHeight(0) }
     
     // PCZT
     public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Pczt

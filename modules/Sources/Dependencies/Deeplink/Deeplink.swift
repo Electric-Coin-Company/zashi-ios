@@ -1,6 +1,6 @@
 //
 //  Deeplink.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 15.06.2022.
 //

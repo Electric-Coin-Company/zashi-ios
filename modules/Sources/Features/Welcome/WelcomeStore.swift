@@ -1,6 +1,6 @@
 //
 //  Welcome.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04.04.2022.
 //

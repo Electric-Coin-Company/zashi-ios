@@ -1,6 +1,6 @@
 //
 //  StoredWallet.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.05.2022.
 //

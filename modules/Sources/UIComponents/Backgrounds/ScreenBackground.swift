@@ -1,6 +1,6 @@
 //
 //  ScreenBackground.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 10/18/21.
 //

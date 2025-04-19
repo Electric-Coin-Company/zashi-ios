@@ -1,6 +1,6 @@
 //
 //  UserPreferencesStorage.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 03/18/2022.
 //

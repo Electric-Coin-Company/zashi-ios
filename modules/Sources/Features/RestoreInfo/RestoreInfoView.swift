@@ -11,6 +11,8 @@ import Generated
 import UIComponents
 
 public struct RestoreInfoView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Perception.Bindable var store: StoreOf<RestoreInfo>
     
     public init(store: StoreOf<RestoreInfo>) {
@@ -19,47 +21,56 @@ public struct RestoreInfoView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                Asset.Assets.Illustrations.connect.image
+                    .resizable()
+                    .frame(width: 132, height: 90)
+                    .padding(.top, 40)
+                    .padding(.bottom, 24)
+
                 Text(L10n.RestoreInfo.title)
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
-                    .padding(.vertical, 30)
-                
-                Asset.Assets.restoreInfo.image
-                    .zImage(width: 90, height: 172, color: Asset.Colors.primary.color)
+                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                    .padding(.bottom, 8)
 
                 Text(L10n.RestoreInfo.subTitle)
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                    .multilineTextAlignment(.center)
-                    .padding(.vertical, 30)
-                    .padding(.horizontal, 50)
+                    .zFont(.medium, size: 16, style: Design.Text.primary)
+                    .padding(.bottom, 16)
 
-                VStack(alignment: .leading) {
-                    Text(L10n.RestoreInfo.tips)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 12))
+                Text(L10n.RestoreInfo.tips)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.bottom, 4)
+
+                bulletpoint(L10n.RestoreInfo.tip1)
+                bulletpoint(L10n.RestoreInfo.tip2)
+                    .padding(.bottom, 20)
+
+                Spacer()
+
+                Text("\(Text(L10n.RestoreInfo.note).bold())\(L10n.RestoreInfo.noteInfo)")
+                    .zFont(size: 12, style: Design.Text.primary)
+                    .padding(.bottom, 24)
+
+                HStack {
+                    ZashiToggle(
+                        isOn: $store.isAcknowledged,
+                        label: L10n.RestoreInfo.checkbox,
+                        textSize: 16
+                    )
                     
-                    bulletpoint(L10n.RestoreInfo.tip1)
-                    bulletpoint(L10n.RestoreInfo.tip2)
-                    bulletpoint(L10n.RestoreInfo.tip3)
-                        .padding(.bottom, 20)
-
-                    Text(L10n.RestoreInfo.note)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 11))
-                    + Text(L10n.RestoreInfo.noteInfo)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 11))
+                    Spacer()
                 }
-                .padding(.horizontal, 30)
-                
+                .padding(.leading, 1)
+
                 ZashiButton(L10n.RestoreInfo.gotIt) {
                     store.send(.gotItTapped)
                 }
-                .padding(.vertical, 50)
+                .padding(.vertical, 24)
             }
-            .padding(.vertical, 1)
             .zashiBack(hidden: true)
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
-        .applyScreenBackground()
+        .applyErredScreenBackground()
     }
     
     @ViewBuilder
@@ -71,7 +82,7 @@ public struct RestoreInfoView: View {
                 .padding(.leading, 8)
 
             Text(text)
-                .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                .zFont(size: 14, style: Design.Text.primary)
         }
         .padding(.bottom, 5)
     }

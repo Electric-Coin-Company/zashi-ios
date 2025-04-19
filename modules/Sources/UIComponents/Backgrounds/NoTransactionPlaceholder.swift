@@ -98,12 +98,12 @@ public struct NoTransactionPlaceholder: View {
                 .padding(.trailing, 16)
             
             VStack(alignment: .leading, spacing: 4) {
-                RoundedRectangle(cornerRadius: 7)
+                RoundedRectangle(cornerRadius: Design.Radius._md)
                     .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     .shimmer(isShimmerOn).clipShape(RoundedRectangle(cornerRadius: 7))
                     .frame(width: 86, height: 14)
                 
-                RoundedRectangle(cornerRadius: 7)
+                RoundedRectangle(cornerRadius: Design.Radius._md)
                     .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     .shimmer(isShimmerOn).clipShape(RoundedRectangle(cornerRadius: 7))
                     .frame(width: 64, height: 14)
@@ -111,7 +111,7 @@ public struct NoTransactionPlaceholder: View {
             
             Spacer()
             
-            RoundedRectangle(cornerRadius: 7)
+            RoundedRectangle(cornerRadius: Design.Radius._md)
                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 .shimmer(isShimmerOn).clipShape(RoundedRectangle(cornerRadius: 7))
                 .frame(width: 32, height: 14)

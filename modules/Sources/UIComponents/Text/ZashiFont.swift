@@ -34,12 +34,23 @@ public struct ZashiFontModifier: ViewModifier {
     let weight: FontWeight
     let addressFont: Bool
     let size: CGFloat
-    let style: Colorable
+    let color: Color?
+    let style: Colorable?
 
     public func body(content: Content) -> some View {
-        content
-            .font(.custom(fontName(weight, addressFont: addressFont), size: size))
-            .zForegroundColor(style)
+        if let color {
+            content
+                .font(.custom(fontName(weight, addressFont: addressFont), size: size))
+            //.zForegroundColor(style)
+                .foregroundColor(color)
+        } else if let style {
+            content
+                .font(.custom(fontName(weight, addressFont: addressFont), size: size))
+                .zForegroundColor(style)
+            //            .foregroundColor(color)
+        } else {
+            EmptyView()
+        }
     }
     
     private func fontName(_ weight: FontWeight, addressFont: Bool = false) -> String {
@@ -82,8 +93,21 @@ public extension View {
         size: CGFloat,
         style: Colorable
     ) -> some View {
+//        zFont(weight, addressFont: addressFont, size: size, color: style.color(.light))
+        
         self.modifier(
-            ZashiFontModifier(weight: weight, addressFont: addressFont, size: size, style: style)
+            ZashiFontModifier(weight: weight, addressFont: addressFont, size: size, color: nil, style: style)
+        )
+    }
+    
+    func zFont(
+        _ weight: ZashiFontModifier.FontWeight = .regular,
+        addressFont: Bool = false,
+        size: CGFloat,
+        color: Color
+    ) -> some View {
+        self.modifier(
+            ZashiFontModifier(weight: weight, addressFont: addressFont, size: size, color: color, style: nil)
         )
     }
 }

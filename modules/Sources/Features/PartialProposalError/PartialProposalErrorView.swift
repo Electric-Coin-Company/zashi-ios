@@ -59,7 +59,7 @@ public struct PartialProposalErrorView: View {
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 10)
+                                    RoundedRectangle(cornerRadius: Design.Radius._lg)
                                         .fill(Design.Inputs.Default.bg.color(colorScheme))
                                 }
                                 .padding(.bottom, 8)
@@ -79,7 +79,7 @@ public struct PartialProposalErrorView: View {
                         
                         shareMessageView()
                     }
-                    .zashiBack(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
+                    .zashiBackV2(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
                     .onAppear { store.send(.onAppear) }
                 }
                 .padding(.vertical, 1)

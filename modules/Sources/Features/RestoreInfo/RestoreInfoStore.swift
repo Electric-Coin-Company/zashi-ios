@@ -12,17 +12,25 @@ import Generated
 @Reducer
 public struct RestoreInfo {
     @ObservableState
-    public struct State: Equatable { }
+    public struct State: Equatable {
+        public var isAcknowledged = true
+    }
     
-    public enum Action: Equatable {
+    public enum Action: BindableAction, Equatable {
+        case binding(BindingAction<RestoreInfo.State>)
         case gotItTapped
     }
 
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
+            case .binding:
+                return .none
+                
             case .gotItTapped:
                 return .none
             }

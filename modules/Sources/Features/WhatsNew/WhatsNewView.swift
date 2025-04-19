@@ -12,6 +12,8 @@ import UIComponents
 import WhatsNewProvider
 
 public struct WhatsNewView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Perception.Bindable var store: StoreOf<WhatsNew>
     
     public init(store: StoreOf<WhatsNew>) {
@@ -60,7 +62,7 @@ public struct WhatsNewView: View {
                                                             Spacer()
                                                         }
                                                         
-                                                        ZashiText(withAttributedString: previewText)
+                                                        ZashiText(withAttributedString: previewText, colorScheme: colorScheme)
                                                             .zFont(size: 14, style: Design.Text.primary)
                                                             .frame(maxWidth: .infinity, alignment: .leading)
                                                             .accentColor(Asset.Colors.primary.color)

@@ -81,7 +81,6 @@ private struct WalletStatusPanel: View {
             Text("Hello, World")
         }
         .padding(.vertical, 1)
-        .walletStatusPanel()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(
             trailing: Text("M")

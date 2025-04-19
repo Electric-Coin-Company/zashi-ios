@@ -1,6 +1,6 @@
 //
 //  SyncStatusSnapshot.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 07.07.2022.
 //
@@ -33,8 +33,8 @@ public struct SyncStatusSnapshot: Equatable {
         case .stopped:
             return SyncStatusSnapshot(state, L10n.Sync.Message.stopped)
 
-        case .syncing(let progress):
-            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", progress * 100)))
+        case let .syncing(syncProgress, _):
+            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", syncProgress * 100)))
         }
     }
 }

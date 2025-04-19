@@ -1,15 +1,21 @@
 import SwiftUI
 import ComposableArchitecture
 
-import About
 import Generated
-import RecoveryPhraseDisplay
 import UIComponents
-import PrivateDataConsent
-import ServerSetup
+
+import About
+import AddKeystoneHWWallet
 import AddressBook
-import WhatsNew
+import CurrencyConversionSetup
+import DeleteWallet
+import ExportTransactionHistory
+import PrivateDataConsent
+import RecoveryPhraseDisplay
+import Scan
+import ServerSetup
 import SendFeedback
+import WhatsNew
 
 public struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -22,38 +28,27 @@ public struct SettingsView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
-                List {
-                    Group {
-                        ActionRow(
-                            icon: Asset.Assets.Icons.user.image,
-                            title: L10n.Settings.addressBook
-                        ) {
-                            store.send(.protectedAccessRequest(.addressBook))
-                        }
-
-                        if store.isEnoughFreeSpaceMode {
+            NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+                VStack {
+                    List {
+                        Group {
                             ActionRow(
-                                icon: Asset.Assets.Icons.integrations.image,
-                                title: L10n.Settings.integrations,
-                                desc: store.isKeystoneAccount
-                                ? L10n.Keystone.settings
-                                : nil,
-                                accessoryView:
-                                    HStack(spacing: 0) {
-                                        if store.isKeystoneAccount {
-                                            Asset.Assets.Partners.coinbaseSeeklogoDisabled.image
-                                                .seekOutline(colorScheme)
-                                            
-                                            if store.featureFlags.flexa {
-                                                Asset.Assets.Partners.flexaSeeklogoDisabled.image
-                                                    .seekOutline(colorScheme)
-                                            }
-                                        } else {
+                                icon: Asset.Assets.Icons.user.image,
+                                title: L10n.Settings.addressBook
+                            ) {
+                                store.send(.addressBookAccessCheck)
+                            }
+                            
+                            if store.isEnoughFreeSpaceMode {
+                                ActionRow(
+                                    icon: Asset.Assets.Icons.integrations.image,
+                                    title: L10n.Settings.integrations,
+                                    accessoryView:
+                                        HStack(spacing: 0) {
                                             Asset.Assets.Partners.coinbaseSeeklogo.image
                                                 .seekOutline(colorScheme)
-
-                                            if store.featureFlags.flexa {
+                                            
+                                            if store.featureFlags.flexa && !store.isKeystoneAccount {
                                                 Asset.Assets.Partners.flexaSeekLogo.image
                                                     .seekOutline(colorScheme)
                                             }
@@ -63,105 +58,102 @@ public struct SettingsView: View {
                                                     .seekOutline(colorScheme)
                                             }
                                         }
-                                    }
-                            ) {
-                                store.send(.updateDestination(.integrations))
+                                ) {
+                                    store.send(.integrationsTapped)
+                                }
                             }
-                            .disabled(store.isKeystoneAccount)
+                            
+                            ActionRow(
+                                icon: Asset.Assets.Icons.settings.image,
+                                title: L10n.Settings.advanced
+                            ) {
+                                store.send(.advancedSettingsTapped)
+                            }
+                            
+                            ActionRow(
+                                icon: Asset.Assets.Icons.magicWand.image,
+                                title: L10n.Settings.whatsNew
+                            ) {
+                                store.send(.whatsNewTapped)
+                            }
+                            
+                            ActionRow(
+                                icon: Asset.Assets.infoOutline.image,
+                                title: L10n.Settings.about
+                            ) {
+                                store.send(.aboutTapped)
+                            }
+                            
+                            ActionRow(
+                                icon: Asset.Assets.Icons.messageSmile.image,
+                                title: L10n.Settings.feedback,
+                                divider: false
+                            ) {
+                                store.send(.sendUsFeedbackTapped)
+                            }
                         }
-
-                        ActionRow(
-                            icon: Asset.Assets.Icons.settings.image,
-                            title: L10n.Settings.advanced
-                        ) {
-                            store.send(.updateDestination(.advanced))
-                        }
-
-                        ActionRow(
-                            icon: Asset.Assets.Icons.magicWand.image,
-                            title: L10n.Settings.whatsNew
-                        ) {
-                            store.send(.updateDestination(.whatsNew))
-                        }
-
-                        ActionRow(
-                            icon: Asset.Assets.infoOutline.image,
-                            title: L10n.Settings.about
-                        ) {
-                            store.send(.updateDestination(.about))
-                        }
-                        
-                        ActionRow(
-                            icon: Asset.Assets.Icons.messageSmile.image,
-                            title: L10n.Settings.feedback,
-                            divider: false
-                        ) {
-                            store.send(.updateDestination(.sendFeedback))
-                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Asset.Colors.background.color)
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Asset.Colors.shade97.color)
-                    .listRowSeparator(.hidden)
+                    .padding(.top, 24)
+                    .padding(.horizontal, 4)
+                    .onAppear { store.send(.onAppear) }
+
+                    Spacer()
+                    
+                    Asset.Assets.zashiTitle.image
+                        .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
+                        .padding(.bottom, 16)
+                    
+                    Text(L10n.Settings.version(store.appVersion, store.appBuild))
+                        .zFont(size: 16, style: Design.Text.tertiary)
+                        .padding(.bottom, 24)
                 }
-                .padding(.top, 24)
-                .padding(.horizontal, 4)
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.about),
-                    destination: {
-                        AboutView(store: store.aboutStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.advanced),
-                    destination: {
-                        AdvancedSettingsView(store: store.advancedSettingsStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.integrations),
-                    destination: {
-                        IntegrationsView(store: store.integrationsStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.addressBook),
-                    destination: {
-                        AddressBookView(store: store.addressBookStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.whatsNew),
-                    destination: {
-                        WhatsNewView(store: store.whatsNewStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.sendFeedback),
-                    destination: {
-                        SendFeedbackView(store: store.sendFeedbackStore())
-                    }
-                )
-                .onAppear {
-                    store.send(.onAppear)
+                .listStyle(.plain)
+                .applyScreenBackground()
+            } destination: { store in
+                switch store.case {
+                case let .about(store):
+                    AboutView(store: store)
+                case let .accountHWWalletSelection(store):
+                    AccountsSelectionView(store: store)
+                case let .addKeystoneHWWallet(store):
+                    AddKeystoneHWWalletView(store: store)
+                case let .addressBook(store):
+                    AddressBookView(store: store)
+                case let .addressBookContact(store):
+                    AddressBookContactView(store: store)
+                case let .advancedSettings(store):
+                    AdvancedSettingsView(store: store)
+                case let .chooseServerSetup(store):
+                    ServerSetupView(store: store)
+                case let .currencyConversionSetup(store):
+                    CurrencyConversionSetupView(store: store)
+                case let .exportPrivateData(store):
+                    PrivateDataConsentView(store: store)
+                case let .exportTransactionHistory(store):
+                    ExportTransactionHistoryView(store: store)
+                case let .integrations(store):
+                    IntegrationsView(store: store)
+                case let .recoveryPhrase(store):
+                    RecoveryPhraseDisplayView(store: store)
+                case let .resetZashi(store):
+                    DeleteWalletView(store: store)
+                case let .scan(store):
+                    ScanView(store: store)
+                case let .sendUsFeedback(store):
+                    SendFeedbackView(store: store)
+                case let .whatsNew(store):
+                    WhatsNewView(store: store)
                 }
-
-                Spacer()
-                
-                Asset.Assets.zashiTitle.image
-                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
-                    .padding(.bottom, 16)
-                
-                Text(L10n.Settings.version(store.appVersion, store.appBuild))
-                    .zFont(size: 16, style: Design.Text.tertiary)
-                    .padding(.bottom, 24)
             }
+            .applyScreenBackground()
+            .navigationBarTitleDisplayMode(.inline)
+            .zashiBack()
+            .navigationBarHidden(!store.path.isEmpty)
+            .screenTitle(L10n.Settings.title)
         }
-        .applyScreenBackground()
-        .listStyle(.plain)
-        .navigationBarTitleDisplayMode(.inline)
-        .zashiBack()
-        .screenTitle(L10n.Settings.title)
-        .walletStatusPanel()
     }
 }
 
@@ -185,12 +177,7 @@ extension Image {
 // MARK: Placeholders
 
 extension Settings.State {
-    public static let initial = Settings.State(
-        aboutState: .initial,
-        addressBookState: .initial,
-        advancedSettingsState: .initial,
-        integrationsState: .initial
-    )
+    public static let initial = Settings.State()
 }
 
 extension StoreOf<Settings> {
@@ -198,75 +185,5 @@ extension StoreOf<Settings> {
         initialState: .initial
     ) {
         Settings()
-    }
-    
-    public static let demo = StoreOf<Settings>(
-        initialState: .init(
-            aboutState: .initial,
-            addressBookState: .initial,
-            advancedSettingsState: .initial,
-            appVersion: "0.0.1",
-            appBuild: "54",
-            integrationsState: .initial
-        )
-    ) {
-        Settings()
-    }
-}
-
-// MARK: - Store
-
-extension StoreOf<Settings> {
-    func advancedSettingsStore() -> StoreOf<AdvancedSettings> {
-        self.scope(
-            state: \.advancedSettingsState,
-            action: \.advancedSettings
-        )
-    }
-    
-    func aboutStore() -> StoreOf<About> {
-        self.scope(
-            state: \.aboutState,
-            action: \.about
-        )
-    }
-
-    func addressBookStore() -> StoreOf<AddressBook> {
-        self.scope(
-            state: \.addressBookState,
-            action: \.addressBook
-        )
-    }
-
-    func integrationsStore() -> StoreOf<Integrations> {
-        self.scope(
-            state: \.integrationsState,
-            action: \.integrations
-        )
-    }
-
-    func sendFeedbackStore() -> StoreOf<SendFeedback> {
-        self.scope(
-            state: \.sendFeedbackState,
-            action: \.sendFeedback
-        )
-    }
-
-    func whatsNewStore() -> StoreOf<WhatsNew> {
-        self.scope(
-            state: \.whatsNewState,
-            action: \.whatsNew
-        )
-    }
-}
-
-// MARK: - Bindings
-
-extension StoreOf<Settings> {
-    func bindingFor(_ destination: Settings.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
     }
 }

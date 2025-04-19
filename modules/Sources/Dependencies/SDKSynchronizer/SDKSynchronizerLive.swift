@@ -1,6 +1,6 @@
 //
 //  SDKSynchronizerLive.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 15.11.2022.
 //
@@ -47,8 +47,7 @@ extension SDKSynchronizerClient: DependencyKey {
         let synchronizer = SDKSynchronizer(initializer: initializer)
 
         return SDKSynchronizerClient(
-            stateStream: { synchronizer.stateStream
-            },
+            stateStream: { synchronizer.stateStream },
             eventStream: { synchronizer.eventStream },
             exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
@@ -205,6 +204,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
 
                 return sortedWalletAccounts
+            },
+            estimateBirthdayHeight: { date in
+                synchronizer.estimateBirthdayHeight(for: date)
             },
             createPCZTFromProposal: { accountUUID, proposal in
                 try await synchronizer.createPCZTFromProposal(accountUUID: accountUUID, proposal: proposal)

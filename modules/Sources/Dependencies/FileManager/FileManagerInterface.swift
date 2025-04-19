@@ -1,6 +1,6 @@
 //
 //  FileManagerClient.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 07.04.2022.
 //

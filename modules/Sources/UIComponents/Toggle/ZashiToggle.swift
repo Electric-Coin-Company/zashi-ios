@@ -12,15 +12,18 @@ public struct ZashiToggle: View {
     @Binding var isOn: Bool
     let label: String
     let textColor: Color
+    let textSize: CGFloat
     
     public init(
         isOn: Binding<Bool>,
         label: String = "",
-        textColor: Color = Asset.Colors.primary.color
+        textColor: Color = Asset.Colors.primary.color,
+        textSize: CGFloat = 14
     ) {
         self._isOn = isOn
         self.label = label
         self.textColor = textColor
+        self.textSize = textSize
     }
     
     public var body: some View {
@@ -33,7 +36,7 @@ public struct ZashiToggle: View {
                     .padding(.trailing, 8)
                 
                 Text(label)
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .zFont(.medium, size: textSize, style: Design.Text.primary)
                     .multilineTextAlignment(.leading)
             }
         }

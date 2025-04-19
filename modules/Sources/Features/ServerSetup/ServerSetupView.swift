@@ -1,6 +1,6 @@
 //
 //  ServerSetupView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 2024-02-07.
 //
@@ -171,7 +171,7 @@ public struct ServerSetupView: View {
                                 WithPerceptionTracking {
                                     if server.value(for: store.network) == store.activeServer && store.selectedServer == nil {
                                         Circle()
-                                            .fill(Design.Surfaces.brandBg.color(colorScheme))
+                                            .fill(Design.Surfaces.brandPrimary.color(colorScheme))
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
@@ -222,11 +222,11 @@ public struct ServerSetupView: View {
                                                 .multilineTextAlignment(.leading)
                                                 .padding(.leading, 10)
                                                 .background {
-                                                    RoundedRectangle(cornerRadius: 8)
+                                                    RoundedRectangle(cornerRadius: Design.Radius._md)
                                                         .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                                 }
                                                 .overlay {
-                                                    RoundedRectangle(cornerRadius: 8)
+                                                    RoundedRectangle(cornerRadius: Design.Radius._md)
                                                         .stroke(Design.Inputs.Default.stroke.color(colorScheme), lineWidth: 1)
                                                 }
                                                 .padding(.vertical, 8)
@@ -264,7 +264,7 @@ public struct ServerSetupView: View {
                             .padding(.leading, 24)
                             .padding(.trailing, isCustom(server) ? 0 : 24)
                             .background {
-                                RoundedRectangle(cornerRadius: 12)
+                                RoundedRectangle(cornerRadius: Design.Radius._xl)
                                     .fill(
                                         server.value(for: store.network) == store.selectedServer
                                         ? Design.Surfaces.bgSecondary.color(colorScheme)
@@ -309,7 +309,7 @@ public struct ServerSetupView: View {
             .zBackground(Design.Utility.SuccessGreen._50)
             .cornerRadius(16)
             .overlay {
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: Design.Radius._2xl)
                     .inset(by: 0.5)
                     .stroke(Design.Utility.SuccessGreen._200.color(colorScheme), lineWidth: 1)
             }

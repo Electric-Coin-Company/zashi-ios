@@ -1,6 +1,6 @@
 //
 //  WalletStorage.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 03/10/2022.
 //
@@ -20,6 +20,13 @@ public struct WalletStorage {
         public static let zcashStoredWallet = "zcashStoredWallet"
         public static let zcashStoredAdressBookEncryptionKeys = "zcashStoredAdressBookEncryptionKeys"
         public static let zcashStoredUserMetadataEncryptionKeys = "zcashStoredMetadataEncryptionKeys"
+
+        public static let zcashStoredWalletBackupReminder = "zcashStoredWalletBackupReminder"
+        public static let zcashStoredShieldingReminder = "zcashStoredShieldingReminder"
+        public static func zcashStoredShieldingReminder(accountName: String) -> String {
+            "\(Constants.zcashStoredShieldingReminder)_\(accountName)"
+        }
+
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
         
@@ -157,6 +164,9 @@ public struct WalletStorage {
         try? deleteData(forKey: Constants.zcashStoredAdressBookEncryptionKeys)
         try? deleteData(forKey: "\(Constants.zcashStoredUserMetadataEncryptionKeys)_zashi")
         try? deleteData(forKey: "\(Constants.zcashStoredUserMetadataEncryptionKeys)_keystone")
+        try? deleteData(forKey: Constants.zcashStoredWalletBackupReminder)
+        try? deleteData(forKey: "\(Constants.zcashStoredShieldingReminder)_zashi")
+        try? deleteData(forKey: "\(Constants.zcashStoredShieldingReminder)_keystone")
     }
     
     public func importAddressBookEncryptionKeys(_ keys: AddressBookEncryptionKeys) throws {
@@ -231,6 +241,73 @@ public struct WalletStorage {
         return wallet
     }
     
+    // MARK: - Remind Me
+    
+    public func importWalletBackupReminder(_ reminder: ReminedMeTimestamp) throws {
+        guard let data = try? encode(object: reminder) else {
+            throw KeychainError.encoding
+        }
+
+        do {
+            try setData(data, forKey: Constants.zcashStoredWalletBackupReminder)
+        } catch KeychainError.duplicate {
+            try updateData(data, forKey: Constants.zcashStoredWalletBackupReminder)
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportWalletBackupReminder() -> ReminedMeTimestamp? {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredWalletBackupReminder)
+        } catch {
+            return nil
+        }
+        
+        guard let reqData else {
+            return nil
+        }
+        
+        return try? decode(json: reqData, as: ReminedMeTimestamp.self)
+    }
+
+    public func importShieldingReminder(_ reminder: ReminedMeTimestamp, accountName: String) throws {
+        guard let data = try? encode(object: reminder) else {
+            throw KeychainError.encoding
+        }
+
+        do {
+            try setData(data, forKey: Constants.zcashStoredShieldingReminder(accountName: accountName))
+        } catch KeychainError.duplicate {
+            try updateData(data, forKey: Constants.zcashStoredShieldingReminder(accountName: accountName))
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportShieldingReminder(accountName: String) -> ReminedMeTimestamp? {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredShieldingReminder(accountName: accountName))
+        } catch {
+            return nil
+        }
+        
+        guard let reqData else {
+            return nil
+        }
+        
+        return try? decode(json: reqData, as: ReminedMeTimestamp.self)
+    }
+    
+    public func resetShieldingReminder(accountName: String) {
+        try? deleteData(forKey: Constants.zcashStoredShieldingReminder(accountName: accountName))
+
+    }
+
     // MARK: - Wallet Storage Codable & Query helpers
     
     public func decode<T: Decodable>(json: Data, as clazz: T.Type) throws -> T? {
