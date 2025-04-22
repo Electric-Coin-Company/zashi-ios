@@ -21,7 +21,7 @@ extension SDKSynchronizerClient: DependencyKey {
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-        
+
         let network = zcashSDKEnvironment.network
         
         #if DEBUG
@@ -51,12 +51,7 @@ extension SDKSynchronizerClient: DependencyKey {
             eventStream: { synchronizer.eventStream },
             exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
-            prepareWith: {
-                seedBytes,
-                walletBirtday,
-                walletMode,
-                name,
-                keySource in
+            prepareWith: { seedBytes, walletBirtday, walletMode, name, keySource in
                 let result = try await synchronizer.prepare(
                     with: seedBytes,
                     walletBirthday: walletBirtday,
@@ -309,10 +304,10 @@ extension SDKSynchronizerClient {
         let clearedTransactions = zcashTransactions.compactMap { rawTransaction in
             rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
         }
-
+        
         var clearedTxs: [TransactionState] = []
-
-        let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+        
+        let latestBlockHeight = try? await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
         
         for clearedTransaction in clearedTransactions {
             var hasTransparentOutputs = false

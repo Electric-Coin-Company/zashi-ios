@@ -99,7 +99,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
 //        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.10"),
-        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", revision: "16a80d2efb2fbb4921a8c6be528e6a8644d4a6d8"),
+        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", revision: "1a2db6b167614fca4161f94ac1cb41cae976222f"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),

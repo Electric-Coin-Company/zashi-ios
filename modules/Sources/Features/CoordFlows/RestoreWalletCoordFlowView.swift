@@ -57,9 +57,16 @@ public struct RestoreWalletCoordFlowView: View {
                                     ForEach(0..<3, id: \.self) { i in
                                         HStack(spacing: 0) {
                                             Text("\(j * 3 + i + 1)")
-                                                .zFont(.medium, size: 14, style: Design.Text.primary)
+                                                .zFont(.medium, size: 14, style: Design.Tags.tcCountFg)
+                                                .frame(minWidth: 12)
+                                                .padding(.vertical, 2)
+                                                .padding(.horizontal, 4)
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: Design.Radius._lg)
+                                                        .fill(Design.Tags.tcCountBg.color(colorScheme))
+                                                }
                                                 .padding(.trailing, 4)
-                                            
+
                                             TextField("", text: $store.words[j * 3 + i])
                                                 .zFont(size: 16, style: Design.Text.primary)
                                                 .disableAutocorrection(true)
@@ -136,6 +143,12 @@ public struct RestoreWalletCoordFlowView: View {
                         focusedField = .field(nextIndex)
                     }
                 }
+                .onChange(of: store.isKeyboardVisible) { value in
+                    if keyboardVisible && !value {
+                        keyboardVisible = value
+                        focusedField = nil
+                    }
+                }
                 .applyScreenBackground()
                 .overlay(
                     VStack(spacing: 0) {
@@ -176,7 +189,6 @@ public struct RestoreWalletCoordFlowView: View {
                                 )
                             )
                             .frame(height: 38)
-                            //.clipped()
 
                             Spacer()
                             
@@ -186,7 +198,6 @@ public struct RestoreWalletCoordFlowView: View {
                                 Text(L10n.General.done.uppercased())
                                     .zFont(.regular, size: 14, style: Design.Text.primary)
                             }
-//                            .padding(.bottom, 4)
                             .padding(.trailing, 24)
                             .padding(.leading, 4)
                         }
@@ -196,7 +207,6 @@ public struct RestoreWalletCoordFlowView: View {
                         .opacity(keyboardVisible ? 1 : 0)
                     }
                 )
-//                .navigationBarHidden(true)
             } destination: { store in
                 switch store.case {
                 case let .estimateBirthdaysDate(store):
@@ -220,7 +230,7 @@ public struct RestoreWalletCoordFlowView: View {
                             .padding(8)
                     }
             )
-            .zashiSheet(isPresented: $store.isHelpSheetPreseted) {
+            .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
             }
@@ -234,11 +244,13 @@ public struct RestoreWalletCoordFlowView: View {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
             withAnimation {
                 keyboardVisible = true
+                store.send(.updateKeyboardFlag(true))
             }
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
             withAnimation {
                 keyboardVisible = false
+                store.send(.updateKeyboardFlag(false))
             }
         }
     }

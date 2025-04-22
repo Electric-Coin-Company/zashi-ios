@@ -123,6 +123,17 @@ public enum Design {
         }
     }
 
+    public enum Tags: Colorable {
+        case tcDefaultFg
+        case tcHoverBg
+        case tcHoverFg
+        case tcCountBg
+        case tcCountFg
+        case surfaceIndicator
+        case surfacePrimary
+        case surfaceStroke
+    }
+    
     public enum Inputs {
         public enum Default: Colorable {
             case bg
@@ -511,6 +522,21 @@ public extension Design.Btns.Ghost {
         case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        }
+    }
+}
+
+public extension Design.Tags {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .tcDefaultFg: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        case .tcHoverBg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .tcHoverFg: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .tcCountBg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
+        case .tcCountFg: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
+        case .surfaceIndicator: return Design.col(Asset.Colors.ZDesign.successGreen600.color, Asset.Colors.ZDesign.successGreen500.color, colorScheme)
+        case .surfacePrimary: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .surfaceStroke: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         }
     }
 }

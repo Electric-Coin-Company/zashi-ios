@@ -195,16 +195,21 @@ extension Root {
                 }
                 
             case .initialization(.registerForSynchronizersUpdate):
-                return .merge(
-                    .publisher {
-                        sdkSynchronizer.stateStream()
-                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .map { $0.redacted }
-                            .map(Root.Action.synchronizerStateChanged)
-                    }
-                    .cancellable(id: CancelStateId, cancelInFlight: true),
-                    .send(.home(.smartBanner(.evaluatePriority1)))
-                )
+                let stateStreamEffect = Effect.publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { $0.redacted }
+                        .map(Root.Action.synchronizerStateChanged)
+                }
+                .cancellable(id: CancelStateId, cancelInFlight: true)
+                if state.bgTask != nil {
+                    return stateStreamEffect
+                } else {
+                    return .merge(
+                        stateStreamEffect,
+                        .send(.home(.smartBanner(.evaluatePriority1)))
+                    )
+                }
 
             case .initialization(.checkWalletConfig):
                 return .publisher {

@@ -91,7 +91,7 @@ public struct RecoveryPhraseDisplayView: View {
             .onAppear { store.send(.onAppear) }
             .alert($store.scope(state: \.alert, action: \.alert))
             .zashiBack()
-            .zashiSheet(isPresented: $store.isHelpSheetPreseted) {
+            .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
             }

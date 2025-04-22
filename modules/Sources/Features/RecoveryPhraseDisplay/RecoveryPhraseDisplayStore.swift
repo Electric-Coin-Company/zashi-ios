@@ -22,7 +22,7 @@ public struct RecoveryPhraseDisplay {
         public var birthday: Birthday?
         public var birthdayValue: String?
         public var isBirthdayHintVisible = false
-        public var isHelpSheetPreseted = false
+        public var isHelpSheetPresented = false
         public var isRecoveryPhraseHidden = true
         public var isWalletBackup = false
         public var phrase: RecoveryPhrase?
@@ -138,7 +138,7 @@ public struct RecoveryPhraseDisplay {
                 return .none
                 
             case .helpSheetRequested:
-                state.isHelpSheetPreseted.toggle()
+                state.isHelpSheetPresented.toggle()
                 return .none
                 
             case .seedSavedTapped:

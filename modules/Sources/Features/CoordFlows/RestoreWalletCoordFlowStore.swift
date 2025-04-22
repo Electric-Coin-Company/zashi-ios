@@ -29,7 +29,8 @@ public struct RestoreWalletCoordFlow {
     
     @ObservableState
     public struct State {
-        public var isHelpSheetPreseted = false
+        public var isHelpSheetPresented = false
+        public var isKeyboardVisible = false
         public var isValidSeed = false
         public var nextIndex: Int?
         public var path = StackState<Path.State>()
@@ -54,6 +55,7 @@ public struct RestoreWalletCoordFlow {
         case successfullyRecovered
         case suggestedWordTapped(String)
         case suggestionsRequested(Int)
+        case updateKeyboardFlag(Bool)
         #if DEBUG
         case debugPasteSeed
         #endif
@@ -91,6 +93,7 @@ public struct RestoreWalletCoordFlow {
                 
             case .selectedIndex(let index):
                 state.selectedIndex = index
+                state.nextIndex = state.selectedIndex
                 if let index {
                     return .send(.suggestionsRequested(index))
                 }
@@ -109,23 +112,37 @@ public struct RestoreWalletCoordFlow {
             case .suggestedWordTapped(let word):
                 if let index = state.selectedIndex {
                     state.words[index] = word
-                    state.prevWords = state.words
-                    state.nextIndex = index + 1 < 24 ? index + 1 : 0
+                    if !state.isValidSeed && state.selectedIndex != 23 {
+                        state.prevWords = state.words
+                        state.nextIndex = index + 1 < 24 ? index + 1 : 0
+                    }
                     return .send(.evaluateSeedValidity)
                 }
                 return .none
                 
             case .helpSheetRequested:
-                state.isHelpSheetPreseted.toggle()
+                state.isHelpSheetPresented.toggle()
                 return .none
 
             case .evaluateSeedValidity:
                 do {
                     try mnemonic.isValid(state.words.joined(separator: " "))
                     state.isValidSeed = true
+                    state.isKeyboardVisible = false
                 } catch {
                     state.isValidSeed = false
+                    if let index = state.selectedIndex {
+                        let prefix = state.words[index]
+                        if let first = state.suggestedWords.first, first == prefix && !state.isValidSeed {
+                            state.prevWords = state.words
+                            state.nextIndex = index + 1 < 24 ? index + 1 : 0
+                        }
+                    }
                 }
+                return .none
+                
+            case .updateKeyboardFlag(let value):
+                state.isKeyboardVisible = value
                 return .none
                 
                 #if DEBUG
@@ -133,8 +150,9 @@ public struct RestoreWalletCoordFlow {
                 do {
                     let seedToPaste = pasteboard.getString()?.data ?? ""
                     try mnemonic.isValid(seedToPaste)
-                    state.words = seedToPaste.components(separatedBy: " ")
                     state.isValidSeed = true
+                    state.isKeyboardVisible = false
+                    state.words = seedToPaste.components(separatedBy: " ")
                 } catch {
                     state.isValidSeed = false
                 }

@@ -22,7 +22,7 @@ public struct WalletBackupCoordFlow {
     
     @ObservableState
     public struct State {
-        public var isHelpSheetPreseted = false
+        public var isHelpSheetPresented = false
         public var path = StackState<Path.State>()
         public var recoveryPhraseDisplayState = RecoveryPhraseDisplay.State.initial
 
@@ -50,7 +50,7 @@ public struct WalletBackupCoordFlow {
         Reduce { state, action in
             switch action {
             case .helpSheetRequested:
-                state.isHelpSheetPreseted.toggle()
+                state.isHelpSheetPresented.toggle()
                 return .none
                 
             default: return .none

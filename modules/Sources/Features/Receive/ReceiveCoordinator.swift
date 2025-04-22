@@ -45,11 +45,13 @@ extension Receive {
                 // MARK: - Request Zec
 
             case .path(.element(id: _, action: .requestZec(.requestTapped))):
+                for element in state.path {
+                    if case .requestZec(let requestZecState) = element {
+                        state.requestZecState.memoState = requestZecState.memoState
+                        break
+                    }
+                }
                 state.path.append(.requestZecSummary(state.requestZecState))
-                return .none
-
-            case .path(.element(id: _, action: .requestZec(.onDisappearMemoStep(let memoText)))):
-                state.memo = memoText
                 return .none
 
             case .path(.element(id: _, action: .requestZecSummary(.cancelRequestTapped))):

@@ -16,7 +16,7 @@ extension NetworkMonitorClient: DependencyKey {
     public static func live() -> Self {
         let monitor = NWPathMonitor()
         let queue = DispatchQueue.global(qos: .background)
-        let subject = PassthroughSubject<Bool, Never>()
+        let subject = CurrentValueSubject<Bool, Never>(true)
 
         return NetworkMonitorClient(
             networkMonitorStream: {

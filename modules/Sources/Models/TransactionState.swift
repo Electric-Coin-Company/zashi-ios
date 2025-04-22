@@ -271,7 +271,7 @@ extension TransactionState {
         transaction: ZcashTransaction.Overview,
         memos: [Memo]? = nil,
         hasTransparentOutputs: Bool = false,
-        latestBlockHeight: BlockHeight
+        latestBlockHeight: BlockHeight?
     ) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
@@ -293,10 +293,18 @@ extension TransactionState {
         // state of the transaction. SDK knows the latestBlockHeight so ideally ZcashTransaction.Overview
         // already knows and provides isPending as a bool value.
         // Once SDK's #1313 is done, adopt the SDK and remove latestBlockHeight here.
-        let isPending = transaction.isPending(currentHeight: latestBlockHeight)
+        var isPending = false
+        var isExpired = false
+
+        if let latestBlockHeight {
+            isPending = transaction.isPending(currentHeight: latestBlockHeight)
+            if let expiryHeight = transaction.expiryHeight, expiryHeight <= latestBlockHeight && minedHeight == nil {
+                isExpired = true
+            }
+        }
 
         // failed check
-        if let expiryHeight = transaction.expiryHeight, expiryHeight <= latestBlockHeight && minedHeight == nil {
+        if isExpired {
             status = .failed
         } else if isShieldingTransaction {
             status = isPending ? .shielding : .shielded

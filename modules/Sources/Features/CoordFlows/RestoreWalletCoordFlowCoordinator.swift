@@ -45,7 +45,7 @@ extension RestoreWalletCoordFlow {
                 // MARK: - Wallet Birthday
 
             case .path(.element(id: _, action: .walletBirthday(.helpSheetRequested))):
-                state.isHelpSheetPreseted.toggle()
+                state.isHelpSheetPresented.toggle()
                 return .none
 
             case .path(.element(id: _, action: .walletBirthday(.estimateHeightTapped))):
@@ -61,7 +61,7 @@ extension RestoreWalletCoordFlow {
                 return .none
                 
             case .path(.element(id: _, action: .estimateBirthdaysDate(.helpSheetRequested))):
-                state.isHelpSheetPreseted.toggle()
+                state.isHelpSheetPresented.toggle()
                 return .none
 
             case .path(.element(id: _, action: .estimateBirthdaysDate(.estimateHeightReady))):
