@@ -53,6 +53,7 @@ public struct SmartBanner {
         public var CancelStateStreamId = UUID()
         public var CancelShieldingProcessorId = UUID()
 
+        public var areFundsSpendable = false
         public var delay = 1.5
         public var isOpen = false
         public var isShielding = false
@@ -71,6 +72,10 @@ public struct SmartBanner {
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transparentBalance = Zatoshi(0)
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
+
+        public var feeStr: String {
+            Zatoshi(100_000).decimalString()
+        }
 
         public var syncingPercentage: Double {
             lastKnownSyncPercentage >= 0 ? lastKnownSyncPercentage * 0.999 : 0
@@ -309,6 +314,7 @@ public struct SmartBanner {
                     
                     if case let .syncing(syncProgress, areFundsSpendable) = snapshot.syncStatus {
                         state.lastKnownSyncPercentage = Double(syncProgress)
+                        state.areFundsSpendable = areFundsSpendable
                         
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)

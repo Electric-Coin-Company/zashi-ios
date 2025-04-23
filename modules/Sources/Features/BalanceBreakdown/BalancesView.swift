@@ -37,29 +37,22 @@ public struct BalancesView: View {
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
                     .padding(.top, 40)
 
-                Text(
-                    store.spendability == .everything
-                    ? L10n.Balances.everythingDone
-                    : store.isPendingInProcess
-                    ? L10n.Balances.infoPending1
-                    : L10n.Balances.shieldInfo1
-                )
-                .zFont(size: 16, style: Design.Text.tertiary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 8)
-                .multilineTextAlignment(
-                    store.spendability == .everything || !store.isShieldableBalanceAvailable
-                    ? .center
-                    : .leading
-                )
+                if store.spendability == .everything || store.isPendingInProcess {
+                    Text(
+                        store.spendability == .everything
+                        ? L10n.Balances.everythingDone
+                        : store.isPendingTransaction
+                        ? L10n.Balances.infoPending
+                        : L10n.Balances.infoSyncing
+                    )
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 8)
+                }
 
                 if store.isShieldableBalanceAvailable {
-                    Text(
-                        store.isPendingInProcess
-                        ? L10n.Balances.infoPending2
-                        : L10n.Balances.shieldInfo2
-                    )
+                    Text(L10n.Balances.infoShielding("\(L10n.General.feeShort(store.feeStr)) \(tokenName)"))
                     .zFont(size: 16, style: Design.Text.tertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)

@@ -46,4 +46,12 @@ extension Zatoshi {
 
         return formatter.string(from: decimalValue.roundedZec) ?? ""
     }
+    
+    public func roundToAvoidDustSpend() -> Zatoshi {
+        self
+//        let amountDouble = Double(amount)
+//        let roundedAmountDouble = roundl(amountDouble / 5_000) * 5_000
+//
+//        return Zatoshi(Int64(roundedAmountDouble))
+    }
 }

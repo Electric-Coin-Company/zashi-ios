@@ -35,8 +35,17 @@ public struct Balances {
         public var shieldedWithPendingBalance: Zatoshi = .zero
         public var spendability: Spendability = .everything
         public var totalBalance: Zatoshi = .zero
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transparentBalance: Zatoshi
 
+        public var feeStr: String {
+            Zatoshi(100_000).decimalString()
+        }
+        
+        public var isPendingTransaction: Bool {
+            transactions.isAnythingPending()
+        }
+        
         public var isPendingInProcess: Bool {
             changePending.amount + pendingTransactions.amount > 0
         }
@@ -77,6 +86,7 @@ public struct Balances {
     @CasePathable
     public enum Action: Equatable {
         case dismissTapped
+        case everythingSpendable
         case onAppear
         case onDisappear
         case sheetHeightUpdated(CGFloat)
@@ -175,16 +185,29 @@ public struct Balances {
                 state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
                 state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
 
+                let everythingCondition = state.shieldedBalance == state.totalBalance
+                || (state.transparentBalance < zcashSDKEnvironment.shieldingThreshold && state.shieldedBalance == state.totalBalance - state.transparentBalance)
+
                 // spendability
                 if state.isProcessingZeroAvailableBalance {
                     state.spendability = .nothing
-                } else if state.shieldedBalance == state.totalBalance {
+                } else if everythingCondition {
                     state.spendability = .everything
+                    return .send(.everythingSpendable)
                 } else {
                     state.spendability = .something
                 }
                 return .none
+                
+            case .everythingSpendable:
+                return .none
             }
         }
+    }
+}
+
+extension IdentifiedArrayOf<TransactionState> {
+    func isAnythingPending() -> Bool {
+        return contains(where: \.isPending)
     }
 }

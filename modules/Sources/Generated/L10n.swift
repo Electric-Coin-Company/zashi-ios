@@ -134,19 +134,19 @@ public enum L10n {
     /// All your funds are shielded and spendable.
     public static let everythingDone = L10n.tr("Localizable", "balances.everythingDone", fallback: "All your funds are shielded and spendable.")
     /// Pending transactions are getting mined and confirmed.
-    public static let infoPending1 = L10n.tr("Localizable", "balances.infoPending1", fallback: "Pending transactions are getting mined and confirmed.")
-    /// Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
-    public static let infoPending2 = L10n.tr("Localizable", "balances.infoPending2", fallback: "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
+    public static let infoPending = L10n.tr("Localizable", "balances.infoPending", fallback: "Pending transactions are getting mined and confirmed.")
+    /// Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)
+    public static func infoShielding(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "balances.infoShielding", String(describing: p1), fallback: "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
+    }
+    /// Your wallet is getting updated.
+    public static let infoSyncing = L10n.tr("Localizable", "balances.infoSyncing", fallback: "Your wallet is getting updated.")
     /// Pending
     public static let pending = L10n.tr("Localizable", "balances.pending", fallback: "Pending")
     /// The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.
     public static let restoringWalletWarning = L10n.tr("Localizable", "balances.restoringWalletWarning", fallback: "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.")
     /// Shield and consolidate funds
     public static let shieldButtonTitle = L10n.tr("Localizable", "balances.shieldButtonTitle", fallback: "Shield and consolidate funds")
-    /// Shield your transparent balance to make your funds spendable and private.
-    public static let shieldInfo1 = L10n.tr("Localizable", "balances.shieldInfo1", fallback: "Shield your transparent balance to make your funds spendable and private.")
-    /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
-    public static let shieldInfo2 = L10n.tr("Localizable", "balances.shieldInfo2", fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
     /// Shielding
     public static let shieldingInProgress = L10n.tr("Localizable", "balances.shieldingInProgress", fallback: "Shielding")
     /// Shielded (Spendable)
@@ -1192,6 +1192,8 @@ public enum L10n {
       public enum Restore {
         /// Keep Zashi open on active phone screen
         public static let info = L10n.tr("Localizable", "smartBanner.content.restore.info", fallback: "Keep Zashi open on active phone screen")
+        /// Your funds are ready to be used now
+        public static let infoSpendable = L10n.tr("Localizable", "smartBanner.content.restore.infoSpendable", fallback: "Your funds are ready to be used now")
         /// Restoring Wallet • %@ Complete
         public static func title(_ p1: Any) -> String {
           return L10n.tr("Localizable", "smartBanner.content.restore.title", String(describing: p1), fallback: "Restoring Wallet • %@ Complete")
@@ -1270,8 +1272,10 @@ public enum L10n {
       public enum Shield {
         /// To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the "Shield" button below to make your transparent funds spendable and your total Zashi balance private. 
         public static let info1 = L10n.tr("Localizable", "smartBanner.help.shield.info1", fallback: "To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the \"Shield\" button below to make your transparent funds spendable and your total Zashi balance private. ")
-        /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)
-        public static let info2 = L10n.tr("Localizable", "smartBanner.help.shield.info2", fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)")
+        /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)
+        public static func info2(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "smartBanner.help.shield.info2", String(describing: p1), fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
+        }
         /// Always Shield Transparent Funds
         public static let title = L10n.tr("Localizable", "smartBanner.help.shield.title", fallback: "Always Shield Transparent Funds")
         /// Transparent

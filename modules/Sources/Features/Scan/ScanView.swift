@@ -19,9 +19,11 @@ public struct ScanView: View {
     @State private var showSheet = false
     
     let store: StoreOf<Scan>
+    let popoverRatio: CGFloat
     
-    public init(store: StoreOf<Scan>) {
+    public init(store: StoreOf<Scan>, popoverRatio: CGFloat = 1.0) {
         self.store = store
+        self.popoverRatio = popoverRatio
     }
     
     public var body: some View {
@@ -32,7 +34,7 @@ public struct ScanView: View {
                 } else {
                     GeometryReader { proxy in
                         QRCodeScanView(
-                            rectOfInterest: ScanView.normalizedRectsOfInterest().real,
+                            rectOfInterest: ScanView.normalizedRectsOfInterest(popoverRatio).real,
                             onQRScanningDidFail: { store.send(.scanFailed(.invalidQRCode)) },
                             onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
                         )
@@ -138,8 +140,8 @@ public struct ScanView: View {
     }
     
     private func torchButton(size: CGSize) -> some View {
-        let topLeft = ScanView.rectOfInterest(size).origin
-        let frameSize = ScanView.frameSize(size)
+        let topLeft = ScanView.rectOfInterest(size, popoverRatio).origin
+        let frameSize = ScanView.frameSize(size, popoverRatio)
 
         return WithPerceptionTracking {
             Button {
@@ -171,8 +173,8 @@ public struct ScanView: View {
     }
     
     private func libraryButton(size: CGSize) -> some View {
-        let topLeft = ScanView.rectOfInterest(size).origin
-        let frameSize = ScanView.frameSize(size)
+        let topLeft = ScanView.rectOfInterest(size, popoverRatio).origin
+        let frameSize = ScanView.frameSize(size, popoverRatio)
 
         return WithPerceptionTracking {
             Button {
@@ -194,8 +196,8 @@ public struct ScanView: View {
     }
     
     private func progress(size: CGSize, progress: Int) -> some View {
-        let topLeft = ScanView.rectOfInterest(size).origin
-        let frameSize = ScanView.frameSize(size)
+        let topLeft = ScanView.rectOfInterest(size, popoverRatio).origin
+        let frameSize = ScanView.frameSize(size, popoverRatio)
 
         return VStack {
             Text(String(format: "%d%%", progress))
@@ -215,8 +217,8 @@ public struct ScanView: View {
 
 extension ScanView {
     func frameOfInterest(_ size: CGSize) -> some View {
-        let topLeft = ScanView.rectOfInterest(size).origin
-        let frameSize = ScanView.frameSize(size)
+        let topLeft = ScanView.rectOfInterest(size, popoverRatio).origin
+        let frameSize = ScanView.frameSize(size, popoverRatio)
         let sizeOfTheMark = 40.0
         let markShiftSize = 18.0
 
@@ -297,31 +299,31 @@ extension View {
 }
 
 extension ScanView {
-    static func frameSize(_ size: CGSize) -> CGSize {
-        let rect = normalizedRectsOfInterest().renderOnly
+    static func frameSize(_ size: CGSize, _ popoverRatio: CGFloat) -> CGSize {
+        let rect = normalizedRectsOfInterest(popoverRatio).renderOnly
         
         return CGSize(width: rect.width * size.width, height: rect.height * size.height)
     }
 
-    static func rectOfInterest(_ size: CGSize) -> CGRect {
-        let rect = normalizedRectsOfInterest().renderOnly
+    static func rectOfInterest(_ size: CGSize, _ popoverRatio: CGFloat) -> CGRect {
+        let rect = normalizedRectsOfInterest(popoverRatio).renderOnly
 
         return CGRect(
             x: size.width * rect.origin.x,
             y: size.height * rect.origin.y,
-            width: frameSize(size).width,
-            height: frameSize(size).height
+            width: frameSize(size, popoverRatio).width,
+            height: frameSize(size, popoverRatio).height
         )
     }
 
-    static func normalizedRectsOfInterest() -> (renderOnly: CGRect, real: CGRect) {
+    static func normalizedRectsOfInterest(_ popoverRatio: CGFloat) -> (renderOnly: CGRect, real: CGRect) {
         let rect = UIScreen.main.bounds
         
         let readRectSize = 0.6
 
         let topLeftX = (1.0 - readRectSize) * 0.5
         let ratio = rect.width / rect.height
-        let rectHeight = ratio * readRectSize
+        let rectHeight = ratio * readRectSize * popoverRatio
         let topLeftY = (1.0 - rectHeight) * 0.5
 
         return (

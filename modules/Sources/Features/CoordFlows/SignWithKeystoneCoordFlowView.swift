@@ -44,7 +44,7 @@ public struct SignWithKeystoneCoordFlowView: View {
                 case let .preSendingFailure(store):
                     PreSendingFailureView(store: store, tokenName: tokenName)
                 case let .scan(store):
-                    ScanView(store: store)
+                    ScanView(store: store, popoverRatio: 1.075)
                 case let .sending(store):
                     SendingView(store: store, tokenName: tokenName)
                 case let .sendResultFailure(store):

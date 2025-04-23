@@ -99,8 +99,10 @@ extension SmartBannerView {
             bulletpoint(L10n.SmartBanner.Help.Restore.point2)
                 .padding(.bottom, 32)
 
-            note(L10n.SmartBanner.Help.Restore.warning)
-                .padding(.bottom, 24)
+            if !store.areFundsSpendable {
+                note(L10n.SmartBanner.Help.Restore.warning)
+                    .padding(.bottom, 24)
+            }
 
             ZashiButton(L10n.General.ok.uppercased()) {
                 store.send(.closeSheetTapped)
@@ -235,7 +237,7 @@ extension SmartBannerView {
                 .padding(.bottom, 12)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(L10n.SmartBanner.Help.Shield.info2)
+            Text(L10n.SmartBanner.Help.Shield.info2("\(L10n.General.feeShort(store.feeStr)) \(tokenName)"))
                 .zFont(size: 16, style: Design.Text.tertiary)
                 .padding(.bottom, 32)
                 .fixedSize(horizontal: false, vertical: true)

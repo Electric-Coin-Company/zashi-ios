@@ -329,7 +329,7 @@ public struct SendForm {
                             memo = nil
                         }
 
-                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount, memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount.roundToAvoidDustSpend(), memo)
                         
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))
@@ -422,6 +422,12 @@ public struct SendForm {
                 
             case .balances(.shieldFundsTapped):
                 state.balancesBinding = false
+                return .none
+                
+            case .balances(.everythingSpendable):
+                if state.balancesBinding {
+                    state.balancesBinding = false
+                }
                 return .none
 
             case .balances:

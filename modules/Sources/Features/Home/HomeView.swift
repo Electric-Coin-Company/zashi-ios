@@ -91,7 +91,8 @@ public struct HomeView: View {
                     store: store.scope(
                         state: \.smartBannerState,
                         action: \.smartBanner
-                    )
+                    ),
+                    tokenName: tokenName
                 )
 
                 ScrollView {

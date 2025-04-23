@@ -26,9 +26,11 @@ public struct SmartBannerView: View {
     @State private var realHeight: CGFloat = 100
     @State private var isUnhidden = false
     @State private var height: CGFloat = 0
+    let tokenName: String
 
-    public init(store: StoreOf<SmartBanner>) {
+    public init(store: StoreOf<SmartBanner>, tokenName: String) {
         self.store = store
+        self.tokenName = tokenName
     }
     
     public var body: some View {

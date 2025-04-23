@@ -82,8 +82,11 @@ extension SmartBannerView {
                 Text(L10n.SmartBanner.Content.Restore.title(String(format: "%0.1f%%", store.lastKnownSyncPercentage * 100)))
                     .zFont(.medium, size: 14, color: titleStyle())
                 
-                Text(L10n.SmartBanner.Content.Restore.info)
-                    .zFont(.medium, size: 12, color: infoStyle())
+                Text(store.areFundsSpendable
+                     ? L10n.SmartBanner.Content.Restore.infoSpendable
+                     : L10n.SmartBanner.Content.Restore.info
+                )
+                .zFont(.medium, size: 12, color: infoStyle())
             }
             
             Spacer()

@@ -589,7 +589,7 @@
 
 "smartBanner.help.shield.title" = "Always Shield Transparent Funds";
 "smartBanner.help.shield.info1" = "To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the \"Shield\" button below to make your transparent funds spendable and your total Zashi balance private. ";
-"smartBanner.help.shield.info2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
+"smartBanner.help.shield.info2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)";
 "smartBanner.help.shield.transparent" = "Transparent";
 
 "smartBanner.help.remindMePhase1" = "Remind me in 2 days";
@@ -604,6 +604,7 @@
 
 "smartBanner.content.restore.title" = "Restoring Wallet • %@ Complete";
 "smartBanner.content.restore.info" = "Keep Zashi open on active phone screen";
+"smartBanner.content.restore.infoSpendable" = "Your funds are ready to be used now";
 
 "smartBanner.content.sync.title" = "Syncing • %@ Complete";
 "smartBanner.content.sync.info" = "Your wallet is getting updated";
@@ -634,10 +635,9 @@
 "balances.dismiss" = "Dismiss";
 "balances.spendableBalance.title" = "Spendable Balance";
 "balances.spendableBalance" = "Shielded (Spendable)";
-"balances.infoPending1" = "Pending transactions are getting mined and confirmed.";
-"balances.infoPending2" = "Shield your transparent ZEC to make it spendable and private. Shielding transparent funds will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
-"balances.shieldInfo1" = "Shield your transparent balance to make your funds spendable and private.";
-"balances.shieldInfo2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: .001 ZEC)";
+"balances.infoPending" = "Pending transactions are getting mined and confirmed.";
+"balances.infoSyncing" = "Your wallet is getting updated.";
+"balances.infoShielding" = "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)";
 "balances.everythingDone" = "All your funds are shielded and spendable.";
 
 "shieldFunds.error.title" = "Shielding Error";
