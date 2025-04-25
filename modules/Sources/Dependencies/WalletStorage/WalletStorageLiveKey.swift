@@ -65,6 +65,18 @@ extension WalletStorageClient: DependencyKey {
             },
             resetShieldingReminder: { accountName in
                 walletStorage.resetShieldingReminder(accountName: accountName)
+            },
+            importWalletBackupAcknowledged: { acknowledged in
+                try walletStorage.importWalletBackupAcknowledged(acknowledged)
+            },
+            exportWalletBackupAcknowledged: {
+                walletStorage.exportWalletBackupAcknowledged()
+            },
+            importShieldingAcknowledged: { acknowledged in
+                try walletStorage.importShieldingAcknowledged(acknowledged)
+            },
+            exportShieldingAcknowledged: {
+                walletStorage.exportShieldingAcknowledged()
             }
         )
     }

@@ -205,6 +205,15 @@ extension SmartBannerView {
                 .padding(.bottom, 32)
                 .fixedSize(horizontal: false, vertical: true)
 
+            if !store.isWalletBackupAcknowledgedAtKeychain {
+                ZashiToggle(
+                    isOn: $store.isWalletBackupAcknowledged,
+                    label: L10n.SmartBanner.Help.Backup.acknowledge
+                )
+                .padding(.bottom, 24)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
             ZashiButton(
                 store.remindMeWalletBackupText,
                 type: .ghost
@@ -212,6 +221,7 @@ extension SmartBannerView {
                 store.send(.remindMeLaterTapped(.priority6))
             }
             .padding(.bottom, 12)
+            .disabled(!store.isWalletBackupAcknowledged)
 
             ZashiButton(L10n.SmartBanner.Content.Backup.button) {
                 store.send(.walletBackupTapped)
@@ -277,11 +287,19 @@ extension SmartBannerView {
             }
             .padding(.bottom, 24)
 
+            
+            ZashiToggle(
+                isOn: $store.isShieldingAcknowledged,
+                label: L10n.SmartBanner.Help.Backup.acknowledge
+            )
+            .padding(.bottom, 24)
+            .fixedSize(horizontal: false, vertical: true)
+
             ZashiButton(
-                store.remindMeShieldedText,
+                L10n.SmartBanner.Help.Shield.notNow,
                 type: .ghost
             ) {
-                store.send(.remindMeLaterTapped(.priority7))
+                store.send(.closeSheetTapped)
             }
             .padding(.bottom, 12)
 

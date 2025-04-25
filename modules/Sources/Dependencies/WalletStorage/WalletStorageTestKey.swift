@@ -24,7 +24,11 @@ extension WalletStorageClient: TestDependencyKey {
         exportWalletBackupReminder: unimplemented("\(Self.self).exportWalletBackupReminder", placeholder: nil),
         importShieldingReminder: unimplemented("\(Self.self).importShieldingReminder"),
         exportShieldingReminder: unimplemented("\(Self.self).exportShieldingReminder", placeholder: nil),
-        resetShieldingReminder: unimplemented("\(Self.self).resetShieldingReminder")
+        resetShieldingReminder: unimplemented("\(Self.self).resetShieldingReminder"),
+        importWalletBackupAcknowledged: unimplemented("\(Self.self).importWalletBackupAcknowledged"),
+        exportWalletBackupAcknowledged: unimplemented("\(Self.self).exportWalletBackupAcknowledged", placeholder: false),
+        importShieldingAcknowledged: unimplemented("\(Self.self).importShieldingAcknowledged"),
+        exportShieldingAcknowledged: unimplemented("\(Self.self).exportShieldingAcknowledged", placeholder: false)
     )
 }
 
@@ -44,6 +48,10 @@ extension WalletStorageClient {
         exportWalletBackupReminder: { nil },
         importShieldingReminder: { _, _ in },
         exportShieldingReminder: { _ in nil },
-        resetShieldingReminder: { _ in }
+        resetShieldingReminder: { _ in },
+        importWalletBackupAcknowledged: { _ in },
+        exportWalletBackupAcknowledged: { false },
+        importShieldingAcknowledged: { _ in },
+        exportShieldingAcknowledged: { false }
     )
 }

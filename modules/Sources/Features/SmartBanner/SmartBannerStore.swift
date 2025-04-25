@@ -57,7 +57,11 @@ public struct SmartBanner {
         public var delay = 1.5
         public var isOpen = false
         public var isShielding = false
+        public var isShieldingAcknowledged = false
+        public var isShieldingAcknowledgedAtKeychain = false
         public var isSmartBannerSheetPresented = false
+        public var isWalletBackupAcknowledged = false
+        public var isWalletBackupAcknowledgedAtKeychain = false
         public var lastKnownErrorMessage = ""
         public var lastKnownSyncPercentage = -1.0
         public var messageToBeShared: String?
@@ -155,6 +159,10 @@ public struct SmartBanner {
             switch action {
             case .onAppear:
                 state.tokenName = zcashSDKEnvironment.tokenName
+                state.isWalletBackupAcknowledgedAtKeychain = walletStorage.exportWalletBackupAcknowledged()
+                state.isWalletBackupAcknowledged = state.isWalletBackupAcknowledgedAtKeychain
+                state.isShieldingAcknowledgedAtKeychain = walletStorage.exportShieldingAcknowledged()
+                state.isShieldingAcknowledged = state.isShieldingAcknowledgedAtKeychain
                 return .merge(
                     .publisher {
                         networkMonitor.networkMonitorStream()
@@ -182,7 +190,11 @@ public struct SmartBanner {
                     .cancel(id: state.CancelStateStreamId),
                     .cancel(id: state.CancelShieldingProcessorId)
                 )
-                
+
+            case .binding(\.isShieldingAcknowledged):
+                try? walletStorage.importShieldingAcknowledged(state.isShieldingAcknowledged)
+                return .none
+
             case .binding:
                 return .none
                 
@@ -252,7 +264,12 @@ public struct SmartBanner {
                 return .none
                 
             case .smartBannerContentTapped:
-                if state.priorityContent == .priority8 {
+                if state.priorityContent == .priority7 {
+                    state.isShieldingAcknowledgedAtKeychain = walletStorage.exportShieldingAcknowledged()
+                    if state.isShieldingAcknowledgedAtKeychain {
+                        return .none
+                    }
+                } else if state.priorityContent == .priority8 {
                     return .send(.currencyConversionScreenRequested)
                 }
                 state.isSmartBannerSheetPresented = true
@@ -263,6 +280,10 @@ public struct SmartBanner {
                 return .none
 
             case .remindMeLaterTapped(let priority):
+                if priority == .priority6 {
+                    try? walletStorage.importWalletBackupAcknowledged(state.isWalletBackupAcknowledged)
+                    state.isWalletBackupAcknowledgedAtKeychain = walletStorage.exportWalletBackupAcknowledged()
+                }
                 state.isSmartBannerSheetPresented = false
                 state.priorityContentRequested = nil
                 let now = Date().timeIntervalSince1970

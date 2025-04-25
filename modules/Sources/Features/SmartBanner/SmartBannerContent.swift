@@ -181,7 +181,11 @@ extension SmartBannerView {
                 type: .ghost,
                 infinityWidth: false
             ) {
-                store.send(.shieldFundsTapped)
+                if store.isShieldingAcknowledgedAtKeychain {
+                    store.send(.shieldFundsTapped)
+                } else {
+                    store.send(.smartBannerContentTapped)
+                }
             }
             .disabled(store.isShielding)
         }

@@ -586,11 +586,15 @@
 "smartBanner.help.backup.point2" = "Wallet Birthday Height (block height at which your wallet was created)";
 "smartBanner.help.backup.info3" = "In case you lose access to the app or to your device, knowing the Secret Recovery Phrase is the only way to recover your funds. We cannot see it and cannot help you recover it.";
 "smartBanner.help.backup.info4" = "Anyone with access to your Secret Recovery Phrase will have full control of your wallet, so keep it secure and never show it to anyone.";
+"smartBanner.help.backup.acknowledge" = "I read and understand the risks of not backing up my wallet.";
 
 "smartBanner.help.shield.title" = "Always Shield Transparent Funds";
 "smartBanner.help.shield.info1" = "To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the \"Shield\" button below to make your transparent funds spendable and your total Zashi balance private. ";
 "smartBanner.help.shield.info2" = "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)";
 "smartBanner.help.shield.transparent" = "Transparent";
+
+"smartBanner.help.shield.notNow" = "Not now";
+"smartBanner.help.shield.doNotShowAgain" = "Do not show this message again";
 
 "smartBanner.help.remindMePhase1" = "Remind me in 2 days";
 "smartBanner.help.remindMePhase2" = "Remind me in 2 weeks";

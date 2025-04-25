@@ -91,4 +91,12 @@ public struct WalletStorageClient {
 
     /// Reset  transparent funds reminder
     public var resetShieldingReminder: (String) -> Void
+    
+    /// Wallet backup acknowledge flag
+    public var importWalletBackupAcknowledged: (Bool) throws -> Void
+    public var exportWalletBackupAcknowledged: () -> Bool = { false}
+
+    /// Shielding acknowledge flag
+    public var importShieldingAcknowledged: (Bool) throws -> Void
+    public var exportShieldingAcknowledged: () -> Bool = { false}
 }

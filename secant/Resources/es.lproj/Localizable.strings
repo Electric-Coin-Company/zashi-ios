@@ -586,11 +586,15 @@
 "smartBanner.help.backup.point2" = "Altura de Cumpleaños de la Billetera (altura de bloque en la que se creó tu billetera)";
 "smartBanner.help.backup.info3" = "En caso de que pierdas acceso a la aplicación o a tu dispositivo, conocer la Frase de Recuperación Secreta es la única forma de recuperar tus fondos. No podemos verla ni podemos ayudarte a recuperarla.";
 "smartBanner.help.backup.info4" = "Cualquiera que tenga acceso a tu Frase de Recuperación Secreta tendrá control total de tu billetera, así que mantenla segura y nunca la muestres a nadie.";
+"smartBanner.help.backup.acknowledge" = "He leído y entiendo los riesgos de no respaldar mi billetera.";
 
 "smartBanner.help.shield.title" = "Protege Siempre los Fondos Transparentes";
 "smartBanner.help.shield.info1" = "Para proteger la privacidad del usuario, Zashi no admite el gasto de ZEC transparente. Toca el botón \"Proteger\" abajo para hacer que tus fondos transparentes sean gastables y tu saldo total en Zashi sea privado.";
 "smartBanner.help.shield.info2" = "Esto creará una transacción de protección en la billetera, consolidando tus fondos transparentes y protegidos. (Tarifa típica: %@)";
 "smartBanner.help.shield.transparent" = "Transparente";
+
+"smartBanner.help.shield.notNow" = "Ahora no";
+"smartBanner.help.shield.doNotShowAgain" = "No mostrar este mensaje de nuevo";
 
 "smartBanner.help.remindMePhase1" = "Recuérdame en 2 días";
 "smartBanner.help.remindMePhase2" = "Recuérdame en 2 semanas";

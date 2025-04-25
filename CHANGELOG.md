@@ -7,7 +7,12 @@ directly impact users rather than highlighting other crucial architectural updat
 ## [Unreleased]
 
 ### Changed
-- Restore wallet flow has been fully redesigned. New option to estimate Birthday of the wallet based on a date has been implemented.
+- Zashi 2.0 is here, and it is packed with UI and UX improvements!
+- Redesigned Home Screen and streamlined app navigation.
+- Brand new Wallet Status Widget which helps you navigate Zashi with ease and get more info upon tap.
+- Available Balance and Balances tab have been redesigned into a new Spendable component on the Send screen. Get more information upon tap, or shield your transparent funds.
+- Restoring has never been easier with the redesigned UI/UX. We added a new feature that helps you estimate Wallet Birthday Height and recovery phrase BIP 39 library hints for the secret recovery phrase entry.
+- Create Wallet with one tap! New Wallet Backup flow has been moved to whenever your wallet receives its first funds.
 
 ## 1.5.3 build 1 (2025-04-14)
 

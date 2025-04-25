@@ -1228,6 +1228,8 @@ public enum L10n {
       /// Remind me next month
       public static let remindMePhase3 = L10n.tr("Localizable", "smartBanner.help.remindMePhase3", fallback: "Remind me next month")
       public enum Backup {
+        /// I read and understand the risks of not backing up my wallet.
+        public static let acknowledge = L10n.tr("Localizable", "smartBanner.help.backup.acknowledge", fallback: "I read and understand the risks of not backing up my wallet.")
         /// Prevent potential loss of funds by securely backing up your wallet.
         public static let info1 = L10n.tr("Localizable", "smartBanner.help.backup.info1", fallback: "Prevent potential loss of funds by securely backing up your wallet.")
         /// Back up access to your funds by backing up:
@@ -1262,12 +1264,16 @@ public enum L10n {
         public static let warning = L10n.tr("Localizable", "smartBanner.help.restore.warning", fallback: "Funds cannot be spent until your wallet is restored.")
       }
       public enum Shield {
+        /// Do not show this message again
+        public static let doNotShowAgain = L10n.tr("Localizable", "smartBanner.help.shield.doNotShowAgain", fallback: "Do not show this message again")
         /// To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the "Shield" button below to make your transparent funds spendable and your total Zashi balance private. 
         public static let info1 = L10n.tr("Localizable", "smartBanner.help.shield.info1", fallback: "To protect user privacy, Zashi doesn't support spending transparent ZEC. Tap the \"Shield\" button below to make your transparent funds spendable and your total Zashi balance private. ")
         /// This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)
         public static func info2(_ p1: Any) -> String {
           return L10n.tr("Localizable", "smartBanner.help.shield.info2", String(describing: p1), fallback: "This will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
         }
+        /// Not now
+        public static let notNow = L10n.tr("Localizable", "smartBanner.help.shield.notNow", fallback: "Not now")
         /// Always Shield Transparent Funds
         public static let title = L10n.tr("Localizable", "smartBanner.help.shield.title", fallback: "Always Shield Transparent Funds")
         /// Transparent
