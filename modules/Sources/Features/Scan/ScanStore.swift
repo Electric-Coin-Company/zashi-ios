@@ -76,6 +76,7 @@ public struct Scan {
 
     public enum Action: Equatable {
         case cancelTapped
+        case checkCameraPermission
         case clearInfo
         case libraryImage(UIImage?)
         case onAppear
@@ -108,15 +109,25 @@ public struct Scan {
                 state.info = ""
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
-                if !captureDevice.isAuthorized() {
-                    state.isCameraEnabled = false
-                    state.info = L10n.Scan.cameraSettings
-                }
-                return .none
-                
+                return .send(.checkCameraPermission)
+
             case .onDisappear:
                 return .cancel(id: state.cancelId)
                 
+            case .checkCameraPermission:
+                if !captureDevice.isAuthorized() {
+                    state.isCameraEnabled = false
+                    state.info = L10n.Scan.cameraSettings
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(1))
+                        await send(.checkCameraPermission)
+                    }
+                } else {
+                    state.isCameraEnabled = true
+                    state.info = ""
+                }
+                return .none
+
             case .foundAddress:
                 state.isAnythingFound = true
                 return .none

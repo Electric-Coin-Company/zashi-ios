@@ -41,9 +41,6 @@ public struct HomeView: View {
                     shortened: true
                 )
                 .padding(.top, 1)
-                .onTapGesture {
-                    store.send(.debug)
-                }
 
                 HStack(spacing: 8) {
                     button(

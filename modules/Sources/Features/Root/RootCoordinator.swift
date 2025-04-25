@@ -89,6 +89,7 @@ extension Root {
             case .home(.sendTapped):
                 state.sendCoordFlowState = .initial
                 state.path = .sendCoordFlow
+                exchangeRate.refreshExchangeRateUSD()
                 return .none
 
             case .home(.scanTapped):

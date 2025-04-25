@@ -43,6 +43,7 @@ extension SmartBannerView {
             Text(L10n.SmartBanner.Help.Diconnected.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.bottom, 4)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.Diconnected.info)
                 .zFont(size: 16, style: Design.Text.tertiary)
@@ -89,6 +90,7 @@ extension SmartBannerView {
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.top, 32)
                 .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.Restore.info)
                 .zFont(size: 16, style: Design.Text.tertiary)
@@ -117,6 +119,7 @@ extension SmartBannerView {
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.top, 32)
                 .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.Sync.info)
                 .zFont(size: 16, style: Design.Text.tertiary)
@@ -146,6 +149,7 @@ extension SmartBannerView {
             Text(L10n.SmartBanner.Help.UpdatingBalance.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.bottom, 4)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.UpdatingBalance.info)
                 .zFont(size: 16, style: Design.Text.tertiary)
@@ -175,6 +179,7 @@ extension SmartBannerView {
             Text(L10n.SmartBanner.Help.Backup.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.bottom, 4)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.Backup.info1)
                 .zFont(size: 16, style: Design.Text.tertiary)
@@ -231,6 +236,7 @@ extension SmartBannerView {
             Text(L10n.SmartBanner.Help.Shield.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.bottom, 4)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(L10n.SmartBanner.Help.Shield.info1)
                 .zFont(size: 16, style: Design.Text.tertiary)

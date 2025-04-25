@@ -120,6 +120,20 @@ extension Settings {
                 }
                 return .none
                 
+            case .path(.element(id: _, action: .scan(.foundAddress(let address)))):
+                for element in state.path {
+                    if element.is(\.addressBook) {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = address.data
+                        addressBookState.isValidZcashAddress = true
+                        addressBookState.isNameFocused = true
+                        state.path.append(.addressBookContact(addressBookState))
+                        audioServices.systemSoundVibrate()
+                        return .none
+                    }
+                }
+                return .none
+                
             case .path(.element(id: _, action: .scan(.cancelTapped))):
                 let _ = state.path.popLast()
                 return .none

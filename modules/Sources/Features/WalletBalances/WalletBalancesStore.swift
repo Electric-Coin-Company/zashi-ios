@@ -23,6 +23,7 @@ public struct WalletBalances {
 
     @ObservableState
     public struct State: Equatable {
+        public var autoShieldingThreshold: Zatoshi = .zero
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
@@ -42,7 +43,7 @@ public struct WalletBalances {
         }
         
         public var isProcessingZeroAvailableBalance: Bool {
-            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
+            if shieldedBalance.amount == 0 && transparentBalance.amount > autoShieldingThreshold.amount {
                 return false
             }
             
@@ -102,6 +103,7 @@ public struct WalletBalances {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
                 if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic {
                     state.isExchangeRateFeatureOn = true
                 } else {
@@ -147,7 +149,9 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
+                    state.$currencyConversion.withLock {
+                        $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    }
                     state.isExchangeRateRefreshEnabled = false
                     state.isExchangeRateStale = false
                 case .refreshEnable(let rate):
@@ -156,11 +160,15 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
+                    state.$currencyConversion.withLock {
+                        $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    }
                     state.isExchangeRateRefreshEnabled = true
                     state.isExchangeRateStale = false
                 case .stale:
-                    state.$currencyConversion.withLock { $0 = nil }
+                    state.$currencyConversion.withLock {
+                        $0 = nil
+                    }
                     state.isExchangeRateStale = true
                     break
                 }

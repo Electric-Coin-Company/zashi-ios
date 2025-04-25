@@ -530,7 +530,7 @@ extension AlertState where Action == Root.Action {
             ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
                 TextState(L10n.General.yes)
             }
-            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+            ButtonState(role: .cancel, action: .initialization(.resetZashiRequestCanceled)) {
                 TextState(L10n.General.no)
             }
         } message: {

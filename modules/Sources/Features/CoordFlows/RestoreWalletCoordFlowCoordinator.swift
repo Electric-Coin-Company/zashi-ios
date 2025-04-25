@@ -32,7 +32,7 @@ extension RestoreWalletCoordFlow {
                     try walletStorage.importWallet(seedPhrase, birthday, .english, false)
                     
                     // update the backup phrase validation flag
-                    //try walletStorage.markUserPassedPhraseBackupTest(true)
+                    try walletStorage.markUserPassedPhraseBackupTest(true)
 
                     state.path.append(.restoreInfo(RestoreInfo.State.initial))
 

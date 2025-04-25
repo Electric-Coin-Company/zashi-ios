@@ -34,7 +34,7 @@ extension HomeView {
                 Spacer()
             }
             
-            Text(L10n.Home.moreOptions)
+            Text(L10n.More.options)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.top, 32)
                 .padding(.bottom, 24)

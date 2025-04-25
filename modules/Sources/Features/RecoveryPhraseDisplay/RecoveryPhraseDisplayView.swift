@@ -98,7 +98,12 @@ public struct RecoveryPhraseDisplayView: View {
             .navigationBarItems(
                 trailing:
                     Button {
-                        store.send(store.isRecoveryPhraseHidden ? .helpSheetRequested : .recoveryPhraseTapped, animation: .easeInOut)
+                        store.send(
+                            store.isRecoveryPhraseHidden || !store.isWalletBackup
+                            ? .helpSheetRequested
+                            : .recoveryPhraseTapped,
+                            animation: .easeInOut
+                        )
                     } label: {
                         if store.isRecoveryPhraseHidden || !store.isWalletBackup {
                             Asset.Assets.Icons.help.image

@@ -87,8 +87,6 @@ public struct Home {
     }
 
     public enum Action: BindableAction, Equatable {
-        case debug
-        
         case accountSwitchTapped
         case addKeystoneHWWalletTapped
         case alert(PresentationAction<Action>)
@@ -151,9 +149,6 @@ public struct Home {
 
         Reduce { state, action in
             switch action {
-            case .debug:
-                return .send(.smartBanner(.debug))
-                
             case .onAppear:
                 state.appId = PartnerKeys.cbProjectId
                 state.walletBalancesState.migratingDatabase = state.migratingDatabase

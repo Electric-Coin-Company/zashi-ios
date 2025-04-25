@@ -59,7 +59,7 @@ public struct Balances {
         }
 
         public var isProcessingZeroAvailableBalance: Bool {
-            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
+            if shieldedBalance.amount == 0 && transparentBalance.amount > autoShieldingThreshold.amount {
                 return false
             }
             

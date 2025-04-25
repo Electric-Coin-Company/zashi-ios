@@ -101,8 +101,6 @@ public struct SmartBanner {
     }
     
     public enum Action: BindableAction, Equatable {
-        case debug
-        
         case binding(BindingAction<SmartBanner.State>)
         case closeAndCleanupBanner
         case closeBanner(Bool)
@@ -155,17 +153,6 @@ public struct SmartBanner {
         
         Reduce { state, action in
             switch action {
-            case .debug:
-                if state.priorityContentRequested == nil {
-                    state.priorityContentRequested = .priority9
-                } else {
-                    state.priorityContentRequested = state.priorityContentRequested?.next()
-                    if state.priorityContentRequested == .priority9 {
-                        state.priorityContent = nil
-                    }
-                }
-                return .send(.openBannerRequest)
-                
             case .onAppear:
                 state.tokenName = zcashSDKEnvironment.tokenName
                 return .merge(
@@ -201,7 +188,7 @@ public struct SmartBanner {
                 
             case .shieldingProcessorStateChanged(let shieldingProcessorState):
                 state.isShielding = shieldingProcessorState == .requested
-                if state.isOpen || state.isSmartBannerSheetPresented {
+                if (state.isOpen || state.isSmartBannerSheetPresented) && state.priorityContent == .priority7 {
                     var hideEverything = false
                     if case .proposal = shieldingProcessorState {
                         hideEverything = true

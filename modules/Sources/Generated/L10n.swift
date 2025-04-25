@@ -139,8 +139,8 @@ public enum L10n {
     public static func infoShielding(_ p1: Any) -> String {
       return L10n.tr("Localizable", "balances.infoShielding", String(describing: p1), fallback: "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
     }
-    /// Your wallet is getting updated.
-    public static let infoSyncing = L10n.tr("Localizable", "balances.infoSyncing", fallback: "Your wallet is getting updated.")
+    /// Zashi is scanning the blockchain to make sure your balances are displayed correctly.
+    public static let infoSyncing = L10n.tr("Localizable", "balances.infoSyncing", fallback: "Zashi is scanning the blockchain to make sure your balances are displayed correctly.")
     /// Pending
     public static let pending = L10n.tr("Localizable", "balances.pending", fallback: "Pending")
     /// The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.
@@ -369,8 +369,6 @@ public enum L10n {
   public enum Home {
     /// Upgrading databases…
     public static let migratingDatabases = L10n.tr("Localizable", "home.migratingDatabases", fallback: "Upgrading databases…")
-    /// More Options
-    public static let moreOptions = L10n.tr("Localizable", "home.moreOptions", fallback: "More Options")
   }
   public enum HomeScreen {
     /// Buy
@@ -633,16 +631,12 @@ public enum L10n {
     }
   }
   public enum RecoveryPhraseDisplay {
-    /// Wallet Birthday Height determines the birth (chain) height of your wallet and facilitates faster wallet restore process. Save this number together with your seed phrase in a safe place.
-    public static let birthdayDesc = L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayDesc", fallback: "Wallet Birthday Height determines the birth (chain) height of your wallet and facilitates faster wallet restore process. Save this number together with your seed phrase in a safe place.")
     /// Wallet Birthday Height
     public static let birthdayTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayTitle", fallback: "Wallet Birthday Height")
     /// These words are the only way to recover your funds! Make sure to save them in the correct order.
     public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "These words are the only way to recover your funds! Make sure to save them in the correct order.")
     /// Hide security details
     public static let hide = L10n.tr("Localizable", "recoveryPhraseDisplay.hide", fallback: "Hide security details")
-    /// Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!
-    public static let note = L10n.tr("Localizable", "recoveryPhraseDisplay.note", fallback: "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!")
     /// The keys are missing. No backup phrase is stored in the keychain.
     public static let noWords = L10n.tr("Localizable", "recoveryPhraseDisplay.noWords", fallback: "The keys are missing. No backup phrase is stored in the keychain.")
     /// Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!
@@ -653,8 +647,6 @@ public enum L10n {
     public static let screenTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.screenTitle", fallback: "Wallet Backup")
     /// Secret Recovery Phrase
     public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Secret Recovery Phrase")
-    /// Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!
-    public static let warning = L10n.tr("Localizable", "recoveryPhraseDisplay.warning", fallback: "Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!")
     /// Your secret recovery phrase is a unique set of 24 words, appearing in a precise order. It protects access to your funds.
     public static let warningInfo = L10n.tr("Localizable", "recoveryPhraseDisplay.warningInfo", fallback: "Your secret recovery phrase is a unique set of 24 words, appearing in a precise order. It protects access to your funds.")
     /// Your Secret Recovery Phrase

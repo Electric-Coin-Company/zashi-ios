@@ -36,6 +36,7 @@ extension Root {
         case loadedWalletAccounts([WalletAccount])
         case resetZashi
         case resetZashiRequest
+        case resetZashiRequestCanceled
         case respondToWalletInitializationState(InitializationState)
         case restoreExistingWallet
         case seedValidationResult(Bool)
@@ -321,7 +322,7 @@ extension Root {
                                 L10n.Accounts.zashi,
                                 L10n.Accounts.zashi.lowercased()
                             )
-                            
+
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
                             await send(.resolveMetadataEncryptionKeys)
@@ -455,6 +456,15 @@ extension Root {
                 state.alert = AlertState.wipeRequest()
                 return .none
                 
+            case .initialization(.resetZashiRequestCanceled):
+                state.alert = nil
+                for (id, element) in zip(state.settingsState.path.ids, state.settingsState.path) {
+                    if element.is(\.resetZashi) {
+                        return .send(.settings(.path(.element(id: id, action: .resetZashi(.deleteCanceled)))))
+                    }
+                }
+                return .none
+
             case .initialization(.resetZashi):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return .send(.resetZashiSDKFailed)

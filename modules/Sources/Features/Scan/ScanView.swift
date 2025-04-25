@@ -112,7 +112,9 @@ public struct ScanView: View {
             .applyScreenBackground()
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
-            .zashiBackV2(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light)
+            .zashiBackV2(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light) {
+                store.send(.cancelTapped)
+            }
             .onChange(of: image) { img in
                 if let img {
                     store.send(.libraryImage(img))
