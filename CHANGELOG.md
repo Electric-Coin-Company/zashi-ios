@@ -6,6 +6,14 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.0.1 build 1 (2025-04-30)
+
+### Fixed
+- An issue when occasionally after Resetting Zashi the SDK initialization fails.
+- Fixed and updated a copy in a few places.
+
+## 2.0 build 1 (2025-04-28)
+
 ### Changed
 - Zashi 2.0 is here, and it is packed with UI and UX improvements!
 - Redesigned Home Screen and streamlined app navigation.

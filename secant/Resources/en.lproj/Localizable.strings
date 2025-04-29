@@ -143,21 +143,21 @@
 "send.requestPayment.total" = "Total";
 "send.requestPayment.title" = "Payment Request";
 "send.sending" = "Sending...";
-"send.sendingInfo" = "Your tokens are being sent to";
+"send.sendingInfo" = "Your coins are being sent to";
 "send.viewTransaction" = "View Transaction";
 "send.success" = "Sent!";
-"send.successInfo" = "Your tokens were successfully sent to";
+"send.successInfo" = "Your coins were successfully sent to";
 "send.failure" = "Unable to send";
-"send.failureInfo" = "There was an error attempting to send tokens. Try it again, please.";
+"send.failureInfo" = "There was an error attempting to send coins. Try it again, please.";
 "send.resubmission" = "Connection Error";
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
 "send.report" = "Report";
 "send.shielding" = "Shielding";
-"send.shieldingInfo" = "Your tokens are getting shielded";
+"send.shieldingInfo" = "Your coins are getting shielded";
 "send.successShielding" = "Shielded!";
-"send.successShieldingInfo" = "Your tokens have been successfully shielded";
+"send.successShieldingInfo" = "Your coins have been successfully shielded";
 "send.failureShielding" = "Unable to shield";
-"send.failureShieldingInfo" = "There was an error attempting to shield your tokens. Try it again, please.";
+"send.failureShieldingInfo" = "There was an error attempting to shield your coins. Try it again, please.";
 
 // MARK: - Message Editor
 "messageEditor.addUA" = "Reply-to: Include my address in the memo";

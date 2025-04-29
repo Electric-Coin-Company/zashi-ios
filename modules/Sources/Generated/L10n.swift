@@ -936,12 +936,12 @@ public enum L10n {
     public static let currencyPlaceholder = L10n.tr("Localizable", "send.currencyPlaceholder", fallback: "USD")
     /// Unable to send
     public static let failure = L10n.tr("Localizable", "send.failure", fallback: "Unable to send")
-    /// There was an error attempting to send tokens. Try it again, please.
-    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens. Try it again, please.")
+    /// There was an error attempting to send coins. Try it again, please.
+    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send coins. Try it again, please.")
     /// Unable to shield
     public static let failureShielding = L10n.tr("Localizable", "send.failureShielding", fallback: "Unable to shield")
-    /// There was an error attempting to shield your tokens. Try it again, please.
-    public static let failureShieldingInfo = L10n.tr("Localizable", "send.failureShieldingInfo", fallback: "There was an error attempting to shield your tokens. Try it again, please.")
+    /// There was an error attempting to shield your coins. Try it again, please.
+    public static let failureShieldingInfo = L10n.tr("Localizable", "send.failureShieldingInfo", fallback: "There was an error attempting to shield your coins. Try it again, please.")
     /// Fee
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee")
     /// Cancel
@@ -960,20 +960,20 @@ public enum L10n {
     public static let review = L10n.tr("Localizable", "send.review", fallback: "Review")
     /// Sending...
     public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending...")
-    /// Your tokens are being sent to
-    public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your tokens are being sent to")
+    /// Your coins are being sent to
+    public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your coins are being sent to")
     /// Shielding
     public static let shielding = L10n.tr("Localizable", "send.shielding", fallback: "Shielding")
-    /// Your tokens are getting shielded
-    public static let shieldingInfo = L10n.tr("Localizable", "send.shieldingInfo", fallback: "Your tokens are getting shielded")
+    /// Your coins are getting shielded
+    public static let shieldingInfo = L10n.tr("Localizable", "send.shieldingInfo", fallback: "Your coins are getting shielded")
     /// Sent!
     public static let success = L10n.tr("Localizable", "send.success", fallback: "Sent!")
-    /// Your tokens were successfully sent to
-    public static let successInfo = L10n.tr("Localizable", "send.successInfo", fallback: "Your tokens were successfully sent to")
+    /// Your coins were successfully sent to
+    public static let successInfo = L10n.tr("Localizable", "send.successInfo", fallback: "Your coins were successfully sent to")
     /// Shielded!
     public static let successShielding = L10n.tr("Localizable", "send.successShielding", fallback: "Shielded!")
-    /// Your tokens have been successfully shielded
-    public static let successShieldingInfo = L10n.tr("Localizable", "send.successShieldingInfo", fallback: "Your tokens have been successfully shielded")
+    /// Your coins have been successfully shielded
+    public static let successShieldingInfo = L10n.tr("Localizable", "send.successShieldingInfo", fallback: "Your coins have been successfully shielded")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
     /// Sending to

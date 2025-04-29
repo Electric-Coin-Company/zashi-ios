@@ -143,21 +143,21 @@
 "send.requestPayment.total" = "Total";
 "send.requestPayment.title" = "Solicitud de Pago";
 "send.sending" = "Enviando...";
-"send.sendingInfo" = "Tus tokens están siendo enviados a";
+"send.sendingInfo" = "Tus monedas están siendo enviados a";
 "send.viewTransaction" = "Ver Transacción";
 "send.success" = "¡Enviado!";
-"send.successInfo" = "Tus tokens fueron enviados exitosamente a";
+"send.successInfo" = "Tus monedas fueron enviados exitosamente a";
 "send.failure" = "No se pudo enviar";
-"send.failureInfo" = "Hubo un error al intentar enviar tokens. Por favor, inténtalo de nuevo.";
+"send.failureInfo" = "Hubo un error al intentar enviar monedas. Por favor, inténtalo de nuevo.";
 "send.resubmission" = "Error de Conexión";
 "send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
 "send.report" = "Reportar";
 "send.shielding" = "Protegiendo";
-"send.shieldingInfo" = "Tus tokens están siendo protegidos";
+"send.shieldingInfo" = "Tus monedas están siendo protegidos";
 "send.successShielding" = "¡Protegidos!";
-"send.successShieldingInfo" = "Tus tokens han sido protegidos con éxito";
+"send.successShieldingInfo" = "Tus monedas han sido protegidos con éxito";
 "send.failureShielding" = "No se pudo proteger";
-"send.failureShieldingInfo" = "Hubo un error al intentar proteger tus tokens. Por favor, inténtalo de nuevo.";
+"send.failureShieldingInfo" = "Hubo un error al intentar proteger tus monedas. Por favor, inténtalo de nuevo.";
 
 // MARK: - Message Editor
 "messageEditor.addUA" = "Responder a: Incluir mi dirección en el memo";
