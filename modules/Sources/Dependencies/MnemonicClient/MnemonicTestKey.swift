@@ -1,6 +1,6 @@
 //
 //  MnemonicTestKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 13.11.2022.
 //
@@ -14,7 +14,8 @@ extension MnemonicClient: TestDependencyKey {
         randomMnemonicWords: unimplemented("\(Self.self).randomMnemonicWords", placeholder: []),
         toSeed: unimplemented("\(Self.self).toSeed", placeholder: []),
         asWords: unimplemented("\(Self.self).asWords", placeholder: []),
-        isValid: unimplemented("\(Self.self).isValid", placeholder: {}())
+        isValid: unimplemented("\(Self.self).isValid", placeholder: {}()),
+        suggestWords: unimplemented("\(Self.self).suggestWords", placeholder: [])
     )
 }
 
@@ -24,6 +25,7 @@ extension MnemonicClient {
         randomMnemonicWords: { [] },
         toSeed: { _ in [] },
         asWords: { _ in [] },
-        isValid: { _ in }
+        isValid: { _ in },
+        suggestWords: { _ in [] }
     )
 }

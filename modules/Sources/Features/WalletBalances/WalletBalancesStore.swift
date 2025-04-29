@@ -1,6 +1,6 @@
 //
 //  WalletBalancesStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04-02-2024
 //
@@ -23,6 +23,7 @@ public struct WalletBalances {
 
     @ObservableState
     public struct State: Equatable {
+        public var autoShieldingThreshold: Zatoshi = .zero
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
@@ -33,6 +34,7 @@ public struct WalletBalances {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var shieldedBalance: Zatoshi
         public var shieldedWithPendingBalance: Zatoshi
+        public var spendability: Spendability = .everything
         public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
 
@@ -41,7 +43,7 @@ public struct WalletBalances {
         }
         
         public var isProcessingZeroAvailableBalance: Bool {
-            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
+            if shieldedBalance.amount == 0 && transparentBalance.amount > autoShieldingThreshold.amount {
                 return false
             }
             
@@ -101,6 +103,7 @@ public struct WalletBalances {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
                 if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic {
                     state.isExchangeRateFeatureOn = true
                 } else {
@@ -112,12 +115,12 @@ public struct WalletBalances {
                         sdkSynchronizer.stateStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .map { $0.redacted }
-                            .map(WalletBalances.Action.synchronizerStateChanged)
+                            .map(Action.synchronizerStateChanged)
                     }
                     .cancellable(id: CancelStateId, cancelInFlight: true),
                     .publisher {
                         exchangeRate.exchangeRateEventStream()
-                            .map(WalletBalances.Action.exchangeRateEvent)
+                            .map(Action.exchangeRateEvent)
                             .receive(on: mainQueue)
                     }
                     .cancellable(id: CancelRateId, cancelInFlight: true)
@@ -146,7 +149,9 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
+                    state.$currencyConversion.withLock {
+                        $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    }
                     state.isExchangeRateRefreshEnabled = false
                     state.isExchangeRateStale = false
                 case .refreshEnable(let rate):
@@ -155,11 +160,15 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
+                    state.$currencyConversion.withLock {
+                        $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    }
                     state.isExchangeRateRefreshEnabled = true
                     state.isExchangeRateStale = false
                 case .stale:
-                    state.$currencyConversion.withLock { $0 = nil }
+                    state.$currencyConversion.withLock {
+                        $0 = nil
+                    }
                     state.isExchangeRateStale = true
                     break
                 }
@@ -183,6 +192,18 @@ public struct WalletBalances {
                 state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
                 state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
+               
+                let everythingCondition = state.shieldedBalance == state.totalBalance
+                || (state.transparentBalance < zcashSDKEnvironment.shieldingThreshold && state.shieldedBalance == state.totalBalance - state.transparentBalance)
+                
+                // spendability
+                if state.isProcessingZeroAvailableBalance {
+                    state.spendability = .nothing
+                } else if everythingCondition {
+                    state.spendability = .everything
+                } else {
+                    state.spendability = .something
+                }
                 return .none
 
             case .debugMenuStartup:

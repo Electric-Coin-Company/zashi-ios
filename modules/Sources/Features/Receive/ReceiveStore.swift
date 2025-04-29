@@ -1,6 +1,6 @@
 //
 //  ReceiveStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 05.07.2022.
 //
@@ -15,20 +15,38 @@ import Utils
 import UIComponents
 import Models
 
+// Path
+import AddressDetails
+import RequestZec
+import ZecKeyboard
+
 @Reducer
 public struct Receive {
+    @Reducer
+    public enum Path {
+        case addressDetails(AddressDetails)
+        case requestZec(RequestZec)
+        case requestZecSummary(RequestZec)
+        case zecKeyboard(ZecKeyboard)
+    }
+    
     @ObservableState
-    public struct State: Equatable {
-        public enum AddressType: Equatable {
+    public struct State {
+        public enum AddressType {
             case saplingAddress
             case tAddress
             case uaAddress
         }
 
         public var currentFocus = AddressType.uaAddress
+        public var memo = ""
+        public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
+        // Path
+        public var requestZecState = RequestZec.State.initial
+        
         public var unifiedAddress: String {
             selectedWalletAccount?.uAddress?.stringEncoded ?? L10n.Receive.Error.cantExtractUnifiedAddress
         }
@@ -54,9 +72,10 @@ public struct Receive {
         public init() { }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case addressDetailsRequest(RedactableString, Bool)
         case copyToPastboard(RedactableString)
+        case path(StackActionOf<Path>)
         case requestTapped(RedactableString, Bool)
         case updateCurrentFocus(State.AddressType)
     }
@@ -66,6 +85,8 @@ public struct Receive {
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        coordinatorReduce()
+        
         Reduce { state, action in
             switch action {
             case .addressDetailsRequest:
@@ -82,7 +103,11 @@ public struct Receive {
             case .updateCurrentFocus(let newFocus):
                 state.currentFocus = newFocus
                 return .none
+                
+            case .path:
+                return .none
             }
         }
+        .forEach(\.path, action: \.path)
     }
 }

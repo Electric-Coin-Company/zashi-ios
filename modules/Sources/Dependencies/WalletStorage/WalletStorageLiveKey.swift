@@ -1,6 +1,6 @@
 //
 //  WalletStorageLiveKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 15.11.2022.
 //
@@ -50,6 +50,33 @@ extension WalletStorageClient: DependencyKey {
             },
             exportUserMetadataEncryptionKeys: { account in
                 try walletStorage.exportUserMetadataEncryptionKeys(account: account)
+            },
+            importWalletBackupReminder: { reminedMeTimestamp in
+                try walletStorage.importWalletBackupReminder(reminedMeTimestamp)
+            },
+            exportWalletBackupReminder: {
+                walletStorage.exportWalletBackupReminder()
+            },
+            importShieldingReminder: { reminedMeTimestamp, accountName in
+                try walletStorage.importShieldingReminder(reminedMeTimestamp, accountName: accountName)
+            },
+            exportShieldingReminder: { accountName in
+                walletStorage.exportShieldingReminder(accountName: accountName)
+            },
+            resetShieldingReminder: { accountName in
+                walletStorage.resetShieldingReminder(accountName: accountName)
+            },
+            importWalletBackupAcknowledged: { acknowledged in
+                try walletStorage.importWalletBackupAcknowledged(acknowledged)
+            },
+            exportWalletBackupAcknowledged: {
+                walletStorage.exportWalletBackupAcknowledged()
+            },
+            importShieldingAcknowledged: { acknowledged in
+                try walletStorage.importShieldingAcknowledged(acknowledged)
+            },
+            exportShieldingAcknowledged: {
+                walletStorage.exportShieldingAcknowledged()
             }
         )
     }

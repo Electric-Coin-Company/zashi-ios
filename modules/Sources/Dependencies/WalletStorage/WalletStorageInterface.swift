@@ -1,6 +1,6 @@
 //
 //  WalletStorageInterface.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 15.11.2022.
 //
@@ -80,4 +80,23 @@ public struct WalletStorageClient {
     
     public var importUserMetadataEncryptionKeys: (UserMetadataEncryptionKeys, Account) throws -> Void
     public var exportUserMetadataEncryptionKeys: (Account) throws -> UserMetadataEncryptionKeys
+
+    /// Wallet backup reminder set/get
+    public var importWalletBackupReminder: (ReminedMeTimestamp) throws -> Void
+    public var exportWalletBackupReminder: () -> ReminedMeTimestamp?
+
+    /// Shield transparent funds set/get
+    public var importShieldingReminder: (ReminedMeTimestamp, String) throws -> Void
+    public var exportShieldingReminder: (String) -> ReminedMeTimestamp?
+
+    /// Reset  transparent funds reminder
+    public var resetShieldingReminder: (String) -> Void
+    
+    /// Wallet backup acknowledge flag
+    public var importWalletBackupAcknowledged: (Bool) throws -> Void
+    public var exportWalletBackupAcknowledged: () -> Bool = { false}
+
+    /// Shielding acknowledge flag
+    public var importShieldingAcknowledged: (Bool) throws -> Void
+    public var exportShieldingAcknowledged: () -> Bool = { false}
 }

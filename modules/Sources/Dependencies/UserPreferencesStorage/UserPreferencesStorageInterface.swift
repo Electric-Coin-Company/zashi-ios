@@ -1,6 +1,6 @@
 //
 //  UserPreferencesStorageInterface.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 2/6/23.
 //

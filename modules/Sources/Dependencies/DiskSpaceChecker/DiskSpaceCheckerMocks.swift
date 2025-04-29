@@ -1,6 +1,6 @@
 //
 //  DiskSpaceCheckerMocks.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 10.11.2022.
 //

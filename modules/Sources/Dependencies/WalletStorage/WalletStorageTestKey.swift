@@ -1,6 +1,6 @@
 //
 //  WalletStorageTestKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 14.11.2022.
 //
@@ -19,7 +19,16 @@ extension WalletStorageClient: TestDependencyKey {
         importAddressBookEncryptionKeys: unimplemented("\(Self.self).importAddressBookEncryptionKeys", placeholder: {}()),
         exportAddressBookEncryptionKeys: unimplemented("\(Self.self).exportAddressBookEncryptionKeys", placeholder: .empty),
         importUserMetadataEncryptionKeys: unimplemented("\(Self.self).importUserMetadataEncryptionKeys", placeholder: {}()),
-        exportUserMetadataEncryptionKeys: unimplemented("\(Self.self).exportUserMetadataEncryptionKeys", placeholder: .empty)
+        exportUserMetadataEncryptionKeys: unimplemented("\(Self.self).exportUserMetadataEncryptionKeys", placeholder: .empty),
+        importWalletBackupReminder: unimplemented("\(Self.self).importWalletBackupReminder"),
+        exportWalletBackupReminder: unimplemented("\(Self.self).exportWalletBackupReminder", placeholder: nil),
+        importShieldingReminder: unimplemented("\(Self.self).importShieldingReminder"),
+        exportShieldingReminder: unimplemented("\(Self.self).exportShieldingReminder", placeholder: nil),
+        resetShieldingReminder: unimplemented("\(Self.self).resetShieldingReminder"),
+        importWalletBackupAcknowledged: unimplemented("\(Self.self).importWalletBackupAcknowledged"),
+        exportWalletBackupAcknowledged: unimplemented("\(Self.self).exportWalletBackupAcknowledged", placeholder: false),
+        importShieldingAcknowledged: unimplemented("\(Self.self).importShieldingAcknowledged"),
+        exportShieldingAcknowledged: unimplemented("\(Self.self).exportShieldingAcknowledged", placeholder: false)
     )
 }
 
@@ -34,6 +43,15 @@ extension WalletStorageClient {
         importAddressBookEncryptionKeys: { _ in },
         exportAddressBookEncryptionKeys: { .empty },
         importUserMetadataEncryptionKeys: { _, _ in },
-        exportUserMetadataEncryptionKeys: { _ in .empty }
+        exportUserMetadataEncryptionKeys: { _ in .empty },
+        importWalletBackupReminder: { _ in },
+        exportWalletBackupReminder: { nil },
+        importShieldingReminder: { _, _ in },
+        exportShieldingReminder: { _ in nil },
+        resetShieldingReminder: { _ in },
+        importWalletBackupAcknowledged: { _ in },
+        exportWalletBackupAcknowledged: { false },
+        importShieldingAcknowledged: { _ in },
+        exportShieldingAcknowledged: { false }
     )
 }

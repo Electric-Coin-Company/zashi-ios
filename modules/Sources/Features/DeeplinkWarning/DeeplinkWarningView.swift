@@ -43,7 +43,7 @@ public struct DeeplinkWarningView: View {
                 Spacer()
 
                 ZashiButton(L10n.DeeplinkWarning.cta) {
-                    store.send(.gotItTapped)
+                    store.send(.rescanInZashi)
                 }
                 .padding(.bottom, 24)
             }

@@ -1,6 +1,6 @@
 //
 //  SecItemClient.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 12.04.2022.
 //

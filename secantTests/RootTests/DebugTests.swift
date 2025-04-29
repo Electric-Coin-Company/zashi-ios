@@ -56,7 +56,7 @@ class DebugTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
 
         await store.send(.confirmationDialog(.presented(.quickRescan))) { state in
-            state.destinationState.internalDestination = .tabs
+            state.destinationState.internalDestination = .home
             state.destinationState.previousDestination = .welcome
             state.confirmationDialog = nil
         }
@@ -79,7 +79,7 @@ class DebugTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
                 
         await store.send(.confirmationDialog(.presented(.fullRescan))) { state in
-            state.destinationState.internalDestination = .tabs
+            state.destinationState.internalDestination = .home
             state.destinationState.previousDestination = .welcome
             state.confirmationDialog = nil
         }

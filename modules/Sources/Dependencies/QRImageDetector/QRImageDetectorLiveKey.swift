@@ -1,6 +1,6 @@
 //
 //  QRImageDetectorLiveKey.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 2024-04-18.
 //

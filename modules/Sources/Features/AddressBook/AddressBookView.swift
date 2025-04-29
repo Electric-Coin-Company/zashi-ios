@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
-import Scan
 
 extension String {
     var initials: String {
@@ -68,29 +67,6 @@ public struct AddressBookView: View {
             )
             .navigationBarTitleDisplayMode(.inline)
             .applyScreenBackground()
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.add),
-                destination: {
-                    AddressBookContactView(store: store, isInEditMode: store.isInEditMode)
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: $store.scanViewBinding,
-                destination: {
-                    ScanView(
-                        store: store.scope(
-                            state: \.scanState,
-                            action: \.scan
-                        )
-                    )
-                }
-            )
-            .alert(
-                store: store.scope(
-                    state: \.$alert,
-                    action: \.alert
-                )
-            )
         }
     }
 
@@ -151,7 +127,7 @@ public struct AddressBookView: View {
                 .zForegroundColor(Design.Surfaces.bgPrimary)
                 .background {
                     Circle()
-                        .fill(Design.Surfaces.brandBg.color(colorScheme))
+                        .fill(Design.Surfaces.brandPrimary.color(colorScheme))
                         .frame(width: 32, height: 32)
                         .background {
                             Circle()
@@ -211,7 +187,7 @@ public struct AddressBookView: View {
                     .padding(.bottom, 40)
                     .padding(.top, 70)
                     .background {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
                             .stroke(Design.Surfaces.strokeSecondary.color(colorScheme), style: StrokeStyle(lineWidth: 2.0, dash: [8, 6]))
                     }
                     .padding(.top, 24)
@@ -292,7 +268,7 @@ public struct AddressBookView: View {
                 .padding(.vertical, 12)
                 .background {
                     if selected {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                 }
@@ -320,16 +296,5 @@ extension AddressBook {
 // MARK: - Placeholders
 
 extension AddressBook.State {
-    public static let initial = AddressBook.State(scanState: .initial)
-}
-
-// MARK: - Bindings
-
-extension StoreOf<AddressBook> {
-    func bindingFor(_ destination: AddressBook.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
-    }
+    public static let initial = AddressBook.State()
 }

@@ -97,8 +97,6 @@ extension TaxExporterClient: DependencyKey {
             } catch {
                 throw error
             }
-
-            return .emptyURL
         }
     )
 }

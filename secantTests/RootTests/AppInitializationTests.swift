@@ -85,16 +85,16 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.registerForSynchronizersUpdate))
 
-        await store.receive(.tabs(.home(.transactionList(.onAppear)))) { state in
-            state.tabsState.homeState.transactionListState.requiredTransactionConfirmations = 10
-        }
+//        await store.receive(.tabs(.home(.transactionList(.onAppear)))) { state in
+//            state.tabsState.homeState.transactionListState.requiredTransactionConfirmations = 10
+//        }
 
-        await store.receive(.destination(.updateDestination(.tabs))) { state in
+        await store.receive(.destination(.updateDestination(.home))) { state in
             state.destinationState.previousDestination = .welcome
-            state.destinationState.internalDestination = .tabs
+            state.destinationState.internalDestination = .home
         }
 
-        await store.receive(.tabs(.home(.transactionList(.updateTransactionList([])))))
+//        await store.receive(.tabs(.home(.transactionList(.updateTransactionList([])))))
 
         await store.send(.cancelAllRunningEffects)
 

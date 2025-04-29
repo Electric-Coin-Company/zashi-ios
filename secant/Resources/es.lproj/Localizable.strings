@@ -3,30 +3,6 @@
 "plainOnboarding.button.createNewWallet" = "Crear nueva billetera";
 "plainOnboarding.button.restoreWallet" = "Restaurar billetera existente";
 
-// MARK: - Security Warning
-"securityWarning.title" = "Advertencia de seguridad:";
-"securityWarning.screenTitle" = "Aviso de privacidad";
-"securityWarning.warningA" = "Zashi %@ (%@) es una billetera exclusiva para Zcash con protección, creada por Zcashers para Zcashers. Zashi ha sido diseñada para tu privacidad y seguridad. Al instalar y usar Zashi, aceptas compartir informes de fallos con Electric Coin Co. (el desarrollador de la billetera), lo cual nos ayudará a mejorar la experiencia del usuario de Zashi.*";
-"securityWarning.warningB" = "Por favor, confirma y acepta a continuación para continuar.";
-"securityWarning.warningC" = "*Nota";
-"securityWarning.warningD" = ": Los informes de fallos podrían revelar el momento del fallo y los eventos ocurridos, pero no revelarán las claves de gasto o visualización.";
-"securityWarning.acknowledge" = "Acepto";
-"securityWarning.confirm" = "Confirmar";
-
-// MARK: - Secret Recovery Phrase Display
-"recoveryPhraseDisplay.screenTitle" = "Frase de Recuperación";
-"recoveryPhraseDisplay.title" = "Asegura tu Billetera Zashi";
-"recoveryPhraseDisplay.description" = "Las siguientes 24 palabras son la clave para tus fondos y constituyen la única forma de recuperarlos si pierdes el acceso o adquieres un nuevo dispositivo. ¡Protege tu ZEC almacenando esta frase en un lugar de confianza y nunca la compartas con nadie!";
-"recoveryPhraseDisplay.button.wroteItDown" = "Ya la guardé";
-"recoveryPhraseDisplay.noWords" = "Las claves están ausentes. No hay una frase de respaldo almacenada en el llavero.";
-"recoveryPhraseDisplay.birthdayTitle" = "Altura de cumpleaños de la billetera";
-"recoveryPhraseDisplay.birthdayDesc" = "La Altura de Cumpleaños de la Billetera determina la altura de nacimiento (cadena) de tu billetera y facilita un proceso de restauración más rápido. Guarda este número junto con tu frase de recuperación en un lugar seguro.";
-"recoveryPhraseDisplay.warning" = "Protege tu ZEC almacenando esta frase en un lugar de confianza y nunca la compartas con nadie.";
-"recoveryPhraseDisplay.reveal" = "Revelar detalles de seguridad";
-"recoveryPhraseDisplay.hide" = "Ocultar detalles de seguridad";
-"recoveryPhraseDisplay.alert.failed.title" = "No se pudo cargar la billetera almacenada";
-"recoveryPhraseDisplay.alert.failed.message" = "El intento de cargar la billetera almacenada desde el llavero falló. Error: %@";
-
 // MARK: - Error Pages
 "errorPage.action.contactSupport" = "Contactar Soporte";
 
@@ -124,9 +100,6 @@
 "serverSetup.refresh" = "Actualizar";
 
 // MARK: - Balances
-"balances.spendableBalance" = "ZEC protegido (disponible)";
-"balances.changePending" = "Cambio pendiente";
-"balances.pendingTransactions" = "Transacciones pendientes";
 "balances.transparentBalance" = "Saldo transparente";
 "balances.shieldButtonTitle" = "Proteger y consolidar fondos";
 "balances.shieldingInProgress" = "Protegiendo";
@@ -136,8 +109,6 @@
 "balances.hintBox.message" = "Zashi utiliza la última actualización de la red y no admite el envío de ZEC transparentes (sin protección). Utiliza el botón Proteger y Consolidar para proteger tus fondos, lo que añadirá a tu saldo disponible y hará que tu ZEC sea gastable.";
 "balances.hintBox.dismiss" = "¡Entendido!";
 "balances.restoringWalletWarning" = "El proceso de restauración puede llevar varias horas en dispositivos de menor potencia, e incluso en dispositivos potentes es probable que lleve más de una hora.";
-"balances.alert.shieldFunds.failure.title" = "No se pudo proteger los fondos";
-"balances.alert.shieldFunds.failure.message" = "Error: %@";
 
 // MARK: - Scan
 "scan.invalidQR" = "Este código QR no contiene una dirección válida de Zcash.";
@@ -299,7 +270,6 @@
 "general.request" = "Solicitar";
 "general.hide" = "Ocultar";
 "general.show" = "Mostrar";
-"balance.availableTitle" = "Saldo Disponible:";
 "qrCodeFor" = "Código QR para %@";
 "general.tapToCopy" = "Toca para copiar";
 "general.fee" = "Tarifa Típica < %@";
@@ -438,7 +408,6 @@
 "currencyConversion.ipDesc" = "La función de conversión de moneda de Zashi no compromete tu dirección IP.";
 "currencyConversion.refresh" = "Actualizar tasa";
 "currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
-"currencyConversion.skipBtn" = "Omitir por ahora";
 
 // MARK: - Deeplink Warning
 "deeplinkWarning.title" = "Parece que utilizaste una aplicación de terceros para escanear un pago.";
@@ -563,3 +532,151 @@
 "filter.daysAgo" = "Hace %@ días";
 "settings.keystone" = "Conectar dispositivo Keystone";
 "settings.keystoneDesc" = "Empareja tu billetera de hardware Keystone con Zashi para firmar transacciones.";
+
+// More actions
+"more.options" = "Más Opciones";
+
+// Home screen
+"homeScreen.scan" = "Escanear";
+"homeScreen.more" = "Más";
+"homeScreen.buy" = "Comprar";
+"homeScreen.moreWarning" = "Las integraciones de Zashi proporcionan acceso a servicios de terceros. La información compartida con ellos está sujeta a sus políticas de privacidad.";
+
+// Onboarding: Restore Wallet
+"restoreWallet.title" = "Frase de Recuperación Secreta";
+"restoreWallet.info" = "Por favor, ingresa tu frase secreta de recuperación de 24 palabras en el orden correcto.";
+"restoreWallet.help.title" = "¿Necesitas saber más?";
+"restoreWallet.help.phrase" = "^[La Frase de Recuperación Secreta](style: 'boldPrimary') es un conjunto único de 24 palabras, que aparecen en un orden preciso. Se puede usar para obtener control total de tus fondos desde cualquier dispositivo a través de cualquier aplicación de billetera Zcash. Piensa en ella como la llave maestra de tu billetera. Se guarda en la Configuración Avanzada de Zashi.";
+"restoreWallet.help.birthday" = "^[La Altura de Cumpleaños de la Billetera](style: 'boldPrimary') es la altura del bloque (número de bloque en la blockchain) en el que tu billetera fue creada. Si alguna vez pierdes acceso a tu aplicación Zashi y necesitas recuperar tus fondos, proporcionar la altura del bloque junto con tu frase de recuperación puede acelerar significativamente el proceso.";
+"restoreWallet.birthday.placeholder" = "Ingresa el número";
+"restoreWallet.birthday.title" = "Altura de Bloque";
+"restoreWallet.birthday.info" = "Ingresar la Altura de Cumpleaños de tu Billetera ayuda a acelerar el proceso de restauración.";
+"restoreWallet.birthday.fieldInfo" = "La Altura de Cumpleaños de la Billetera es el momento en que se creó tu billetera.";
+"restoreWallet.birthday.estimate" = "Estimar mi altura de bloque";
+"restoreWallet.birthday.estimateDate.title" = "Primera Transacción de la Billetera";
+"restoreWallet.birthday.estimateDate.info" = "Ingresar la altura de bloque en la que se creó tu billetera reduce la cantidad de bloques que necesitan ser escaneados para recuperar tu billetera.";
+"restoreWallet.birthday.estimateDate.warning" = "Si no estás seguro, elige una fecha anterior.";
+"restoreWallet.birthday.estimated.title" = "Altura de Bloque Estimada";
+"restoreWallet.birthday.estimated.info" = "Zashi escaneará y recuperará todas las transacciones realizadas después del siguiente número de bloque.";
+"restoreInfo.checkbox" = "Mantener la pantalla encendida mientras se restaura";
+"restoreWallet.dateTip" = "Si no estás seguro, elige una fecha anterior.";
+
+// Smart Banner
+"smartBanner.help.diconnected.title" = "Billetera Desconectada";
+"smartBanner.help.diconnected.info" = "Parece que estás offline. Por favor, restaura tu conexión a internet para usar la billetera Zashi.";
+
+"smartBanner.help.syncError.title" = "Error de Sincronización";
+
+"smartBanner.help.restore.title" = "Restauración de Billetera en Progreso";
+"smartBanner.help.restore.info" = "Zashi está escaneando la blockchain para recuperar tus transacciones. Las billeteras más antiguas pueden tardar horas en restaurarse. Sigue estos pasos para evitar interrupciones:";
+"smartBanner.help.restore.point1" = "Mantén la aplicación Zashi abierta en una pantalla activa del teléfono.";
+"smartBanner.help.restore.point2" = "Para evitar que la pantalla de tu teléfono se apague, desactiva el modo de ahorro de energía y mantén tu teléfono conectado.";
+"smartBanner.help.restore.warning" = "Los fondos no pueden ser gastados hasta que tu billetera esté restaurada.";
+
+"smartBanner.help.sync.title" = "Sincronización de Billetera en Progreso";
+"smartBanner.help.sync.info" = "Zashi está escaneando la blockchain para tus últimas transacciones para asegurarse de que tus balances se muestren correctamente. Mantén la aplicación Zashi abierta en una pantalla activa del teléfono para evitar interrupciones.";
+
+"smartBanner.help.updatingBalance.title" = "Actualizando Balance";
+"smartBanner.help.updatingBalance.info" = "Tu última transacción está siendo minada y confirmada.";
+
+"smartBanner.help.backup.title" = "Respaldo Requerido";
+"smartBanner.help.backup.info1" = "Evita la pérdida potencial de fondos respaldando tu billetera de forma segura.";
+"smartBanner.help.backup.info2" = "Respalda el acceso a tus fondos realizando un respaldo de:";
+"smartBanner.help.backup.point1" = "Frase de Recuperación Secreta (un conjunto único de 24 palabras en un orden preciso)";
+"smartBanner.help.backup.point2" = "Altura de Cumpleaños de la Billetera (altura de bloque en la que se creó tu billetera)";
+"smartBanner.help.backup.info3" = "En caso de que pierdas acceso a la aplicación o a tu dispositivo, conocer la Frase de Recuperación Secreta es la única forma de recuperar tus fondos. No podemos verla ni podemos ayudarte a recuperarla.";
+"smartBanner.help.backup.info4" = "Cualquiera que tenga acceso a tu Frase de Recuperación Secreta tendrá control total de tu billetera, así que mantenla segura y nunca la muestres a nadie.";
+"smartBanner.help.backup.acknowledge" = "He leído y entiendo los riesgos de no respaldar mi billetera.";
+
+"smartBanner.help.shield.title" = "Protege Siempre los Fondos Transparentes";
+"smartBanner.help.shield.info1" = "Para proteger la privacidad del usuario, Zashi no admite el gasto de ZEC transparente. Toca el botón \"Proteger\" abajo para hacer que tus fondos transparentes sean gastables y tu saldo total en Zashi sea privado.";
+"smartBanner.help.shield.info2" = "Esto creará una transacción de protección en la billetera, consolidando tus fondos transparentes y protegidos. (Tarifa típica: %@)";
+"smartBanner.help.shield.transparent" = "Transparente";
+
+"smartBanner.help.shield.notNow" = "Ahora no";
+"smartBanner.help.shield.doNotShowAgain" = "No mostrar este mensaje de nuevo";
+
+"smartBanner.help.remindMePhase1" = "Recuérdame en 2 días";
+"smartBanner.help.remindMePhase2" = "Recuérdame en 2 semanas";
+"smartBanner.help.remindMePhase3" = "Recuérdame el próximo mes";
+
+"smartBanner.content.disconnected.title" = "Billetera Desconectada";
+"smartBanner.content.disconnected.info" = "Verifica tu conexión y recarga Zashi";
+
+"smartBanner.content.syncingError.title" = "Error al sincronizar";
+"smartBanner.content.syncingError.info" = "Intentando resolver";
+
+"smartBanner.content.restore.title" = "Restaurando Billetera • %@ Completo";
+"smartBanner.content.restore.info" = "Mantén Zashi abierta en una pantalla activa del teléfono";
+"smartBanner.content.restore.infoSpendable" = "Tus fondos están listos para ser utilizados ahora";
+
+"smartBanner.content.sync.title" = "Sincronizando • %@ Completo";
+"smartBanner.content.sync.info" = "Tu billetera está siendo actualizada";
+
+"smartBanner.content.updatingBalance.title" = "Actualizando Balance...";
+"smartBanner.content.updatingBalance.info" = "Esperando a que la última transacción se procese";
+
+"smartBanner.content.backup.title" = "Respaldo de Billetera Requerido";
+"smartBanner.content.backup.info" = "Evita la pérdida potencial de fondos";
+"smartBanner.content.backup.button" = "Iniciar";
+
+"smartBanner.content.shield.title" = "Saldo Transparente Detectado";
+"smartBanner.content.shield.titleShorter" = "Saldo Transparente";
+"smartBanner.content.shield.button" = "Proteger";
+
+"smartBanner.content.currencyConversion.title" = "Conversión de Moneda";
+"smartBanner.content.currencyConversion.info" = "Activa para mostrar valores en USD";
+"smartBanner.content.currencyConversion.button" = "Iniciar";
+
+"smartBanner.content.autoShielding.title" = "Auto-Protección";
+"smartBanner.content.autoShielding.info" = "Activa la protección automática";
+"smartBanner.content.autoShielding.button" = "Iniciar";
+
+"currencyConversion.skipBtn" = "Omitir";
+
+"balance.availableTitle" = "Gastable:";
+"balances.pending" = "Pendiente";
+"balances.dismiss" = "Descartar";
+"balances.spendableBalance.title" = "Balance Gastable";
+"balances.spendableBalance" = "Protegido (Gastable)";
+"balances.infoPending" = "Las transacciones pendientes están siendo minadas y confirmadas.";
+"balances.infoSyncing" = "Zashi está escaneando la blockchain para asegurarse de que tus balances se muestren correctamente.";
+"balances.infoShielding" = "Protege tus ZEC transparentes para hacerlos gastables y privados. Esto creará una transacción de protección en la billetera, consolidando tus fondos transparentes y protegidos. (Tarifa típica: %@)";
+"balances.everythingDone" = "Todos tus fondos están protegidos y son gastables.";
+
+"shieldFunds.error.title" = "Error de Protección";
+"shieldFunds.error.failure.message" = "Ocurrió un error durante la última transacción de protección. Puedes intentarlo nuevamente más tarde o reportar este problema si persiste. \n\n %@";
+"shieldFunds.error.gprc.message" = "Ocurrió un error durante la última transacción de protección. Intentaremos reenviar la transacción más tarde. Si falla, es posible que debas repetir el intento de protección más tarde.";
+
+"transactionHistory.status" = "Estado";
+
+// MARK: - Secret Recovery Phrase Display
+"recoveryPhraseDisplay.screenTitle" = "Respaldo de Billetera";
+"recoveryPhraseDisplay.title" = "Frase de Recuperación Secreta";
+"recoveryPhraseDisplay.description" = "¡Estas palabras son la única manera de recuperar tus fondos! Asegúrate de guardarlas en el orden correcto.";
+"recoveryPhraseDisplay.button.wroteItDown" = "Lo he guardado";
+"recoveryPhraseDisplay.button.remindMeLater" = "Recuérdame más tarde";
+
+"recoveryPhraseDisplay.noWords" = "Faltan las claves. No hay ninguna frase de respaldo almacenada en el llavero.";
+"recoveryPhraseDisplay.birthdayTitle" = "Altura de Cumpleaños de la Billetera";
+"recoveryPhraseDisplay.reveal" = "Mostrar detalles de seguridad";
+"recoveryPhraseDisplay.hide" = "Ocultar detalles de seguridad";
+"recoveryPhraseDisplay.alert.failed.title" = "No se pudo cargar la billetera almacenada";
+"recoveryPhraseDisplay.alert.failed.message" = "El intento de cargar la billetera almacenada desde el llavero falló. Error: %@";
+
+"recoveryPhraseDisplay.warningTitle" = "Tu Frase de Recuperación Secreta";
+"recoveryPhraseDisplay.warningInfo" =  "Tu frase de recuperación secreta es un conjunto único de 24 palabras, que aparecen en un orden preciso. Protege el acceso a tus fondos.";
+
+"recoveryPhraseDisplay.warningControl.title" = "Controla tu billetera";
+"recoveryPhraseDisplay.warningControl.info" = "Úsala para acceder a tus fondos desde otros dispositivos y billeteras Zcash.";
+
+"recoveryPhraseDisplay.warningKeep.title" = "Manténla privada";
+"recoveryPhraseDisplay.warningKeep.info" = "¡No la compartas con nadie! Puede usarse para obtener control total de tus fondos.";
+
+"recoveryPhraseDisplay.warningStore.title" = "Guárdala de manera segura";
+"recoveryPhraseDisplay.warningStore.info" = "No tenemos acceso a ella y nunca te pediremos que la compartas. Si la pierdes, no puede ser recuperada.";
+
+"recoveryPhraseDisplay.warningHeight.title" = "Altura de cumpleaños de la billetera";
+"recoveryPhraseDisplay.warningHeight.info" = "La altura del bloque en el que se creó tu billetera puede acelerar significativamente el proceso de recuperación de la billetera.";
+
+"recoveryPhraseDisplay.proceedWarning" = "Mantén esta frase de manera segura oculta. ¡No tomes capturas de pantalla ni la guardes en tu teléfono!";

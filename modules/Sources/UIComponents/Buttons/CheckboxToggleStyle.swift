@@ -17,7 +17,7 @@ public struct CheckboxToggleStyle: ToggleStyle {
         HStack {
             ZStack {
                 if configuration.isOn {
-                    RoundedRectangle(cornerRadius: 4)
+                    RoundedRectangle(cornerRadius: Design.Radius._xs)
                         .fill(Design.Checkboxes.onBg.color(colorScheme))
                         .frame(width: 16, height: 16)
                         .overlay {
@@ -25,11 +25,11 @@ public struct CheckboxToggleStyle: ToggleStyle {
                                 .zImage(size: 12, style: Design.Checkboxes.onFg)
                         }
                 } else {
-                    RoundedRectangle(cornerRadius: 4)
+                    RoundedRectangle(cornerRadius: Design.Radius._xs)
                         .fill(Design.Checkboxes.offBg.color(colorScheme))
                         .frame(width: 16, height: 16)
                         .background {
-                            RoundedRectangle(cornerRadius: 4)
+                            RoundedRectangle(cornerRadius: Design.Radius._xs)
                                 .stroke(Design.Checkboxes.offStroke.color(colorScheme))
                         }
                 }

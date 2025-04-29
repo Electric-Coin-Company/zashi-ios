@@ -5,17 +5,22 @@ import Generated
 import TransactionList
 import Settings
 import UIComponents
-import SyncProgress
 import Utils
 import Models
 import WalletBalances
+import Scan
+import SmartBanner
 
 public struct HomeView: View {
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorScheme) var colorScheme
     
-    let store: StoreOf<Home>
+    @Perception.Bindable var store: StoreOf<Home>
     let tokenName: String
     
+    @State var accountSwitchSheetHeight: CGFloat = .zero
+    @State var moreSheetHeight: CGFloat = .zero
+
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<Home>, tokenName: String) {
@@ -32,42 +37,127 @@ public struct HomeView: View {
                         action: \.walletBalances
                     ),
                     tokenName: tokenName,
-                    couldBeHidden: true
+                    couldBeHidden: true,
+                    shortened: true
                 )
                 .padding(.top, 1)
 
-                if walletStatus == .restoring {
-                    SyncProgressView(
-                        store: store.scope(
-                            state: \.syncProgressState,
-                            action: \.syncProgress
-                        )
-                    )
-                    .frame(height: 94)
-                    .frame(maxWidth: .infinity)
-                    .background(Asset.Colors.syncProgresBcg.color)
-                    .padding(.top, 7)
-                    .padding(.bottom, 20)
+                HStack(spacing: 8) {
+                    button(
+                        L10n.Tabs.receive,
+                        icon: Asset.Assets.Icons.received.image
+                    ) {
+                        store.send(.receiveTapped)
+                    }
+
+                    button(
+                        L10n.Tabs.send,
+                        icon: Asset.Assets.Icons.sent.image
+                    ) {
+                        store.send(.sendTapped)
+                    }
+
+                    button(
+                        L10n.HomeScreen.scan,
+                        icon: Asset.Assets.Icons.scan.image
+                    ) {
+                        store.send(.scanTapped)
+                    }
+
+                    if store.isKeystoneAccountActive {
+                        button(
+                            L10n.HomeScreen.buy,
+                            icon: Asset.Assets.Icons.shoppingBag.image
+                        ) {
+                            store.send(.buyTapped)
+                        }
+                    } else {
+                        button(
+                            L10n.HomeScreen.more,
+                            icon: Asset.Assets.Icons.dotsMenu.image
+                        ) {
+                            store.send(.moreTapped)
+                        }
+                    }
                 }
-                
-                VStack(spacing: 0) {
+                .zFont(.medium, size: 12, style: Design.Text.primary)
+                .padding(.top, 24)
+                .screenHorizontalPadding()
+
+                SmartBannerView(
+                    store: store.scope(
+                        state: \.smartBannerState,
+                        action: \.smartBanner
+                    ),
+                    tokenName: tokenName
+                )
+
+                ScrollView {
                     if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
                     } else {
-                        transactionsView()
-
-                        TransactionListView(
-                            store:
-                                store.scope(
-                                    state: \.transactionListState,
-                                    action: \.transactionList
-                                ),
-                            tokenName: tokenName
-                        )
+                        VStack(spacing: 0) {
+                            transactionsView()
+                            
+                            TransactionListView(
+                                store:
+                                    store.scope(
+                                        state: \.transactionListState,
+                                        action: \.transactionList
+                                    ),
+                                tokenName: tokenName,
+                                scrollable: false
+                            )
+                        }
                     }
                 }
             }
-            .walletStatusPanel()
+            .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
+                if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.isInAppBrowserKeystoneOn) {
+                if let url = URL(string: store.inAppBrowserURLKeystone) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.accountSwitchRequest) {
+                accountSwitchContent()
+            }
+            .sheet(isPresented: $store.moreRequest) {
+                moreContent()
+            }
+            .navigationBarItems(
+                leading:
+                    walletAccountSwitcher()
+            )
+            .navigationBarItems(
+                trailing:
+                    HStack(spacing: 0) {
+                        hideBalancesButton()
+                        
+                        settingsButton()
+                    }
+            )
+            .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
+                WithPerceptionTracking {
+                    if store.isRateTooltipEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                Tooltip(
+                                    title: L10n.Tooltip.ExchangeRate.title,
+                                    desc: L10n.Tooltip.ExchangeRate.desc
+                                ) {
+                                    store.send(.rateTooltipTapped)
+                                }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+                            }
+                        }
+                    }
+                }
+            }
             .applyScreenBackground()
             .onAppear {
                 store.send(.onAppear)
@@ -113,7 +203,7 @@ public struct HomeView: View {
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .background {
-                            RoundedRectangle(cornerRadius: 16)
+                            RoundedRectangle(cornerRadius: Design.Radius._2xl)
                                 .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                         }
                     }
@@ -172,6 +262,82 @@ public struct HomeView: View {
             }
         }
     }
+    
+    @ViewBuilder private func button(
+        _ title: String,
+        icon: Image,
+        action: @escaping () -> Void
+    ) -> some View {
+        if colorScheme == .light {
+            Button {
+                action()
+            } label: {
+                VStack(spacing: 4) {
+                    icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(title)
+                }
+                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                        .background {
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .stroke(Design.Utility.Gray._100.color(colorScheme))
+                        }
+                }
+                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+                .padding(.bottom, 4)
+            }
+        } else {
+            Button {
+                action()
+            } label: {
+                VStack(spacing: 4) {
+                    icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(title)
+                }
+                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                        .fill(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades12dp.color, location: 0.00),
+                                    Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades01dp.color, location: 1.00)
+                                ],
+                                startPoint: UnitPoint(x: 0.5, y: 0.0),
+                                endPoint: UnitPoint(x: 0.5, y: 1.0)
+                            )
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .stroke(
+                                    LinearGradient(
+                                        stops: [
+                                            Gradient.Stop(color: Design.Utility.Gray._200.color(colorScheme), location: 0.00),
+                                            Gradient.Stop(color: Design.Utility.Gray._200.color(colorScheme).opacity(0.15), location: 1.00)
+                                        ],
+                                        startPoint: UnitPoint(x: 0.5, y: 0.0),
+                                        endPoint: UnitPoint(x: 0.5, y: 1.0)
+                                    )
+                                )
+                        }
+                }
+                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+                .padding(.bottom, 4)
+            }
+        }
+    }
 }
 
 // MARK: - Previews
@@ -184,11 +350,6 @@ struct HomeView_Previews: PreviewProvider {
                     StoreOf<Home>(
                         initialState:
                                 .init(
-                                    syncProgressState: .init(
-                                        lastKnownSyncPercentage: Float(0.43),
-                                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
-                                        syncStatusMessage: "Syncing"
-                                    ),
                                     transactionListState: .initial,
                                     walletBalancesState: .initial,
                                     walletConfig: .initial
@@ -212,7 +373,6 @@ struct HomeView_Previews: PreviewProvider {
 extension Home.State {
     public static var initial: Self {
         .init(
-            syncProgressState: .initial,
             transactionListState: .initial,
             walletBalancesState: .initial,
             walletConfig: .initial
@@ -232,7 +392,6 @@ extension Home {
     public static var error: StoreOf<Home> {
         StoreOf<Home>(
             initialState: .init(
-                syncProgressState: .initial,
                 transactionListState: .initial,
                 walletBalancesState: .initial,
                 walletConfig: .initial

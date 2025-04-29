@@ -1,6 +1,6 @@
 //
 //  WelcomeView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 1/6/22.
 //

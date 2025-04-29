@@ -1,6 +1,6 @@
 //
 //  ReceiveView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 05.07.2022.
 //
@@ -13,67 +13,116 @@ import Generated
 import UIComponents
 import Utils
 
+// Path
+import AddressDetails
+import RequestZec
+import ZecKeyboard
+
 public struct ReceiveView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @Perception.Bindable var store: StoreOf<Receive>
     let networkType: NetworkType
+    let tokenName: String
 
-    public init(store: StoreOf<Receive>, networkType: NetworkType) {
+    public init(store: StoreOf<Receive>, networkType: NetworkType, tokenName: String) {
         self.store = store
         self.networkType = networkType
+        self.tokenName = tokenName
     }
     
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
-                WithPerceptionTracking {
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack {
-                            Text(L10n.Receive.title)
-                                .zFont(.semiBold, size: 28, style: Design.Text.primary)
-                                .lineLimit(1)
-                                .padding(.top, 24)
-                                .padding(.bottom, 6)
+            NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+                ScrollView {
+                    WithPerceptionTracking {
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack {
+                                Text(L10n.Receive.title)
+                                    .zFont(.semiBold, size: 28, style: Design.Text.primary)
+                                    .lineLimit(1)
+                                    .padding(.top, 24)
+                                    .padding(.bottom, 6)
+                                
+                                Spacer()
+                            }
                             
-                            Spacer()
+                            Text(L10n.Receive.warning)
+                                .zFont(size: 16, style: Design.Text.secondary)
+                        }
+                        .padding(.horizontal, 20)
+                        .onAppear {
+                            store.send(.updateCurrentFocus(.uaAddress))
                         }
                         
-                        Text(L10n.Receive.warning)
-                            .zFont(size: 16, style: Design.Text.secondary)
-                    }
-                    .padding(.horizontal, 20)
-                    .onAppear {
-                        store.send(.updateCurrentFocus(.uaAddress))
-                    }
-
-                    if store.selectedWalletAccount?.vendor == .keystone {
-                        addressBlock(
-                            prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
-                            title: L10n.Accounts.Keystone.shieldedAddress,
-                            address: store.unifiedAddress,
-                            postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
-                            iconFg: Design.Utility.Indigo._800,
-                            iconBg: Design.Utility.Indigo._100,
-                            bcgColor: Design.Utility.Indigo._50.color(colorScheme),
-                            expanded: store.currentFocus == .uaAddress
-                        ) {
-                            store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                        } qrAction: {
-                            store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
-                        } requestAction: {
-                            store.send(.requestTapped(store.unifiedAddress.redacted, true))
-                        }
-                        .onTapGesture {
-                            store.send(.updateCurrentFocus(.uaAddress), animation: .default)
-                        }
-                        .padding(.top, 24)
-                        
-                        if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
+                        if store.selectedWalletAccount?.vendor == .keystone {
                             addressBlock(
                                 prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
-                                title: L10n.Accounts.Keystone.transparentAddress,
-                                address: transparentAddress,
+                                title: L10n.Accounts.Keystone.shieldedAddress,
+                                address: store.unifiedAddress,
+                                postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
+                                iconFg: Design.Utility.Indigo._800,
+                                iconBg: Design.Utility.Indigo._100,
+                                bcgColor: Design.Utility.Indigo._50.color(colorScheme),
+                                expanded: store.currentFocus == .uaAddress
+                            ) {
+                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                            } qrAction: {
+                                store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
+                            } requestAction: {
+                                store.send(.requestTapped(store.unifiedAddress.redacted, true))
+                            }
+                            .onTapGesture {
+                                store.send(.updateCurrentFocus(.uaAddress), animation: .default)
+                            }
+                            .padding(.top, 24)
+                            
+                            if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
+                                addressBlock(
+                                    prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
+                                    title: L10n.Accounts.Keystone.transparentAddress,
+                                    address: transparentAddress,
+                                    iconFg: Design.Text.primary,
+                                    iconBg: Design.Surfaces.bgTertiary,
+                                    bcgColor: Design.Utility.Gray._50.color(colorScheme),
+                                    expanded: store.currentFocus == .tAddress
+                                ) {
+                                    store.send(.copyToPastboard(store.transparentAddress.redacted))
+                                } qrAction: {
+                                    store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
+                                } requestAction: {
+                                    store.send(.requestTapped(store.transparentAddress.redacted, false))
+                                }
+                                .onTapGesture {
+                                    store.send(.updateCurrentFocus(.tAddress), animation: .default)
+                                }
+                            }
+                        } else {
+                            addressBlock(
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
+                                title: L10n.Accounts.Zashi.shieldedAddress,
+                                address: store.unifiedAddress,
+                                postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
+                                iconFg: Design.Utility.Purple._800,
+                                iconBg: Design.Utility.Purple._100,
+                                bcgColor: Design.Utility.Purple._50.color(colorScheme),
+                                expanded: store.currentFocus == .uaAddress
+                            ) {
+                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                            } qrAction: {
+                                store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
+                            } requestAction: {
+                                store.send(.requestTapped(store.unifiedAddress.redacted, true))
+                            }
+                            .onTapGesture {
+                                store.send(.updateCurrentFocus(.uaAddress), animation: .default)
+                            }
+                            .padding(.top, 24)
+                            
+                            addressBlock(
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                title: L10n.Accounts.Zashi.transparentAddress,
+                                address: store.transparentAddress,
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
                                 bcgColor: Design.Utility.Gray._50.color(colorScheme),
@@ -88,76 +137,50 @@ public struct ReceiveView: View {
                             .onTapGesture {
                                 store.send(.updateCurrentFocus(.tAddress), animation: .default)
                             }
-                        }
-                    } else {
-                        addressBlock(
-                            prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
-                            title: L10n.Accounts.Zashi.shieldedAddress,
-                            address: store.unifiedAddress,
-                            postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
-                            iconFg: Design.Utility.Purple._800,
-                            iconBg: Design.Utility.Purple._100,
-                            bcgColor: Design.Utility.Purple._50.color(colorScheme),
-                            expanded: store.currentFocus == .uaAddress
-                        ) {
-                            store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                        } qrAction: {
-                            store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
-                        } requestAction: {
-                            store.send(.requestTapped(store.unifiedAddress.redacted, true))
-                        }
-                        .onTapGesture {
-                            store.send(.updateCurrentFocus(.uaAddress), animation: .default)
-                        }
-                        .padding(.top, 24)
-                        
-                        addressBlock(
-                            prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                            title: L10n.Accounts.Zashi.transparentAddress,
-                            address: store.transparentAddress,
-                            iconFg: Design.Text.primary,
-                            iconBg: Design.Surfaces.bgTertiary,
-                            bcgColor: Design.Utility.Gray._50.color(colorScheme),
-                            expanded: store.currentFocus == .tAddress
-                        ) {
-                            store.send(.copyToPastboard(store.transparentAddress.redacted))
-                        } qrAction: {
-                            store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
-                        } requestAction: {
-                            store.send(.requestTapped(store.transparentAddress.redacted, false))
-                        }
-                        .onTapGesture {
-                            store.send(.updateCurrentFocus(.tAddress), animation: .default)
-                        }
 #if DEBUG
-                        if networkType == .testnet {
-                            addressBlock(
-                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                                title: L10n.Receive.saplingAddress,
-                                address: store.saplingAddress,
-                                iconFg: Design.Text.primary,
-                                iconBg: Design.Surfaces.bgTertiary,
-                                bcgColor: .clear,
-                                expanded: store.currentFocus == .saplingAddress
-                            ) {
-                                store.send(.copyToPastboard(store.saplingAddress.redacted))
-                            } qrAction: {
-                                store.send(.addressDetailsRequest(store.saplingAddress.redacted, true))
-                            } requestAction: {
-                                store.send(.requestTapped(store.saplingAddress.redacted, true))
+                            if networkType == .testnet {
+                                addressBlock(
+                                    prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                    title: L10n.Receive.saplingAddress,
+                                    address: store.saplingAddress,
+                                    iconFg: Design.Text.primary,
+                                    iconBg: Design.Surfaces.bgTertiary,
+                                    bcgColor: .clear,
+                                    expanded: store.currentFocus == .saplingAddress
+                                ) {
+                                    store.send(.copyToPastboard(store.saplingAddress.redacted))
+                                } qrAction: {
+                                    store.send(.addressDetailsRequest(store.saplingAddress.redacted, true))
+                                } requestAction: {
+                                    store.send(.requestTapped(store.saplingAddress.redacted, true))
+                                }
+                                .onTapGesture {
+                                    store.send(.updateCurrentFocus(.saplingAddress))
+                                }
                             }
-                            .onTapGesture {
-                                store.send(.updateCurrentFocus(.saplingAddress))
-                            }
-                        }
 #endif
+                        }
                     }
                 }
+                .padding(.vertical, 1)
+                .applyScreenBackground()
+            } destination: { store in
+                switch store.case {
+                case let .addressDetails(store):
+                    AddressDetailsView(store: store)
+                case let .requestZec(store):
+                    RequestZecView(store: store, tokenName: tokenName)
+                case let .requestZecSummary(store):
+                    RequestZecSummaryView(store: store, tokenName: tokenName)
+                case let .zecKeyboard(store):
+                    ZecKeyboardView(store: store, tokenName: tokenName)
+                }
             }
-            .padding(.vertical, 1)
+            .navigationBarHidden(!store.path.isEmpty)
         }
         .padding(.horizontal, 4)
         .applyScreenBackground()
+        .zashiBack()
     }
     
     @ViewBuilder private func addressBlock(
@@ -234,7 +257,7 @@ public struct ReceiveView: View {
         }
         .padding(.vertical, 20)
         .background {
-            RoundedRectangle(cornerRadius: 24)
+            RoundedRectangle(cornerRadius: Design.Radius._4xl)
                 .fill(bcgColor)
         }
     }
@@ -252,7 +275,7 @@ public struct ReceiveView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 64)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(fill)
                     }
                 
@@ -265,7 +288,7 @@ public struct ReceiveView: View {
 
 #Preview {
     NavigationView {
-        ReceiveView(store: Receive.placeholder, networkType: .testnet)
+        ReceiveView(store: Receive.placeholder, networkType: .testnet, tokenName: "ZEC")
     }
 }
 

@@ -133,7 +133,9 @@ public struct TransactionDetailsView: View {
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()
             }
-            .zashiBack(hidden: store.isCloseButtonRequired)
+            .zashiBack(hidden: store.isCloseButtonRequired) {
+                store.send(.closeDetailTapped)
+            }
             .zashiBackV2(hidden: !store.isCloseButtonRequired) {
                 store.send(.closeDetailTapped)
             }
@@ -151,7 +153,6 @@ public struct TransactionDetailsView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .walletStatusPanel(background: .transparent)
         .applyDefaultGradientScreenBackground()
     }
 }
@@ -193,7 +194,7 @@ extension TransactionDetailsView {
             HStack(spacing: 0) {
                 Circle()
                     .frame(width: 48, height: 48)
-                    .zForegroundColor(Design.Surfaces.brandBg)
+                    .zForegroundColor(Design.Surfaces.brandPrimary)
                     .overlay {
                         ZcashSymbol()
                             .frame(width: 34, height: 34)
@@ -201,7 +202,7 @@ extension TransactionDetailsView {
                     }
                 
                 if store.transaction.isShieldingTransaction {
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
                         .fill(Design.Utility.Purple._500.color(colorScheme))
                         .frame(width: 48, height: 48)
                         .overlay {
@@ -211,13 +212,13 @@ extension TransactionDetailsView {
                                     .frame(width: 51, height: 51)
 
                                 Asset.Assets.Icons.shieldTickFilled.image
-                                    .zImage(size: 24, style: Design.Text.primary)
+                                    .zImage(size: 24, style: Design.Text.opposite)
                             }
                         }
                         .offset(x: -4)
                 }
                 
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
                     .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                     .frame(width: 48, height: 48)
                     .overlay {
@@ -363,7 +364,9 @@ extension TransactionDetailsView {
                 }
                 
                 detailView(
-                    title: L10n.TransactionHistory.completed,
+                    title: store.transaction.listDateYearString == nil
+                    ? L10n.TransactionHistory.status
+                    : L10n.TransactionHistory.completed,
                     value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                     rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                 )
@@ -469,7 +472,9 @@ extension TransactionDetailsView {
                     }
 
                     detailView(
-                        title: L10n.TransactionHistory.completed,
+                        title: store.transaction.listDateYearString == nil
+                        ? L10n.TransactionHistory.status
+                        : L10n.TransactionHistory.completed,
                         value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
@@ -573,7 +578,7 @@ extension TransactionDetailsView {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(12)
                     .background {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                     .onTapGesture {
@@ -605,7 +610,7 @@ extension TransactionDetailsView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
                 .background {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }
