@@ -13,7 +13,12 @@ import UIComponents
 extension SignWithKeystoneView {
     @ViewBuilder func rejectSendContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.4, *) {
+                mainBody(colorScheme: colorScheme)
+                    .presentationDetents([.height(accountSwitchSheetHeight)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Design.Radius._4xl)
+            } else if #available(iOS 16.0, *) {
                 mainBody(colorScheme: colorScheme)
                     .presentationDetents([.height(accountSwitchSheetHeight)])
                     .presentationDragIndicator(.visible)

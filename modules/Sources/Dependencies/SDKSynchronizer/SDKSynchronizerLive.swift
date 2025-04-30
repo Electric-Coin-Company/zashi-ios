@@ -1,6 +1,6 @@
 //
 //  SDKSynchronizerLive.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 15.11.2022.
 //
@@ -21,7 +21,7 @@ extension SDKSynchronizerClient: DependencyKey {
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-        
+
         let network = zcashSDKEnvironment.network
         
         #if DEBUG
@@ -47,17 +47,11 @@ extension SDKSynchronizerClient: DependencyKey {
         let synchronizer = SDKSynchronizer(initializer: initializer)
 
         return SDKSynchronizerClient(
-            stateStream: { synchronizer.stateStream
-            },
+            stateStream: { synchronizer.stateStream },
             eventStream: { synchronizer.eventStream },
             exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
-            prepareWith: {
-                seedBytes,
-                walletBirtday,
-                walletMode,
-                name,
-                keySource in
+            prepareWith: { seedBytes, walletBirtday, walletMode, name, keySource in
                 let result = try await synchronizer.prepare(
                     with: seedBytes,
                     walletBirthday: walletBirtday,
@@ -206,6 +200,9 @@ extension SDKSynchronizerClient: DependencyKey {
 
                 return sortedWalletAccounts
             },
+            estimateBirthdayHeight: { date in
+                synchronizer.estimateBirthdayHeight(for: date)
+            },
             createPCZTFromProposal: { accountUUID, proposal in
                 try await synchronizer.createPCZTFromProposal(accountUUID: accountUUID, proposal: proposal)
             },
@@ -307,10 +304,10 @@ extension SDKSynchronizerClient {
         let clearedTransactions = zcashTransactions.compactMap { rawTransaction in
             rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
         }
-
+        
         var clearedTxs: [TransactionState] = []
-
-        let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+        
+        let latestBlockHeight = try? await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
         
         for clearedTransaction in clearedTransactions {
             var hasTransparentOutputs = false

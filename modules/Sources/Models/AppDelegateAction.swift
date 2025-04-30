@@ -1,6 +1,6 @@
 //
 //  AppDelegateAction.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 27.03.2022.
 //

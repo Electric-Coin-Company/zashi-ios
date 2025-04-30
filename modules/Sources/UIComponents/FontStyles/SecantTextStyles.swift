@@ -1,6 +1,6 @@
 //
 //  SecantTextStyles.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 10/28/21.
 //

@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash-hackworks/MnemonicSwift",
       "state" : {
-        "revision" : "716a2c32ac2bbd8a1499ac834077df42b75edc85",
-        "version" : "2.2.4"
+        "revision" : "2d7f3e76e904621e111efada6cc9575f39543bb2",
+        "version" : "2.2.5"
       }
     },
     {
@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "2ebda6ae2b155a5c3d75aff5f6d25c024bc91311",
-        "version" : "1.17.1"
+        "revision" : "fd409c79ea8ba378bd3997e2719dcf74f4ed909b",
+        "version" : "1.19.0"
       }
     },
     {
@@ -266,8 +266,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-navigation",
       "state" : {
-        "revision" : "16a27ab7ae0abfefbbcba73581b3e2380b47a579",
-        "version" : "2.2.2"
+        "revision" : "db6bc9dbfed001f21e6728fd36413d9342c235b4",
+        "version" : "2.3.0"
       }
     },
     {
@@ -446,8 +446,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "78cc7388a2ba5530888a99e584823a7399631d48",
-        "version" : "0.14.2"
+        "revision" : "79746bb672dd207e0456b45489b88f3da8f55f36",
+        "version" : "0.15.0"
       }
     },
     {
@@ -464,8 +464,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "e5e826d13349746eabf7b481ccf7c6adcbc32bce",
-        "version" : "2.2.11"
+        "revision" : "768421a1f8bd4c66a4e4c59422c4b0e96930484a",
+        "version" : "2.2.13"
       }
     }
   ],

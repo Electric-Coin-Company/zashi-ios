@@ -9,7 +9,7 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
-import SendFlow
+import SendForm
 import UIComponents
 import Utils
 import SendConfirmation
@@ -17,13 +17,13 @@ import SendConfirmation
 
 class SendSnapshotTests: XCTestCase {
     func testTransactionSendSnapshot() throws {
-        var state = SendFlow.State.initial
+        var state = SendForm.State.initial
         state.addMemoState = true
 
         let store = Store(
             initialState: state
         ) {
-            SendFlow()
+            SendForm()
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -33,7 +33,7 @@ class SendSnapshotTests: XCTestCase {
                 .dependency(\.exchangeRate, .noOp)
         }
 
-        addAttachments(SendFlowView(store: store, tokenName: "ZEC"))
+        addAttachments(SendFormView(store: store, tokenName: "ZEC"))
     }
     
     func testTransactionConfirmationScreen_withMemo() throws {

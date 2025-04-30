@@ -72,10 +72,10 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
             .padding(.vertical, 12)
             .frame(maxWidth: infinityWidth ? .infinity : nil)
             .background {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: Design.Radius._xl)
                     .fill(bgColor().color(colorScheme))
                     .overlay {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: Design.Radius._xl)
                             .stroke(strokeColor().color(colorScheme))
                     }
             }

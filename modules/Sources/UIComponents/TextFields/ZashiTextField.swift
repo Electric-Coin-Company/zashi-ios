@@ -98,10 +98,10 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: Design.Radius._lg)
                     .fill(Design.Inputs.Default.bg.color(colorScheme))
                     .overlay {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: Design.Radius._lg)
                             .stroke(
                                 error == nil
                                 ? Design.Inputs.Default.bg.color(colorScheme)

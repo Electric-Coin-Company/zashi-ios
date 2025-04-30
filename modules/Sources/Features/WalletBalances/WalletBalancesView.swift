@@ -1,6 +1,6 @@
 //
 //  WalletBalancesView.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04-02-2024
 //
@@ -15,76 +15,86 @@ public struct WalletBalancesView: View {
     
     @Perception.Bindable var store: StoreOf<WalletBalances>
     let tokenName: String
-    let underlinedAvailableBalance: Bool
     let couldBeHidden: Bool
+    let shortened: Bool
 
     public init(
         store: StoreOf<WalletBalances>,
         tokenName: String,
-        underlinedAvailableBalance: Bool = true,
-        couldBeHidden: Bool = false
+        couldBeHidden: Bool = false,
+        shortened: Bool = false
     ) {
         self.store = store
         self.tokenName = tokenName
-        self.underlinedAvailableBalance = underlinedAvailableBalance
         self.couldBeHidden = couldBeHidden
+        self.shortened = shortened
     }
 
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
+                balanceContent()
                     .padding(.top, 40)
                     .anchorPreference(
                         key: ExchangeRateFeaturePreferenceKey.self,
                         value: .bounds
                     ) { $0 }
-
 #if !SECANT_DISTRIB
                     .accessDebugMenuWithHiddenGesture {
                         store.send(.debugMenuStartup)
                     }
 #endif
 
-                exchangeRate()
+                if shortened {
+                    exchangeRate()
+                }
 
                 if store.migratingDatabase {
                     Text(L10n.Home.migratingDatabases)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .foregroundColor(Asset.Colors.primary.color)
-                        .padding(.top, 10)
+                        .padding(.top, 12)
                         .padding(.bottom, 30)
-                } else {
-                    if underlinedAvailableBalance {
-                        Button {
-                            store.send(.availableBalanceTapped)
-                        } label: {
-                            AvailableBalanceView(
-                                balance: store.shieldedBalance,
-                                tokenName: tokenName,
-                                showIndicator: store.isProcessingZeroAvailableBalance,
-                                underlined: underlinedAvailableBalance,
-                                couldBeHidden: couldBeHidden
-                            )
-                            .padding(.top, 10)
-                            .padding(.bottom, 30)
-                        }
-                    } else {
+                } else if store.spendability != .everything && !shortened {
+                    Button {
+                        store.send(.availableBalanceTapped)
+                    } label: {
                         AvailableBalanceView(
                             balance: store.shieldedBalance,
-                            tokenName: tokenName,
-                            showIndicator: store.isProcessingZeroAvailableBalance,
-                            underlined: underlinedAvailableBalance,
-                            couldBeHidden: couldBeHidden
+                            showIndicator: store.isProcessingZeroAvailableBalance
                         )
-                        .padding(.top, 10)
+                        .padding(.top, 12)
                         .padding(.bottom, 30)
                     }
+                } else if !shortened {
+                    Color.clear
+                        .padding(.bottom, 30)
                 }
             }
             .foregroundColor(Asset.Colors.primary.color)
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
+        }
+    }
+    
+    @ViewBuilder private func balanceContent() -> some View {
+        HStack(spacing: 0) {
+            ZcashSymbol()
+                .frame(width: 32, height: 32)
+                .zForegroundColor(Design.Text.primary)
+            
+            if shortened {
+                ZatoshiText(store.totalBalance, .abbreviated)
+                    .zFont(.semiBold, size: 48, style: Design.Text.primary)
+            } else {
+                ZatoshiRepresentationView(
+                    balance: store.totalBalance,
+                    fontName: FontFamily.Inter.semiBold.name,
+                    mostSignificantFontSize: 48,
+                    leastSignificantFontSize: 20,
+                    format: .expanded
+                )
+            }
         }
     }
     
@@ -141,7 +151,7 @@ public struct WalletBalancesView: View {
                             .padding(8)
                             .padding(.horizontal, 6)
                             .background {
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: Design.Radius._lg)
                                     .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                                     .background {
                                         Design.Surfaces.bgSecondary.color(colorScheme)

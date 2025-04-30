@@ -14,25 +14,33 @@ import Generated
 import Foundation
 import ExportLogs
 import OnboardingFlow
-import Tabs
 import ReadTransactionsStorage
-import RecoveryPhraseDisplay
 import BackgroundTasks
 import Utils
 import UserDefaults
-import ServerSetup
 import ExchangeRate
 import FlexaHandler
 import Flexa
 import AutolockHandler
 import UIComponents
-import AddressBook
 import LocalAuthenticationHandler
 import DeeplinkWarning
 import URIParser
 import OSStatusError
 import AddressBookClient
 import UserMetadataProvider
+import AudioServices
+import ShieldingProcessor
+import SupportDataGenerator
+
+// Path
+import CurrencyConversionSetup
+import Home
+import Receive
+import RecoveryPhraseDisplay
+import CoordFlows
+import ServerSetup
+import Settings
 
 @Reducer
 public struct Root {
@@ -40,7 +48,7 @@ public struct Root {
         static let maxResetZashiAppAttempts = 3
         static let maxResetZashiSDKAttempts = 3
     }
-    
+
     let CancelId = UUID()
     let CancelStateId = UUID()
     let CancelBatteryStateId = UUID()
@@ -50,14 +58,24 @@ public struct Root {
     let CancelFlexaId = UUID()
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State {
+        public enum Path {
+            case addKeystoneHWWalletCoordFlow
+            case currencyConversionSetup
+            case receive
+            case requestZecCoordFlow
+            case scanCoordFlow
+            case sendCoordFlow
+            case settings
+            case transactionsCoordFlow
+            case walletBackup
+        }
+        
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
+        public var shieldingProcessorCancelId = UUID()
 
-        public var addressBookBinding: Bool = false
-        public var addressBookContactBinding: Bool = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-        public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
@@ -68,20 +86,25 @@ public struct Root {
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var homeState: Home.State = .initial
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
         public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
         public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
+        public var messageToBeShared = ""
+        public var messageShareBinding: String?
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
+        public var path: Path? = nil
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
-        public var serverSetupViewBinding: Bool = false
+        public var serverSetupViewBinding = false
+        public var signWithKeystoneCoordFlowBinding = false
         public var splashAppeared = false
-        public var tabsState: Tabs.State
+        public var supportData: SupportData?
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -89,10 +112,22 @@ public struct Root {
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
+        public var zashiUAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
+        // Path
+        public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
+        public var currencyConversionSetupState = CurrencyConversionSetup.State.initial
+        public var receiveState = Receive.State.initial
+        public var requestZecCoordFlowState = RequestZecCoordFlow.State.initial
+        public var scanCoordFlowState = ScanCoordFlow.State.initial
+        public var sendCoordFlowState = SendCoordFlow.State.initial
+        public var settingsState = Settings.State.initial
+        public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
+        public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
+        public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
+
         public init(
-            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
@@ -104,12 +139,10 @@ public struct Root {
             onboardingState: OnboardingFlow.State,
             osStatusErrorState: OSStatusError.State = .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State,
-            tabsState: Tabs.State,
             serverSetupState: ServerSetup.State = .initial,
             walletConfig: WalletConfig,
             welcomeState: Welcome.State
         ) {
-            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
@@ -122,22 +155,17 @@ public struct Root {
             self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
             self.serverSetupState = serverSetupState
-            self.tabsState = tabsState
             self.walletConfig = walletConfig
             self.welcomeState = welcomeState
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action: BindableAction {
         public enum ConfirmationDialog: Equatable {
             case fullRescan
             case quickRescan
         }
 
-        case addressBook(AddressBook.Action)
-        case addressBookBinding(Bool)
-        case addressBookContactBinding(Bool)
-        case addressBookAccessGranted
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification?)
         case binding(BindingAction<Root.State>)
@@ -148,8 +176,9 @@ public struct Root {
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case flexaOnTransactionRequest(FlexaTransaction?)
+        case flexaOpenRequest
         case flexaTransactionFailed(String)
-        case tabs(Tabs.Action)
+        case home(Home.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
         case resetZashiFinishProcessing
@@ -161,15 +190,30 @@ public struct Root {
         case onboarding(OnboardingFlow.Action)
         case osStatusError(OSStatusError.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
-        case splashFinished
-        case splashRemovalRequested
         case serverSetup(ServerSetup.Action)
         case serverSetupBindingUpdated(Bool)
+        case splashFinished
+        case splashRemovalRequested
         case synchronizerStateChanged(RedactableSynchronizerState)
+        case transactionDetailsOpen(String)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(Welcome.Action)
         
+        // Path
+        case addKeystoneHWWalletCoordFlow(AddKeystoneHWWalletCoordFlow.Action)
+        case currencyConversionSetup(CurrencyConversionSetup.Action)
+        case receive(Receive.Action)
+        case requestZecCoordFlow(RequestZecCoordFlow.Action)
+        case scanCoordFlow(ScanCoordFlow.Action)
+        case sendAgainRequested(TransactionState)
+        case sendCoordFlow(SendCoordFlow.Action)
+        case settings(Settings.Action)
+        case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
+        case signWithKeystoneRequested
+        case transactionsCoordFlow(TransactionsCoordFlow.Action)
+        case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
+
         // Transactions
         case observeTransactions
         case foundTransactions([ZcashTransaction.Overview])
@@ -185,9 +229,16 @@ public struct Root {
         // UserMetadata
         case loadUserMetadata
         case resolveMetadataEncryptionKeys
+        
+        // Shielding
+        case observeShieldingProcessor
+        case reportShieldingFailure
+        case shareFinished
+        case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
     }
 
     @Dependency(\.addressBook) var addressBook
+    @Dependency(\.audioServices) var audioServices
     @Dependency(\.autolockHandler) var autolockHandler
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
@@ -201,6 +252,7 @@ public struct Root {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.shieldingProcessor) var shieldingProcessor
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userMetadataProvider) var userMetadataProvider
@@ -214,20 +266,18 @@ public struct Root {
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
+        BindingReducer()
+        
         Scope(state: \.deeplinkWarningState, action: \.deeplinkWarning) {
             DeeplinkWarning()
         }
-        
-        Scope(state: \.addressBookState, action: \.addressBook) {
-            AddressBook()
-        }
-        
+
         Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
 
-        Scope(state: \.tabsState, action: \.tabs) {
-            Tabs()
+        Scope(state: \.homeState, action: \.home) {
+            Home()
         }
 
         Scope(state: \.exportLogsState, action: \.exportLogs) {
@@ -254,6 +304,46 @@ public struct Root {
             OSStatusError()
         }
 
+        Scope(state: \.settingsState, action: \.settings) {
+            Settings()
+        }
+
+        Scope(state: \.receiveState, action: \.receive) {
+            Receive()
+        }
+        
+        Scope(state: \.requestZecCoordFlowState, action: \.requestZecCoordFlow) {
+            RequestZecCoordFlow()
+        }
+        
+        Scope(state: \.sendCoordFlowState, action: \.sendCoordFlow) {
+            SendCoordFlow()
+        }
+        
+        Scope(state: \.scanCoordFlowState, action: \.scanCoordFlow) {
+            ScanCoordFlow()
+        }
+        
+        Scope(state: \.addKeystoneHWWalletCoordFlowState, action: \.addKeystoneHWWalletCoordFlow) {
+            AddKeystoneHWWalletCoordFlow()
+        }
+
+        Scope(state: \.transactionsCoordFlowState, action: \.transactionsCoordFlow) {
+            TransactionsCoordFlow()
+        }
+        
+        Scope(state: \.walletBackupCoordFlowState, action: \.walletBackupCoordFlow) {
+            WalletBackupCoordFlow()
+        }
+
+        Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
+            CurrencyConversionSetup()
+        }
+
+        Scope(state: \.signWithKeystoneCoordFlowState, action: \.signWithKeystoneCoordFlow) {
+            SignWithKeystoneCoordFlow()
+        }
+
         initializationReduce()
 
         destinationReduce()
@@ -265,6 +355,10 @@ public struct Root {
         addressBookReduce()
         
         userMetadataReduce()
+        
+        coordinatorReduce()
+        
+        shieldingProcessorReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -278,55 +372,7 @@ public struct Root {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
-            
-            case .addressBookBinding(let newValue):
-                state.addressBookBinding = newValue
-                return .none
 
-            case .addressBookContactBinding(let newValue):
-                state.addressBookContactBinding = newValue
-                return .none
-
-            case .tabs(.send(.addNewContactTapped(let address))):
-                state.addressBookContactBinding = true
-                state.addressBookState.isValidZcashAddress = true
-                state.addressBookState.isNameFocused = true
-                state.addressBookState.address = address.data
-                return .none
-                
-            case .addressBook(.saveButtonTapped):
-                if state.addressBookBinding {
-                    state.addressBookBinding = false
-                }
-                if state.addressBookContactBinding {
-                    state.addressBookContactBinding = false
-                }
-                return .none
-
-            case .addressBookAccessGranted:
-                state.addressBookBinding = true
-                state.addressBookState.isInSelectMode = true
-                return .none
-
-            case .tabs(.send(.addressBookTapped)):
-                return .run { send in
-                    if await !localAuthentication.authenticate() {
-                        return
-                    }
-                    await send(.addressBookAccessGranted)
-                }
-
-            case .addressBook(.walletAccountTapped(let walletAccount)):
-                guard let address = walletAccount.uAddress?.stringEncoded else {
-                    return .none
-                }
-                state.addressBookBinding = false
-                return .send(.tabs(.send(.scan(.found(address.redacted)))))
-
-            case .addressBook(.editId(let address)):
-                state.addressBookBinding = false
-                return .send(.tabs(.send(.scan(.found(address.redacted)))))
-                
             case .serverSetup:
                 return .none
                 
@@ -335,7 +381,8 @@ public struct Root {
                 return .none
                 
             case .batteryStateChanged:
-                autolockHandler.value(state.walletStatus == .restoring)
+                let leavesScreenOpen = userDefaults.objectForKey(Constants.udLeavesScreenOpen) as? Bool ?? false
+                autolockHandler.value(state.walletStatus == .restoring && leavesScreenOpen)
                 return .none
                 
             case .cancelAllRunningEffects:
@@ -348,10 +395,12 @@ public struct Root {
                     .cancel(id: DidFinishLaunchingId)
                 )
 
+            case .onboarding(.newWalletSuccessfulyCreated):
+                return .send(.initialization(.initializeSDK(.newWallet)))
+
             default: return .none
             }
         }
-        .ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }
 
@@ -481,22 +530,14 @@ extension AlertState where Action == Root.Action {
             ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
                 TextState(L10n.General.yes)
             }
-            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+            ButtonState(role: .cancel, action: .initialization(.resetZashiRequestCanceled)) {
                 TextState(L10n.General.no)
             }
         } message: {
             TextState(L10n.Root.Initialization.Alert.Wipe.message)
         }
     }
-    
-    public static func successfullyRecovered() -> AlertState {
-        AlertState {
-            TextState(L10n.General.success)
-        } message: {
-            TextState(L10n.ImportWallet.Alert.Success.message)
-        }
-    }
-    
+
     public static func differentSeed() -> AlertState {
         AlertState {
             TextState(L10n.General.Alert.warning)
@@ -539,6 +580,29 @@ extension AlertState where Action == Root.Action {
             }
         } message: {
             TextState(L10n.Root.ServiceUnavailable.message)
+        }
+    }
+    
+    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+        AlertState {
+            TextState(L10n.ShieldFunds.Error.title)
+        } actions: {
+            ButtonState(action: .alert(.dismiss)) {
+                TextState(L10n.General.ok)
+            }
+            ButtonState(action: .reportShieldingFailure) {
+                TextState(L10n.Send.report)
+            }
+        } message: {
+            TextState(L10n.ShieldFunds.Error.Failure.message(error.detailedMessage))
+        }
+    }
+    
+    public static func shieldFundsGrpc() -> AlertState {
+        AlertState {
+            TextState(L10n.ShieldFunds.Error.title)
+        } message: {
+            TextState(L10n.ShieldFunds.Error.Gprc.message)
         }
     }
 }

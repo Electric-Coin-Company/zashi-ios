@@ -1,6 +1,6 @@
 //
 //  BalancesStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 04.08.2022.
 //
@@ -11,94 +11,91 @@ import ZcashLightClientKit
 import DerivationTool
 import MnemonicClient
 import NumberFormatter
-import PartialProposalError
 import Utils
 import Generated
 import WalletStorage
 import SDKSynchronizer
 import Models
-import SyncProgress
-import WalletBalances
 import ZcashSDKEnvironment
+import ShieldingProcessor
 
 @Reducer
 public struct Balances {
-    private let CancelId = UUID()
-    
     @ObservableState
     public struct State: Equatable {
-        public enum Destination: Equatable {
-            case partialProposalError
-        }
+        public var stateStreamCancelId = UUID()
+        public var shieldingProcessorCancelId = UUID()
 
-        @Presents public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
-        public var destination: Destination?
-        public var isShieldingFunds: Bool
-        public var isHintBoxVisible = false
-        public var partialProposalErrorState: PartialProposalError.State
+        public var isShielding: Bool
         public var pendingTransactions: Zatoshi
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var shieldedBalance: Zatoshi
-        public var syncProgressState: SyncProgress.State
+        public var shieldedWithPendingBalance: Zatoshi = .zero
+        public var spendability: Spendability = .everything
+        public var totalBalance: Zatoshi = .zero
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transparentBalance: Zatoshi
-        public var walletBalancesState: WalletBalances.State
 
+        public var feeStr: String {
+            Zatoshi(100_000).decimalString()
+        }
+        
+        public var isPendingTransaction: Bool {
+            transactions.isAnythingPending()
+        }
+        
+        public var isPendingInProcess: Bool {
+            changePending.amount + pendingTransactions.amount > 0
+        }
+        
         public var isShieldableBalanceAvailable: Bool {
             transparentBalance.amount >= autoShieldingThreshold.amount
         }
 
         public var isShieldingButtonDisabled: Bool {
-            isShieldingFunds || !isShieldableBalanceAvailable
+            isShielding || !isShieldableBalanceAvailable
         }
-                
+
+        public var isProcessingZeroAvailableBalance: Bool {
+            if shieldedBalance.amount == 0 && transparentBalance.amount > autoShieldingThreshold.amount {
+                return false
+            }
+            
+            return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
+        }
+
         public init(
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,
-            destination: Destination? = nil,
-            isShieldingFunds: Bool,
-            isHintBoxVisible: Bool = false,
-            partialProposalErrorState: PartialProposalError.State,
+            isShielding: Bool,
             pendingTransactions: Zatoshi,
             shieldedBalance: Zatoshi = .zero,
-            syncProgressState: SyncProgress.State,
-            transparentBalance: Zatoshi = .zero,
-            walletBalancesState: WalletBalances.State
+            transparentBalance: Zatoshi = .zero
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
-            self.destination = destination
-            self.isShieldingFunds = isShieldingFunds
-            self.isHintBoxVisible = isHintBoxVisible
-            self.partialProposalErrorState = partialProposalErrorState
+            self.isShielding = isShielding
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
-            self.syncProgressState = syncProgressState
             self.transparentBalance = transparentBalance
-            self.walletBalancesState = walletBalancesState
         }
     }
 
     @CasePathable
     public enum Action: Equatable {
-        case alert(PresentationAction<Action>)
+        case dismissTapped
+        case everythingSpendable
         case onAppear
         case onDisappear
-        case partialProposalError(PartialProposalError.Action)
-        case proposalReadyForShieldingWithKeystone(Proposal)
-        case shieldFunds
-        case shieldFundsFailure(ZcashError)
-        case shieldFundsPartial([String], [String])
-        case shieldFundsSuccess
-        case shieldFundsWithKeystone
+        case sheetHeightUpdated(CGFloat)
+        case shieldFundsTapped
+        case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
         case synchronizerStateChanged(RedactableSynchronizerState)
-        case syncProgress(SyncProgress.Action)
         case updateBalance(AccountBalance?)
         case updateBalances([AccountUUID: AccountBalance])
-        case updateDestination(Balances.State.Destination?)
-        case updateHintBoxVisibility(Bool)
-        case walletBalances(WalletBalances.Action)
+        case updateBalancesOnAppear
     }
 
     @Dependency(\.derivationTool) var derivationTool
@@ -106,132 +103,70 @@ public struct Balances {
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.shieldingProcessor) var shieldingProcessor
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.syncProgressState, action: \.syncProgress) {
-            SyncProgress()
-        }
-        
-        Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
-            PartialProposalError()
-        }
-
-        Scope(state: \.walletBalancesState, action: \.walletBalances) {
-            WalletBalances()
-        }
-
         Reduce { state, action in
             switch action {
-            case .alert(.presented(let action)):
-                return .send(action)
-
-            case .alert(.dismiss):
-                state.alert = nil
-                return .none
-
-            case .alert:
-                return .none
-
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                return .publisher {
-                    sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map { $0.redacted }
-                        .map(Action.synchronizerStateChanged)
-                }
-                .cancellable(id: CancelId, cancelInFlight: true)
+                return .merge(
+                    .publisher {
+                        sdkSynchronizer.stateStream()
+                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                            .map { $0.redacted }
+                            .map(Action.synchronizerStateChanged)
+                    }
+                    .cancellable(id: state.stateStreamCancelId, cancelInFlight: true),
+                    .publisher {
+                        shieldingProcessor.observe()
+                            .map(Action.shieldingProcessorStateChanged)
+                    }
+                    .cancellable(id: state.shieldingProcessorCancelId, cancelInFlight: true),
+                    .send(.updateBalancesOnAppear)
+                )
                 
             case .onDisappear:
-                return .cancel(id: CancelId)
+                return .merge(
+                    .cancel(id: state.stateStreamCancelId),
+                    .cancel(id: state.shieldingProcessorCancelId)
+                )
             
-            case .partialProposalError:
+            case .shieldingProcessorStateChanged(let shieldingProcessorState):
+                state.isShielding = shieldingProcessorState == .requested
+                if shieldingProcessorState == .succeeded {
+                    return .send(.updateBalancesOnAppear)
+                }
                 return .none
 
-            case .shieldFunds:
-                guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
-                    return .none
-                }
-                if account.vendor == .keystone {
-                    return .send(.shieldFundsWithKeystone)
-                }
-                // Regular path only for Zashi account
-                state.isShieldingFunds = true
-                return .run { send in
-                    do {
-                        let storedWallet = try walletStorage.exportWallet()
-                        let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
-                        
-                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account.id) else { throw "sdkSynchronizer.getUnifiedAddress" }
-
-                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
-                        
-                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
-                        
-                        let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-                        
-                        await send(.walletBalances(.updateBalances))
-                        
-                        switch result {
-                        case .grpcFailure:
-                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError()))
-                        case let .failure(txIds, code, description):
-                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError()))
-                        case let .partial(txIds: txIds, statuses: statuses):
-                            await send(.shieldFundsPartial(txIds, statuses))
-                        case .success:
-                            await send(.shieldFundsSuccess)
-                        }
-                    } catch {
-                        await send(.shieldFundsFailure(error.toZcashError()))
-                    }
-                }
-                
-            case .shieldFundsWithKeystone:
+            case .updateBalancesOnAppear:
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
                 return .run { send in
-                    do {
-                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, nil)
-                        
-                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
-                        await send(.proposalReadyForShieldingWithKeystone(proposal))
-                    } catch {
-                        await send(.shieldFundsFailure(error.toZcashError()))
+                    if let accountBalance = try? await sdkSynchronizer.getAccountsBalances()[account.id] {
+                        await send(.updateBalance(accountBalance))
+                    } else if let accountBalance = sdkSynchronizer.latestState().accountsBalances[account.id] {
+                        await send(.updateBalance(accountBalance))
                     }
                 }
+
+            case .sheetHeightUpdated:
+                return .none
                 
-            case .proposalReadyForShieldingWithKeystone:
+            case .dismissTapped:
                 return .none
-
-            case .shieldFundsFailure(let error):
-                state.isShieldingFunds = false
-                state.alert = AlertState.shieldFundsFailure(error)
-                return .none
-
-            case .shieldFundsSuccess:
-                state.isShieldingFunds = false
-                state.walletBalancesState.transparentBalance = .zero
-                return .none
-
-            case let .shieldFundsPartial(txIds, statuses):
-                state.partialProposalErrorState.txIds = txIds
-                state.partialProposalErrorState.statuses = statuses
-                return .send(.updateDestination(.partialProposalError))
                 
+            case .shieldFundsTapped:
+                shieldingProcessor.shieldFunds()
+                return .none
+
             case .synchronizerStateChanged(let latestState):
                 return .send(.updateBalances(latestState.data.accountsBalances))
-
-            case .walletBalances(.balanceUpdated(let accountBalance)):
-                state.shieldedBalance = state.walletBalancesState.shieldedBalance
-                state.transparentBalance = state.walletBalancesState.transparentBalance
-                return .send(.updateBalance(accountBalance))
 
             case .updateBalances(let accountsBalances):
                 guard let account = state.selectedWalletAccount else {
@@ -244,34 +179,35 @@ public struct Balances {
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +
                     (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
-                return .none
+                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
+                state.transparentBalance = accountBalance?.unshielded ?? .zero
 
-            case .syncProgress:
-                return .none
+                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
+                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
 
-            case let .updateDestination(destination):
-                state.destination = destination
-                return .none
+                let everythingCondition = state.shieldedBalance == state.totalBalance
+                || (state.transparentBalance < zcashSDKEnvironment.shieldingThreshold && state.shieldedBalance == state.totalBalance - state.transparentBalance)
 
-            case .updateHintBoxVisibility(let visibility):
-                state.isHintBoxVisible = visibility
+                // spendability
+                if state.isProcessingZeroAvailableBalance {
+                    state.spendability = .nothing
+                } else if everythingCondition {
+                    state.spendability = .everything
+                    return .send(.everythingSpendable)
+                } else {
+                    state.spendability = .something
+                }
                 return .none
                 
-            case .walletBalances:
+            case .everythingSpendable:
                 return .none
             }
         }
     }
 }
 
-// MARK: Alerts
-
-extension AlertState where Action == Balances.Action {
-    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
-        } message: {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
-        }
+extension IdentifiedArrayOf<TransactionState> {
+    func isAnythingPending() -> Bool {
+        return contains(where: \.isPending)
     }
 }

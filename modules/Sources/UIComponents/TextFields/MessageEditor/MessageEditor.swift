@@ -1,6 +1,6 @@
 //
 //  MessageEditor.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 22.07.2022.
 //
@@ -100,7 +100,7 @@ public struct MessageEditorView: View {
                     .padding(.top, 4)
                 }
                 .background {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: Design.Radius._lg)
                         .fill(Design.Inputs.Default.bg.color(colorScheme))
                 }
                 

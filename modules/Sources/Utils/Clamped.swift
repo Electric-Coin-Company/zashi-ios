@@ -1,6 +1,6 @@
 //
 //  Clamped.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Francisco Gindre on 10/20/21.
 //

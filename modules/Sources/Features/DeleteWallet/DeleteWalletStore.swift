@@ -1,6 +1,6 @@
 //
 //  DeleteWalletStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 03-27-2024
 //
@@ -31,6 +31,7 @@ public struct DeleteWallet {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<DeleteWallet.State>)
         case deleteTapped
+        case deleteCanceled
     }
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -43,6 +44,10 @@ public struct DeleteWallet {
         Reduce { state, action in
             switch action {
             case .binding:
+                return .none
+
+            case .deleteCanceled:
+                state.isProcessing = false
                 return .none
 
             case .deleteTapped:

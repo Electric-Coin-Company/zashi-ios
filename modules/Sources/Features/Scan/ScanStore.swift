@@ -1,6 +1,6 @@
 //
 //  ScanStore.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 16.05.2022.
 //
@@ -39,6 +39,7 @@ public struct Scan {
         public var forceLibraryToHide = false
         public var info = ""
         public var instructions: String?
+        public var isAnythingFound = false
         public var isCameraEnabled = true
         public var isTorchAvailable = false
         public var isTorchOn = false
@@ -74,19 +75,20 @@ public struct Scan {
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public enum Action: Equatable {
-        case cancelPressed
+        case cancelTapped
+        case checkCameraPermission
         case clearInfo
         case libraryImage(UIImage?)
         case onAppear
         case onDisappear
-        case found(RedactableString)
-        case foundRP(ParserResult)
-        case foundZA(ZcashAccounts)
+        case foundAddress(RedactableString)
+        case foundRequestZec(ParserResult)
+        case foundAccounts(ZcashAccounts)
         case foundPCZT(Data)
         case animatedQRProgress(Int, Int?, Int?)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
-        case torchPressed
+        case torchTapped
     }
     
     public init() { }
@@ -97,6 +99,7 @@ public struct Scan {
             switch action {
             case .onAppear:
                 // reset the values
+                state.isAnythingFound = false
                 state.reportedPart = -1
                 state.reportedParts = 0
                 state.expectedParts = 0
@@ -106,27 +109,44 @@ public struct Scan {
                 state.info = ""
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
-                if !captureDevice.isAuthorized() {
-                    state.isCameraEnabled = false
-                    state.info = L10n.Scan.cameraSettings
-                }
-                return .none
-                
+                return .send(.checkCameraPermission)
+
             case .onDisappear:
                 return .cancel(id: state.cancelId)
                 
-            case .foundRP:
+            case .checkCameraPermission:
+                if !captureDevice.isAuthorized() {
+                    state.isCameraEnabled = false
+                    state.info = L10n.Scan.cameraSettings
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(1))
+                        await send(.checkCameraPermission)
+                    }
+                } else {
+                    state.isCameraEnabled = true
+                    state.info = ""
+                }
+                return .none
+
+            case .foundAddress:
+                state.isAnythingFound = true
+                return .none
+
+            case .foundRequestZec:
+                state.isAnythingFound = true
                 return .none
                 
-            case .foundZA:
+            case .foundAccounts:
+                state.isAnythingFound = true
                 state.progress = nil
                 return .none
 
             case .foundPCZT:
+                state.isAnythingFound = true
                 state.progress = nil
                 return .none
 
-            case .cancelPressed:
+            case .cancelTapped:
                 return .none
                 
             case .clearInfo:
@@ -141,9 +161,6 @@ public struct Scan {
                 }
                 state.expectedParts = Int(Float(expectedParts ?? 0) * 1.75)
                 state.progress = progress
-                return .none
-                
-            case .found:
                 return .none
 
             case .libraryImage(let image):
@@ -186,6 +203,9 @@ public struct Scan {
                 )
 
             case .scan(let code):
+                guard !state.isAnythingFound else {
+                    return .none
+                }
                 for checker in state.checkers {
                     if let action = checker.checker.checkQRCode(code.data) {
                         return .send(action)
@@ -197,7 +217,7 @@ public struct Scan {
                 }
                 return .send(.scanFailed(.noQRCodeFound))
 
-            case .torchPressed:
+            case .torchTapped:
                 do {
                     try captureDevice.torch(!state.isTorchOn)
                     state.isTorchOn.toggle()

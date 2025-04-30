@@ -1,6 +1,6 @@
 //
 //  AppVersionMocks.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 12.11.2022.
 //

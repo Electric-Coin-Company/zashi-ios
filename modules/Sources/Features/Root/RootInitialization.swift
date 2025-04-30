@@ -1,6 +1,6 @@
 //
 //  RootInitialization.swift
-//  secant-testnet
+//  Zashi
 //
 //  Created by Lukáš Korba on 01.12.2022.
 //
@@ -19,10 +19,11 @@ import WalletStorage
 extension Root {
     public enum Constants {
         static let udIsRestoringWallet = "udIsRestoringWallet"
+        static let udLeavesScreenOpen = "udLeaves_screen_open"
         static let noAuthenticationWithinXMinutes = 15
     }
     
-    public enum InitializationAction: Equatable {
+    public enum InitializationAction {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
         case checkRestoreWalletFlag(SyncStatus)
@@ -35,6 +36,7 @@ extension Root {
         case loadedWalletAccounts([WalletAccount])
         case resetZashi
         case resetZashiRequest
+        case resetZashiRequestCanceled
         case respondToWalletInitializationState(InitializationState)
         case restoreExistingWallet
         case seedValidationResult(Bool)
@@ -116,7 +118,7 @@ extension Root {
 
                     flexaHandler.updateBalance(shieldedWithPendingBalance, shieldedBalance)
                 }
-                
+
                 // handle possible service unavailability
                 if case .error(let error) = snapshot.syncStatus, checkUnavailableService(error) {
                     if state.walletStatus != .disconnected {
@@ -194,13 +196,21 @@ extension Root {
                 }
                 
             case .initialization(.registerForSynchronizersUpdate):
-                return .publisher {
+                let stateStreamEffect = Effect.publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map { $0.redacted }
                         .map(Root.Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelStateId, cancelInFlight: true)
+                if state.bgTask != nil {
+                    return stateStreamEffect
+                } else {
+                    return .merge(
+                        stateStreamEffect,
+                        .send(.home(.smartBanner(.evaluatePriority1)))
+                    )
+                }
 
             case .initialization(.checkWalletConfig):
                 return .publisher {
@@ -312,7 +322,7 @@ extension Root {
                                 L10n.Accounts.zashi,
                                 L10n.Accounts.zashi.lowercased()
                             )
-                            
+
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
                             await send(.resolveMetadataEncryptionKeys)
@@ -357,10 +367,10 @@ extension Root {
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
-                state.tabsState.settingsState.integrationsState.uAddress = uAddress
-                if let uAddress = uAddress?.stringEncoded {
-                    state.tabsState.sendState.memoState.uAddress = uAddress
-                }
+                state.zashiUAddress = uAddress
+                state.homeState.uAddress = uAddress
+                state.settingsState.uAddress = uAddress
+                state.requestZecCoordFlowState.uAddress = uAddress
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -369,7 +379,8 @@ extension Root {
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
                     .send(.batteryStateChanged(nil)),
-                    .send(.observeTransactions)
+                    .send(.observeTransactions),
+                    .send(.observeShieldingProcessor)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -388,12 +399,6 @@ extension Root {
                     .send(.loadUserMetadata)
                 )
 
-            case .tabs(.addKeystoneHWWallet(.loadedWalletAccounts)), .tabs(.settings(.integrations(.addKeystoneHWWallet(.loadedWalletAccounts)))):
-                return .merge(
-                    .send(.resolveMetadataEncryptionKeys),
-                    .send(.loadUserMetadata)
-                )
-                
             case .resolveMetadataEncryptionKeys:
                 do {
                     let storedWallet: StoredWallet
@@ -430,37 +435,19 @@ extension Root {
                 return .none
                 
             case .initialization(.checkBackupPhraseValidation):
-                let storedWallet: StoredWallet
                 do {
-                    storedWallet = try walletStorage.exportWallet()
+                    let _ = try walletStorage.exportWallet()
                 } catch {
                     return .send(.destination(.updateDestination(.osStatusError)))
                 }
-                var landingDestination = Root.DestinationState.Destination.tabs
-                
-                if !storedWallet.hasUserPassedPhraseBackupTest {
-                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-                    
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseDisplayState.birthday = storedWallet.birthday
-                    if let value = storedWallet.birthday?.value() {
-                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
-                    }
-                    landingDestination = .phraseDisplay
-                }
-                
+
                 state.appInitializationState = .initialized
                 let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
                 
-                return .run { [landingDestination] send in
-                    if landingDestination == .tabs {
-                        await send(.tabs(.home(.transactionList(.onAppear))))
-                    }
+                return .run { send in
                     try await mainQueue.sleep(for: .seconds(0.5))
                     if !isAtDeeplinkWarningScreen {
-                        await send(.destination(.updateDestination(landingDestination)))
+                        await send(.destination(.updateDestination(Root.DestinationState.Destination.home)))
                     }
                 }
                 .cancellable(id: CancelId, cancelInFlight: true)
@@ -469,7 +456,16 @@ extension Root {
                 state.alert = AlertState.wipeRequest()
                 return .none
                 
-            case .initialization(.resetZashi), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
+            case .initialization(.resetZashiRequestCanceled):
+                state.alert = nil
+                for (id, element) in zip(state.settingsState.path.ids, state.settingsState.path) {
+                    if element.is(\.resetZashi) {
+                        return .send(.settings(.path(.element(id: id, action: .resetZashi(.deleteCanceled)))))
+                    }
+                }
+                return .none
+
+            case .initialization(.resetZashi):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return .send(.resetZashiSDKFailed)
                 }
@@ -489,6 +485,7 @@ extension Root {
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
+                userDefaults.remove(Constants.udLeavesScreenOpen)
                 flexaHandler.signOut()
                 userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()
@@ -503,6 +500,7 @@ extension Root {
                 state.$transactionMemos.withLock { $0 = [:] }
                 state.$addressBookContacts.withLock { $0 = .empty }
                 state.$transactions.withLock { $0 = [] }
+                state.path = nil
 
                 return .send(.resetZashiKeychainRequest)
                 
@@ -549,15 +547,12 @@ extension Root {
                 }
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
-                    return .concatenate(
-                        .cancel(id: SynchronizerCancelId),
-                        .send(.onboarding(.importWallet(.updateDestination(.birthday))))
-                    )
+                    return .cancel(id: SynchronizerCancelId)
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        .send(.onboarding(.securityWarning(.createNewWallet)))
+                        .send(.onboarding(.createNewWalletRequested))
                     )
                 } else {
                     return .concatenate(
@@ -567,7 +562,12 @@ extension Root {
                 }
                 
             case .resetZashiKeychainFailedWithCorruptedData(let errMsg):
-                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.settingsState.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeKeychainFailed(errMsg)
                 return .cancel(id: SynchronizerCancelId)
 
@@ -577,7 +577,12 @@ extension Root {
                     return .send(.resetZashiKeychainRequest)
                 }
                 state.maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
-                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.settingsState.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeFailed(osStatus)
                 return .cancel(id: SynchronizerCancelId)
 
@@ -590,31 +595,31 @@ extension Root {
                     )
                 }
                 state.maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
-                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.settingsState.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeFailed(Int32.max)
                 return .cancel(id: SynchronizerCancelId)
 
-            case .phraseDisplay(.finishedPressed), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
-                do {
-                    try walletStorage.markUserPassedPhraseBackupTest(true)
-                    state.destinationState.destination = .tabs
-                } catch {
-                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
-                }
+            case .phraseDisplay(.finishedTapped), .onboarding(.newWalletSuccessfulyCreated):
+                state.destinationState.destination = .home
                 return .none
                 
-            case .welcome(.debugMenuStartup), .tabs(.home(.walletBalances(.debugMenuStartup))):
+            case .welcome(.debugMenuStartup)://, .tabs(.home(.walletBalances(.debugMenuStartup))):
                 return .concatenate(
                     Effect.cancel(id: CancelId),
                     .send(.destination(.updateDestination(.startup)))
                 )
 
-            case .onboarding(.securityWarning(.confirmTapped)):
+            case .onboarding(.createNewWalletTapped):
                 if state.appInitializationState == .keysMissing {
                     state.alert = AlertState.existingWallet()
                     return .none
                 } else {
-                    return .send(.onboarding(.securityWarning(.createNewWallet)))
+                    return .send(.onboarding(.createNewWalletRequested))
                 }
                 
             case .initialization(.restoreExistingWallet):
@@ -623,41 +628,9 @@ extension Root {
                     try await mainQueue.sleep(for: .seconds(1))
                     await send(.onboarding(.importExistingWallet))
                 }
-                
-            case .onboarding(.importWallet(.nextPressed)):
-                if state.appInitializationState == .keysMissing {
-                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
-                    return .run { send in
-                        do {
-                            let seedBytes = try mnemonic.toSeed(seedPhrase)
-                            let result = try await sdkSynchronizer.isSeedRelevantToAnyDerivedAccount(seedBytes)
-                            await send(.initialization(.seedValidationResult(result)))
-                        } catch {
-                            await send(.initialization(.seedValidationResult(false)))
-                        }
-                    }
-                } else {
-                    state.onboardingState.importWalletState.destination = .birthday
-                    return .none
-                }
-
-            case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
-                state.destinationState.destination = .tabs
-                return .none
-
-            case .onboarding(.importWallet(.initializeSDK)):
-                state.isRestoringWallet = true
-                userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                state.$walletStatus.withLock { $0 = .restoring }
-                return .concatenate(
-                    .send(.initialization(.initializeSDK(.restoreWallet))),
-                    .send(.initialization(.checkBackupPhraseValidation))
-                )
 
             case .initialization(.seedValidationResult(let validSeed)):
-                if validSeed {
-                    state.onboardingState.importWalletState.destination = .birthday
-                } else {
+                if !validSeed {
                     state.alert = AlertState.differentSeed()
                 }
                 return .none
@@ -665,7 +638,6 @@ extension Root {
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig
-                state.tabsState.homeState.walletConfig = walletConfig
                 return .none
 
             case .initialization(.initializationFailed(let error)):
@@ -673,12 +645,7 @@ extension Root {
                 state.alert = AlertState.initializationFailed(error)
                 return .none
 
-            case .onboarding(.securityWarning(.newWalletCreated)):
-                return .send(.initialization(.initializeSDK(.newWallet)))
-                
-            case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
-                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata:
+            default:
                 return .none
             }
         }

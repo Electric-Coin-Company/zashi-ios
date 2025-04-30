@@ -1,6 +1,24 @@
 {
     "releases": [
         {
+            "version": "2.0",
+            "date": "04-25-2025",
+            "timestamp": 1745594869,
+            "sections": [
+                {
+                    "title": "",
+                    "bulletpoints": [
+                        "Zashi 2.0 is here, and it is packed with UI and UX improvements!",
+                        "Redesigned Home Screen and streamlined app navigation.",
+                        "Brand new Wallet Status Widget which helps you navigate Zashi with ease and get more info upon tap.",
+                        "Available Balance and Balances tab have been redesigned into a new Spendable component on the Send screen. Get more information upon tap, or shield your transparent funds.",
+                        "Restoring has never been easier with the redesigned UI/UX. We added a new feature that helps you estimate Wallet Birthday Height and recovery phrase BIP 39 library hints for the secret recovery phrase entry.",
+                        "Create Wallet with one tap! New Wallet Backup flow has been moved to whenever your wallet receives its first funds."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.5.3",
             "date": "04-14-2025",
             "timestamp": 1744615242,
@@ -8,7 +26,7 @@
                 {
                     "title": "Fixed:",
                     "bulletpoints": [
-                        "We fixed an issue with transaction flow getting stuck on the sending screen in case of failed biometric check. "
+                        "We fixed an issue with transaction flow getting stuck on the sending screen in case of failed biometric check."
                     ]
                 }
             ]

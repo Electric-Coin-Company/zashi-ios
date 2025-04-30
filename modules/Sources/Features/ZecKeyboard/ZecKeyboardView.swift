@@ -100,7 +100,7 @@ public struct ZecKeyboardView: View {
                                 .zImage(size: 24, style: Design.Btns.Tertiary.fg)
                                 .padding(8)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                 }
                                 .rotationEffect(Angle(degrees: 90))

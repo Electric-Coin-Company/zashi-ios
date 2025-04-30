@@ -45,16 +45,8 @@ public struct AccountsSelectionView: View {
                 ) {
                     store.send(.unlockTapped)
                 }
-                .padding(.bottom, 12)
-                .disabled(!store.isKSAccountSelected)
-
-                ZashiButton(
-                    L10n.Keystone.AddHWWallet.forgetDevice,
-                    type: .ghost
-                ) {
-                    store.send(.forgetThisDeviceTapped)
-                }
                 .padding(.bottom, 24)
+                .disabled(!store.isKSAccountSelected)
             }
             .screenHorizontalPadding()
             .zashiBackV2(background: false) {
@@ -97,7 +89,7 @@ public struct AccountsSelectionView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background {
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }

@@ -158,7 +158,7 @@ public struct RequestPaymentConfirmationView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background {
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: Design.Radius._lg)
                                     .fill(Design.Inputs.Filled.bg.color(colorScheme))
                             }
                         }
@@ -203,17 +203,6 @@ public struct RequestPaymentConfirmationView: View {
                     .padding(.bottom, 20)
                 }
                 .padding(.vertical, 1)
-                .navigationLinkEmpty(
-                    isActive: $store.partialProposalErrorViewBinding,
-                    destination: {
-                        PartialProposalErrorView(
-                            store: store.scope(
-                                state: \.partialProposalErrorState,
-                                action: \.partialProposalError
-                            )
-                        )
-                    }
-                )
                 .alert($store.scope(state: \.alert, action: \.alert))
                 
                 Spacer()
@@ -241,7 +230,7 @@ public struct RequestPaymentConfirmationView: View {
                             .disabled(store.isSending)
                     } else {
                         ZashiButton(L10n.General.send) {
-                            store.send(.sendPressed)
+                            store.send(.sendTapped)
                         }
                         .screenHorizontalPadding()
                         .padding(.top, 40)
@@ -249,7 +238,7 @@ public struct RequestPaymentConfirmationView: View {
                 }
                 
                 ZashiButton(L10n.Send.goBack, type: .tertiary) {
-                    store.send(.goBackPressedFromRequestZec)
+                    store.send(.goBackTappedFromRequestZec)
                 }
                 .screenHorizontalPadding()
                 .disabled(store.isSending)
@@ -258,18 +247,6 @@ public struct RequestPaymentConfirmationView: View {
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(L10n.Send.RequestPayment.title.uppercased())
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.sending),
-                destination: {
-                    SendingView(store: store, tokenName: tokenName)
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: store.bindingForStack(.signWithKeystone),
-                destination: {
-                    SignWithKeystoneView(store: store, tokenName: tokenName)
-                }
-            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

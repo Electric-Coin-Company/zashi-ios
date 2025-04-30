@@ -51,13 +51,13 @@ public struct RequestZecSummaryView: View {
                         }
                         .padding(24)
                         .background {
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
                                 .fill(store.isQRCodeAppreanceFlipped
                                       ? Asset.Colors.ZDesign.Base.bone.color
                                       : Design.screenBackground.color(colorScheme)
                                 )
                                 .background {
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
                                         .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                 }
                         }
