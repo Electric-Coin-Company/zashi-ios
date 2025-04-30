@@ -290,7 +290,7 @@ extension SmartBannerView {
             
             ZashiToggle(
                 isOn: $store.isShieldingAcknowledged,
-                label: L10n.SmartBanner.Help.Backup.acknowledge
+                label: L10n.SmartBanner.Help.Shield.doNotShowAgain
             )
             .padding(.bottom, 24)
             .fixedSize(horizontal: false, vertical: true)

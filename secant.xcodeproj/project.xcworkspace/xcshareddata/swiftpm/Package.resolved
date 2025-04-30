@@ -464,8 +464,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "768421a1f8bd4c66a4e4c59422c4b0e96930484a",
-        "version" : "2.2.13"
+        "revision" : "3cc71dc1b6de8b09b52bdeed45b2cc007f128830",
+        "version" : "2.2.14"
       }
     }
   ],

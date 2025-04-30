@@ -1,6 +1,31 @@
 {
     "releases": [
         {
+            "version": "2.0.1",
+            "date": "04-25-2029",
+            "timestamp": 1745926301,
+            "sections": [
+                {
+                    "title": "Zashi 2.0.1 Actualización de corrección de errores",
+                    "bulletpoints": [
+                        "Solucionamos un problema que, ocasionalmente, provocaba un error al inicializar el SDK tras restablecer Zashi.",
+                        "También corregímos y actualizamos texto en ciertos lugares."
+                    ]
+                },
+                {
+                    "title": "Zashi 2.0",
+                    "bulletpoints": [
+                        "Zashi 2.0 ya está aquí, ¡y viene repleta de mejoras de interfaz y experiencia de usuario!",
+                        "Pantalla de inicio rediseñada y navegación optimizada de la app.",
+                        "Nuevo widget de estado de la billetera que te ayuda a navegar por Zashi fácilmente y obtener más información con solo un toque.",
+                        "Las pestañas de Saldo disponible y Saldos se han rediseñado con un nuevo componente Gastable en la pantalla de Envío. Obtén más información con solo un toque o protege tus fondos transparentes.",
+                        "Restaurar nunca ha sido tan fácil con la interfaz de usuario y experiencia de usuario rediseñadas. Hemos añadido una nueva función que te ayuda a estimar la fecha de nacimiento de la billetera y sugerencias de la biblioteca BIP 39 para la frase de recuperación secreta.",
+                        "¡Crea una billetera con un solo toque! El nuevo flujo de copia de seguridad de la billetera se ha trasladado a cuando tu billetera recibe sus primeros fondos."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0",
             "date": "04-25-2025",
             "timestamp": 1745594869,
