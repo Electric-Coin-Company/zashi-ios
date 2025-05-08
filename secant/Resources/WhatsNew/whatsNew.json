@@ -1,6 +1,35 @@
 {
     "releases": [
         {
+            "version": "2.0.2",
+            "date": "05-08-2025",
+            "timestamp": 1746692913,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "When entering amount in USD in the Send or Request ZEC flow, we floor the Zatoshi amount automatically to the nearest 5000 Zatoshi to prevent creating unspendable dust notes in your wallet.",
+                        "We updated the privacy policy to be displayed in an in-app browser for better user experience.",
+                        "We updated primary & secondary button position to follow UX best practices.",
+                        "We updated Receive screen design to better align with the app navigation change.",
+                        "After receiving your feedback, we updated the Send and Receive screen icons across the app. How do you like them now? Let us know!",
+                        "We improved copy in a few places.",
+                        "We also made a few other UI tweaks."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed the home buttons sizing across devices.",
+                        "We fixed the padding on the Address Book screen.",
+                        "We fixed an issue with word suggestions during Restore flow.",
+                        "We also fixed an issue with the Spendable bottom sheet getting auto-closed in certain edge cases."
+                    ]
+                }
+
+            ]
+        },
+        {
             "version": "2.0.1",
             "date": "04-25-2029",
             "timestamp": 1745926301,

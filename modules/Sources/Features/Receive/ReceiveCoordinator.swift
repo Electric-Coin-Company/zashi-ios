@@ -64,7 +64,7 @@ extension Receive {
                 for element in state.path {
                     if case .zecKeyboard(let zecKeyboardState) = element {
                         state.requestZecState.memoState.text = state.memo
-                        state.requestZecState.requestedZec = zecKeyboardState.amount
+                        state.requestZecState.requestedZec = zecKeyboardState.amount.roundToAvoidDustSpend()
                         break
                     }
                 }

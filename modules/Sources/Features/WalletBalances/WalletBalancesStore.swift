@@ -193,9 +193,9 @@ public struct WalletBalances {
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
                 state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
                
-                let everythingCondition = state.shieldedBalance == state.totalBalance
-                || (state.transparentBalance < zcashSDKEnvironment.shieldingThreshold && state.shieldedBalance == state.totalBalance - state.transparentBalance)
-                
+                let everythingCondition = state.shieldedBalance.amount > 0 && ((state.shieldedBalance == state.totalBalance)
+                || (state.transparentBalance < zcashSDKEnvironment.shieldingThreshold && state.shieldedBalance == state.totalBalance - state.transparentBalance))
+
                 // spendability
                 if state.isProcessingZeroAvailableBalance {
                     state.spendability = .nothing

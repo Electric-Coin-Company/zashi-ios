@@ -150,6 +150,7 @@ public struct TransactionDetailsView: View {
             .onDisappear { store.send(.onDisappear) }
             .sheet(isPresented: $store.annotationRequest) {
                 annotationContent(store.isEditMode)
+                    .applyScreenBackground()
             }
         }
         .navigationBarTitleDisplayMode(.inline)

@@ -65,6 +65,7 @@ public struct SmartBannerView: View {
             .zashiSheet(isPresented: $store.isSmartBannerSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
+                    .applyScreenBackground()
             }
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }

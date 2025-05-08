@@ -35,16 +35,16 @@ public struct PlainOnboardingView: View {
 
                 Spacer()
                 
-                ZashiButton(L10n.PlainOnboarding.Button.createNewWallet) {
-                    store.send(.createNewWalletTapped)
-                }
-                .padding(.bottom, 8)
-
                 ZashiButton(
                     L10n.PlainOnboarding.Button.restoreWallet,
                     type: .tertiary
                 ) {
                     store.send(.importExistingWallet)
+                }
+                .padding(.bottom, 8)
+                
+                ZashiButton(L10n.PlainOnboarding.Button.createNewWallet) {
+                    store.send(.createNewWalletTapped)
                 }
                 .padding(.bottom, 24)
             }

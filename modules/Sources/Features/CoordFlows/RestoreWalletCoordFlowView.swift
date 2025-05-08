@@ -233,6 +233,7 @@ public struct RestoreWalletCoordFlowView: View {
             .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
+                    .applyScreenBackground()
             }
         }
         .applyScreenBackground()

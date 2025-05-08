@@ -76,9 +76,8 @@
 "receive.error.cantExtractUnifiedAddress" = "could not extract UA";
 "receive.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
 "receive.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
-"receive.title" = "Receive Zcash";
-"receive.warning" = "Prioritize using your shielded address for maximum privacy.";
 "receive.saplingAddress" = "Zcash Sapling Address";
+"receive.warning" = "Prioritize using your shielded address for maximum privacy.";
 "receive.copy" = "Copy";
 "receive.qrCode" = "QR Code";
 "receive.request" = "Request";
@@ -540,7 +539,7 @@
 "homeScreen.scan" = "Scan";
 "homeScreen.more" = "More";
 "homeScreen.buy" = "Buy";
-"homeScreen.moreWarning" = "Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.";
+"homeScreen.moreWarning" = "Information shared with Zashi integrations is subject to their privacy policies.";
 
 // Onboarding: Restore Wallet
 "restoreWallet.title" = "Secret Recovery Phrase";
@@ -611,7 +610,7 @@
 "smartBanner.content.restore.infoSpendable" = "Your funds are ready to be used now";
 
 "smartBanner.content.sync.title" = "Syncing • %@ Complete";
-"smartBanner.content.sync.info" = "Your wallet is getting updated";
+"smartBanner.content.sync.info" = "Your wallet is updating";
 
 "smartBanner.content.updatingBalance.title" = "Updating Balance...";
 "smartBanner.content.updatingBalance.info" = "Waiting for last transaction to process";

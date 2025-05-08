@@ -94,6 +94,7 @@ public struct RecoveryPhraseDisplayView: View {
             .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
+                    .applyScreenBackground()
             }
             .navigationBarItems(
                 trailing:

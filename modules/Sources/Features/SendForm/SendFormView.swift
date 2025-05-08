@@ -31,8 +31,6 @@ public struct SendFormView: View {
     @FocusState private var isCurrencyFocused
     @FocusState private var isMemoFocused
 
-        //@State var sheetHeight: CGFloat = .zero
-    
     public init(store: StoreOf<SendForm>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -219,11 +217,13 @@ public struct SendFormView: View {
             .sheet(isPresented: $store.balancesBinding) {
                 if #available(iOS 16.4, *) {
                     balancesContent()
+                        .applyScreenBackground()
                         .presentationDetents([.height(store.sheetHeight)])
                         .presentationDragIndicator(.visible)
                         .presentationCornerRadius(Design.Radius._4xl)
                 } else {
                     balancesContent()
+                        .applyScreenBackground()
                         .presentationDetents([.height(store.sheetHeight)])
                         .presentationDragIndicator(.visible)
                 }

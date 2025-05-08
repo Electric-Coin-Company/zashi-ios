@@ -164,6 +164,7 @@ public struct SignWithKeystoneView: View {
             }
             .sheet(isPresented: $store.rejectSendRequest) {
                 rejectSendContent(colorScheme)
+                    .applyScreenBackground()
             }
             .onAppear {
                 store.send(.onAppear)
