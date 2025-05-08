@@ -42,13 +42,15 @@ public struct HomeView: View {
                 )
                 .padding(.top, 1)
 
-                HStack(spacing: 8) {
+                HStack {
                     button(
                         L10n.Tabs.receive,
                         icon: Asset.Assets.Icons.received.image
                     ) {
                         store.send(.receiveTapped)
                     }
+
+                    Spacer(minLength: 8)
 
                     button(
                         L10n.Tabs.send,
@@ -57,12 +59,16 @@ public struct HomeView: View {
                         store.send(.sendTapped)
                     }
 
+                    Spacer(minLength: 8)
+
                     button(
                         L10n.HomeScreen.scan,
                         icon: Asset.Assets.Icons.scan.image
                     ) {
                         store.send(.scanTapped)
                     }
+
+                    Spacer(minLength: 8)
 
                     if store.isKeystoneAccountActive {
                         button(
@@ -124,9 +130,11 @@ public struct HomeView: View {
             }
             .sheet(isPresented: $store.accountSwitchRequest) {
                 accountSwitchContent()
+                    .applyScreenBackground()
             }
             .sheet(isPresented: $store.moreRequest) {
                 moreContent()
+                    .applyScreenBackground()
             }
             .navigationBarItems(
                 leading:
@@ -280,7 +288,8 @@ public struct HomeView: View {
                     
                     Text(title)
                 }
-                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .frame(minWidth: 76, maxWidth: 84, minHeight: 76, maxHeight: 84, alignment: .center)
+                .aspectRatio(1, contentMode: .fit)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgPrimary.color(colorScheme))
@@ -305,7 +314,8 @@ public struct HomeView: View {
                     
                     Text(title)
                 }
-                .frame(maxWidth: .infinity, minHeight: 76, maxHeight: 76, alignment: .center)
+                .frame(minWidth: 76, maxWidth: 84, minHeight: 76, maxHeight: 84, alignment: .center)
+                .aspectRatio(1, contentMode: .fit)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(

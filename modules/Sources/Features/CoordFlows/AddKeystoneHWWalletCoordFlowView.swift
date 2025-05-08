@@ -49,7 +49,6 @@ public struct AddKeystoneHWWalletCoordFlowView: View {
         }
         .applyScreenBackground()
         .zashiBack()
-        .screenTitle(L10n.General.send)
     }
 }
 

@@ -133,7 +133,7 @@ public struct RestoreWalletCoordFlow {
                     state.isValidSeed = false
                     if let index = state.selectedIndex {
                         let prefix = state.words[index]
-                        if let first = state.suggestedWords.first, first == prefix && !state.isValidSeed {
+                        if let first = state.suggestedWords.first, first == prefix && !state.isValidSeed && state.suggestedWords.count == 1 {
                             state.prevWords = state.words
                             state.nextIndex = index + 1 < 24 ? index + 1 : 0
                         }

@@ -119,6 +119,7 @@ public enum Asset {
       public static let server = ImageAsset(name: "server")
       public static let settings = ImageAsset(name: "settings")
       public static let share = ImageAsset(name: "share")
+      public static let shieldBcg = ImageAsset(name: "shieldBcg")
       public static let shieldOff = ImageAsset(name: "shieldOff")
       public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let shieldZap = ImageAsset(name: "shieldZap")

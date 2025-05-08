@@ -6,6 +6,22 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.0.2 build 1 (2025-05-08)
+
+### Changed
+- When entering amount in USD in the Send or Request ZEC flow, we floor the Zatoshi amount automatically to the nearest 5000 Zatoshi to prevent creating unspendable dust notes in your wallet. 
+- The privacy policy updated to be displayed in an in-app browser for better user experience.
+- Primary & secondary button position to follow UX best practices.
+- Receive screen design to better align with the app navigation change. 
+- Send and Receive screen icons across the app.
+- Copy in a few places.
+
+### Fixed
+- Home buttons sizing across devices.
+- Padding on the Address Book screen.
+- Issue with word suggestions during Restore flow. 
+- Issue with the Spendable bottom sheet getting auto-closed in certain edge cases.
+
 ## 2.0.1 build 1 (2025-04-30)
 
 ### Fixed

@@ -48,10 +48,9 @@ extension Zatoshi {
     }
     
     public func roundToAvoidDustSpend() -> Zatoshi {
-        self
-//        let amountDouble = Double(amount)
-//        let roundedAmountDouble = roundl(amountDouble / 5_000) * 5_000
-//
-//        return Zatoshi(Int64(roundedAmountDouble))
+        let amountDouble = Double(amount)
+        let roundedAmountDouble = roundl(amountDouble / 5_000) * 5_000
+
+        return Zatoshi(Int64(roundedAmountDouble))
     }
 }

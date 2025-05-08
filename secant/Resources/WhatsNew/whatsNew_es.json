@@ -1,6 +1,35 @@
 {
     "releases": [
         {
+            "version": "2.0.2",
+            "date": "05-08-2025",
+            "timestamp": 1746692913,
+            "sections": [
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Al ingresar una cantidad en USD en el flujo de Enviar o Solicitar ZEC, reducimos automáticamente la cantidad de Zatoshi a los 5000 Zatoshi más cercanos para evitar la creación de notas de polvo no gastables en tu billetera.",
+                        "Actualizamos la política de privacidad para que se muestre en el navegador de la app y mejore la experiencia del usuario.",
+                        "Actualizamos la posición de los botones principal y secundario para seguir las mejores prácticas de UX.",
+                        "Actualizamos el diseño de la pantalla Recibir para que se ajuste mejor al cambio de navegación de la app.",
+                        "Después de recibir sus comentarios, actualizamos los íconos de las pantallas Enviar y Recibir en toda la app. ¿Qué les parecen ahora? ¡Cuéntanos!",
+                        "Mejoramos el texto en algunos lugares.",
+                        "También realizamos otros ajustes en la interfaz de usuario."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Corregimos el tamaño de los botones de inicio en todos los dispositivos.",
+                        "Corregimos el relleno en la pantalla Libreta de direcciones.",
+                        "Corregimos un problema con las sugerencias de palabras durante el flujo de Restaurar.",
+                        "También corregimos un problema con el cierre automático de la hoja inferior Gastable en ciertos casos extremos."
+                    ]
+                }
+
+            ]
+        },
+        {
             "version": "2.0.1",
             "date": "04-25-2029",
             "timestamp": 1745926301,

@@ -76,9 +76,8 @@
 "receive.error.cantExtractUnifiedAddress" = "no se pudo extraer la Dirección Unificada";
 "receive.error.cantExtractTransparentAddress" = "no se pudo extraer el receptor transparente de la Dirección Unificada";
 "receive.error.cantExtractSaplingAddress" = "no se pudo extraer el receptor Sapling de la Dirección Unificada";
-"receive.title" = "Recibir Zcash";
-"receive.warning" = "Prioriza usar tu dirección protegida para máxima privacidad.";
 "receive.saplingAddress" = "Dirección Sapling de Zcash";
+"receive.warning" = "Prioriza usar tu dirección protegida para máxima privacidad.";
 "receive.copy" = "Copiar";
 "receive.qrCode" = "Código QR";
 "receive.request" = "Solicitar";
@@ -540,7 +539,7 @@
 "homeScreen.scan" = "Escanear";
 "homeScreen.more" = "Más";
 "homeScreen.buy" = "Comprar";
-"homeScreen.moreWarning" = "Las integraciones de Zashi proporcionan acceso a servicios de terceros. La información compartida con ellos está sujeta a sus políticas de privacidad.";
+"homeScreen.moreWarning" = "La información compartida con las integraciones de Zashi está sujeta a sus políticas de privacidad.";
 
 // Onboarding: Restore Wallet
 "restoreWallet.title" = "Frase de Recuperación Secreta";
@@ -611,7 +610,7 @@
 "smartBanner.content.restore.infoSpendable" = "Tus fondos están listos para ser utilizados ahora";
 
 "smartBanner.content.sync.title" = "Sincronizando • %@ Completo";
-"smartBanner.content.sync.info" = "Tu billetera está siendo actualizada";
+"smartBanner.content.sync.info" = "Tu billetera se está actualizando";
 
 "smartBanner.content.updatingBalance.title" = "Actualizando Balance...";
 "smartBanner.content.updatingBalance.info" = "Esperando a que la última transacción se procese";

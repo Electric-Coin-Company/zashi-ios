@@ -150,6 +150,7 @@ public struct TransactionsManagerView: View {
             .navigationBarItems(trailing: hideBalancesButton())
             .sheet(isPresented: $store.filtersRequest) {
                 filtersContent()
+                    .applyScreenBackground()
             }
         }
         .navigationBarTitleDisplayMode(.inline)

@@ -54,6 +54,7 @@ public struct WalletBackupCoordFlowView: View {
             .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                 helpSheetContent()
                     .screenHorizontalPadding()
+                    .applyScreenBackground()
             }
         }
         .padding(.horizontal, 4)

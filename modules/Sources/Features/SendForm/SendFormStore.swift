@@ -45,6 +45,7 @@ public struct SendForm {
         public var currencyText: RedactableString = .empty
         public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
+        public var isLatestInputFiat = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
         public var isValidAddress = false
@@ -248,9 +249,6 @@ public struct SendForm {
             switch action {
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                guard let _ = state.zashiWalletAccount else {
-                    return .send(.exchangeRateSetupChanged)
-                }
                 return .send(.exchangeRateSetupChanged)
 
             case .onDisapear:
@@ -316,6 +314,7 @@ public struct SendForm {
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
+                state.amount = state.isLatestInputFiat ? state.amount.roundToAvoidDustSpend() : state.amount
                 return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)
@@ -329,7 +328,7 @@ public struct SendForm {
                             memo = nil
                         }
 
-                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount.roundToAvoidDustSpend(), memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))
@@ -474,6 +473,7 @@ public struct SendForm {
                 
             case .currencyUpdated(let newValue):
                 state.currencyText = newValue
+                state.isLatestInputFiat = true
                 return .send(.syncAmounts(false))
                 
             case .validateAddress:
@@ -485,6 +485,7 @@ public struct SendForm {
                 
             case .zecAmountUpdated(let newValue):
                 state.zecAmountText = newValue
+                state.isLatestInputFiat = false
                 return .send(.syncAmounts(true))
                 
             case .dismissRequired:

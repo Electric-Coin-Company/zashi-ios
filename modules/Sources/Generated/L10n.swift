@@ -375,8 +375,8 @@ public enum L10n {
     public static let buy = L10n.tr("Localizable", "homeScreen.buy", fallback: "Buy")
     /// More
     public static let more = L10n.tr("Localizable", "homeScreen.more", fallback: "More")
-    /// Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.
-    public static let moreWarning = L10n.tr("Localizable", "homeScreen.moreWarning", fallback: "Zashi integrations provide access to third party services. Information shared with them is subject to their privacy policies.")
+    /// Information shared with Zashi integrations is subject to their privacy policies.
+    public static let moreWarning = L10n.tr("Localizable", "homeScreen.moreWarning", fallback: "Information shared with Zashi integrations is subject to their privacy policies.")
     /// Scan
     public static let scan = L10n.tr("Localizable", "homeScreen.scan", fallback: "Scan")
   }
@@ -615,8 +615,6 @@ public enum L10n {
     public static let saplingAddress = L10n.tr("Localizable", "receive.saplingAddress", fallback: "Zcash Sapling Address")
     /// Transparent Address
     public static let ta = L10n.tr("Localizable", "receive.ta", fallback: "Transparent Address")
-    /// Receive Zcash
-    public static let title = L10n.tr("Localizable", "receive.title", fallback: "Receive Zcash")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "receive.ua", fallback: "Unified Address")
     /// Prioritize using your shielded address for maximum privacy.
@@ -1200,8 +1198,8 @@ public enum L10n {
         public static let titleShorter = L10n.tr("Localizable", "smartBanner.content.shield.titleShorter", fallback: "Transparent Balance")
       }
       public enum Sync {
-        /// Your wallet is getting updated
-        public static let info = L10n.tr("Localizable", "smartBanner.content.sync.info", fallback: "Your wallet is getting updated")
+        /// Your wallet is updating
+        public static let info = L10n.tr("Localizable", "smartBanner.content.sync.info", fallback: "Your wallet is updating")
         /// Syncing • %@ Complete
         public static func title(_ p1: Any) -> String {
           return L10n.tr("Localizable", "smartBanner.content.sync.title", String(describing: p1), fallback: "Syncing • %@ Complete")

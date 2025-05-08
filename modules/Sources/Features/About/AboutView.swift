@@ -11,8 +11,6 @@ import Generated
 import UIComponents
 
 public struct AboutView: View {
-    @Environment(\.openURL) var openURL
-    
     @Perception.Bindable var store: StoreOf<About>
     
     public init(store: StoreOf<About>) {
@@ -42,9 +40,7 @@ public struct AboutView: View {
                     divider: false,
                     horizontalPadding: 4
                 ) {
-                    if let url = URL(string: "https://electriccoin.co/zashi-privacy-policy/") {
-                        openURL(url)
-                    }
+                    store.send(.privacyPolicyButtonTapped)
                 }
                 .padding(.top, 32)
 
@@ -59,6 +55,11 @@ public struct AboutView: View {
                     .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
+            .sheet(isPresented: $store.isInAppBrowserOn) {
+                if let url = URL(string: "https://electriccoin.co/zashi-privacy-policy/") {
+                    InAppBrowserView(url: url)
+                }
+            }
             .zashiBack()
             .screenTitle(L10n.Settings.about)
         }

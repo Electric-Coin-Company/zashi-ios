@@ -70,7 +70,7 @@ public struct RestoreInfoView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
-        .applyErredScreenBackground()
+        .applyScreenBackground()
     }
     
     @ViewBuilder

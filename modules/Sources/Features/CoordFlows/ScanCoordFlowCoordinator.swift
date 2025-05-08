@@ -270,7 +270,7 @@ extension ScanCoordFlow {
                         return
                     }
                     do {
-                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount.roundToAvoidDustSpend(), state.memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount, state.memo)
                         await send(.proposalResolved(proposal))
                     } catch {
                         await send(.requestZecFailed)

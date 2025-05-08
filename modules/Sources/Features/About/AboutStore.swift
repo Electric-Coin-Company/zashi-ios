@@ -10,6 +10,7 @@ public struct About {
     public struct State: Equatable {
         public var appVersion = ""
         public var appBuild = ""
+        public var isInAppBrowserOn = false
 
         public init(
             appVersion: String = "",
@@ -44,6 +45,7 @@ public struct About {
                 return .none
 
             case .privacyPolicyButtonTapped:
+                state.isInAppBrowserOn = true
                 return .none
             }
         }
