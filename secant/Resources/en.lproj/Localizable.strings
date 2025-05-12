@@ -679,3 +679,9 @@
 "recoveryPhraseDisplay.warningHeight.info" = "The block height at which your wallet was created can significantly speed up the wallet recovery process.";
 
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
+
+// MARK: - Swap and Pay
+"sendSelect.zashi.send" = "Pay in ZEC";
+"sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
+"sendSelect.swapAndPay" = "SWAPnPAY";
+"sendSelect.swapAndPay.desc" = "Pay anyone by swapping ZEC with Near integration.";
