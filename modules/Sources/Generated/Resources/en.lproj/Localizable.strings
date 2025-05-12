@@ -728,3 +728,9 @@
 "receive.help.transparent.desc3" = "To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.";
 "receive.help.transparent.desc4" = "You won\'t be able to spend your transparent ZEC until you shield it.";
 "receive.ua.rotateInfo" = "Rotates every time you use it";
+
+// MARK: - Swap and Pay
+"sendSelect.zashi.send" = "Pay in ZEC";
+"sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
+"sendSelect.swapAndPay" = "SWAPnPAY";
+"sendSelect.swapAndPay.desc" = "Pay anyone by swapping ZEC with Near integration.";
