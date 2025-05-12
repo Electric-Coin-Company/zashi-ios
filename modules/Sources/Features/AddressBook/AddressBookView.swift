@@ -58,6 +58,7 @@ public struct AddressBookView: View {
 
                 addContactButton(store)
             }
+            .padding(.top, 24)
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .screenTitle(

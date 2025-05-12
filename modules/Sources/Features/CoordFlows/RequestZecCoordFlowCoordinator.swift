@@ -33,7 +33,7 @@ extension RequestZecCoordFlow {
                 state.requestZecState.maxPrivacy = true
                 state.requestZecState.memoState = .initial
                 state.requestZecState.memoState.text = state.memo
-                state.requestZecState.requestedZec = state.zecKeyboardState.amount
+                state.requestZecState.requestedZec = state.zecKeyboardState.amount.roundToAvoidDustSpend()
                 state.path.append(.requestZec(state.requestZecState))
                 return .none
                 
