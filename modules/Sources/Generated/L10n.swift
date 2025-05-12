@@ -1033,6 +1033,22 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "sendFeedback.share.title", fallback: "Support message")
     }
   }
+  public enum SendSelect {
+    /// SWAPnPAY
+    public static let swapAndPay = L10n.tr("Localizable", "sendSelect.swapAndPay", fallback: "SWAPnPAY")
+    public enum SwapAndPay {
+      /// Pay anyone by swapping ZEC with Near integration.
+      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Pay anyone by swapping ZEC with Near integration.")
+    }
+    public enum Zashi {
+      /// Pay in ZEC
+      public static let send = L10n.tr("Localizable", "sendSelect.zashi.send", fallback: "Pay in ZEC")
+      public enum Send {
+        /// Pay anyone by sending them ZEC.
+        public static let desc = L10n.tr("Localizable", "sendSelect.zashi.send.desc", fallback: "Pay anyone by sending them ZEC.")
+      }
+    }
+  }
   public enum ServerSetup {
     /// Active
     public static let active = L10n.tr("Localizable", "serverSetup.active", fallback: "Active")
