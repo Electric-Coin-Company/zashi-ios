@@ -32,7 +32,7 @@ extension Root {
         case initializeSDK(WalletInitMode)
         case initialSetups
         case initializationFailed(ZcashError)
-        case initializationSuccessfullyDone(UnifiedAddress?)
+        case initializationSuccessfullyDone
         case loadedWalletAccounts([WalletAccount])
         case resetZashi
         case resetZashiRequest
@@ -353,10 +353,9 @@ extension Root {
                                     }
                                 }
 
-                                let uAddress = try? await sdkSynchronizer.getUnifiedAddress(account.id)
-                                await send(.initialization(.initializationSuccessfullyDone(uAddress)))
+                                await send(.initialization(.initializationSuccessfullyDone))
                             } else {
-                                await send(.initialization(.initializationSuccessfullyDone(nil)))
+                                await send(.initialization(.initializationSuccessfullyDone))
                             }
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))
@@ -366,11 +365,7 @@ extension Root {
                     return .send(.initialization(.initializationFailed(error.toZcashError())))
                 }
                 
-            case .initialization(.initializationSuccessfullyDone(let uAddress)):
-                state.zashiUAddress = uAddress
-                state.homeState.uAddress = uAddress
-                state.settingsState.uAddress = uAddress
-                state.requestZecCoordFlowState.uAddress = uAddress
+            case .initialization(.initializationSuccessfullyDone):
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -495,6 +490,7 @@ extension Root {
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
+//                state.$selectedWalletAccountsUA.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
                 state.$transactionMemos.withLock { $0 = [:] }

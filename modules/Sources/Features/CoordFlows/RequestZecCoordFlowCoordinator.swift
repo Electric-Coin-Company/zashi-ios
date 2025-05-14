@@ -29,7 +29,7 @@ extension RequestZecCoordFlow {
                 // MARK: - Zec Keyboard
 
             case .zecKeyboard(.nextTapped):
-                state.requestZecState.address = state.uAddress?.stringEncoded.redacted ?? "".redacted
+                state.requestZecState.address = state.selectedWalletAccount?.privateUnifiedAddress?.redacted ?? "".redacted
                 state.requestZecState.maxPrivacy = true
                 state.requestZecState.memoState = .initial
                 state.requestZecState.memoState.text = state.memo

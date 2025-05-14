@@ -48,25 +48,15 @@ public struct Receive {
         public var requestZecState = RequestZec.State.initial
         
         public var unifiedAddress: String {
-            selectedWalletAccount?.uAddress?.stringEncoded ?? L10n.Receive.Error.cantExtractUnifiedAddress
+            selectedWalletAccount?.privateUnifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
         }
 
         public var saplingAddress: String {
-            do {
-                let address = try selectedWalletAccount?.uAddress?.saplingReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractSaplingAddress
-                return address
-            } catch {
-                return L10n.Receive.Error.cantExtractSaplingAddress
-            }
+            selectedWalletAccount?.saplingAddress ?? L10n.Receive.Error.cantExtractSaplingAddress
         }
 
         public var transparentAddress: String {
-            do {
-                let address = try selectedWalletAccount?.uAddress?.transparentReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractTransparentAddress
-                return address
-            } catch {
-                return L10n.Receive.Error.cantExtractTransparentAddress
-            }
+            selectedWalletAccount?.transparentAddress ?? L10n.Receive.Error.cantExtractTransparentAddress
         }
 
         public init() { }

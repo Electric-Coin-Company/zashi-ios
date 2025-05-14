@@ -15,7 +15,6 @@ public struct Integrations {
         public var isInAppBrowserOn = false
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var uAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public var isKeystoneAccountActive: Bool {
@@ -33,7 +32,7 @@ public struct Integrations {
         }
         
         public var inAppBrowserURL: String? {
-            if let address = try? selectedWalletAccount?.uAddress?.transparentReceiver().stringEncoded, let appId {
+            if let address = selectedWalletAccount?.transparentAddress, let appId {
                 return L10n.Partners.coinbaseOnrampUrl(appId, address)
             }
             
@@ -41,11 +40,9 @@ public struct Integrations {
         }
         
         public init(
-            isInAppBrowserOn: Bool = false,
-            uAddress: UnifiedAddress? = nil
+            isInAppBrowserOn: Bool = false
         ) {
             self.isInAppBrowserOn = isInAppBrowserOn
-            self.uAddress = uAddress
         }
     }
 
