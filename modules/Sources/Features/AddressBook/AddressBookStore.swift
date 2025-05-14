@@ -28,11 +28,14 @@ public struct AddressBook {
         public var addressAlreadyExists = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
+        public var chain = ""
         public var deleteIdToConfirm: String?
         public var isAddressFocused = false
         public var editId: String?
+        public var isChainFocused = false
         public var isInSelectMode = false
         public var isNameFocused = false
+        public var isTokenFocused = false
         public var isValidForm = false
         public var isValidZcashAddress = false
         public var name = ""
@@ -40,6 +43,7 @@ public struct AddressBook {
         public var originalAddress = ""
         public var originalName = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var token = ""
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 

@@ -110,6 +110,11 @@ extension Root {
                 state.path = .addKeystoneHWWalletCoordFlow
                 return .none
                 
+            case .home(.swapAndPayTapped):
+                state.swapAndPayCoordFlowState = .initial
+                state.path = .swapAndPayCoordFlow
+                return .none
+
             case .home(.transactionList(.transactionTapped(let txId))):
                 state.transactionsCoordFlowState = .initial
                 state.transactionsCoordFlowState.transactionToOpen = txId

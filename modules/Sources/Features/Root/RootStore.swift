@@ -67,6 +67,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case swapAndPayCoordFlow
             case transactionsCoordFlow
             case walletBackup
         }
@@ -123,6 +124,7 @@ public struct Root {
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
+        public var swapAndPayCoordFlowState = SwapAndPayCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
 
@@ -210,6 +212,7 @@ public struct Root {
         case settings(Settings.Action)
         case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
         case signWithKeystoneRequested
+        case swapAndPayCoordFlow(SwapAndPayCoordFlow.Action)
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
         case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
 
@@ -341,6 +344,10 @@ public struct Root {
 
         Scope(state: \.signWithKeystoneCoordFlowState, action: \.signWithKeystoneCoordFlow) {
             SignWithKeystoneCoordFlow()
+        }
+
+        Scope(state: \.swapAndPayCoordFlowState, action: \.swapAndPayCoordFlow) {
+            SwapAndPayCoordFlow()
         }
 
         initializationReduce()
