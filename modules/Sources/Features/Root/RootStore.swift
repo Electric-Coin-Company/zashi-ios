@@ -68,6 +68,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case swapAndPayCoordFlow
             case torSetup
             case transactionsCoordFlow
             case walletBackup
@@ -126,6 +127,7 @@ public struct Root {
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
+        public var swapAndPayCoordFlowState = SwapAndPayCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
         public var torSetupState = TorSetup.State.initial
@@ -214,6 +216,7 @@ public struct Root {
         case settings(Settings.Action)
         case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
         case signWithKeystoneRequested
+        case swapAndPayCoordFlow(SwapAndPayCoordFlow.Action)
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
         case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
         case torSetup(TorSetup.Action)
@@ -356,6 +359,10 @@ public struct Root {
 
         Scope(state: \.torSetupState, action: \.torSetup) {
             TorSetup()
+        }
+
+        Scope(state: \.swapAndPayCoordFlowState, action: \.swapAndPayCoordFlow) {
+            SwapAndPayCoordFlow()
         }
 
         initializationReduce()

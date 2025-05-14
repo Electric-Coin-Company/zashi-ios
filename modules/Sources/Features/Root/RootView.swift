@@ -211,6 +211,14 @@ private extension RootView {
                                         action: \.torSetup)
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.swapAndPayCoordFlow)) {
+                            SwapAndPayCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.swapAndPayCoordFlowState,
+                                        action: \.swapAndPayCoordFlow)
+                            )
+                        }
                         .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {
                             SignWithKeystoneCoordFlowView(
                                 store:
