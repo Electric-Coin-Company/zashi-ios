@@ -185,7 +185,9 @@ public struct Home {
                 return .send(.receiveTapped)
                 
             case .updatePrivateUA(let privateUA):
-                state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
+                if state.selectedWalletAccount?.vendor == .zcash {
+                    state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
+                }
                 return .none
 
             case .receiveTapped, .sendTapped:
