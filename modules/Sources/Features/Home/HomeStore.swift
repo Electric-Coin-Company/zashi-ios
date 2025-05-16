@@ -175,9 +175,10 @@ public struct Home {
                 )
                 
             case .receiveScreenRequested:
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
-                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, [.sapling, .orchard])
+                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
                         await send(.updatePrivateUA(privateUA))
                         await send(.receiveTapped)
                     }
@@ -215,9 +216,10 @@ public struct Home {
                 return .none
 
             case .getSomeZecRequested:
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
-                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, [.sapling, .orchard])
+                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
                         await send(.updatePrivateUA(privateUA))
                         await send(.getSomeZecTapped)
                     }

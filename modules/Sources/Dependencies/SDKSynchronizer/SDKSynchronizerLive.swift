@@ -195,7 +195,7 @@ extension SDKSynchronizerClient: DependencyKey {
                     walletAccounts[i].defaultUA = try? await synchronizer.getUnifiedAddress(accountUUID: walletAccounts[i].id)
                     walletAccounts[i].privateUA = try? await synchronizer.getCustomUnifiedAddress(
                         accountUUID: walletAccounts[i].id,
-                        receivers: [.sapling, .orchard]
+                        receivers: walletAccounts[i].vendor == .keystone ? [.orchard] : [.sapling, .orchard]
                     )
                 }
                 
