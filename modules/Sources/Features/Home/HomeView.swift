@@ -47,7 +47,7 @@ public struct HomeView: View {
                         L10n.Tabs.receive,
                         icon: Asset.Assets.Icons.received.image
                     ) {
-                        store.send(.receiveTapped)
+                        store.send(.receiveScreenRequested)
                     }
 
                     Spacer(minLength: 8)
@@ -262,7 +262,7 @@ public struct HomeView: View {
                             type: .tertiary,
                             infinityWidth: false
                         ) {
-                            store.send(.getSomeZecTapped)
+                            store.send(.getSomeZecRequested)
                         }
                     }
                 }

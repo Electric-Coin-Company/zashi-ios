@@ -51,7 +51,6 @@ public struct Settings {
         public var isEnoughFreeSpaceMode = true
         public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var uAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public var isKeystoneConnected: Bool {

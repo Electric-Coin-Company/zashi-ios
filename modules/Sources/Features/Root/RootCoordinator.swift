@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension Root {
     public func coordinatorReduce() -> Reduce<Root.State, Root.Action> {
@@ -77,7 +78,6 @@ extension Root {
 
             case .home(.settingsTapped):
                 state.settingsState = .initial
-                state.settingsState.uAddress = state.zashiUAddress
                 state.path = .settings
                 return .none
                 
@@ -202,7 +202,7 @@ extension Root {
                 return .none
 
                 // MARK: - Self
-                
+
             case .sendAgainRequested(let transactionState):
                 state.sendCoordFlowState = .initial
                 state.path = .sendCoordFlow

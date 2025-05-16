@@ -146,7 +146,6 @@ extension Settings {
 
             case .integrationsTapped:
                 var integrationsState = Integrations.State.initial
-                integrationsState.uAddress = state.uAddress
                 state.path.append(.integrations(integrationsState))
                 return .none
 

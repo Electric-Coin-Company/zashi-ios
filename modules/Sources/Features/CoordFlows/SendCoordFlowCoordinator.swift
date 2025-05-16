@@ -30,7 +30,7 @@ extension SendCoordFlow {
                 return .send(.sendForm(.addressUpdated(address.redacted)))
 
             case .path(.element(id: _, action: .addressBook(.walletAccountTapped(let contact)))):
-                if let address = contact.uAddress?.stringEncoded {
+                if let address = contact.unifiedAddress {
                     state.path.removeAll()
                     audioServices.systemSoundVibrate()
                     return .send(.sendForm(.addressUpdated(address.redacted)))

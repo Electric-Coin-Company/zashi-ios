@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 import ZecKeyboard
+import Models
 
 // Path
 import RequestZec
@@ -26,8 +27,8 @@ public struct RequestZecCoordFlow {
     public struct State {
         public var memo = ""
         public var path = StackState<Path.State>()
-        public var uAddress: UnifiedAddress? = nil
         public var requestZecState = RequestZec.State.initial
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var zecKeyboardState = ZecKeyboard.State.initial
 
         public init() { }

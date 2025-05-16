@@ -37,7 +37,7 @@ extension ScanCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .addressBook(.walletAccountTapped(let contact)))):
-                if let address = contact.uAddress?.stringEncoded {
+                if let address = contact.unifiedAddress {
                     let _ = state.path.removeLast()
                     audioServices.systemSoundVibrate()
                     if let first = state.path.ids.first {

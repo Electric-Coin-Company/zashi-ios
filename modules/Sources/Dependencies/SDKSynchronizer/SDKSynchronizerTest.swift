@@ -48,7 +48,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         createTransactionFromPCZT: unimplemented("\(Self.self).createTransactionFromPCZT", placeholder: .success(txIds: [])),
         urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil),
         redactPCZTForSigner: unimplemented("\(Self.self).redactPCZTForSigner", placeholder: Pczt()),
-        fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: [])
+        fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: []),
+        getCustomUnifiedAddress: unimplemented("\(Self.self).getCustomUnifiedAddress", placeholder: nil)
     )
 }
 
@@ -87,7 +88,8 @@ extension SDKSynchronizerClient {
         createTransactionFromPCZT: { _, _ in .success(txIds: []) },
         urEncoderForPCZT: { _ in nil },
         redactPCZTForSigner: { _ in Pczt() },
-        fetchTxidsWithMemoContaining: { _ in [] }
+        fetchTxidsWithMemoContaining: { _ in [] },
+        getCustomUnifiedAddress: { _, _ in nil }
     )
 
     public static let mock = Self.mocked()
@@ -197,7 +199,8 @@ extension SDKSynchronizerClient {
         createTransactionFromPCZT: @escaping (Pczt, Pczt) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
         urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil },
         redactPCZTForSigner: @escaping (Pczt) async throws -> Pczt = { _ in Pczt() },
-        fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] }
+        fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] },
+        getCustomUnifiedAddress: @escaping (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress? = { _, _ in nil }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -233,7 +236,8 @@ extension SDKSynchronizerClient {
             createTransactionFromPCZT: createTransactionFromPCZT,
             urEncoderForPCZT: urEncoderForPCZT,
             redactPCZTForSigner: redactPCZTForSigner,
-            fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining
+            fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining,
+            getCustomUnifiedAddress: getCustomUnifiedAddress
         )
     }
 }
