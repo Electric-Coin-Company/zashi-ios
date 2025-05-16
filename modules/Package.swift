@@ -43,6 +43,7 @@ let package = Package(
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
+        .library(name: "Near1Click", targets: ["Near1Click"]),
         .library(name: "NetworkMonitor", targets: ["NetworkMonitor"]),
         .library(name: "NotEnoughFreeSpace", targets: ["NotEnoughFreeSpace"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
@@ -242,6 +243,7 @@ let package = Package(
                 "Generated",
                 "MnemonicSwift",
                 "Models",
+                "Near1Click",
                 "NumberFormatter",
                 "PartialProposalError",
                 "Pasteboard",
@@ -412,6 +414,7 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Models",
+                "Near1Click",
                 "PartnerKeys",
                 "ReviewRequest",
                 "Scan",
@@ -471,6 +474,15 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Models"
+        ),
+        .target(
+            name: "Near1Click",
+            dependencies: [
+                "Models",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/Near1Click"
         ),
         .target(
             name: "NetworkMonitor",
