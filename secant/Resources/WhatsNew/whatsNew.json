@@ -1,6 +1,26 @@
 {
     "releases": [
         {
+            "version": "2.0.3",
+            "date": "05-19-2025",
+            "timestamp": 1747652167,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "Zashi no longer includes transparent receivers in Unified Addresses (Zcash addresses that start with the letter \"u\"). The Receive screen now displays a rotating, shielded-only UA.- * Zashi will generate a new Zcash Shielded Address each time you open the Receive screen. Generating unique addresses is commonly used for privacy and security reasons.",
+                        "All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.",
+                        "While we recommend using a new address every time, each unique address can be reused.",
+                        "Both transparent and shielded ZEC can be sent to Zashi's Shielded Addresses. It will be received and stored as shielded ZEC.",
+                        "Wallets and exchanges that don’t support sending funds to shielded receivers will not accept this address format. They will require transparent addresses.",
+                        "If users need a transparent address (starts with the letter \"t\"), it is still available and displayed separately on the Receive screen.",
+                        "Users must update the app to activate this change.",
+                        "If you're sharing a Unified Address from an earlier version of Zashi and didn't intend to reveal the linked transparent address, we recommend replacing it with a freshly generated address from the updated app."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0.2",
             "date": "05-08-2025",
             "timestamp": 1746692913,
@@ -26,7 +46,6 @@
                         "We also fixed an issue with the Spendable bottom sheet getting auto-closed in certain edge cases."
                     ]
                 }
-
             ]
         },
         {

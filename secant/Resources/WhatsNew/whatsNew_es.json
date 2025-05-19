@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "2.0.3",
+            "date": "05-19-2025",
+            "timestamp": 1747652167,
+            "sections": [
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Zashi ya no incluye receptores transparentes en las Direcciones Unificadas (direcciones Zcash que empiezan por la letra \"u\"). La pantalla de Recibir ahora muestra una DU rotativa/protegida.",
+                        "Zashi generará una nueva Dirección Protegida de Zcash cada vez que se abre la pantalla de Recibir. La generación de direcciones únicas se por razones de privacidad y seguridad.",
+                        "Todas las transacciones enviadas a tus diferentes Direcciones Protegidas rotativas formarán parte del saldo de una billetera con la misma frase de recuperación.",
+                        "Si bien recomendamos usar siempre una nueva dirección, las direcciones unicas pueden reutilizarse.",
+                        "Tanto ZEC transparentes como protegidos pueden enviarse a las Direcciones Protegidas de Zashi. Estos se recibirán y almacenarán como ZEC protegidos.",
+                        "Las billeteras y plataformas de intercambio que no admitan el envío de fondos a receptores protegidos no aceptarán este formato de dirección. Requerirán direcciones transparentes.",
+                        "Si los usuarios necesitan una dirección transparente (que empieza por la letra \"t\"), esta sigue estando disponible y se muestra por separado en la pantalla de Recibir.",
+                        "Los usuarios deben actualizar la aplicación para activar este cambio.",
+                        "Si compartes una dirección unificada de una versión anterior de Zashi y no querías revelar la dirección transparente vinculada, te recomendamos reemplazarla con una dirección generada recientemente desde la aplicación actualizada."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0.2",
             "date": "05-08-2025",
             "timestamp": 1746692913,
@@ -26,7 +47,6 @@
                         "También corregimos un problema con el cierre automático de la hoja inferior Gastable en ciertos casos extremos."
                     ]
                 }
-
             ]
         },
         {
