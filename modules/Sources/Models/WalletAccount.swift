@@ -44,17 +44,26 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
 
     public let id: AccountUUID
     public let vendor: Vendor
-    public var uAddress: UnifiedAddress?
+    public var defaultUA: UnifiedAddress?
+    public var privateUA: UnifiedAddress?
     public var seedFingerprint: [UInt8]?
     public var zip32AccountIndex: Zip32AccountIndex?
     public let account: Account
 
     public var unifiedAddress: String? {
-        uAddress?.stringEncoded
+        defaultUA?.stringEncoded
+    }
+
+    public var privateUnifiedAddress: String? {
+        privateUA?.stringEncoded
+    }
+
+    public var saplingAddress: String? {
+        try? defaultUA?.saplingReceiver().stringEncoded
     }
 
     public var transparentAddress: String? {
-        try? uAddress?.transparentReceiver().stringEncoded
+        try? defaultUA?.transparentReceiver().stringEncoded
     }
 
     public init(_ account: Account) {

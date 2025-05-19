@@ -80,4 +80,7 @@ public struct SDKSynchronizerClient {
 
     // Search
     public var fetchTxidsWithMemoContaining: (String) async throws -> [Data]
+    
+    // UA with custom receivers
+    public var getCustomUnifiedAddress: (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress?
 }

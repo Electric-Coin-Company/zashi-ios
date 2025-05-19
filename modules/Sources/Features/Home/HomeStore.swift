@@ -37,7 +37,6 @@ public struct Home {
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionListState: TransactionList.State
-        public var uAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
 
@@ -60,7 +59,7 @@ public struct Home {
         }
 
         public var inAppBrowserURLCoinbase: String? {
-            if let address = try? selectedWalletAccount?.uAddress?.transparentReceiver().stringEncoded, let appId {
+            if let address = selectedWalletAccount?.transparentAddress, let appId {
                 return L10n.Partners.coinbaseOnrampUrl(appId, address)
             }
             
@@ -95,6 +94,7 @@ public struct Home {
         case currencyConversionCloseTapped
         case currencyConversionSetupTapped
         case foundTransactions
+        case getSomeZecRequested
         case getSomeZecTapped
         case keystoneBannerTapped
         case moreTapped
@@ -102,6 +102,7 @@ public struct Home {
         case onDisappear
         case presentKeystoneWeb
         case rateTooltipTapped
+        case receiveScreenRequested
         case receiveTapped
         case resolveReviewRequest
         case retrySync
@@ -114,6 +115,7 @@ public struct Home {
         case smartBanner(SmartBanner.Action)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
+        case updatePrivateUA(UnifiedAddress?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
         case walletAccountTapped(WalletAccount)
@@ -155,16 +157,16 @@ public struct Home {
                 state.migratingDatabase = false
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
                 return .publisher {
-                        sdkSynchronizer.eventStream()
-                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .compactMap {
-                                if case SynchronizerEvent.foundTransactions = $0 {
-                                    return Home.Action.foundTransactions
-                                }
-                                return nil
+                    sdkSynchronizer.eventStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .compactMap {
+                            if case SynchronizerEvent.foundTransactions = $0 {
+                                return Home.Action.foundTransactions
                             }
-                    }
-                    .cancellable(id: CancelEventId, cancelInFlight: true)
+                            return nil
+                        }
+                }
+                .cancellable(id: CancelEventId, cancelInFlight: true)
                 
             case .onDisappear:
                 return .concatenate(
@@ -172,6 +174,21 @@ public struct Home {
                     .cancel(id: CancelEventId)
                 )
                 
+            case .receiveScreenRequested:
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                if let uuid = state.selectedWalletAccount?.id {
+                    return .run { send in
+                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
+                        await send(.updatePrivateUA(privateUA))
+                        await send(.receiveTapped)
+                    }
+                }
+                return .send(.receiveTapped)
+                
+            case .updatePrivateUA(let privateUA):
+                state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
+                return .none
+
             case .receiveTapped, .sendTapped:
                 return .none
                 
@@ -197,6 +214,17 @@ public struct Home {
             case .reviewRequestFinished:
                 state.canRequestReview = false
                 return .none
+
+            case .getSomeZecRequested:
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                if let uuid = state.selectedWalletAccount?.id {
+                    return .run { send in
+                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
+                        await send(.updatePrivateUA(privateUA))
+                        await send(.getSomeZecTapped)
+                    }
+                }
+                return .send(.getSomeZecTapped)
 
             case .getSomeZecTapped:
                 return .none

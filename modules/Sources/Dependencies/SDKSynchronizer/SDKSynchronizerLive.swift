@@ -192,7 +192,11 @@ extension SDKSynchronizerClient: DependencyKey {
                 
                 // Enrich the WalletAccounts with UnifiedAddresses
                 for i in 0..<walletAccounts.count {
-                    walletAccounts[i].uAddress = try? await synchronizer.getUnifiedAddress(accountUUID: walletAccounts[i].id)
+                    walletAccounts[i].defaultUA = try? await synchronizer.getUnifiedAddress(accountUUID: walletAccounts[i].id)
+                    walletAccounts[i].privateUA = try? await synchronizer.getCustomUnifiedAddress(
+                        accountUUID: walletAccounts[i].id,
+                        receivers: walletAccounts[i].vendor == .keystone ? [.orchard] : [.sapling, .orchard]
+                    )
                 }
                 
                 // Put the Zashi account to the top
@@ -269,6 +273,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             fetchTxidsWithMemoContaining: { searchTerm in
                 try await synchronizer.fetchTxidsWithMemoContaining(searchTerm: searchTerm)
+            },
+            getCustomUnifiedAddress: { accountUUID, receivers in
+                try await synchronizer.getCustomUnifiedAddress(accountUUID: accountUUID, receivers: receivers)
             }
         )
     }

@@ -112,7 +112,6 @@ public struct Root {
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
-        public var zashiUAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         // Path
