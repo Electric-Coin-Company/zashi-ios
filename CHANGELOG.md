@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.0.3 build 1 (2025-05-19)
+
 ### Changed
 - Unified address without transparent receiver for even better privacy. Regenerated with every Receive screen access.
 
