@@ -43,7 +43,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Scan zAddress Qr Codes</string>
+	<string>This app needs access to your camera to scan QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>To access sensitive wallet data which should never be shared with anyone. For example backup phrase seed that can restore the wallet and gain access to funds.</string>
 	<key>NSUbiquitousContainers</key>
