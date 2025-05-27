@@ -9,30 +9,34 @@ import SwiftUI
 import ComposableArchitecture
 
 import UIComponents
-import AddressBook
 import Generated
 
 // Path
+import AddressBook
 import Scan
+import SwapAndPayForm
 
 public struct SwapAndPayCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @Perception.Bindable var store: StoreOf<SwapAndPayCoordFlow>
+    let tokenName: String
 
-    public init(store: StoreOf<SwapAndPayCoordFlow>) {
+    public init(store: StoreOf<SwapAndPayCoordFlow>, tokenName: String) {
         self.store = store
+        self.tokenName = tokenName
     }
     
     public var body: some View {
         WithPerceptionTracking {
             NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                AddressBookView(
+                AddressChainTokenView(
                     store:
                         store.scope(
-                            state: \.addressBookState,
-                            action: \.addressBook
-                        )
+                            state: \.swapAndPayState,
+                            action: \.swapAndPay
+                        ),
+                    tokenName: tokenName
                 )
                 .navigationBarHidden(true)
             } destination: { store in
@@ -43,6 +47,8 @@ public struct SwapAndPayCoordFlowView: View {
                     AddressBookContactView(store: store)
                 case let .scan(store):
                     ScanView(store: store)
+                case let .swapAndPayForm(store):
+                    SwapAndPayForm(store: store, tokenName: tokenName)
                 }
             }
             .navigationBarHidden(!store.path.isEmpty)
@@ -60,13 +66,17 @@ public struct SwapAndPayCoordFlowView: View {
         .padding(.horizontal, 4)
         .applyScreenBackground()
         .zashiBack()
-        //.screenTitle(L10n.RecoveryPhraseDisplay.screenTitle.uppercased())
+        .zashiTitle {
+            Text(L10n.SendSelect.swapAndPay)
+                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                .fixedSize()
+        }
     }
 }
 
 #Preview {
     NavigationView {
-        SwapAndPayCoordFlowView(store: SwapAndPayCoordFlow.placeholder)
+        SwapAndPayCoordFlowView(store: SwapAndPayCoordFlow.placeholder, tokenName: "ZEC")
     }
 }
 

@@ -27,6 +27,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
     let title: String
     let type: `Type`
     let infinityWidth: Bool
+    let fontSize: CGFloat
     @ViewBuilder let prefixView: PrefixContent?
     @ViewBuilder let accessoryView: AccessoryContent?
     let action: () -> Void
@@ -35,6 +36,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
         _ title: String,
         type: `Type` = .primary,
         infinityWidth: Bool = true,
+        fontSize: CGFloat = 16,
         prefixView: PrefixContent? = EmptyView(),
         accessoryView: AccessoryContent? = EmptyView(),
         action: @escaping () -> Void
@@ -42,6 +44,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
         self.title = title
         self.type = type
         self.infinityWidth = infinityWidth
+        self.fontSize = fontSize
         self.accessoryView = accessoryView
         self.prefixView = prefixView
         self.action = action
@@ -58,7 +61,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
                 }
 
                 Text(title)
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: fontSize))
                     .fixedSize()
                     .minimumScaleFactor(0.5)
                 

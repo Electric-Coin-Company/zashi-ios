@@ -1363,6 +1363,46 @@ public enum L10n {
       public static let time = L10n.tr("Localizable", "supportData.timeItem.time", fallback: "Current time")
     }
   }
+  public enum SwapAndPay {
+    /// Cancel payment
+    public static let cancelPayment = L10n.tr("Localizable", "swapAndPay.cancelPayment", fallback: "Cancel payment")
+    /// Edit payment
+    public static let editPayment = L10n.tr("Localizable", "swapAndPay.editPayment", fallback: "Edit payment")
+    /// Enter address...
+    public static let enterAddress = L10n.tr("Localizable", "swapAndPay.enterAddress", fallback: "Enter address...")
+    /// ZEC transaction fee
+    public static let fee = L10n.tr("Localizable", "swapAndPay.fee", fallback: "ZEC transaction fee")
+    /// Get a quote
+    public static let getQuote = L10n.tr("Localizable", "swapAndPay.getQuote", fallback: "Get a quote")
+    /// Max slippage %@%
+    public static func maxSlippage(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "swapAndPay.maxSlippage", String(describing: p1), fallback: "Max slippage %@%")
+    }
+    /// Pay from
+    public static let payFrom = L10n.tr("Localizable", "swapAndPay.payFrom", fallback: "Pay from")
+    /// Pay now
+    public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay now")
+    /// Pay to
+    public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
+    /// Quote Unavailable
+    public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
+    /// Recipient gets
+    public static let recipientGets = L10n.tr("Localizable", "swapAndPay.recipientGets", fallback: "Recipient gets")
+    /// Search by name or ticker...
+    public static let search = L10n.tr("Localizable", "swapAndPay.search", fallback: "Search by name or ticker...")
+    /// Select...
+    public static let select = L10n.tr("Localizable", "swapAndPay.select", fallback: "Select...")
+    /// Select asset
+    public static let selectToken = L10n.tr("Localizable", "swapAndPay.selectToken", fallback: "Select asset")
+    /// Slippage
+    public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage")
+    /// A slippage setting determines the maximum allowable difference between the expected and actual price of a swap.
+    public static let slippageDesc = L10n.tr("Localizable", "swapAndPay.slippageDesc", fallback: "A slippage setting determines the maximum allowable difference between the expected and actual price of a swap.")
+    /// Total Amount
+    public static let totalAmount = L10n.tr("Localizable", "swapAndPay.totalAmount", fallback: "Total Amount")
+    /// You pay
+    public static let youPay = L10n.tr("Localizable", "swapAndPay.youPay", fallback: "You pay")
+  }
   public enum Sync {
     public enum Alert {
       /// Error

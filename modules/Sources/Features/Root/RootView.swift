@@ -207,7 +207,8 @@ private extension RootView {
                                 store:
                                     store.scope(
                                         state: \.swapAndPayCoordFlowState,
-                                        action: \.swapAndPayCoordFlow)
+                                        action: \.swapAndPayCoordFlow),
+                                tokenName: tokenName
                             )
                         }
                         .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {

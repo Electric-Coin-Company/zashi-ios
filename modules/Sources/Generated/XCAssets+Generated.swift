@@ -59,6 +59,9 @@ public enum Asset {
       public static let swapAndPay = ImageAsset(name: "swapAndPay")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
+    public enum Tickers {
+      public static let `none` = ImageAsset(name: "none")
+    }
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
     public static let alertIcon = ImageAsset(name: "alertIcon")
@@ -75,8 +78,10 @@ public enum Asset {
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public enum Icons {
       public static let alertCircle = ImageAsset(name: "alertCircle")
+      public static let alertOutline = ImageAsset(name: "alertOutline")
       public static let alertTriangle = ImageAsset(name: "alertTriangle")
       public static let archive = ImageAsset(name: "archive")
+      public static let arrowRight = ImageAsset(name: "arrowRight")
       public static let arrowUp = ImageAsset(name: "arrowUp")
       public static let authKey = ImageAsset(name: "authKey")
       public static let bookmark = ImageAsset(name: "bookmark")
@@ -125,6 +130,7 @@ public enum Asset {
       public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let shieldZap = ImageAsset(name: "shieldZap")
       public static let shoppingBag = ImageAsset(name: "shoppingBag")
+      public static let slippage = ImageAsset(name: "slippage")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
