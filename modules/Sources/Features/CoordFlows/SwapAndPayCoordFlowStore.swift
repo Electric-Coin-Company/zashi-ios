@@ -15,6 +15,7 @@ import Models
 // Path
 import AddressBook
 import Scan
+import SwapAndPayForm
 
 @Reducer
 public struct SwapAndPayCoordFlow {
@@ -23,19 +24,20 @@ public struct SwapAndPayCoordFlow {
         case addressBookChainToken(AddressBook)
         case addressBookContact(AddressBook)
         case scan(Scan)
+        case swapAndPayForm(SwapAndPay)
     }
     
     @ObservableState
     public struct State {
         public var path = StackState<Path.State>()
-        public var addressBookState = AddressBook.State.initial
+        public var swapAndPayState = SwapAndPay.State.initial
 
         public init() { }
     }
 
     public enum Action {
         case path(StackActionOf<Path>)
-        case addressBook(AddressBook.Action)
+        case swapAndPay(SwapAndPay.Action)
     }
 
     @Dependency(\.audioServices) var audioServices
@@ -45,8 +47,8 @@ public struct SwapAndPayCoordFlow {
     public var body: some Reducer<State, Action> {
         coordinatorReduce()
 
-        Scope(state: \.addressBookState, action: \.addressBook) {
-            AddressBook()
+        Scope(state: \.swapAndPayState, action: \.swapAndPay) {
+            SwapAndPay()
         }
 
         Reduce { state, action in
