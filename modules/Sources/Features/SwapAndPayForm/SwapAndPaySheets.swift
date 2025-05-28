@@ -178,7 +178,6 @@ extension SwapAndPayForm {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            //.background(.red)
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -201,8 +200,6 @@ extension SwapAndPayForm {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.top, 4)
-
-                    //                    CustomSliderView(sliderValue: $store.slippage)
                 }
                 .padding(.bottom, 32)
                 
@@ -405,97 +402,6 @@ extension SwapAndPayForm {
 
             Text(value)
                 .zFont(.medium, size: 14, style: Design.Text.primary)
-        }
-    }
-}
-
-// MARK: - Slider
-
-struct CustomSliderView: View {
-    @Binding var sliderValue: Double // e.g., 4.0%
-
-    var body: some View {
-        VStack(spacing: 32) {
-            // Bubble above thumb
-            ValueBubble(text: sliderLabel)
-                .offset(x: bubbleOffset)
-
-            // Track background + fill
-//            ZStack {
-//                Capsule()
-//                    .fill(Color.gray.opacity(0.2))
-//                    .frame(height: 6)
-//
-//                GeometryReader { geometry in
-//                    Capsule()
-//                        .fill(Color.black)
-//                        .frame(width: geometry.size.width * CGFloat(sliderValue / 50), height: 6)
-//                }
-//            }
-//            .frame(height: 6)
-
-            // Slider thumb
-            Slider(value: $sliderValue, in: 0...50, step: 1)
-
-            // Tick marks + labels
-            HStack {
-                ForEach(0..<6) { i in
-                    VStack(spacing: 4) {
-                        Rectangle()
-                            .frame(width: 1, height: 8)
-                            .foregroundColor(.gray.opacity(0.5))
-                        Text(i == 5 ? "Custom" : "\(i + 1)%")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-            }
-        }
-        .padding()
-    }
-
-    // Computed label for bubble
-    private var sliderLabel: String {
-        sliderValue == 50 ? "Custom" : "\(Int(sliderValue) / 10)%"
-    }
-
-    // Computed offset for bubble alignment
-    private var bubbleOffset: CGFloat {
-        let trackWidth: CGFloat = UIScreen.main.bounds.width - 32 * 2 // padding compensation
-        let thumbX = (trackWidth * CGFloat(sliderValue / 50)) - (trackWidth / 2)
-        return thumbX
-    }
-}
-
-struct ValueBubble: View {
-    let text: String
-
-    var body: some View {
-        VStack(spacing: 0) {
-            Text(text)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .padding(.vertical, 6)
-                .padding(.horizontal, 12)
-                .background(Color.black)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-            Triangle()
-                .fill(Color.black)
-                .frame(width: 12, height: 6)
-        }
-        .shadow(radius: 3)
-    }
-}
-
-struct Triangle: Shape {
-    func path(in rect: CGRect) -> Path {
-        Path { path in
-            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-            path.closeSubpath()
         }
     }
 }
