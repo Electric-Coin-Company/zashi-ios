@@ -11,10 +11,17 @@ public struct Contact: Equatable, Codable, Identifiable, Hashable {
     public let id: String
     public var name: String
     public var lastUpdated: Date
+    public var chainToken: ChainToken?
 
-    public init(address: String, name: String, lastUpdated: Date = Date()) {
+    public init(
+        address: String,
+        name: String,
+        lastUpdated: Date = Date(),
+        chainToken: ChainToken? = nil
+    ) {
         self.id = address
         self.name = name
         self.lastUpdated = lastUpdated
+        self.chainToken = chainToken
     }
 }

@@ -14,6 +14,7 @@ import PartnerKeys
 import UserPreferencesStorage
 import Utils
 import SmartBanner
+import SwapAndPay
 
 @Reducer
 public struct Home {
@@ -115,6 +116,7 @@ public struct Home {
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
         case smartBanner(SmartBanner.Action)
+        case swapAndPayTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case updatePrivateUA(UnifiedAddress?)
@@ -131,6 +133,7 @@ public struct Home {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.reviewRequest) var reviewRequest
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -175,9 +178,9 @@ public struct Home {
                     .cancel(id: CancelStateId),
                     .cancel(id: CancelEventId)
                 )
-                
+
             case .receiveScreenRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
@@ -201,7 +204,11 @@ public struct Home {
             case .sendTapped:
                 state.sendSelectRequest = false
                 return .none
-                
+
+            case .swapAndPayTapped:
+                state.sendSelectRequest = false
+                return .none
+
             case .scanTapped:
                 return .none
 
@@ -226,7 +233,7 @@ public struct Home {
                 return .none
 
             case .getSomeZecRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])

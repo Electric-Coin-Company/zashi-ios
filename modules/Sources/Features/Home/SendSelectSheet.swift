@@ -28,7 +28,7 @@ extension HomeView {
                 title: L10n.SendSelect.swapAndPay,
                 subtitle: L10n.SendSelect.SwapAndPay.desc
             ) {
-                
+                store.send(.swapAndPayTapped)
             }
         }
         .padding(.bottom, 56)

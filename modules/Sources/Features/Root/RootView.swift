@@ -202,6 +202,15 @@ private extension RootView {
                                         action: \.currencyConversionSetup)
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.swapAndPayCoordFlow)) {
+                            SwapAndPayCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.swapAndPayCoordFlowState,
+                                        action: \.swapAndPayCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
                         .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {
                             SignWithKeystoneCoordFlowView(
                                 store:
