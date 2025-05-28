@@ -52,16 +52,6 @@ public struct SwapAndPayCoordFlowView: View {
                 }
             }
             .navigationBarHidden(!store.path.isEmpty)
-//            .navigationBarItems(
-//                trailing:
-//                    Button {
-//                        store.send(.helpSheetRequested)
-//                    } label: {
-//                        Asset.Assets.Icons.help.image
-//                            .zImage(size: 24, style: Design.Text.primary)
-//                            .padding(8)
-//                    }
-//            )
         }
         .padding(.horizontal, 4)
         .applyScreenBackground()

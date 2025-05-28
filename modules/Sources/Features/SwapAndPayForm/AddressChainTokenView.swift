@@ -1,6 +1,6 @@
 //
 //  AddressChainTokenView.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 2025-05-23.
 //
