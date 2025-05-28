@@ -192,6 +192,16 @@ public struct Home {
                 
             case .updatePrivateUA(let privateUA):
                 state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
+
+            case .sendSelectTapped:
+                state.sendSelectRequest = true
+                return .none
+
+            case .receiveTapped:
+                return .none
+
+            case .sendTapped:
+                state.sendSelectRequest = false
                 return .none
 
             case .sendSelectTapped:
