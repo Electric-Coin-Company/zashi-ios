@@ -34,7 +34,6 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
-        public var sendSelectRequest = false
         public var smartBannerState = SmartBanner.State.initial
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -111,7 +110,6 @@ public struct Home {
         case reviewRequestFinished
         case scanTapped
         case seeAllTransactionsTapped
-        case sendSelectTapped
         case sendTapped
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
@@ -194,19 +192,14 @@ public struct Home {
                 state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
                 return .none
 
-            case .sendSelectTapped:
-                state.sendSelectRequest = true
-                return .none
-
             case .receiveTapped:
                 return .none
 
             case .sendTapped:
-                state.sendSelectRequest = false
                 return .none
 
             case .swapAndPayTapped:
-                state.sendSelectRequest = false
+                state.moreRequest = false
                 return .none
 
             case .scanTapped:

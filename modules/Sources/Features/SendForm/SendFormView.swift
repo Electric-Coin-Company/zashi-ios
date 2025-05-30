@@ -106,7 +106,7 @@ public struct SendFormView: View {
                                                         error: store.invalidZecAmountErrorText,
                                                         prefixView:
                                                             Asset.Assets.Icons.currencyZec.image
-                                                            .zImage(size: 20, style: Design.Inputs.Default.text)
+                                                                .zImage(size: 20, style: Design.Inputs.Default.text)
                                                     )
                                                     .keyboardType(.decimalPad)
                                                     .focused($isAmountFocused)

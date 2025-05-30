@@ -56,7 +56,7 @@ public struct HomeView: View {
                         L10n.Tabs.send,
                         icon: Asset.Assets.Icons.sent.image
                     ) {
-                        store.send(.sendSelectTapped)
+                        store.send(.sendTapped)
                     }
 
                     Spacer(minLength: 8)
@@ -134,10 +134,6 @@ public struct HomeView: View {
             }
             .sheet(isPresented: $store.moreRequest) {
                 moreContent()
-                    .applyScreenBackground()
-            }
-            .zashiSheet(isPresented: $store.sendSelectRequest) {
-                sendSelectContent()
                     .applyScreenBackground()
             }
             .navigationBarItems(
