@@ -683,8 +683,8 @@
 // MARK: - Swap and Pay
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
-"sendSelect.swapAndPay" = "SWAPnPAY";
-"sendSelect.swapAndPay.desc" = "Pay anyone by swapping ZEC with Near integration.";
+"sendSelect.swapAndPay" = "Pay with NEAR";
+"sendSelect.swapAndPay.desc" = "Send payments in any coin or token supported by Zashi's DEX integration.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -703,3 +703,8 @@
 "swapAndPay.maxSlippage" = "Max slippage %@%";
 "swapAndPay.totalAmount" = "Total Amount";
 "swapAndPay.search" = "Search by name or ticker...";
+"swapAndPay.slippageSet1" = "You will pay up to ";
+"swapAndPay.slippageSet2" = "%@% (%@) ";
+"swapAndPay.slippageSet3" = "for the swap.";
+"swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
+"swapAndPay.customSlippage" = "Enter custom slippage";

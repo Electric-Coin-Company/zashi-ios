@@ -30,6 +30,19 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         }
     }
     
+    public var tokenName: String {
+        switch token.lowercased() {
+        case "btc": return "Bitcoin"
+        case "eth": return "Ethereum"
+        case "near": return "Near"
+        case "sol": return "Solana"
+        case "tron": return "Tron"
+        case "xrp": return "Ripple"
+        case "zec": return "Zcash"
+        default: return token
+        }
+    }
+
     public var chainIcon: Image {
         guard let icon = UIImage(named: chain.lowercased()) else {
             return Asset.Assets.Tickers.none.image

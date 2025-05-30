@@ -40,6 +40,17 @@ extension HomeView {
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
             
+            ActionRow(
+                icon: Asset.Assets.Tickers.near.image,
+                title: L10n.SendSelect.swapAndPay,
+                desc: L10n.SendSelect.SwapAndPay.desc,
+                customIcon: true,
+                divider: store.featureFlags.flexa
+            ) {
+                store.send(.swapAndPayTapped)
+            }
+            .disabled(walletStatus == .restoring)
+
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(
                     icon: Asset.Assets.Partners.coinbase.image,

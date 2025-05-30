@@ -89,6 +89,7 @@ public struct AddressChainTokenView: View {
                 ZashiButton(L10n.General.next) {
                     store.send(.nextTapped)
                 }
+                .disabled(!store.isValidForm)
                 .padding(.bottom, 24)
             }
             .screenHorizontalPadding()
@@ -191,7 +192,7 @@ public struct AddressChainTokenView: View {
             } label: {
                 HStack(spacing: 0) {
                     if let selectedAsset = store.selectedAsset {
-                        
+                        noBcgTicker(asset: selectedAsset, colorScheme)
                     } else {
                         Text(L10n.SwapAndPay.select)
                             .font(.custom(FontFamily.Inter.regular.name, size: 16))
