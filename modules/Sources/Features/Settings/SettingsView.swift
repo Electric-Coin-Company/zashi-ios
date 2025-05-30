@@ -40,29 +40,29 @@ public struct SettingsView: View {
                                 store.send(.addressBookAccessCheck)
                             }
                             
-                            if store.isEnoughFreeSpaceMode {
-                                ActionRow(
-                                    icon: Asset.Assets.Icons.integrations.image,
-                                    title: L10n.Settings.integrations,
-                                    accessoryView:
-                                        HStack(spacing: 0) {
-                                            Asset.Assets.Partners.coinbaseSeeklogo.image
-                                                .seekOutline(colorScheme)
-                                            
-                                            if store.featureFlags.flexa && !store.isKeystoneAccount {
-                                                Asset.Assets.Partners.flexaSeekLogo.image
-                                                    .seekOutline(colorScheme)
-                                            }
-                                            
-                                            if !store.isKeystoneConnected {
-                                                Asset.Assets.Partners.keystoneSeekLogo.image
-                                                    .seekOutline(colorScheme)
-                                            }
-                                        }
-                                ) {
-                                    store.send(.integrationsTapped)
-                                }
-                            }
+//                            if store.isEnoughFreeSpaceMode {
+//                                ActionRow(
+//                                    icon: Asset.Assets.Icons.integrations.image,
+//                                    title: L10n.Settings.integrations,
+//                                    accessoryView:
+//                                        HStack(spacing: 0) {
+//                                            Asset.Assets.Partners.coinbaseSeeklogo.image
+//                                                .seekOutline(colorScheme)
+//                                            
+//                                            if store.featureFlags.flexa && !store.isKeystoneAccount {
+//                                                Asset.Assets.Partners.flexaSeekLogo.image
+//                                                    .seekOutline(colorScheme)
+//                                            }
+//                                            
+//                                            if !store.isKeystoneConnected {
+//                                                Asset.Assets.Partners.keystoneSeekLogo.image
+//                                                    .seekOutline(colorScheme)
+//                                            }
+//                                        }
+//                                ) {
+//                                    store.send(.integrationsTapped)
+//                                }
+//                            }
                             
                             ActionRow(
                                 icon: Asset.Assets.Icons.settings.image,

@@ -49,7 +49,8 @@ extension AddressChainTokenView {
                         Spacer()
                     }
                 }
-                .padding(.vertical, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 24)
                 .padding(.horizontal, 20)
 
                 ZashiTextField(
@@ -67,7 +68,7 @@ extension AddressChainTokenView {
 
                 List {
                     WithPerceptionTracking {
-                        ForEach(store.swapAssets, id: \.self) { asset in
+                        ForEach(store.swapAssetsToPresent, id: \.self) { asset in
                             assetView(asset, colorScheme)
                                 .listRowInsets(EdgeInsets())
                                 .listRowBackground(Asset.Colors.background.color)
@@ -84,50 +85,56 @@ extension AddressChainTokenView {
     
     @ViewBuilder private func assetView(_ asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
-            VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    asset.tokenIcon
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .padding(.trailing, 12)
-                        .overlay {
-                            ZStack {
-                                Circle()
-                                    .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                    .frame(width: 22, height: 22)
-                                    .offset(x: 8, y: 12)
-
-                                asset.chainIcon
-                                    .resizable()
-                                    .frame(width: 18, height: 18)
-                                    .offset(x: 8, y: 12)
+            Button {
+                store.send(.assetTapped(asset))
+            } label: {
+                VStack(spacing: 0) {
+                    HStack(spacing: 0) {
+                        asset.tokenIcon
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .padding(.trailing, 12)
+                            .overlay {
+                                ZStack {
+                                    Circle()
+                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                                        .frame(width: 22, height: 22)
+                                        .offset(x: 8, y: 12)
+                                    
+                                    asset.chainIcon
+                                        .resizable()
+                                        .frame(width: 18, height: 18)
+                                        .offset(x: 8, y: 12)
+                                }
                             }
-                        }
-
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(asset.token)
-                            .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                            .zForegroundColor(Design.Text.primary)
                         
-                        Text(asset.chainName)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            .zForegroundColor(Design.Text.tertiary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                            .padding(.top, 2)
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(asset.token)
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                                .zForegroundColor(Design.Text.primary)
+                            
+                            Text(asset.chainName)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                .zForegroundColor(Design.Text.tertiary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                                .padding(.top, 2)
+                        }
+                        .padding(.trailing, 16)
+                        
+                        Spacer(minLength: 2)
+                        
+                        Asset.Assets.chevronRight.image
+                            .zImage(size: 20, style: Design.Text.tertiary)
                     }
-                    .padding(.trailing, 16)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
                     
-                    Spacer(minLength: 2)
-                    
-                    Asset.Assets.chevronRight.image
-                        .zImage(size: 20, style: Design.Text.tertiary)
+                    if store.swapAssetsToPresent.last != asset {
+                        Design.Surfaces.divider.color(colorScheme)
+                            .frame(height: 1)
+                    }
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 20)
-
-                Design.Surfaces.divider.color(colorScheme)
-                    .frame(height: 1)
             }
         }
     }
@@ -136,104 +143,158 @@ extension AddressChainTokenView {
 extension SwapAndPayForm {
     @ViewBuilder func slippageContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
-            VStack(alignment: .leading, spacing: 0) {
-                Button {
-                    store.send(.closeSlippageSheetTapped)
-                } label: {
-                    Asset.Assets.buttonCloseX.image
-                        .zImage(size: 24, style: Design.Text.primary)
-                        .padding(8)
-                }
-                .padding(.vertical, 24)
-
-                Text(L10n.SwapAndPay.slippage)
-                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                    .padding(.bottom, 8)
-
-                Text(L10n.SwapAndPay.slippageDesc)
-                    .zFont(size: 14, style: Design.Text.tertiary)
-                    .padding(.bottom, 24)
-
-                VStack(spacing: 0) {
-                    Slider(value: $store.slippage, in: 0...40, step: 1) {
-                        
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Button {
+                        store.send(.closeSlippageSheetTapped)
+                    } label: {
+                        Asset.Assets.buttonCloseX.image
+                            .zImage(size: 24, style: Design.Text.primary)
+                            .padding(8)
                     }
-                    .tint(Design.Text.primary.color(colorScheme))
-
-                    HStack(spacing: 0) {
-                        ForEach(0..<4) { i in
-                            HStack(spacing: 0) {
-                                Rectangle()
-                                    .frame(width: 1, height: 8)
-                                    .foregroundColor(Design.Text.primary.color(colorScheme))
-                                    .padding(.leading, i == 0 ? 12 : 0)
-
-                                Spacer()
-                                
-                                if i == 3 {
+                    .padding(.vertical, 24)
+                    
+                    Text(L10n.SwapAndPay.slippage)
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+                    
+                    Text(L10n.SwapAndPay.slippageDesc)
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .padding(.bottom, 24)
+                    
+//                        HStack {
+//                            Spacer()
+//                            
+//                            Picker("", selection: $store.slippageIntValue) {
+//                                ForEach(0..<100, id: \.self) { intValue in
+//                                    Text("\(intValue)")
+//                                        .zFont(size: 23, style: Design.Text.primary)
+//                                }
+//                            }
+//                            .pickerStyle(.wheel)
+//                            .frame(width: 70)
+//                            
+//                            Text(".")
+//                                .zFont(size: 23, style: Design.Text.primary)
+//                            
+//                            Picker("", selection: $store.slippageDecimalValue) {
+//                                ForEach(0..<10, id: \.self) { decimalValue in
+//                                    Text("\(decimalValue)%")
+//                                        .zFont(size: 23, style: Design.Text.primary)
+//                                }
+//                            }
+//                            .pickerStyle(.wheel)
+//                            .frame(width: 70)
+//                            
+//                            Spacer()
+//                        }
+//                        .padding(.bottom, 32)
+                    
+                    VStack(spacing: 0) {
+                        Slider(value: $store.slippageInSheet, in: 0...40, step: 1) {
+                            
+                        }
+                        .tint(Design.Text.primary.color(colorScheme))
+                        
+                        HStack(spacing: 0) {
+                            ForEach(0..<4) { i in
+                                HStack(spacing: 0) {
                                     Rectangle()
                                         .frame(width: 1, height: 8)
                                         .foregroundColor(Design.Text.primary.color(colorScheme))
-                                        .padding(.trailing, 12)
+                                        .padding(.leading, i == 0 ? 12 : 0)
+                                    
+                                    Spacer()
+                                    
+                                    if i == 3 {
+                                        Rectangle()
+                                            .frame(width: 1, height: 8)
+                                            .foregroundColor(Design.Text.primary.color(colorScheme))
+                                            .padding(.trailing, 12)
+                                    }
                                 }
+                                .frame(maxWidth: .infinity)
                             }
-                            .frame(maxWidth: .infinity)
                         }
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    HStack(spacing: 0) {
-                        ForEach(0..<4) { i in
-                            HStack(spacing: 0) {
-                                Text("\(i)%")
-                                    .foregroundColor(Design.Text.primary.color(colorScheme))
-
-                                Spacer()
-                                
-                                if i == 3 {
-                                    Text("custom")
-                                        .foregroundColor(Design.Text.primary.color(colorScheme))
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 4)
-                }
-                .padding(.bottom, 32)
-                
-                HStack(spacing: 0) {
-                    HStack(alignment: .top, spacing: 0) {
-                        Asset.Assets.infoCircle.image
-                            .zImage(size: 20, style: Design.Utility.Gray._600)
-                            .padding(.trailing, 8)
+                        .frame(maxWidth: .infinity)
                         
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Low Slippage")
-                                .zFont(.semiBold, size: 14, style: Design.Utility.Gray._600)
-                                .padding(.bottom, 4)
-
-                            Text("You will only pay up to 1% ($1.01) for the swap but the transaction is less likely to succeed.")
-                                .zFont(size: 12, style: Design.Utility.Gray._900)
+                        HStack(spacing: 0) {
+                            ForEach(0..<4) { i in
+                                HStack(spacing: 0) {
+                                    Text("\(i)%")
+                                        .foregroundColor(Design.Text.primary.color(colorScheme))
+                                    
+                                    Spacer()
+                                    
+                                    if i == 3 {
+                                        Text("custom")
+                                            .foregroundColor(Design.Text.primary.color(colorScheme))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 4)
+                    }
+                    .padding(.bottom, 32)
+                    
+                    if store.isCustomSlippageFieldVisible {
+                        ZashiTextField(
+                            text: $store.customSlippage,
+                            placeholder: "",
+                            title: L10n.SwapAndPay.customSlippage,
+                        )
+                        .keyboardType(.decimalPad)
+                        .focused($isSlippageFocused)
+                        .padding(.bottom, 32)
+                    }
+                    
+                    HStack(spacing: 0) {
+                        HStack(alignment: .top, spacing: 0) {
+                            Asset.Assets.infoCircle.image
+                                .zImage(size: 20, color: slippageWarnIconColor(colorScheme))
+                                .padding(.trailing, 8)
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                Group {
+                                    Text(L10n.SwapAndPay.slippageSet1)
+                                    + Text(
+                                        L10n.SwapAndPay.slippageSet2(
+                                            String(format: "%0.1f%%", store.slippageInSheet * 0.1),
+                                            store.slippageDiff
+                                        )
+                                    ).bold()
+                                    + Text(L10n.SwapAndPay.slippageSet3)
+                                }
+                                .zFont(size: 12, style: slippageWarnTextStyle())
+                                .fixedSize(horizontal: false, vertical: true)
+                                
+                                Text(L10n.SwapAndPay.slippageWarn)
+                                    .zFont(size: 12, style: slippageWarnTextStyle())
+                                    .padding(.top, 16)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(20)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
-                        .fill(Design.Utility.Gray._50.color(colorScheme))
-                }
-                
-                Spacer()
-                
-                ZashiButton(L10n.General.confirm) {
+                    .frame(maxWidth: .infinity)
+                    .padding(20)
+                    .background {
+                        RoundedRectangle(cornerRadius: Design.Radius._2xl)
+                            .fill(slippageWarnBcgColor(colorScheme))
+                    }
+                    .padding(.bottom, 32)
+
+                    Spacer()
                     
+                    ZashiButton(L10n.General.confirm) {
+                        store.send(.slippageSetConfirmTapped)
+                    }
+                    .padding(.bottom, 24)
                 }
-                .padding(.bottom, 24)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 1)
         }
     }
 

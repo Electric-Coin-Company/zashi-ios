@@ -8,14 +8,18 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import SwapAndPay
 
 import UIComponents
 
 public struct SwapAndPayForm: View {
     @Environment(\.colorScheme) private var colorScheme
     
-    @State private var keyboardVisible: Bool = false
+    @State var keyboardVisible: Bool = false
     
+    @FocusState private var isAmountFocused
+    @FocusState var isSlippageFocused
+
     @Perception.Bindable var store: StoreOf<SwapAndPay>
     let tokenName: String
     
@@ -42,7 +46,10 @@ public struct SwapAndPayForm: View {
                 .padding(.bottom, 24)
             }
             .screenHorizontalPadding()
-            .onAppear { observeKeyboardNotifications() }
+            .onAppear {
+                observeKeyboardNotifications()
+                isAmountFocused = true
+            }
             .applyScreenBackground()
             .zashiBack()
             .zashiTitle {
@@ -50,6 +57,32 @@ public struct SwapAndPayForm: View {
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
                     .fixedSize()
             }
+            .overlay(
+                VStack(spacing: 0) {
+                    Spacer()
+
+                    Asset.Colors.primary.color
+                        .frame(height: 1)
+                        .opacity(0.1)
+                    
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        Button {
+                            isAmountFocused = false
+                        } label: {
+                            Text(L10n.General.done.uppercased())
+                                .zFont(.regular, size: 14, style: Design.Text.primary)
+                        }
+                        .padding(.bottom, 4)
+                    }
+                    .applyScreenBackground()
+                    .padding(.horizontal, 20)
+                    .frame(height: keyboardVisible ? 38 : 0)
+                    .frame(maxWidth: .infinity)
+                    .opacity(keyboardVisible ? 1 : 0)
+                }
+            )
             .popover(isPresented: $store.isSlippagePresented) {
                 slippageContent(colorScheme)
                     .screenHorizontalPadding()
@@ -69,50 +102,96 @@ public struct SwapAndPayForm: View {
     }
     
     @ViewBuilder private func recipientGetsView() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(L10n.SwapAndPay.recipientGets)
-                .zFont(.medium, size: 14, style: Design.Text.secondary)
-                .padding(.bottom, 4)
-            
-            HStack(spacing: 0) {
-                Text("100.0")
-                    .zFont(.semiBold, size: 32, style: Design.Text.primary)
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.SwapAndPay.recipientGets)
+                    .zFont(.medium, size: 14, style: Design.Text.secondary)
                     .padding(.bottom, 4)
                 
-                Spacer()
-                
-                ticker()
-            }
-
-            HStack(spacing: 0) {
-                Text("$32.00")
-                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                    .padding(.trailing, 4)
-                
-                Asset.Assets.Icons.switchHorizontal.image
-                    .zImage(size: 14, style: Design.Btns.Tertiary.fg)
-                    .padding(5)
-                    .background {
-                        RoundedRectangle(cornerRadius: Design.Radius._md)
-                            .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                HStack(spacing: 0) {
+                    if store.isInputInUsd {
+                        Asset.Assets.Icons.currencyDollar.image
+                            .zImage(size: 26, style: Design.Inputs.Default.text)
                     }
-                    .rotationEffect(Angle(degrees: 90))
-                
-                Spacer()
-
-                Text("$936.25")
-                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
-            }
-        }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            RoundedRectangle(cornerRadius: Design.Radius._4xl)
-                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
-                        .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+                    
+                    TextField(
+                        "",
+                        text: $store.amountText,
+                        prompt:
+                            Text(store.localePlaceholder)
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 32))
+                            .foregroundColor(Design.Text.primary.color(colorScheme))
+                    )
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+                    .keyboardType(.decimalPad)
+                    .zFont(.semiBold, size: 32, style: Design.Text.primary)
+                    .lineLimit(1)
+                    .accentColor(Design.Text.primary.color(colorScheme))
+                    .padding(.bottom, 4)
+                    .focused($isAmountFocused)
+                    
+                    Spacer()
+                    
+                    if let asset = store.selectedAsset {
+                        ticker(asset: asset, colorScheme)
+                    }
                 }
+                
+                HStack(spacing: 0) {
+                    Text(store.recipientGetsConverted)
+                        .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        .padding(.trailing, 4)
+                    
+                    Button {
+                        store.send(.switchInputTapped)
+                    } label: {
+                        Asset.Assets.Icons.switchHorizontal.image
+                            .zImage(size: 14, style: Design.Btns.Tertiary.fg)
+                            .padding(8)
+                            .background {
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                            }
+                            .rotationEffect(Angle(degrees: 90))
+                    }
+                    
+                    Spacer()
+                    
+                    Text(store.spendableUSDBalance)
+                        .zFont(
+                            .medium,
+                            size: 14,
+                            style: store.isInsufficientFunds
+                            ? Design.Text.error
+                            : Design.Text.tertiary
+                        )
+                }
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
+                    .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                    .background {
+                        RoundedRectangle(cornerRadius: Design.Radius._4xl)
+                            .stroke(
+                                store.isInsufficientFunds
+                                ? Design.Text.error.color(colorScheme)
+                                : Design.Surfaces.strokeSecondary.color(colorScheme)
+                            )
+                    }
+            }
+            
+            if store.isInsufficientFunds {
+                HStack {
+                    Spacer()
+                    
+                    Text(L10n.Send.Error.insufficientFunds)
+                        .zFont(size: 14, style: Design.Inputs.ErrorFilled.hint)
+                }
+                .padding(.top, 6)
+            }
         }
     }
 
@@ -135,7 +214,7 @@ public struct SwapAndPayForm: View {
                         .zImage(size: 16, style: Design.Btns.Primary.fg)
                         .padding(.trailing, 4)
                     
-                    Text("1%")
+                    Text(String(format: "%0.1f%%", store.slippage * 0.1))
                         .zFont(.semiBold, size: 14, style: Design.Btns.Primary.fg)
                 }
                 .padding(.horizontal, 10)
@@ -143,7 +222,7 @@ public struct SwapAndPayForm: View {
             }
             .frame(height: 32)
             .background {
-                RoundedRectangle(cornerRadius: Design.Radius._xl)
+                RoundedRectangle(cornerRadius: Design.Radius._md)
                     .fill(Design.Btns.Primary.bg.color(colorScheme))
             }
         }
@@ -158,16 +237,20 @@ public struct SwapAndPayForm: View {
                 .padding(.bottom, 4)
             
             HStack(spacing: 0) {
-                Text("100.0")
+                Text(store.youPayZec)
                     .zFont(.semiBold, size: 32, style: Design.Text.tertiary)
                     .padding(.bottom, 4)
+                    .fixedSize()
+                    .minimumScaleFactor(0.7)
                 
                 Spacer()
-                
-                ticker()
+
+                if let asset = store.zecAsset {
+                    ticker(asset: asset, colorScheme)
+                }
             }
 
-            Text("$32")
+            Text(store.youPayZecConverted)
                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
                 .padding(.bottom, 4)
         }
@@ -177,43 +260,6 @@ public struct SwapAndPayForm: View {
             RoundedRectangle(cornerRadius: Design.Radius._4xl)
                 .fill(Design.Utility.Gray._50.color(colorScheme))
         }
-    }
-    
-    @ViewBuilder private func ticker() -> some View {
-        HStack(spacing: 0) {
-            Asset.Assets.Partners.coinbaseSeeklogo.image
-                .resizable()
-                .frame(width: 24, height: 24)
-                .padding(.trailing, 8)
-                .overlay {
-                    ZStack {
-                        Circle()
-                            .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                            .frame(width: 16, height: 16)
-                            .offset(x: 6, y: 6)
-
-                        Asset.Assets.Partners.keystoneSeekLogo.image
-                            .resizable()
-                            .frame(width: 14, height: 14)
-                            .offset(x: 6, y: 6)
-                    }
-                }
-            
-            Text("USDT")
-                .zFont(.semiBold, size: 14, style: Design.Text.primary)
-                .padding(.trailing, 4)
-        }
-        .padding(4)
-        .background {
-            RoundedRectangle(cornerRadius: Design.Radius._full)
-                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._full)
-                        .stroke(Design.Surfaces.strokeTertiary.color(colorScheme))
-                }
-        }
-        .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
-        .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
     }
 
     private func observeKeyboardNotifications() {
@@ -227,5 +273,80 @@ public struct SwapAndPayForm: View {
                 keyboardVisible = false
             }
         }
+    }
+    
+    public func slippageWarnBcgColor(_ colorScheme: ColorScheme) -> Color {
+        if store.slippageInSheet <= 10.0 {
+            return Design.Utility.Gray._50.color(colorScheme)
+        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
+            return Design.Utility.WarningYellow._50.color(colorScheme)
+        } else {
+            return Design.Utility.ErrorRed._50.color(colorScheme)
+        }
+    }
+    
+    public func slippageWarnIconColor(_ colorScheme: ColorScheme) -> Color {
+        if store.slippageInSheet <= 10.0 {
+            return Design.Utility.Gray._600.color(colorScheme)
+        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
+            return Design.Utility.WarningYellow._600.color(colorScheme)
+        } else {
+            return Design.Utility.ErrorRed._600.color(colorScheme)
+        }
+    }
+    
+    public func slippageWarnTextStyle() -> Colorable {
+        if store.slippageInSheet <= 10.0 {
+            return Design.Utility.Gray._900
+        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
+            return Design.Utility.WarningYellow._900
+        } else {
+            return Design.Utility.ErrorRed._900
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder func noBcgTicker(asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
+        HStack(spacing: 0) {
+            asset.tokenIcon
+                .resizable()
+                .frame(width: 24, height: 24)
+                .padding(.trailing, 8)
+                .overlay {
+                    ZStack {
+                        Circle()
+                            .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                            .frame(width: 16, height: 16)
+                            .offset(x: 6, y: 6)
+
+                        asset.chainIcon
+                            .resizable()
+                            .frame(width: 14, height: 14)
+                            .offset(x: 6, y: 6)
+                    }
+                }
+            
+            Text(asset.token)
+                .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                .padding(.trailing, 4)
+                .fixedSize()
+                .minimumScaleFactor(0.7)
+        }
+        .padding(4)
+    }
+    
+    @ViewBuilder func ticker(asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
+        noBcgTicker(asset: asset, colorScheme)
+            .background {
+                RoundedRectangle(cornerRadius: Design.Radius._full)
+                    .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                    .background {
+                        RoundedRectangle(cornerRadius: Design.Radius._full)
+                            .stroke(Design.Surfaces.strokeTertiary.color(colorScheme))
+                    }
+            }
+            .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
+            .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
     }
 }
