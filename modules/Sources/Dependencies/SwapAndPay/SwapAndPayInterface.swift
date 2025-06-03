@@ -18,4 +18,5 @@ extension DependencyValues {
 @DependencyClient
 public struct  SwapAndPayClient {
     public let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
+    public let quote: () async throws -> Void
 }

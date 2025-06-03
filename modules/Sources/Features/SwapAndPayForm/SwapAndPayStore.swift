@@ -281,8 +281,15 @@ public struct SwapAndPay {
                 return .send(.updateAssetsAccordingToSearchTerm)
                 
             case .getQuoteTapped:
+                return .run { send in
+                    do {
+                        try await swapAndPay.quote()
+                    } catch {
+                        print(error)
+                    }
+                }
                 //                state.isQuotePresented = true
-                state.isQuoteUnavailablePresented = true
+                //state.isQuoteUnavailablePresented = true
                 return .none
                 
             case .slippageTapped:

@@ -14,6 +14,9 @@ extension SwapAndPayClient: DependencyKey {
     public static let liveValue = Self(
         swapAssets: {
             try await Near1Click.liveValue.swapAssets()
+        },
+        quote: {
+            try await Near1Click.liveValue.quote()
         }
     )
 }
