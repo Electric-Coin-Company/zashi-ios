@@ -13,132 +13,132 @@ import SwapAndPay
 
 import BalanceBreakdown
 
-extension AddressChainTokenView {
-    @ViewBuilder func balancesContent() -> some View {
-        WithPerceptionTracking {
-            BalancesView(
-                store:
-                    store.scope(
-                        state: \.balancesState,
-                        action: \.balances
-                    ),
-                tokenName: tokenName
-            )
-        }
-    }
-    
-    @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
-        WithPerceptionTracking {
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    VStack {
-                        Text(L10n.SwapAndPay.selectToken.uppercased())
-                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                            .fixedSize()
-                    }
-                    
-                    HStack {
-                        Button {
-                            store.send(.closeAssetsSheetTapped)
-                        } label: {
-                            Asset.Assets.buttonCloseX.image
-                                .zImage(size: 24, style: Design.Text.primary)
-                                .padding(8)
-                        }
-                        
-                        Spacer()
-                    }
-                }
-                .padding(.top, 16)
-                .padding(.bottom, 24)
-                .padding(.horizontal, 20)
-
-                ZashiTextField(
-                    text: $store.searchTerm,
-                    placeholder: L10n.SwapAndPay.search,
-                    eraseAction: { store.send(.eraseSearchTermTapped) },
-                    accessoryView: !store.searchTerm.isEmpty ? Asset.Assets.Icons.xClose.image
-                        .zImage(size: 16, style: Design.Btns.Tertiary.fg) : nil,
-                    prefixView: Asset.Assets.Icons.search.image
-                        .zImage(size: 20, style: Design.Dropdowns.Default.text)
-                )
-                .padding(.trailing, 8)
-                .padding(.bottom, 32)
-                .padding(.horizontal, 20)
-
-                List {
-                    WithPerceptionTracking {
-                        ForEach(store.swapAssetsToPresent, id: \.self) { asset in
-                            assetView(asset, colorScheme)
-                                .listRowInsets(EdgeInsets())
-                                .listRowBackground(Asset.Colors.background.color)
-                                .listRowSeparator(.hidden)
-                        }
-                    }
-                }
-                .padding(.vertical, 1)
-                .background(Asset.Colors.background.color)
-                .listStyle(.plain)
-            }
-        }
-    }
-    
-    @ViewBuilder private func assetView(_ asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
-        WithPerceptionTracking {
-            Button {
-                store.send(.assetTapped(asset))
-            } label: {
-                VStack(spacing: 0) {
-                    HStack(spacing: 0) {
-                        asset.tokenIcon
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .padding(.trailing, 12)
-                            .overlay {
-                                ZStack {
-                                    Circle()
-                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                        .frame(width: 22, height: 22)
-                                        .offset(x: 8, y: 12)
-                                    
-                                    asset.chainIcon
-                                        .resizable()
-                                        .frame(width: 18, height: 18)
-                                        .offset(x: 8, y: 12)
-                                }
-                            }
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(asset.token)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                                .zForegroundColor(Design.Text.primary)
-                            
-                            Text(asset.chainName)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                .zForegroundColor(Design.Text.tertiary)
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-                                .padding(.top, 2)
-                        }
-                        .padding(.trailing, 16)
-                        
-                        Spacer(minLength: 2)
-                        
-                        Asset.Assets.chevronRight.image
-                            .zImage(size: 20, style: Design.Text.tertiary)
-                    }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 20)
-                    
-                    if store.swapAssetsToPresent.last != asset {
-                        Design.Surfaces.divider.color(colorScheme)
-                            .frame(height: 1)
-                    }
-                }
-            }
-        }
-    }
-}
+//extension AddressChainTokenView {
+//    @ViewBuilder func balancesContent() -> some View {
+//        WithPerceptionTracking {
+//            BalancesView(
+//                store:
+//                    store.scope(
+//                        state: \.balancesState,
+//                        action: \.balances
+//                    ),
+//                tokenName: tokenName
+//            )
+//        }
+//    }
+//    
+//    @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
+//        WithPerceptionTracking {
+//            VStack(alignment: .leading, spacing: 0) {
+//                ZStack {
+//                    VStack {
+//                        Text(L10n.SwapAndPay.selectToken.uppercased())
+//                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
+//                            .fixedSize()
+//                    }
+//                    
+//                    HStack {
+//                        Button {
+//                            store.send(.closeAssetsSheetTapped)
+//                        } label: {
+//                            Asset.Assets.buttonCloseX.image
+//                                .zImage(size: 24, style: Design.Text.primary)
+//                                .padding(8)
+//                        }
+//                        
+//                        Spacer()
+//                    }
+//                }
+//                .padding(.top, 16)
+//                .padding(.bottom, 24)
+//                .padding(.horizontal, 20)
+//
+//                ZashiTextField(
+//                    text: $store.searchTerm,
+//                    placeholder: L10n.SwapAndPay.search,
+//                    eraseAction: { store.send(.eraseSearchTermTapped) },
+//                    accessoryView: !store.searchTerm.isEmpty ? Asset.Assets.Icons.xClose.image
+//                        .zImage(size: 16, style: Design.Btns.Tertiary.fg) : nil,
+//                    prefixView: Asset.Assets.Icons.search.image
+//                        .zImage(size: 20, style: Design.Dropdowns.Default.text)
+//                )
+//                .padding(.trailing, 8)
+//                .padding(.bottom, 32)
+//                .padding(.horizontal, 20)
+//
+//                List {
+//                    WithPerceptionTracking {
+//                        ForEach(store.swapAssetsToPresent, id: \.self) { asset in
+//                            assetView(asset, colorScheme)
+//                                .listRowInsets(EdgeInsets())
+//                                .listRowBackground(Asset.Colors.background.color)
+//                                .listRowSeparator(.hidden)
+//                        }
+//                    }
+//                }
+//                .padding(.vertical, 1)
+//                .background(Asset.Colors.background.color)
+//                .listStyle(.plain)
+//            }
+//        }
+//    }
+//    
+//    @ViewBuilder private func assetView(_ asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
+//        WithPerceptionTracking {
+//            Button {
+//                store.send(.assetTapped(asset))
+//            } label: {
+//                VStack(spacing: 0) {
+//                    HStack(spacing: 0) {
+//                        asset.tokenIcon
+//                            .resizable()
+//                            .frame(width: 40, height: 40)
+//                            .padding(.trailing, 12)
+//                            .overlay {
+//                                ZStack {
+//                                    Circle()
+//                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+//                                        .frame(width: 22, height: 22)
+//                                        .offset(x: 8, y: 12)
+//                                    
+//                                    asset.chainIcon
+//                                        .resizable()
+//                                        .frame(width: 18, height: 18)
+//                                        .offset(x: 8, y: 12)
+//                                }
+//                            }
+//                        
+//                        VStack(alignment: .leading, spacing: 0) {
+//                            Text(asset.token)
+//                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+//                                .zForegroundColor(Design.Text.primary)
+//                            
+//                            Text(asset.chainName)
+//                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+//                                .zForegroundColor(Design.Text.tertiary)
+//                                .lineLimit(1)
+//                                .truncationMode(.middle)
+//                                .padding(.top, 2)
+//                        }
+//                        .padding(.trailing, 16)
+//                        
+//                        Spacer(minLength: 2)
+//                        
+//                        Asset.Assets.chevronRight.image
+//                            .zImage(size: 20, style: Design.Text.tertiary)
+//                    }
+//                    .padding(.vertical, 12)
+//                    .padding(.horizontal, 20)
+//                    
+//                    if store.swapAssetsToPresent.last != asset {
+//                        Design.Surfaces.divider.color(colorScheme)
+//                            .frame(height: 1)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 extension SwapAndPayForm {
     @ViewBuilder func slippageContent(_ colorScheme: ColorScheme) -> some View {

@@ -19,6 +19,8 @@ public struct SwapAndPayForm: View {
     
     @FocusState private var isAmountFocused
     @FocusState var isSlippageFocused
+    
+    @State var safeAreaHeight: CGFloat = 0
 
     @Perception.Bindable var store: StoreOf<SwapAndPay>
     let tokenName: String
@@ -30,22 +32,29 @@ public struct SwapAndPayForm: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack(spacing: 0) {
-                recipientGetsView()
-                    .padding(.top, 24)
+            ScrollView {
+                VStack(spacing: 0) {
+                    youPayView()
+                        .padding(.top, 24)
 
-                slippageView()
-                
-                youPayView()
-                
-                Spacer()
-                
-                ZashiButton(L10n.SwapAndPay.getQuote) {
-                    store.send(.getQuoteTapped)
+                    youPayView()
+//                                    slippageView()
+
+                    recipientGetsView()
+                    
+                    
+                    Spacer()
+                    
+                    ZashiButton(L10n.SwapAndPay.getQuote) {
+                        store.send(.getQuoteTapped)
+                    }
+                    .padding(.top, keyboardVisible ? 40 : 0)
+                    .padding(.bottom, 40)
                 }
-                .padding(.bottom, 24)
+                .ignoresSafeArea()
+                .frame(minHeight: keyboardVisible ? 0 : safeAreaHeight)
+                .screenHorizontalPadding()
             }
-            .screenHorizontalPadding()
             .onAppear {
                 observeKeyboardNotifications()
                 isAmountFocused = true
@@ -63,7 +72,7 @@ public struct SwapAndPayForm: View {
 
                     Asset.Colors.primary.color
                         .frame(height: 1)
-                        .opacity(0.1)
+                        .opacity(keyboardVisible ? 0.1 : 0)
                     
                     HStack(alignment: .center) {
                         Spacer()
@@ -97,6 +106,12 @@ public struct SwapAndPayForm: View {
                 quoteUnavailableContent(colorScheme)
                     .screenHorizontalPadding()
                     .applyScreenBackground()
+            }
+        }
+        .onAppear {
+            if let window = UIApplication.shared.windows.first {
+                let safeFrame = window.safeAreaLayoutGuide.layoutFrame
+                safeAreaHeight = safeFrame.height
             }
         }
     }
@@ -348,5 +363,29 @@ extension View {
             }
             .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
             .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+    }
+}
+
+#Preview {
+    NavigationView {
+        SwapAndPayForm(store: SwapAndPay.initial, tokenName: "ZEC")
+    }
+}
+
+// MARK: Placeholders
+
+extension SwapAndPay.State {
+    public static var initial: Self {
+        .init(
+            walletBalancesState: .initial
+        )
+    }
+}
+
+extension SwapAndPay {
+    public static var initial = StoreOf<SwapAndPay>(
+        initialState: .initial
+    ) {
+        SwapAndPay()
     }
 }

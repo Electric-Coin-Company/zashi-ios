@@ -30,7 +30,7 @@ public struct SwapAndPayCoordFlowView: View {
     public var body: some View {
         WithPerceptionTracking {
             NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                AddressChainTokenView(
+                SwapAndPayForm(
                     store:
                         store.scope(
                             state: \.swapAndPayState,
@@ -47,8 +47,6 @@ public struct SwapAndPayCoordFlowView: View {
                     AddressBookContactView(store: store)
                 case let .scan(store):
                     ScanView(store: store)
-                case let .swapAndPayForm(store):
-                    SwapAndPayForm(store: store, tokenName: tokenName)
                 }
             }
             .navigationBarHidden(!store.path.isEmpty)

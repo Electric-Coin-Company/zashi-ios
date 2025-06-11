@@ -38,9 +38,9 @@ extension SwapAndPayCoordFlow {
 //                print("TODO: append ZecKeyboard here")
 //                return .none
 
-            case .swapAndPay(.nextTapped):
-                state.path.append(.swapAndPayForm(state.swapAndPayState))
-                return .none
+//            case .swapAndPay(.nextTapped):
+//                state.path.append(.swapAndPayForm(state.swapAndPayState))
+//                return .none
 
             default: return .none
             }

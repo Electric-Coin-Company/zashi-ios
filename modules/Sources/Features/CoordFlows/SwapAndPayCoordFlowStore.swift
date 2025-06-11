@@ -24,7 +24,6 @@ public struct SwapAndPayCoordFlow {
         case addressBookChainToken(AddressBook)
         case addressBookContact(AddressBook)
         case scan(Scan)
-        case swapAndPayForm(SwapAndPay)
     }
     
     @ObservableState
