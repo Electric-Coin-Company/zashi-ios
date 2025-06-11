@@ -22,10 +22,10 @@ public struct SendFormView: View {
     }
     
     @State private var keyboardVisible: Bool = false
-    
+
     @Perception.Bindable var store: StoreOf<SendForm>
     let tokenName: String
-    
+
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
     @FocusState private var isCurrencyFocused
@@ -308,7 +308,7 @@ public struct SendFormView: View {
                 }
         }
     }
-    
+
     private func observeKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
             withAnimation {

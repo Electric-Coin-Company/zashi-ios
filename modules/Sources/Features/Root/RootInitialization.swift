@@ -78,6 +78,7 @@ extension Root {
                 
             case .initialization(.appDelegate(.didEnterBackground)):
                 sdkSynchronizer.stop()
+                sdkSynchronizer.pause()
                 state.bgTask?.setTaskCompleted(success: false)
                 state.bgTask = nil
                 state.appStartState = .didEnterBackground
@@ -183,6 +184,7 @@ extension Root {
                 return .run { [state] send in
                     do {
                         try await sdkSynchronizer.start(true)
+                        sdkSynchronizer.resume()
                         if state.bgTask != nil {
                             LoggerProxy.event("BGTask synchronizer.start() PASSED")
                         }
@@ -328,6 +330,7 @@ extension Root {
                             await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)
+                            sdkSynchronizer.resume()
 
                             var selectedAccount: WalletAccount?
                             

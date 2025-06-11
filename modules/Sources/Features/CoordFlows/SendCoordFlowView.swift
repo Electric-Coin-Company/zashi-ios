@@ -25,6 +25,8 @@ public struct SendCoordFlowView: View {
     @Perception.Bindable var store: StoreOf<SendCoordFlow>
     let tokenName: String
 
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+
     public init(store: StoreOf<SendCoordFlow>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -77,6 +79,23 @@ public struct SendCoordFlowView: View {
         .applyScreenBackground()
         .zashiBack { store.send(.dismissRequired) }
         .screenTitle(L10n.General.send)
+        .navigationBarItems(
+            trailing:
+                HStack(spacing: 0) {
+                    hideBalancesButton()
+                }
+        )
+    }
+    
+    private func hideBalancesButton() -> some View {
+        Button {
+            $isSensitiveContentHidden.withLock { $0.toggle() }
+        } label: {
+            let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+            image
+                .zImage(size: 24, color: Asset.Colors.primary.color)
+                .padding(8)
+        }
     }
 }
 

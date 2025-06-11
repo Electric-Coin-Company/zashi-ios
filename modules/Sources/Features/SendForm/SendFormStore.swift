@@ -129,7 +129,7 @@ public struct SendForm {
                 return true
             }
         }
-        
+
         public var isValidForm: Bool {
             isValidAddress
             && !isInsufficientFunds

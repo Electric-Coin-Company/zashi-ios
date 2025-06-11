@@ -39,7 +39,6 @@ public struct TransactionsCoordFlowView: View {
                             ),
                         tokenName: tokenName
                     )
-                    //.navigationBarHidden(true)
                 } else {
                     TransactionsManagerView(
                         store:
@@ -49,7 +48,6 @@ public struct TransactionsCoordFlowView: View {
                             ),
                         tokenName: tokenName
                     )
-                    //.navigationBarHidden(true)
                 }
             } destination: { store in
                 switch store.case {
@@ -59,10 +57,8 @@ public struct TransactionsCoordFlowView: View {
                     TransactionDetailsView(store: store, tokenName: tokenName)
                 }
             }
-//            .navigationBarHidden(!store.path.isEmpty)
             .navigationBarHidden(true)
         }
-        .padding(.horizontal, 4)
         .applyScreenBackground()
         .zashiBack()
         .screenTitle(L10n.General.request)
