@@ -22,7 +22,7 @@ extension Root {
                         sdkSynchronizer.eventStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .compactMap {
-                                if case SynchronizerEvent.foundTransactions(let transactions, _) = $0 {
+                                if case SynchronizerEvent.foundTransactions(let transactions) = $0 {
                                     return Root.Action.foundTransactions(transactions)
                                 } else if case SynchronizerEvent.minedTransaction(let transaction) = $0 {
                                     return Root.Action.minedTransaction(transaction)

@@ -323,7 +323,7 @@ public struct SmartBanner {
                     if case let .syncing(syncProgress, areFundsSpendable) = snapshot.syncStatus {
                         state.lastKnownSyncPercentage = Double(syncProgress)
                         state.areFundsSpendable = areFundsSpendable
-                        
+
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
                         }

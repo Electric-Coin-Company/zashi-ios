@@ -491,8 +491,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "branch" : "1564-Pause-and-resume-SDK-to-mirror-client-lifecycle",
-        "revision" : "daa2a4053959c3fe5ccad4de0d56d86dd5ebebee"
+        "branch" : "1563-Privacy-over-Tor-for-transaction-fetch",
+        "revision" : "882d550596de3cbd2d43fc4dad2dbd9d31f6b6a3"
       }
     }
   ],
