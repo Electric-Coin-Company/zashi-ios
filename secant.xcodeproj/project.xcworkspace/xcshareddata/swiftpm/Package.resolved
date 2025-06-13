@@ -492,7 +492,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "1563-Privacy-over-Tor-for-transaction-fetch",
-        "revision" : "882d550596de3cbd2d43fc4dad2dbd9d31f6b6a3"
+        "revision" : "d309f5c19071a7fcccfb97e1fb10cc7b52d4c8b1"
       }
     }
   ],

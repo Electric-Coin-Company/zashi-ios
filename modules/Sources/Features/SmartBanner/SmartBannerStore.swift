@@ -53,7 +53,7 @@ public struct SmartBanner {
         public var CancelStateStreamId = UUID()
         public var CancelShieldingProcessorId = UUID()
 
-        public var areFundsSpendable = false
+        public var isScanProgressComplete = false
         public var delay = 1.5
         public var isOpen = false
         public var isShielding = false
@@ -70,12 +70,17 @@ public struct SmartBanner {
         public var remindMeShieldedPhaseCounter = 0
         public var remindMeWalletBackupPhaseCounter = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var spendableBalance = Zatoshi(0)
         public var supportData: SupportData?
         public var synchronizerStatusSnapshot: SyncStatusSnapshot = .snapshotFor(state: .unprepared)
         public var tokenName = "ZEC"
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transparentBalance = Zatoshi(0)
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
+
+        public var areFundsSpendable: Bool {
+            isScanProgressComplete && spendableBalance.amount > 0
+        }
 
         public var feeStr: String {
             Zatoshi(100_000).decimalString()
@@ -317,12 +322,17 @@ public struct SmartBanner {
                 
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
+                
+                if let account = state.selectedWalletAccount, let accountBalance = latestState.data.accountsBalances[account.id] {
+                    state.spendableBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
+                }
+                
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
                     
-                    if case let .syncing(syncProgress, areFundsSpendable) = snapshot.syncStatus {
+                    if case let .syncing(syncProgress, isScanProgressComplete) = snapshot.syncStatus {
                         state.lastKnownSyncPercentage = Double(syncProgress)
-                        state.areFundsSpendable = areFundsSpendable
+                        state.isScanProgressComplete = isScanProgressComplete
 
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
