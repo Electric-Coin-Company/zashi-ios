@@ -739,9 +739,9 @@
 "swapAndPay.select" = "Select...";
 "swapAndPay.getQuote" = "Get a quote";
 "swapAndPay.recipientGets" = "Recipient gets";
-"swapAndPay.slippage" = "Slippage";
+"swapAndPay.slippage" = "Slippage tolerance";
 "swapAndPay.youPay" = "You pay";
-"swapAndPay.slippageDesc" = "A slippage setting determines the maximum allowable difference between the expected and actual price of a swap.";
+"swapAndPay.slippageDesc" = "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.";
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
 "swapAndPay.cancelPayment" = "Cancel payment";
 "swapAndPay.editPayment" = "Edit payment";
@@ -757,3 +757,10 @@
 "swapAndPay.slippageSet3" = "for the swap.";
 "swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
 "swapAndPay.customSlippage" = "Enter custom slippage";
+"swapAndPay.from" = "From";
+"swapAndPay.max" = "Max: %@";
+"swapAndPay.to" = "To";
+"swapAndPay.swap" = "Swap";
+"swapAndPay.oneZecRate" = "1 ZEC = %@ %@";
+"swapAndPay.rate" = "Rate";
+"swapAndPay.address" = "Address";

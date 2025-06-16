@@ -37,23 +37,36 @@ public struct SwapAndPay {
         public var sheetHeight: CGFloat = 0.0
         public var slippage = 10.0
         public var slippageInSheet = 10.0
+        public var selectedSlippageChip = 1
         public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
         public var walletBalancesState: WalletBalances.State
         public var zecAsset: SwapAsset?
 
+        public var rateToOneZec: String? {
+            guard let selectedAsset else {
+                return nil
+            }
+            
+            guard let zecAsset else {
+                return nil
+            }
+            
+            return String(format: "%0.8f%", zecAsset.usdPrice / selectedAsset.usdPrice)
+        }
+        
         public var isValidForm: Bool {
             selectedAsset != nil
         }
         
         public var isInsufficientFunds: Bool {
             guard let selectedAsset else {
-                return true
+                return false
             }
             
             guard let zecAsset else {
-                return true
+                return false
             }
 
             let spendableUsd = walletBalancesState.shieldedBalance.decimalValue.doubleValue * zecAsset.usdPrice
@@ -185,6 +198,7 @@ public struct SwapAndPay {
         case getQuoteTapped
         case nextTapped
         case onAppear
+        case slippageChipTapped(Int)
         case slippageSetConfirmTapped
         case slippageTapped
         case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
@@ -262,6 +276,10 @@ public struct SwapAndPay {
                 state.assetSelectBinding = true
                 return .none
                 
+            case .slippageChipTapped(let index):
+                state.selectedSlippageChip = index
+                return .none
+                
             case .balances:
                 return .none
                 
@@ -290,7 +308,7 @@ public struct SwapAndPay {
                 }
                 //                state.isQuotePresented = true
                 //state.isQuoteUnavailablePresented = true
-                return .none
+//                return .none
                 
             case .slippageTapped:
                 state.isSlippagePresented = true
@@ -308,6 +326,9 @@ public struct SwapAndPay {
             case .swapAssetsLoaded(let swapAssets):
                 state.swapAssets = swapAssets
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
+                if state.selectedAsset == nil {
+                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
+                }
                 return .send(.updateAssetsAccordingToSearchTerm)
 
             case .walletBalances:

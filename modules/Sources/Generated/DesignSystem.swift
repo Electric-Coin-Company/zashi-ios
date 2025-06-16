@@ -183,7 +183,17 @@ public enum Design: Colorable {
         case badgeBg
         case badgeFg
     }
-    
+
+    public enum Switcher: Colorable {
+        case defaultText
+        case selectedBg
+        case selectedIcon
+        case selectedText
+        case selectedTagBg
+        case selectedStroke
+        case surfacePrimary
+    }
+
     public enum Checkboxes: Colorable {
         case offBg
         case offStroke
@@ -601,6 +611,20 @@ public extension Design.Avatars {
         case .textFg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
         case .badgeBg: return Design.col(Asset.Colors.ZDesign.hyperBlue400.color, Asset.Colors.ZDesign.hyperBlue400.color, colorScheme)
         case .badgeFg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        }
+    }
+}
+
+public extension Design.Switcher {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .defaultText: return Design.col(Asset.Colors.ZDesign.gray800.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .selectedBg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
+        case .selectedIcon: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
+        case .selectedText: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .selectedTagBg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
+        case .selectedStroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .surfacePrimary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         }
     }
 }

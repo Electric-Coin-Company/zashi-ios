@@ -1406,6 +1406,8 @@ public enum L10n {
     }
   }
   public enum SwapAndPay {
+    /// Address
+    public static let address = L10n.tr("Localizable", "swapAndPay.address", fallback: "Address")
     /// Cancel payment
     public static let cancelPayment = L10n.tr("Localizable", "swapAndPay.cancelPayment", fallback: "Cancel payment")
     /// Enter custom slippage
@@ -1416,11 +1418,21 @@ public enum L10n {
     public static let enterAddress = L10n.tr("Localizable", "swapAndPay.enterAddress", fallback: "Enter address...")
     /// ZEC transaction fee
     public static let fee = L10n.tr("Localizable", "swapAndPay.fee", fallback: "ZEC transaction fee")
+    /// From
+    public static let from = L10n.tr("Localizable", "swapAndPay.from", fallback: "From")
     /// Get a quote
     public static let getQuote = L10n.tr("Localizable", "swapAndPay.getQuote", fallback: "Get a quote")
+    /// Max: %@
+    public static func max(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "swapAndPay.max", String(describing: p1), fallback: "Max: %@")
+    }
     /// Max slippage %@%
     public static func maxSlippage(_ p1: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.maxSlippage", String(describing: p1), fallback: "Max slippage %@%")
+    }
+    /// 1 ZEC = %@ %@
+    public static func oneZecRate(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "swapAndPay.oneZecRate", String(describing: p1), String(describing: p2), fallback: "1 ZEC = %@ %@")
     }
     /// Pay from
     public static let payFrom = L10n.tr("Localizable", "swapAndPay.payFrom", fallback: "Pay from")
@@ -1430,6 +1442,8 @@ public enum L10n {
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
     /// Quote Unavailable
     public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
+    /// Rate
+    public static let rate = L10n.tr("Localizable", "swapAndPay.rate", fallback: "Rate")
     /// Recipient gets
     public static let recipientGets = L10n.tr("Localizable", "swapAndPay.recipientGets", fallback: "Recipient gets")
     /// Search by name or ticker...
@@ -1438,10 +1452,10 @@ public enum L10n {
     public static let select = L10n.tr("Localizable", "swapAndPay.select", fallback: "Select...")
     /// Select asset
     public static let selectToken = L10n.tr("Localizable", "swapAndPay.selectToken", fallback: "Select asset")
-    /// Slippage
-    public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage")
-    /// A slippage setting determines the maximum allowable difference between the expected and actual price of a swap.
-    public static let slippageDesc = L10n.tr("Localizable", "swapAndPay.slippageDesc", fallback: "A slippage setting determines the maximum allowable difference between the expected and actual price of a swap.")
+    /// Slippage tolerance
+    public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage tolerance")
+    /// This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.
+    public static let slippageDesc = L10n.tr("Localizable", "swapAndPay.slippageDesc", fallback: "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.")
     /// You will pay up to 
     public static let slippageSet1 = L10n.tr("Localizable", "swapAndPay.slippageSet1", fallback: "You will pay up to ")
     /// %@% (%@) 
@@ -1452,6 +1466,10 @@ public enum L10n {
     public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: "for the swap.")
     /// Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.
     public static let slippageWarn = L10n.tr("Localizable", "swapAndPay.slippageWarn", fallback: "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.")
+    /// Swap
+    public static let swap = L10n.tr("Localizable", "swapAndPay.swap", fallback: "Swap")
+    /// To
+    public static let to = L10n.tr("Localizable", "swapAndPay.to", fallback: "To")
     /// Total Amount
     public static let totalAmount = L10n.tr("Localizable", "swapAndPay.totalAmount", fallback: "Total Amount")
     /// You pay
