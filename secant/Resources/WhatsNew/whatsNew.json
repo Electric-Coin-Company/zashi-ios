@@ -1,6 +1,33 @@
 {
     "releases": [
         {
+            "version": "2.0.4",
+            "date": "06-16-2025",
+            "timestamp": 1750070962,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added Show/Hide balances feature on the Send screen."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We updated our Send and Receive icons.",
+                        "We updated copy on the Receive screen.",
+                        "We updated the animation on the Sending screen."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed the issue with fetching USD conversion rate and made it more reliable."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0.3",
             "date": "05-19-2025",
             "timestamp": 1747652167,

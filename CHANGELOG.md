@@ -6,6 +6,19 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.0.4 build 1 (2025-06-16)
+
+### Added
+* Show/Hide balances feature on the Send screen.
+
+### Changed
+* Send and Receive icons.
+* Copy on the Receive screen.
+* The animation on the Sending screen.
+
+### Fixed 
+* The issue with fetching USD conversion rate and made it more reliable. 
+
 ## 2.0.3 build 1 (2025-05-19)
 
 ### Changed
