@@ -41,7 +41,7 @@ extension HomeView {
                 .padding(.horizontal, 20)
             
             ActionRow(
-                icon: Asset.Assets.Tickers.near.image,
+                icon: Asset.Assets.Partners.payWithNear.image,
                 title: L10n.SendSelect.swapAndPay,
                 desc: L10n.SendSelect.SwapAndPay.desc,
                 customIcon: true,

@@ -53,7 +53,7 @@ public struct SwapAndPay {
                 return nil
             }
             
-            return String(format: "%0.8f%", zecAsset.usdPrice / selectedAsset.usdPrice)
+            return formatter.string(from: NSNumber(value: zecAsset.usdPrice / selectedAsset.usdPrice))
         }
         
         public var isValidForm: Bool {
@@ -96,7 +96,17 @@ public struct SwapAndPay {
             
             return formatter
         }
-        
+
+        public var slippageFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 2
+            formatter.locale = Locale.current
+            
+            return formatter
+        }
+
         public var isCustomSlippageFieldVisible: Bool {
             slippageInSheet >= 40.0
         }
@@ -123,11 +133,31 @@ public struct SwapAndPay {
             }
         }
         
-        public var spendableUSDBalance: String {
-            Decimal(spendableAmount).formatted(.currency(code: CurrencyISO4217.usd.code))
+        public var spendableBalance: String {
+            formatter.string(from: walletBalancesState.shieldedBalance.decimalValue.roundedZec) ?? ""
         }
 
         public var recipientGetsConverted: String {
+            guard let zecAsset else {
+                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+            }
+            
+            var amountWithRate = amount
+            
+            if isInputInUsd {
+                amountWithRate /= zecAsset.usdPrice
+            } else {
+                amountWithRate *= zecAsset.usdPrice
+            }
+            
+            let tokenString = formatter.string(from: NSNumber(value: amountWithRate)) ?? "\(amount) \(zecAsset.token)"
+            
+            return isInputInUsd ?
+            "\(tokenString) \(zecAsset.token)"
+            : Decimal(amountWithRate).formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
+        
+        public var youPayConverted: String {
             guard let selectedAsset else {
                 return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
             }
@@ -163,12 +193,28 @@ public struct SwapAndPay {
             return formatter.string(from: NSNumber(value: amountInZec)) ?? "\(amountInZec)"
         }
         
-        public var youPayZecConverted: String {
+        public var recipientGetsToken: String {
+            guard let zecAsset else {
+                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+            }
+
             guard let selectedAsset else {
                 return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
             }
             
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
+            let amountInUsd = amount * (isInputInUsd ? 1.0 : zecAsset.usdPrice)
+            let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
+            let amountInToken = amountInUsdWithSlippage / selectedAsset.usdPrice
+
+            return formatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
+        }
+        
+        public var youPayZecConverted: String {
+            guard let zecAsset else {
+                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+            }
+            
+            let amountInUsd = amount * (isInputInUsd ? 1.0 : zecAsset.usdPrice)
             let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
             
             return Decimal(amountInUsdWithSlippage).formatted(.currency(code: CurrencyISO4217.usd.code))
@@ -183,6 +229,44 @@ public struct SwapAndPay {
             let amountInUsdWithSlippage = amountInUsd + (slippageInSheet * 0.001 * amountInUsd)
             
             return Decimal(amountInUsdWithSlippage - amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
+        
+        public func slippageString(value: Double) -> String {
+            let value = slippageFormatter.string(from: NSNumber(value: value)) ?? ""
+            
+            return "\(value)%"
+        }
+        
+        public var currentSlippageString: String {
+            slippageString(value: slippage / 10.0)
+        }
+
+        public var currentSlippageInSheetString: String {
+            slippageString(value: slippageInSheet / 10.0)
+        }
+
+        public var slippage05String: String {
+            slippageString(value: 0.5)
+        }
+
+        public var slippage1String: String {
+            slippageString(value: 1.0)
+        }
+
+        public var slippage2String: String {
+            slippageString(value: 2.0)
+        }
+
+        public var slippage0String: String {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 2
+            formatter.locale = Locale.current
+            
+            let value = formatter.string(from: NSNumber(value: 0)) ?? ""
+
+            return "\(value)%"
         }
     }
 
@@ -226,12 +310,15 @@ public struct SwapAndPay {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .run { send in
-                    let swapAssets = try? await swapAndPay.swapAssets()
-                    if let swapAssets {
-                        await send(.swapAssetsLoaded(swapAssets))
+                return .merge(
+                    .send(.walletBalances(.onAppear)),
+                    .run { send in
+                        let swapAssets = try? await swapAndPay.swapAssets()
+                        if let swapAssets {
+                            await send(.swapAssetsLoaded(swapAssets))
+                        }
                     }
-                }
+                )
 
             case .binding(\.customSlippage):
                 if !state.customSlippage.isEmpty {
@@ -278,6 +365,12 @@ public struct SwapAndPay {
                 
             case .slippageChipTapped(let index):
                 state.selectedSlippageChip = index
+                switch index {
+                case 0: state.slippage = 5.0
+                case 1: state.slippage = 10.0
+                case 2: state.slippage = 20.0
+                default: break
+                }
                 return .none
                 
             case .balances:
@@ -313,6 +406,16 @@ public struct SwapAndPay {
             case .slippageTapped:
                 state.isSlippagePresented = true
                 state.slippageInSheet = state.slippage
+                switch state.slippage {
+                case 5.0: state.selectedSlippageChip = 0
+                case 10.0: state.selectedSlippageChip = 1
+                case 20.0: state.selectedSlippageChip = 2
+                default:
+                    state.selectedSlippageChip = 3
+                    if let value = state.slippageFormatter.string(from: NSNumber(value: state.slippage / 10.0)) {
+                        state.customSlippage = value
+                    }
+                }
                 return .none
                 
             case .slippageSetConfirmTapped:

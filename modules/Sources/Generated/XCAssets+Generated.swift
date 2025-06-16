@@ -56,6 +56,7 @@ public enum Asset {
       public static let keystonePromo = ImageAsset(name: "keystonePromo")
       public static let keystoneSeekLogo = ImageAsset(name: "keystoneSeekLogo")
       public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
+      public static let payWithNear = ImageAsset(name: "payWithNear")
       public static let swapAndPay = ImageAsset(name: "swapAndPay")
       public static let torLogo = ImageAsset(name: "torLogo")
     }

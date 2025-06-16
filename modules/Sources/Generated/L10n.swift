@@ -1066,11 +1066,11 @@ public enum L10n {
     }
   }
   public enum SendSelect {
-    /// Pay with NEAR
-    public static let swapAndPay = L10n.tr("Localizable", "sendSelect.swapAndPay", fallback: "Pay with NEAR")
+    /// Swap or Pay with NEAR
+    public static let swapAndPay = L10n.tr("Localizable", "sendSelect.swapAndPay", fallback: "Swap or Pay with NEAR")
     public enum SwapAndPay {
-      /// Send payments in any coin or token supported by Zashi's DEX integration.
-      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Send payments in any coin or token supported by Zashi's DEX integration.")
+      /// Send payments and swap ZEC in any coin or token supported by NEAR.
+      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Send payments and swap ZEC in any coin or token supported by NEAR.")
     }
     public enum Zashi {
       /// Pay in ZEC

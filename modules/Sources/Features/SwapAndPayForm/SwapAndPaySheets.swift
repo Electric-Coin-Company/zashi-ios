@@ -27,117 +27,6 @@ import BalanceBreakdown
 //        }
 //    }
 //    
-//    @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
-//        WithPerceptionTracking {
-//            VStack(alignment: .leading, spacing: 0) {
-//                ZStack {
-//                    VStack {
-//                        Text(L10n.SwapAndPay.selectToken.uppercased())
-//                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
-//                            .fixedSize()
-//                    }
-//                    
-//                    HStack {
-//                        Button {
-//                            store.send(.closeAssetsSheetTapped)
-//                        } label: {
-//                            Asset.Assets.buttonCloseX.image
-//                                .zImage(size: 24, style: Design.Text.primary)
-//                                .padding(8)
-//                        }
-//                        
-//                        Spacer()
-//                    }
-//                }
-//                .padding(.top, 16)
-//                .padding(.bottom, 24)
-//                .padding(.horizontal, 20)
-//
-//                ZashiTextField(
-//                    text: $store.searchTerm,
-//                    placeholder: L10n.SwapAndPay.search,
-//                    eraseAction: { store.send(.eraseSearchTermTapped) },
-//                    accessoryView: !store.searchTerm.isEmpty ? Asset.Assets.Icons.xClose.image
-//                        .zImage(size: 16, style: Design.Btns.Tertiary.fg) : nil,
-//                    prefixView: Asset.Assets.Icons.search.image
-//                        .zImage(size: 20, style: Design.Dropdowns.Default.text)
-//                )
-//                .padding(.trailing, 8)
-//                .padding(.bottom, 32)
-//                .padding(.horizontal, 20)
-//
-//                List {
-//                    WithPerceptionTracking {
-//                        ForEach(store.swapAssetsToPresent, id: \.self) { asset in
-//                            assetView(asset, colorScheme)
-//                                .listRowInsets(EdgeInsets())
-//                                .listRowBackground(Asset.Colors.background.color)
-//                                .listRowSeparator(.hidden)
-//                        }
-//                    }
-//                }
-//                .padding(.vertical, 1)
-//                .background(Asset.Colors.background.color)
-//                .listStyle(.plain)
-//            }
-//        }
-//    }
-//    
-//    @ViewBuilder private func assetView(_ asset: SwapAsset, _ colorScheme: ColorScheme) -> some View {
-//        WithPerceptionTracking {
-//            Button {
-//                store.send(.assetTapped(asset))
-//            } label: {
-//                VStack(spacing: 0) {
-//                    HStack(spacing: 0) {
-//                        asset.tokenIcon
-//                            .resizable()
-//                            .frame(width: 40, height: 40)
-//                            .padding(.trailing, 12)
-//                            .overlay {
-//                                ZStack {
-//                                    Circle()
-//                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-//                                        .frame(width: 22, height: 22)
-//                                        .offset(x: 8, y: 12)
-//                                    
-//                                    asset.chainIcon
-//                                        .resizable()
-//                                        .frame(width: 18, height: 18)
-//                                        .offset(x: 8, y: 12)
-//                                }
-//                            }
-//                        
-//                        VStack(alignment: .leading, spacing: 0) {
-//                            Text(asset.token)
-//                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-//                                .zForegroundColor(Design.Text.primary)
-//                            
-//                            Text(asset.chainName)
-//                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-//                                .zForegroundColor(Design.Text.tertiary)
-//                                .lineLimit(1)
-//                                .truncationMode(.middle)
-//                                .padding(.top, 2)
-//                        }
-//                        .padding(.trailing, 16)
-//                        
-//                        Spacer(minLength: 2)
-//                        
-//                        Asset.Assets.chevronRight.image
-//                            .zImage(size: 20, style: Design.Text.tertiary)
-//                    }
-//                    .padding(.vertical, 12)
-//                    .padding(.horizontal, 20)
-//                    
-//                    if store.swapAssetsToPresent.last != asset {
-//                        Design.Surfaces.divider.color(colorScheme)
-//                            .frame(height: 1)
-//                    }
-//                }
-//            }
-//        }
-//    }
 //}
 
 extension SwapAndPayForm {
@@ -274,16 +163,16 @@ extension SwapAndPayForm {
                         .zFont(size: 14, style: Design.Text.tertiary)
 
                     HStack(spacing: 0) {
-                        slippageChip(index: 0, text: "0.5%", colorScheme)
-                        slippageChip(index: 1, text: "1%", colorScheme)
-                        slippageChip(index: 2, text: "2%", colorScheme)
+                        slippageChip(index: 0, text: store.slippage05String, colorScheme)
+                        slippageChip(index: 1, text: store.slippage1String, colorScheme)
+                        slippageChip(index: 2, text: store.slippage2String, colorScheme)
                         
                         if store.selectedSlippageChip == 3 {
                             HStack(spacing: 0) {
                                 Spacer()
                                 
                                 TextField(
-                                    "0.00%",
+                                    store.slippage0String,
                                     text: $store.customSlippage
                                 )
                                 .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
@@ -336,7 +225,7 @@ extension SwapAndPayForm {
                         Text(L10n.SwapAndPay.slippageSet1)
                         + Text(
                             L10n.SwapAndPay.slippageSet2(
-                                String(format: "%0.1f%%", store.slippageInSheet * 0.1),
+                                store.currentSlippageInSheetString,
                                 store.slippageDiff
                             )
                         ).bold()
@@ -354,7 +243,7 @@ extension SwapAndPayForm {
                     .padding(.vertical, 20)
 
                     Text(L10n.SwapAndPay.slippageWarn)
-                        .zFont(size: 12, style: slippageWarnTextStyle())
+                        .zFont(size: 12, style: Design.Text.tertiary)
                         .fixedSize(horizontal: false, vertical: true)
 
                     Spacer()

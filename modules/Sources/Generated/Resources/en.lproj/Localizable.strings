@@ -732,8 +732,8 @@
 // MARK: - Swap and Pay
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
-"sendSelect.swapAndPay" = "Pay with NEAR";
-"sendSelect.swapAndPay.desc" = "Send payments in any coin or token supported by Zashi's DEX integration.";
+"sendSelect.swapAndPay" = "Swap or Pay with NEAR";
+"sendSelect.swapAndPay.desc" = "Send payments and swap ZEC in any coin or token supported by NEAR.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";

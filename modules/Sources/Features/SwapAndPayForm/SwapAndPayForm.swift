@@ -51,28 +51,28 @@ public struct SwapAndPayForm: View {
                         text: $store.address,
                         placeholder: L10n.SwapAndPay.enterAddress,
                         title: L10n.SwapAndPay.address,
-                        accessoryView:
-                            HStack(spacing: 4) {
-                                WithPerceptionTracking {
-                                    fieldButton(
-                                        icon: store.isNotAddressInAddressBook
-                                        ? Asset.Assets.Icons.userPlus.image
-                                        : Asset.Assets.Icons.user.image
-                                    ) {
-                                        if store.isNotAddressInAddressBook {
-                                            //store.send(.addNewContactTapped(store.address))
-                                        } else {
-                                            //store.send(.addressBookTapped)
-                                        }
-                                    }
-                                    
-                                    fieldButton(icon: Asset.Assets.Icons.qr.image) {
-                                        //store.send(.scanTapped)
-                                    }
-                                }
-                            }
-                            .frame(height: 20)
-                            .offset(x: 8)
+//                        accessoryView:
+//                            HStack(spacing: 4) {
+//                                WithPerceptionTracking {
+//                                    fieldButton(
+//                                        icon: store.isNotAddressInAddressBook
+//                                        ? Asset.Assets.Icons.userPlus.image
+//                                        : Asset.Assets.Icons.user.image
+//                                    ) {
+//                                        if store.isNotAddressInAddressBook {
+//                                            //store.send(.addNewContactTapped(store.address))
+//                                        } else {
+//                                            //store.send(.addressBookTapped)
+//                                        }
+//                                    }
+//                                    
+//                                    fieldButton(icon: Asset.Assets.Icons.qr.image) {
+//                                        //store.send(.scanTapped)
+//                                    }
+//                                }
+//                            }
+//                            .frame(height: 20)
+//                            .offset(x: 8)
                     )
                     .id(InputID.addressBookHint)
                     .keyboardType(.alphabet)
@@ -95,8 +95,10 @@ public struct SwapAndPayForm: View {
                         
                         if let rateValue = store.rateToOneZec, let selectedToken = store.selectedAsset?.token {
                             Text(L10n.SwapAndPay.oneZecRate(rateValue, selectedToken))
+                                .zFont(.medium, size: 14, style: Design.Text.primary)
                         } else {
                             Text("xxxxxxxxxx")
+                                .zFont(.medium, size: 14, style: Design.Text.primary)
                                 .shimmer(true).clipShape(RoundedRectangle(cornerRadius: 7))
                         }
                     }
@@ -159,6 +161,33 @@ public struct SwapAndPayForm: View {
                 slippageContent(colorScheme)
                     .screenHorizontalPadding()
                     .applyScreenBackground()
+                    .overlay(
+                        VStack(spacing: 0) {
+                            Spacer()
+
+                            Asset.Colors.primary.color
+                                .frame(height: 1)
+                                .opacity(keyboardVisible ? 0.1 : 0)
+                            
+                            HStack(alignment: .center) {
+                                Spacer()
+                                
+                                Button {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                                                    to: nil, from: nil, for: nil)
+                                } label: {
+                                    Text(L10n.General.done.uppercased())
+                                        .zFont(.regular, size: 14, style: Design.Text.primary)
+                                }
+                                .padding(.bottom, 4)
+                            }
+                            .applyScreenBackground()
+                            .padding(.horizontal, 20)
+                            .frame(height: keyboardVisible ? 38 : 0)
+                            .frame(maxWidth: .infinity)
+                            .opacity(keyboardVisible ? 1 : 0)
+                        }
+                    )
             }
             .zashiSheet(isPresented: $store.isQuotePresented) {
                 quoteContent(colorScheme)
@@ -190,7 +219,7 @@ public struct SwapAndPayForm: View {
                     
                     Spacer()
                     
-                    Text(L10n.SwapAndPay.max(store.spendableUSDBalance))
+                    Text(L10n.SwapAndPay.max(store.spendableBalance))
                         .zFont(
                             .medium,
                             size: 14,
@@ -211,7 +240,12 @@ public struct SwapAndPayForm: View {
 
                     HStack(spacing: 0) {
                         Asset.Assets.Icons.currencyZec.image
-                            .zImage(size: 20, style: Design.Text.tertiary)
+                            .zImage(
+                                size: 20,
+                                style: store.amountText.isEmpty
+                                ? Design.Text.tertiary
+                                : Design.Text.primary
+                            )
 
                         Spacer()
                         
@@ -245,7 +279,7 @@ public struct SwapAndPayForm: View {
                 HStack(spacing: 0) {
                     Spacer()
 
-                    Text(store.recipientGetsConverted)
+                    Text(store.youPayZecConverted)
                         .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         .padding(.trailing, 4)
                     
@@ -298,15 +332,15 @@ public struct SwapAndPayForm: View {
             Spacer()
 
             Button {
+                isAmountFocused = false
                 store.send(.slippageTapped)
             } label: {
                 HStack(spacing: 4) {
-                    Text(String(format: "%0.1f%%", store.slippage * 0.1))
+                    Text(store.currentSlippageString)
                         .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
 
                     Asset.Assets.Icons.settings2.image
                         .zImage(size: 16, style: Design.Btns.Tertiary.fg)
-                        .padding(.trailing, 4)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
@@ -345,11 +379,11 @@ public struct SwapAndPayForm: View {
                 HStack(spacing: 0) {
                     Spacer()
                     
-                    Text(store.youPayZec)
+                    Text(store.recipientGetsToken)
                         .zFont(.semiBold, size: 32, style: Design.Text.tertiary)
                         .multilineTextAlignment(.trailing)
-                        .fixedSize()
-                        .minimumScaleFactor(0.7)
+                        .minimumScaleFactor(0.1)
+                        .lineLimit(1)
                 }
                 .frame(maxWidth: .infinity)
             }
