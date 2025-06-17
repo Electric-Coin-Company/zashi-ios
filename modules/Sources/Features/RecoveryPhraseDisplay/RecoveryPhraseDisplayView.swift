@@ -227,21 +227,23 @@ public struct RecoveryPhraseDisplayView: View {
     }
     
     @ViewBuilder private func helpSheetContent() -> some View {
-        Text(L10n.RestoreWallet.Help.title)
-            .zFont(.semiBold, size: 24, style: Design.Text.primary)
-            .padding(.top, 24)
-            .padding(.bottom, 12)
-        
-        infoContent(text: L10n.RestoreWallet.Help.phrase)
-            .padding(.bottom, 12)
-
-        infoContent(text: L10n.RestoreWallet.Help.birthday)
-            .padding(.bottom, 32)
-        
-        ZashiButton(L10n.General.ok.uppercased()) {
-            store.send(.helpSheetRequested)
+        VStack(spacing: 0) {
+            Text(L10n.RestoreWallet.Help.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+            
+            infoContent(text: L10n.RestoreWallet.Help.phrase)
+                .padding(.bottom, 12)
+            
+            infoContent(text: L10n.RestoreWallet.Help.birthday)
+                .padding(.bottom, 32)
+            
+            ZashiButton(L10n.General.ok.uppercased()) {
+                store.send(.helpSheetRequested)
+            }
+            .padding(.bottom, 24)
         }
-        .padding(.bottom, 24)
     }
     
     @ViewBuilder private func infoContent(text: String) -> some View {
