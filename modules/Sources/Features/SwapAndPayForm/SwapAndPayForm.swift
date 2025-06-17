@@ -40,7 +40,7 @@ public struct SwapAndPayForm: View {
             ScrollView {
                 VStack(spacing: 0) {
                     recipientGetsView()
-                        .padding(.top, 24)
+                        .padding(.top, 36)
 
                     dividerView()
                     
@@ -51,9 +51,9 @@ public struct SwapAndPayForm: View {
                         text: $store.address,
                         placeholder: L10n.SwapAndPay.enterAddress,
                         title: L10n.SwapAndPay.address,
-//                        accessoryView:
-//                            HStack(spacing: 4) {
-//                                WithPerceptionTracking {
+                        accessoryView:
+                            HStack(spacing: 4) {
+                                WithPerceptionTracking {
 //                                    fieldButton(
 //                                        icon: store.isNotAddressInAddressBook
 //                                        ? Asset.Assets.Icons.userPlus.image
@@ -65,14 +65,14 @@ public struct SwapAndPayForm: View {
 //                                            //store.send(.addressBookTapped)
 //                                        }
 //                                    }
-//                                    
-//                                    fieldButton(icon: Asset.Assets.Icons.qr.image) {
-//                                        //store.send(.scanTapped)
-//                                    }
-//                                }
-//                            }
-//                            .frame(height: 20)
-//                            .offset(x: 8)
+                                    
+                                    fieldButton(icon: Asset.Assets.Icons.qr.image) {
+                                        store.send(.scanTapped)
+                                    }
+                                }
+                            }
+                            .frame(height: 20)
+                            .offset(x: 8)
                     )
                     .id(InputID.addressBookHint)
                     .keyboardType(.alphabet)

@@ -44,18 +44,6 @@ public struct SwapAndPay {
         public var walletBalancesState: WalletBalances.State
         public var zecAsset: SwapAsset?
 
-        public var rateToOneZec: String? {
-            guard let selectedAsset else {
-                return nil
-            }
-            
-            guard let zecAsset else {
-                return nil
-            }
-            
-            return formatter.string(from: NSNumber(value: zecAsset.usdPrice / selectedAsset.usdPrice))
-        }
-        
         public var isValidForm: Bool {
             selectedAsset != nil
         }
@@ -110,11 +98,7 @@ public struct SwapAndPay {
         public var isCustomSlippageFieldVisible: Bool {
             slippageInSheet >= 40.0
         }
-        
-        public var localePlaceholder: String {
-            usdFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-        }
-        
+
         public var spendableAmount: Double {
             guard let zecAsset else {
                 return walletBalancesState.shieldedBalance.decimalValue.doubleValue
@@ -231,6 +215,22 @@ public struct SwapAndPay {
             return Decimal(amountInUsdWithSlippage - amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
         }
         
+        public var localePlaceholder: String {
+            usdFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+        
+        public var rateToOneZec: String? {
+            guard let selectedAsset else {
+                return nil
+            }
+            
+            guard let zecAsset else {
+                return nil
+            }
+            
+            return formatter.string(from: NSNumber(value: zecAsset.usdPrice / selectedAsset.usdPrice))
+        }
+        
         public func slippageString(value: Double) -> String {
             let value = slippageFormatter.string(from: NSNumber(value: value)) ?? ""
             
@@ -282,6 +282,7 @@ public struct SwapAndPay {
         case getQuoteTapped
         case nextTapped
         case onAppear
+        case scanTapped
         case slippageChipTapped(Int)
         case slippageSetConfirmTapped
         case slippageTapped
@@ -331,6 +332,9 @@ public struct SwapAndPay {
             case .binding(\.searchTerm):
                 return .send(.updateAssetsAccordingToSearchTerm)
 
+            case .scanTapped:
+                return .none
+                
             case .binding:
                 return .none
                 

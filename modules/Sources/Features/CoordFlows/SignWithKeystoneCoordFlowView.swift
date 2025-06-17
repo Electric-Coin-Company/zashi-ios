@@ -61,7 +61,6 @@ public struct SignWithKeystoneCoordFlowView: View {
         }
         .applyScreenBackground()
         .zashiBack()
-        //.screenTitle(L10n.General.send)
     }
 }
 

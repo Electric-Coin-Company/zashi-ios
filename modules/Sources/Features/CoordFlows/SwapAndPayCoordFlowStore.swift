@@ -28,13 +28,18 @@ public struct SwapAndPayCoordFlow {
     
     @ObservableState
     public struct State {
+        public var isHelpSheetPresented = false
         public var path = StackState<Path.State>()
+        public var selectedOperationChip = 0
         public var swapAndPayState = SwapAndPay.State.initial
 
         public init() { }
     }
 
-    public enum Action {
+    public enum Action: BindableAction {
+        case binding(BindingAction<SwapAndPayCoordFlow.State>)
+        case helpSheetRequested
+        case operationChipTapped(Int)
         case path(StackActionOf<Path>)
         case swapAndPay(SwapAndPay.Action)
     }
@@ -46,12 +51,22 @@ public struct SwapAndPayCoordFlow {
     public var body: some Reducer<State, Action> {
         coordinatorReduce()
 
+        BindingReducer()
+        
         Scope(state: \.swapAndPayState, action: \.swapAndPay) {
             SwapAndPay()
         }
 
         Reduce { state, action in
             switch action {
+            case .operationChipTapped(let index):
+                state.selectedOperationChip = index
+                return .none
+                
+            case .helpSheetRequested:
+                state.isHelpSheetPresented.toggle()
+                return .none
+                
             default: return .none
             }
         }
