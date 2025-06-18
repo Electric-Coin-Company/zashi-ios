@@ -41,7 +41,9 @@ extension HomeView {
                 .padding(.horizontal, 20)
             
             ActionRow(
-                icon: Asset.Assets.Partners.payWithNear.image,
+                icon: walletStatus == .restoring
+                ? Asset.Assets.Partners.payWithNearDisabled.image
+                : Asset.Assets.Partners.payWithNear.image,
                 title: L10n.SendSelect.swapAndPay,
                 desc: L10n.SendSelect.SwapAndPay.desc,
                 customIcon: true,

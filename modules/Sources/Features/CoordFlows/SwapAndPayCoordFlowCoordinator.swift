@@ -17,6 +17,18 @@ extension SwapAndPayCoordFlow {
         Reduce { state, action in
             switch action {
 
+                // MARK: - Scan
+                
+            case .path(.element(id: _, action: .scan(.foundString(let address)))):
+                let _ = state.path.removeLast()
+                audioServices.systemSoundVibrate()
+                state.swapAndPayState.address = address
+                return .none
+
+            case .path(.element(id: _, action: .scan(.cancelTapped))):
+                let _ = state.path.popLast()
+                return .none
+                
                 // MARK: - Self
 
             case .swapAndPay(.scanTapped):

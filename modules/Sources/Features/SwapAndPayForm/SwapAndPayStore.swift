@@ -32,6 +32,7 @@ public struct SwapAndPay {
         public var isQuotePresented = false
         public var isQuoteUnavailablePresented = false
         public var isSlippagePresented = false
+        public var isSwapExperienceEnabled = true
         public var searchTerm = ""
         public var selectedAsset: SwapAsset?
         public var sheetHeight: CGFloat = 0.0
@@ -46,6 +47,9 @@ public struct SwapAndPay {
 
         public var isValidForm: Bool {
             selectedAsset != nil
+            && !address.isEmpty
+            && amount > 0
+            && !isInsufficientFunds
         }
         
         public var isInsufficientFunds: Bool {
@@ -57,42 +61,18 @@ public struct SwapAndPay {
                 return false
             }
 
-            let spendableUsd = walletBalancesState.shieldedBalance.decimalValue.doubleValue * zecAsset.usdPrice
+            let spendableZec = walletBalancesState.shieldedBalance.decimalValue.doubleValue
             
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
-            let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
-
-            return amountInUsdWithSlippage > spendableUsd
-        }
-
-        public var usdFormatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 2
-            formatter.locale = Locale.current
-            
-            return formatter
-        }
-        
-        public var formatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 8
-            formatter.locale = Locale.current
-            
-            return formatter
-        }
-
-        public var slippageFormatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 0
-            formatter.maximumFractionDigits = 2
-            formatter.locale = Locale.current
-            
-            return formatter
+            switch (isSwapExperienceEnabled, isInputInUsd) {
+            case (true, false):
+                return amount > spendableZec
+            case (true, true):
+                return (amount / zecAsset.usdPrice) > spendableZec
+            case (false, false):
+                return ((amount * selectedAsset.usdPrice) / zecAsset.usdPrice) > spendableZec
+            case (false, true):
+                return (amount / zecAsset.usdPrice) > spendableZec
+            }
         }
 
         public var isCustomSlippageFieldVisible: Bool {
@@ -116,158 +96,6 @@ public struct SwapAndPay {
                 return 0.0
             }
         }
-        
-        public var spendableBalance: String {
-            formatter.string(from: walletBalancesState.shieldedBalance.decimalValue.roundedZec) ?? ""
-        }
-
-        public var recipientGetsConverted: String {
-            guard let zecAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            var amountWithRate = amount
-            
-            if isInputInUsd {
-                amountWithRate /= zecAsset.usdPrice
-            } else {
-                amountWithRate *= zecAsset.usdPrice
-            }
-            
-            let tokenString = formatter.string(from: NSNumber(value: amountWithRate)) ?? "\(amount) \(zecAsset.token)"
-            
-            return isInputInUsd ?
-            "\(tokenString) \(zecAsset.token)"
-            : Decimal(amountWithRate).formatted(.currency(code: CurrencyISO4217.usd.code))
-        }
-        
-        public var youPayConverted: String {
-            guard let selectedAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            var amountWithRate = amount
-            
-            if isInputInUsd {
-                amountWithRate /= selectedAsset.usdPrice
-            } else {
-                amountWithRate *= selectedAsset.usdPrice
-            }
-            
-            let tokenString = formatter.string(from: NSNumber(value: amountWithRate)) ?? "\(amount) \(selectedAsset.token)"
-            
-            return isInputInUsd ?
-            "\(tokenString) \(selectedAsset.token)"
-            : Decimal(amountWithRate).formatted(.currency(code: CurrencyISO4217.usd.code))
-        }
-        
-        public var youPayZec: String {
-            guard let zecAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-
-            guard let selectedAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
-            let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
-            let amountInZec = amountInUsdWithSlippage / zecAsset.usdPrice
-
-            return formatter.string(from: NSNumber(value: amountInZec)) ?? "\(amountInZec)"
-        }
-        
-        public var recipientGetsToken: String {
-            guard let zecAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-
-            guard let selectedAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : zecAsset.usdPrice)
-            let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
-            let amountInToken = amountInUsdWithSlippage / selectedAsset.usdPrice
-
-            return formatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
-        }
-        
-        public var youPayZecConverted: String {
-            guard let zecAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : zecAsset.usdPrice)
-            let amountInUsdWithSlippage = amountInUsd + (slippage * 0.001 * amountInUsd)
-            
-            return Decimal(amountInUsdWithSlippage).formatted(.currency(code: CurrencyISO4217.usd.code))
-        }
-        
-        public var slippageDiff: String {
-            guard let selectedAsset else {
-                return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-            }
-            
-            let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
-            let amountInUsdWithSlippage = amountInUsd + (slippageInSheet * 0.001 * amountInUsd)
-            
-            return Decimal(amountInUsdWithSlippage - amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
-        }
-        
-        public var localePlaceholder: String {
-            usdFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
-        }
-        
-        public var rateToOneZec: String? {
-            guard let selectedAsset else {
-                return nil
-            }
-            
-            guard let zecAsset else {
-                return nil
-            }
-            
-            return formatter.string(from: NSNumber(value: zecAsset.usdPrice / selectedAsset.usdPrice))
-        }
-        
-        public func slippageString(value: Double) -> String {
-            let value = slippageFormatter.string(from: NSNumber(value: value)) ?? ""
-            
-            return "\(value)%"
-        }
-        
-        public var currentSlippageString: String {
-            slippageString(value: slippage / 10.0)
-        }
-
-        public var currentSlippageInSheetString: String {
-            slippageString(value: slippageInSheet / 10.0)
-        }
-
-        public var slippage05String: String {
-            slippageString(value: 0.5)
-        }
-
-        public var slippage1String: String {
-            slippageString(value: 1.0)
-        }
-
-        public var slippage2String: String {
-            slippageString(value: 2.0)
-        }
-
-        public var slippage0String: String {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 2
-            formatter.locale = Locale.current
-            
-            let value = formatter.string(from: NSNumber(value: 0)) ?? ""
-
-            return "\(value)%"
-        }
     }
 
     public enum Action: BindableAction {
@@ -278,6 +106,7 @@ public struct SwapAndPay {
         case closeAssetsSheetTapped
         case closeSlippageSheetTapped
         case dismissRequired
+        case enableSwapExperience(Bool)
         case eraseSearchTermTapped
         case getQuoteTapped
         case nextTapped
@@ -323,7 +152,7 @@ public struct SwapAndPay {
 
             case .binding(\.customSlippage):
                 if !state.customSlippage.isEmpty {
-                    if let input = state.formatter.number(from: state.customSlippage)?.doubleValue, input > 0.0 && input < 100.0 {
+                    if let input = state.slippageFormatter.number(from: state.customSlippage)?.doubleValue, input > 0.0 && input < 100.0 {
                         state.slippageInSheet = input * 10.0
                     }
                 }
@@ -332,6 +161,27 @@ public struct SwapAndPay {
             case .binding(\.searchTerm):
                 return .send(.updateAssetsAccordingToSearchTerm)
 
+            case .enableSwapExperience(let enable):
+                state.isSwapExperienceEnabled = enable
+                if !state.isInputInUsd {
+                    if state.isSwapExperienceEnabled {
+                        if let zecAsset = state.zecAsset, let selectedAsset = state.selectedAsset {
+                            let amountInToken = (state.amount * selectedAsset.usdPrice) / zecAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInToken)) {
+                                state.amountText = value
+                            }
+                        }
+                    } else {
+                        if let zecAsset = state.zecAsset, let selectedAsset = state.selectedAsset {
+                            let amountInToken = (state.amount * zecAsset.usdPrice) / selectedAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInToken)) {
+                                state.amountText = value
+                            }
+                        }
+                    }
+                }
+                return .none
+            
             case .scanTapped:
                 return .none
                 
@@ -361,6 +211,39 @@ public struct SwapAndPay {
 
             case .switchInputTapped:
                 state.isInputInUsd.toggle()
+                if state.isSwapExperienceEnabled {
+                    if state.isInputInUsd {
+                        if let zecAsset = state.zecAsset {
+                            let amountInUsd = state.amount * zecAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInUsd)) {
+                                state.amountText = value
+                            }
+                        }
+                    } else {
+                        if let zecAsset = state.zecAsset {
+                            let amountInUsd = state.amount / zecAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInUsd)) {
+                                state.amountText = value
+                            }
+                        }
+                    }
+                } else {
+                    if state.isInputInUsd {
+                        if let selectedAsset = state.selectedAsset {
+                            let amountInUsd = state.amount * selectedAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInUsd)) {
+                                state.amountText = value
+                            }
+                        }
+                    } else {
+                        if let selectedAsset = state.selectedAsset {
+                            let amountInUsd = state.amount / selectedAsset.usdPrice
+                            if let value = state.conversionFormatter.string(from: NSNumber(value: amountInUsd)) {
+                                state.amountText = value
+                            }
+                        }
+                    }
+                }
                 return .none
                 
             case .assetSelectRequested:
@@ -435,6 +318,7 @@ public struct SwapAndPay {
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil {
                     state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
+//                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
                 return .send(.updateAssetsAccordingToSearchTerm)
 
@@ -442,5 +326,240 @@ public struct SwapAndPay {
                 return .none
             }
         }
+    }
+}
+
+// MARK: - Conversion Logic
+
+extension SwapAndPay.State {
+    public var primaryLabelFrom: String {
+        guard let zecAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        guard let selectedAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            return amountText
+        case (true, true):
+            return amountText
+        case (false, false):
+            let amountInToken = (amount * selectedAsset.usdPrice) / zecAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
+        case (false, true):
+            return Decimal(amount).formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
+    }
+    
+    public var secondaryLabelFrom: String {
+        guard let zecAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+        
+        guard let selectedAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            let amountInUsd = amount * zecAsset.usdPrice
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (true, true):
+            let amountInUsd = amount / zecAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInUsd)) ?? "\(amountInUsd)"
+        case (false, false):
+            let amountInUsd = amount * selectedAsset.usdPrice
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (false, true):
+            let amountInUsd = amount / zecAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInUsd)) ?? "\(amountInUsd)"
+        }
+    }
+    
+    public var primaryLabelTo: String {
+        guard let zecAsset else {
+            return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        guard let selectedAsset else {
+            return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            let amountInToken = (amount * zecAsset.usdPrice) / selectedAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
+        case (true, true):
+            return Decimal(amount).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (false, false):
+            return amountText
+        case (false, true):
+            return amountText
+        }
+    }
+    
+    public var secondaryLabelTo: String {
+        guard let zecAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        guard let selectedAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            let amountInUsd = amount * zecAsset.usdPrice
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (true, true):
+            let amountInToken = amount / selectedAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
+        case (false, false):
+            let amountInUsd = amount * selectedAsset.usdPrice
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (false, true):
+            let amountInToken = amount / selectedAsset.usdPrice
+            return conversionFormatter.string(from: NSNumber(value: amountInToken)) ?? "\(amountInToken)"
+        }
+    }
+    
+    public var maxLabel: String {
+        guard let zecAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        let amountInUsd = walletBalancesState.shieldedBalance.decimalValue.roundedZec.doubleValue * zecAsset.usdPrice
+
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            return spendableBalance
+        case (true, true):
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        case (false, false):
+            return spendableBalance
+        case (false, true):
+            return Decimal(amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
+    }
+}
+
+// MARK: - String Representations
+
+extension SwapAndPay.State {
+    public var spendableBalance: String {
+        formatter.string(from: walletBalancesState.shieldedBalance.decimalValue.roundedZec) ?? ""
+    }
+    
+    public var slippageDiff: String {
+        guard let selectedAsset else {
+            return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+        
+        let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
+        let amountInUsdWithSlippage = amountInUsd + (slippageInSheet * 0.001 * amountInUsd)
+        
+        return Decimal(amountInUsdWithSlippage - amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+    }
+    
+    public var localePlaceholder: String {
+        usdFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+    }
+    
+    public var rateToOneZec: String? {
+        guard let selectedAsset else {
+            return nil
+        }
+        
+        guard let zecAsset else {
+            return nil
+        }
+        
+        return formatter.string(from: NSNumber(value: zecAsset.usdPrice / selectedAsset.usdPrice))
+    }
+    
+    public func slippageString(value: Double) -> String {
+        let value = slippageFormatter.string(from: NSNumber(value: value)) ?? ""
+        
+        return "\(value)%"
+    }
+    
+    public var currentSlippageString: String {
+        slippageString(value: slippage / 10.0)
+    }
+
+    public var currentSlippageInSheetString: String {
+        slippageString(value: slippageInSheet / 10.0)
+    }
+
+    public var slippage05String: String {
+        slippageString(value: 0.5)
+    }
+
+    public var slippage1String: String {
+        slippageString(value: 1.0)
+    }
+
+    public var slippage2String: String {
+        slippageString(value: 2.0)
+    }
+
+    public var slippage0String: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        let value = formatter.string(from: NSNumber(value: 0)) ?? ""
+
+        return "\(value)%"
+    }
+}
+
+// MARK: - Formatters
+
+extension SwapAndPay.State {
+    public var usdFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    public var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 8
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+
+    public var conversionFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+
+    public var slippageFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
     }
 }

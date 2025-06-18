@@ -1069,8 +1069,8 @@ public enum L10n {
     /// Swap or Pay with NEAR
     public static let swapAndPay = L10n.tr("Localizable", "sendSelect.swapAndPay", fallback: "Swap or Pay with NEAR")
     public enum SwapAndPay {
-      /// Send payments and swap ZEC in any coin or token supported by NEAR.
-      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Send payments and swap ZEC in any coin or token supported by NEAR.")
+      /// Send payments or swap for any coin or token supported by NEAR.
+      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Send payments or swap for any coin or token supported by NEAR.")
     }
     public enum Zashi {
       /// Pay in ZEC
@@ -1474,6 +1474,20 @@ public enum L10n {
     public static let totalAmount = L10n.tr("Localizable", "swapAndPay.totalAmount", fallback: "Total Amount")
     /// You pay
     public static let youPay = L10n.tr("Localizable", "swapAndPay.youPay", fallback: "You pay")
+    public enum Help {
+      /// Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. 
+      public static let payDesc = L10n.tr("Localizable", "swapAndPay.help.payDesc", fallback: "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ")
+      /// Pay with
+      public static let payWith = L10n.tr("Localizable", "swapAndPay.help.payWith", fallback: "Pay with")
+      /// Pay with NEAR
+      public static let payWithNear = L10n.tr("Localizable", "swapAndPay.help.payWithNear", fallback: "Pay with NEAR")
+      /// Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. 
+      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. ")
+      /// Swap with
+      public static let swapWith = L10n.tr("Localizable", "swapAndPay.help.swapWith", fallback: "Swap with")
+      /// Swap with NEAR
+      public static let swapWithNear = L10n.tr("Localizable", "swapAndPay.help.swapWithNear", fallback: "Swap with NEAR")
+    }
   }
   public enum Sync {
     public enum Alert {

@@ -69,7 +69,6 @@ public struct SwapAndPayCoordFlowView: View {
                         .applyScreenBackground()
                 }
             }
-            .padding(.horizontal, 4)
             .applyScreenBackground()
             .zashiBack()
             .zashiTitle {
@@ -78,7 +77,7 @@ public struct SwapAndPayCoordFlowView: View {
                     operationChip(index: 1, text: "Pay", colorScheme)
                 }
                 .padding(.horizontal, 2)
-                .frame(minWidth: 200)
+                .frame(minWidth: 180)
                 .padding(.vertical, 2)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._lg)
@@ -92,7 +91,7 @@ public struct SwapAndPayCoordFlowView: View {
         if store.selectedOperationChip == index {
             Text(text)
                 .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
-                .frame(minWidth: 100)
+                .frame(minWidth: 90)
                 .fixedSize()
                 .frame(height: 36)
                 .background {
@@ -109,7 +108,7 @@ public struct SwapAndPayCoordFlowView: View {
         } else {
             Text(text)
                 .zFont(.medium, size: 16, style: Design.Switcher.defaultText)
-                .frame(minWidth: 100)
+                .frame(minWidth: 90)
                 .fixedSize()
                 .frame(height: 36)
                 .onTapGesture {
@@ -137,18 +136,29 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(spacing: 0) {
-            Text(L10n.RestoreWallet.Help.title)
-                .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                .padding(.top, 24)
-                .padding(.bottom, 12)
+            HStack(spacing: 10) {
+                Text(
+                    store.selectedOperationChip == 0
+                    ? L10n.SwapAndPay.Help.swapWith
+                    : L10n.SwapAndPay.Help.payWith
+                )
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                
+                Asset.Assets.Partners.nearLogo.image
+                    .zImage(width: 98, height: 24, style: Design.Text.primary)
+            }
+            .padding(.top, 12)
+            .padding(.vertical, 24)
+
+            if store.selectedOperationChip == 0 {
+                infoContent(text: L10n.SwapAndPay.Help.swapDesc)
+                    .padding(.bottom, 32)
+            } else {
+                infoContent(text: L10n.SwapAndPay.Help.payDesc)
+                    .padding(.bottom, 32)
+            }
             
-            infoContent(text: L10n.RestoreWallet.Help.phrase)
-                .padding(.bottom, 12)
-            
-            infoContent(text: L10n.RestoreWallet.Help.birthday)
-                .padding(.bottom, 32)
-            
-            ZashiButton(L10n.RestoreInfo.gotIt) {
+            ZashiButton(L10n.General.ok.uppercased()) {
                 store.send(.helpSheetRequested)
             }
             .padding(.bottom, 24)
@@ -157,16 +167,36 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func infoContent(text: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
-            Asset.Assets.infoCircle.image
-                .zImage(size: 20, style: Design.Text.primary)
-            
-            if let attrText = try? AttributedString(
-                markdown: text,
-                including: \.zashiApp
-            ) {
-                ZashiText(withAttributedString: attrText, colorScheme: colorScheme)
+            if store.selectedOperationChip == 0 {
+                Asset.Assets.Icons.arrowDown.image
+                    .zImage(size: 20, style: Design.Text.primary)
+                    .padding(10)
+                    .background {
+                        Circle()
+                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                    }
+            } else {
+                Asset.Assets.Icons.coinsSwap.image
+                    .zImage(size: 20, style: Design.Text.primary)
+                    .padding(10)
+                    .background {
+                        Circle()
+                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                    }
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(
+                    store.selectedOperationChip == 0
+                    ? L10n.SwapAndPay.Help.swapWithNear
+                    : L10n.SwapAndPay.Help.payWithNear
+                )
+                .zFont(.semiBold, size: 14, style: Design.Text.primary)
+
+                Text(text)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(1.5)
             }
         }
     }

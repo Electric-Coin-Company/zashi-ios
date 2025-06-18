@@ -733,7 +733,7 @@
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
 "sendSelect.swapAndPay" = "Swap or Pay with NEAR";
-"sendSelect.swapAndPay.desc" = "Send payments and swap ZEC in any coin or token supported by NEAR.";
+"sendSelect.swapAndPay.desc" = "Send payments or swap for any coin or token supported by NEAR.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -764,3 +764,9 @@
 "swapAndPay.oneZecRate" = "1 ZEC = %@ %@";
 "swapAndPay.rate" = "Rate";
 "swapAndPay.address" = "Address";
+"swapAndPay.help.swapWith" = "Swap with";
+"swapAndPay.help.payWith" = "Pay with";
+"swapAndPay.help.swapWithNear" = "Swap with NEAR";
+"swapAndPay.help.payWithNear" = "Pay with NEAR";
+"swapAndPay.help.swapDesc" = "Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. ";
+"swapAndPay.help.payDesc" = "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ";

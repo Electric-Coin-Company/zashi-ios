@@ -61,7 +61,7 @@ public struct SwapAndPayCoordFlow {
             switch action {
             case .operationChipTapped(let index):
                 state.selectedOperationChip = index
-                return .none
+                return .send(.swapAndPay(.enableSwapExperience(index == 0)))
                 
             case .helpSheetRequested:
                 state.isHelpSheetPresented.toggle()
