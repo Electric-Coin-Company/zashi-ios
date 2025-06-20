@@ -42,7 +42,7 @@ public struct SendingView: View {
                 )
                 .resizable()
                 .looping()
-                .frame(width: 110, height: 110)
+                .frame(width: 170, height: 170)
 
                 Text(store.isShielding ? L10n.Send.shielding : L10n.Send.sending)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)

@@ -92,7 +92,8 @@ public struct WalletBalancesView: View {
                     fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 48,
                     leastSignificantFontSize: 20,
-                    format: .expanded
+                    format: .expanded,
+                    couldBeHidden: couldBeHidden
                 )
             }
         }

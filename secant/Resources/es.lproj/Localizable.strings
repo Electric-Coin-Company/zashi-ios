@@ -50,6 +50,7 @@
 "tabs.account" = "Cuenta";
 "tabs.send" = "Enviar";
 "tabs.receive" = "Recibir";
+"tabs.receiveZec" = "Recibir ZEC";
 "tabs.balances" = "Saldos";
 
 // MARK: - Home Screen
@@ -77,7 +78,7 @@
 "receive.error.cantExtractTransparentAddress" = "no se pudo extraer el receptor transparente de la Dirección Unificada";
 "receive.error.cantExtractSaplingAddress" = "no se pudo extraer el receptor Sapling de la Dirección Unificada";
 "receive.saplingAddress" = "Dirección Sapling de Zcash";
-"receive.warning" = "Prioriza usar tu dirección protegida para máxima privacidad.";
+"receive.warning" = "Para privacidad, utilice siempre una dirección protegida.";
 "receive.copy" = "Copiar";
 "receive.qrCode" = "Código QR";
 "receive.request" = "Solicitar";
@@ -425,8 +426,8 @@
 "tooltip.exchangeRate.desc" = "Lo intentamos pero no pudimos actualizar la tasa de cambio para ti. Verifica tu conexión, reinicia la aplicación e intentaremos de nuevo.";
 
 // MARK: - UI Components
-"component.maxPrivacy" = "Máxima privacidad";
-"component.lowPrivacy" = "Baja privacidad";
+"component.maxPrivacy" = "Privado";
+"component.lowPrivacy" = "Público";
 
 // MARK: - Partners
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";

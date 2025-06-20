@@ -171,10 +171,10 @@ public enum L10n {
     }
   }
   public enum Component {
-    /// Low Privacy
-    public static let lowPrivacy = L10n.tr("Localizable", "component.lowPrivacy", fallback: "Low Privacy")
-    /// Maximum Privacy
-    public static let maxPrivacy = L10n.tr("Localizable", "component.maxPrivacy", fallback: "Maximum Privacy")
+    /// Not Private
+    public static let lowPrivacy = L10n.tr("Localizable", "component.lowPrivacy", fallback: "Not Private")
+    /// Private
+    public static let maxPrivacy = L10n.tr("Localizable", "component.maxPrivacy", fallback: "Private")
   }
   public enum CurrencyConversion {
     /// Review
@@ -617,8 +617,8 @@ public enum L10n {
     public static let ta = L10n.tr("Localizable", "receive.ta", fallback: "Transparent Address")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "receive.ua", fallback: "Unified Address")
-    /// Prioritize using your shielded address for maximum privacy.
-    public static let warning = L10n.tr("Localizable", "receive.warning", fallback: "Prioritize using your shielded address for maximum privacy.")
+    /// For privacy, always use shielded address.
+    public static let warning = L10n.tr("Localizable", "receive.warning", fallback: "For privacy, always use shielded address.")
     public enum Error {
       /// could not extract sapling receiver from UA
       public static let cantExtractSaplingAddress = L10n.tr("Localizable", "receive.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")
@@ -1376,6 +1376,8 @@ public enum L10n {
     public static let balances = L10n.tr("Localizable", "tabs.balances", fallback: "Balances")
     /// Receive
     public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
+    /// Receive ZEC
+    public static let receiveZec = L10n.tr("Localizable", "tabs.receiveZec", fallback: "Receive ZEC")
     /// Send
     public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
   }

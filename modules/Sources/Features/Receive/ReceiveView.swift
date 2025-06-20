@@ -180,7 +180,7 @@ public struct ReceiveView: View {
         }
         .padding(.horizontal, 4)
         .applyScreenBackground()
-        .screenTitle(L10n.Tabs.receive)
+        .screenTitle(L10n.Tabs.receiveZec)
         .zashiBack()
     }
     

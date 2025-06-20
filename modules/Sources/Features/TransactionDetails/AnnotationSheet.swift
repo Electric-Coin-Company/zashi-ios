@@ -87,20 +87,14 @@ extension TransactionDetailsView {
                         store.send(.deleteNoteTapped)
                     }
 
-                    ZashiButton(
-                        L10n.Annotation.save,
-                        type: .secondary
-                    ) {
+                    ZashiButton(L10n.Annotation.save) {
                         store.send(.saveNoteTapped)
                     }
                     .disabled(!store.isAnnotationModified)
                 }
                 .padding(.bottom, 24)
             } else {
-                ZashiButton(
-                    L10n.Annotation.add,
-                    type: .secondary
-                ) {
+                ZashiButton(L10n.Annotation.add) {
                     store.send(.addNoteTapped)
                 }
                 .disabled(store.annotation.isEmpty)

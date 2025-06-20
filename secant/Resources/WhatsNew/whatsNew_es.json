@@ -1,6 +1,33 @@
 {
     "releases": [
         {
+            "version": "2.0.4",
+            "date": "06-16-2025",
+            "timestamp": 1750070962,
+            "sections": [
+                {
+                    "title": "Añadido:",
+                    "bulletpoints": [
+                        "Añadimos la función Mostrar/Ocultar saldos en la pantalla Enviar."
+                    ]
+                },
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Actualizamos los iconos Enviar y Recibir.",
+                        "Actualizamos la copia en la pantalla Recibir.",
+                        "Actualizamos la animación en la pantalla Enviar."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Solucionamos el problema con la obtención del tipo de cambio de USD y lo hicimos más fiable."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0.3",
             "date": "05-19-2025",
             "timestamp": 1747652167,
