@@ -82,22 +82,32 @@ public struct SwapAndPayForm: View {
                     
                     Spacer()
                     
-                    ZashiButton(L10n.Send.review) {
-                        store.send(.getQuoteTapped)
+                    if store.isQuoteRequestInFlight {
+                        ZashiButton(
+                            L10n.SwapAndPay.getQuote,
+                            accessoryView: ProgressView()
+                        ) { }
+                        .disabled(true)
+                        .padding(.top, keyboardVisible ? 40 : 0)
+                        .padding(.bottom, 40)
+                    } else {
+                        ZashiButton(L10n.SwapAndPay.getQuote) {
+                            store.send(.getQuoteTapped)
+                        }
+                        .padding(.top, keyboardVisible ? 40 : 0)
+                        .padding(.bottom, 40)
+                        .disabled(!store.isValidForm)
                     }
-                    .padding(.top, keyboardVisible ? 40 : 0)
-                    .padding(.bottom, 40)
-                    .disabled(!store.isValidForm)
                 }
                 .ignoresSafeArea()
                 .frame(minHeight: keyboardVisible ? 0 : safeAreaHeight)
                 .screenHorizontalPadding()
             }
+            .padding(.top, 1)
             .onAppear {
                 observeKeyboardNotifications()
             }
             .applyScreenBackground()
-            .zashiBack()
             .zashiTitle {
                 Text(L10n.SendSelect.swapAndPay)
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
@@ -240,6 +250,7 @@ public struct SwapAndPayForm: View {
                                     .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
                                     .foregroundColor(Design.Text.primary.color(colorScheme))
                             )
+                            .disabled(store.isQuoteRequestInFlight)
                             .frame(maxWidth: .infinity)
                             .frame(height: 32)
                             .autocapitalization(.none)
@@ -337,10 +348,11 @@ public struct SwapAndPayForm: View {
                     } label: {
                         ticker(asset: store.selectedAsset, colorScheme)
                     }
-                    
+
                     Spacer()
                 }
                 .frame(maxWidth: .infinity)
+                .disabled(store.isQuoteRequestInFlight)
 
                 if store.isSwapExperienceEnabled {
                     HStack(spacing: 0) {
@@ -367,6 +379,7 @@ public struct SwapAndPayForm: View {
                         }
                         
                         Spacer()
+                        
                         TextField(
                             "",
                             text: $store.amountText,
@@ -375,6 +388,7 @@ public struct SwapAndPayForm: View {
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
                                 .foregroundColor(Design.Text.primary.color(colorScheme))
                         )
+                        .disabled(store.isQuoteRequestInFlight)
                         .frame(maxWidth: .infinity)
                         .frame(height: 32)
                         .autocapitalization(.none)
@@ -489,6 +503,7 @@ public struct SwapAndPayForm: View {
                 .frame(height: 20)
                 .offset(x: 8)
         )
+        .disabled(store.isQuoteRequestInFlight)
         .id(InputID.addressBookHint)
         .keyboardType(.alphabet)
         .focused($isAddressFocused)
@@ -520,6 +535,7 @@ public struct SwapAndPayForm: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
             }
+            .disabled(store.isQuoteRequestInFlight)
             .frame(height: 32)
             .background {
                 RoundedRectangle(cornerRadius: Design.Radius._md)
@@ -561,25 +577,29 @@ public struct SwapAndPayForm: View {
     
     @ViewBuilder func zecTicker(_ colorScheme: ColorScheme) -> some View {
         HStack(spacing: 0) {
-            Asset.Assets.Brandmarks.brandmarkMax.image
-                .zImage(size: 24, style: Design.Text.primary)
-                .padding(.trailing, 12)
-                .overlay {
-                    Asset.Assets.Icons.shieldBcg.image
-                        .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
-                        .offset(x: 4, y: 8)
-                        .overlay {
-                            Asset.Assets.Icons.shieldTickFilled.image
-                                .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
-                                .offset(x: 4, y: 8)
-                        }
-                }
+            zecTickerLogo(colorScheme)
             
             Text(tokenName)
                 .zFont(.semiBold, size: 14, style: Design.Text.primary)
             
             Spacer()
         }
+    }
+    
+    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme) -> some View {
+        Asset.Assets.Brandmarks.brandmarkMax.image
+            .zImage(size: 24, style: Design.Text.primary)
+            .padding(.trailing, 12)
+            .overlay {
+                Asset.Assets.Icons.shieldBcg.image
+                    .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
+                    .offset(x: 4, y: 8)
+                    .overlay {
+                        Asset.Assets.Icons.shieldTickFilled.image
+                            .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
+                            .offset(x: 4, y: 8)
+                    }
+            }
     }
     
     public func slippageWarnBcgColor(_ colorScheme: ColorScheme) -> Color {
@@ -617,23 +637,7 @@ extension View {
     @ViewBuilder func noBcgTicker(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {
         HStack(spacing: 0) {
             if let asset {
-                asset.tokenIcon
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .padding(.trailing, 8)
-                    .overlay {
-                        ZStack {
-                            Circle()
-                                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                .frame(width: 16, height: 16)
-                                .offset(x: 6, y: 6)
-                            
-                            asset.chainIcon
-                                .resizable()
-                                .frame(width: 14, height: 14)
-                                .offset(x: 6, y: 6)
-                        }
-                    }
+                tokenTicker(asset: asset, colorScheme)
                 
                 Text(asset.token)
                     .zFont(.semiBold, size: 14, style: Design.Text.primary)
@@ -659,6 +663,28 @@ extension View {
                 .padding(.trailing, 4)
         }
         .padding(4)
+    }
+    
+    @ViewBuilder func tokenTicker(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {
+        if let asset {
+            asset.tokenIcon
+                .resizable()
+                .frame(width: 24, height: 24)
+                .padding(.trailing, 8)
+                .overlay {
+                    ZStack {
+                        Circle()
+                            .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                            .frame(width: 16, height: 16)
+                            .offset(x: 6, y: 6)
+                        
+                        asset.chainIcon
+                            .resizable()
+                            .frame(width: 14, height: 14)
+                            .offset(x: 6, y: 6)
+                    }
+                }
+        }
     }
     
     @ViewBuilder func ticker(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {

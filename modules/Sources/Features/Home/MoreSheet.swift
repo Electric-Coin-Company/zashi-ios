@@ -40,18 +40,20 @@ extension HomeView {
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
             
-            ActionRow(
-                icon: walletStatus == .restoring
-                ? Asset.Assets.Partners.payWithNearDisabled.image
-                : Asset.Assets.Partners.payWithNear.image,
-                title: L10n.SendSelect.swapAndPay,
-                desc: L10n.SendSelect.SwapAndPay.desc,
-                customIcon: true,
-                divider: store.featureFlags.flexa
-            ) {
-                store.send(.swapAndPayTapped)
+            if !store.isKeystoneAccountActive {
+                ActionRow(
+                    icon: walletStatus == .restoring
+                    ? Asset.Assets.Partners.payWithNearDisabled.image
+                    : Asset.Assets.Partners.payWithNear.image,
+                    title: L10n.SendSelect.swapAndPay,
+                    desc: L10n.SendSelect.SwapAndPay.desc,
+                    customIcon: true,
+                    divider: store.featureFlags.flexa
+                ) {
+                    store.send(.swapAndPayTapped)
+                }
+                .disabled(walletStatus == .restoring)
             }
-            .disabled(walletStatus == .restoring)
 
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(

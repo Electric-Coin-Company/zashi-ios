@@ -38,7 +38,7 @@ public struct FailureView: View {
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(store.isShielding ? L10n.Send.failureShieldingInfo : L10n.Send.failureInfo)
+                Text(store.failureInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)

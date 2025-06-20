@@ -745,6 +745,9 @@
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
 "swapAndPay.cancelPayment" = "Cancel payment";
 "swapAndPay.editPayment" = "Edit payment";
+"swapAndPay.swapNow" = "Swap now";
+"swapAndPay.swapFrom" = "Swap from";
+"swapAndPay.swapTo" = "Swap to";
 "swapAndPay.payNow" = "Pay now";
 "swapAndPay.payFrom" = "Pay from";
 "swapAndPay.payTo" = "Pay to";
@@ -770,3 +773,9 @@
 "swapAndPay.help.payWithNear" = "Pay with NEAR";
 "swapAndPay.help.swapDesc" = "Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. ";
 "swapAndPay.help.payDesc" = "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ";
+"swapAndPay.quote.zashi" = "Zashi";
+"swapAndPay.sendingInfo" = "Your coins are being sent to the deposit address...";
+"swapAndPay.successInfo" = "You successfully initiated a swap. Follow its status on the transaction screen.";
+"swapAndPay.failureInfo" = "There was an error initiating a swap. Try it again, please.";
+"swapAndPay.checkStatus" = "Check status";
+"swapAndPay.custom" = "Custom";

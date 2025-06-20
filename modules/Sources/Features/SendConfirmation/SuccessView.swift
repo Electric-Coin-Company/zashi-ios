@@ -38,19 +38,19 @@ public struct SuccessView: View {
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(store.isShielding ? L10n.Send.successShieldingInfo : L10n.Send.successInfo)
+                Text(store.successInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                if !store.isShielding {
+                if !store.isShielding && !store.isSwap {
                     Text(store.address.zip316)
                         .zFont(addressFont: true, size: 14, style: Design.Text.primary)
                         .padding(.top, 4)
                 }
 
-                if store.txIdToExpand != nil {
+                if store.txIdToExpand != nil || !store.isSwap {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,
@@ -63,10 +63,20 @@ public struct SuccessView: View {
 
                 Spacer()
                 
-                ZashiButton(L10n.General.close) {
+                ZashiButton(
+                    L10n.General.close,
+                    type: .ghost
+                ) {
                     store.send(.closeTapped)
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, store.isSwap ? 12 : 24)
+
+                if store.isSwap {
+                    ZashiButton(L10n.SwapAndPay.checkStatus) {
+                        store.send(.checkStatusTapped)
+                    }
+                    .padding(.bottom, 24)
+                }
             }
         }
         .navigationBarBackButtonHidden()

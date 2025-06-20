@@ -62,17 +62,20 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public let chain: String
     public let token: String
     public let assetId: String
-    public let usdPrice: Double
+    public let usdPrice: Decimal
+    public let decimals: Int
     
     init(
         chain: String,
         token: String,
         assetId: String,
-        usdPrice: Double
+        usdPrice: Decimal,
+        decimals: Int
     ) {
         self.chain = chain
         self.token = token
         self.assetId = assetId
         self.usdPrice = usdPrice
+        self.decimals = decimals
     }
 }

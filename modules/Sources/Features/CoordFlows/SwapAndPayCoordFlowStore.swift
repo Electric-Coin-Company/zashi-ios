@@ -11,11 +11,30 @@ import ZcashLightClientKit
 
 import AudioServices
 import Models
+//import Utils
+import MnemonicClient
+import SDKSynchronizer
+import WalletStorage
+import ZcashSDKEnvironment
+//import UIComponents
+//import Models
+//import Generated
+//import BalanceFormatter
+//import WalletBalances
+//import LocalAuthenticationHandler
+//import AddressBookClient
+//import MessageUI
+//import SupportDataGenerator
+//import KeystoneHandler
+//import TransactionDetails
+//import AddressBook
 
 // Path
 import AddressBook
 import Scan
+import SendConfirmation
 import SwapAndPayForm
+import TransactionDetails
 
 @Reducer
 public struct SwapAndPayCoordFlow {
@@ -24,15 +43,33 @@ public struct SwapAndPayCoordFlow {
         case addressBookChainToken(AddressBook)
         case addressBookContact(AddressBook)
         case scan(Scan)
+        case sending(SendConfirmation)
+        case sendResultFailure(SendConfirmation)
+        case sendResultResubmission(SendConfirmation)
+        case sendResultSuccess(SendConfirmation)
+        case transactionDetails(TransactionDetails)
     }
     
     @ObservableState
     public struct State {
+        public enum Result: Equatable {
+            case failure
+            case resubmission
+            case success
+        }
+        
+        public var failedDescription = ""
         public var isHelpSheetPresented = false
         public var path = StackState<Path.State>()
+        public var sendingScreenOnAppearTimestamp: TimeInterval = 0
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectedOperationChip = 0
         public var swapAndPayState = SwapAndPay.State.initial
 
+        public var isSwapInFlight: Bool {
+            swapAndPayState.isQuoteRequestInFlight
+        }
+        
         public init() { }
     }
 
@@ -41,10 +78,28 @@ public struct SwapAndPayCoordFlow {
         case helpSheetRequested
         case operationChipTapped(Int)
         case path(StackActionOf<Path>)
+        case sendDone
+        case sendFailed(ZcashError?, Bool)
+        case stopSending
         case swapAndPay(SwapAndPay.Action)
+        case swapRequested
+        case updateFailedData(Int, String, String)
+        case updateResult(State.Result?)
+        case updateTxIdToExpand(String?)
     }
 
     @Dependency(\.audioServices) var audioServices
+//    @Dependency(\.addressBook) var addressBook
+//    @Dependency(\.audioServices) var audioServices
+    @Dependency(\.localAuthentication) var localAuthentication
+    @Dependency(\.derivationTool) var derivationTool
+//    @Dependency(\.keystoneHandler) var keystoneHandler
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+    @Dependency(\.swapAndPay) var swapAndPay
 
     public init() { }
 

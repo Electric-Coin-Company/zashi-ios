@@ -13,22 +13,6 @@ import SwapAndPay
 
 import BalanceBreakdown
 
-//extension AddressChainTokenView {
-//    @ViewBuilder func balancesContent() -> some View {
-//        WithPerceptionTracking {
-//            BalancesView(
-//                store:
-//                    store.scope(
-//                        state: \.balancesState,
-//                        action: \.balances
-//                    ),
-//                tokenName: tokenName
-//            )
-//        }
-//    }
-//    
-//}
-
 extension SwapAndPayForm {
     @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
@@ -203,7 +187,7 @@ extension SwapAndPayForm {
                                     }
                             }
                         } else {
-                            Text("Custom")
+                            Text(L10n.SwapAndPay.custom)
                                 .zFont(.medium, size: 16, style: Design.Switcher.defaultText)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
@@ -251,7 +235,7 @@ extension SwapAndPayForm {
                     ZashiButton(L10n.General.confirm) {
                         store.send(.slippageSetConfirmTapped)
                     }
-                    .padding(.bottom, 24)
+                    .padding(.top, 36)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -304,7 +288,7 @@ extension SwapAndPayForm {
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
                     .padding(.bottom, 8)
 
-                Text("We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the payment details or try again later.")
+                Text(store.quoteUnavailableErrorMsg)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 32)
@@ -315,12 +299,12 @@ extension SwapAndPayForm {
                     L10n.SwapAndPay.cancelPayment,
                     type: .destructive1
                 ) {
-                    
+                    store.send(.cancelPaymentTapped)
                 }
                 .padding(.bottom, 8)
 
                 ZashiButton(L10n.SwapAndPay.editPayment) {
-                    
+                    store.send(.editPaymentTapped)
                 }
                 .padding(.bottom, 24)
             }
@@ -330,50 +314,56 @@ extension SwapAndPayForm {
     @ViewBuilder func quoteContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                Text(L10n.SwapAndPay.payNow)
-                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                    .padding(.vertical, 24)
+                Text(
+                    store.isSwapExperienceEnabled
+                    ? L10n.SwapAndPay.swapNow
+                    : L10n.SwapAndPay.payNow
+                )
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.vertical, 24)
 
                 ZStack {
                     HStack(spacing: 8) {
                         VStack(spacing: 0) {
-                            HStack(spacing: 4) {
-                                Text("2.4776156")
+                            HStack(spacing: 2) {
+                                Text(store.zecToBeSpendInQuote)
                                     .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.1)
                                 
-                                Asset.Assets.Partners.keystoneSeekLogo.image
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
+                                zecTickerLogo(colorScheme)
+                                    .scaleEffect(0.8)
                             }
                             
-                            Text("$101.00")
+                            Text(store.zecUsdToBeSpendInQuote)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         }
                         .padding(16)
                         .frame(maxWidth: .infinity)
                         .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._2xl)
-                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
+                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                         }
                         
                         VStack(spacing: 0) {
-                            HStack(spacing: 4) {
-                                Text("2.4776156")
+                            HStack(spacing: 2) {
+                                Text(store.tokenToBeReceivedInQuote)
                                     .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                                
-                                Asset.Assets.Partners.keystoneSeekLogo.image
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.1)
+
+                                tokenTicker(asset: store.selectedAsset, colorScheme)
+                                    .scaleEffect(0.8)
                             }
                             
-                            Text("$101.00")
+                            Text(store.tokenUsdToBeReceivedInQuote)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         }
                         .padding(16)
                         .frame(maxWidth: .infinity)
                         .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._2xl)
-                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                            RoundedRectangle(cornerRadius: Design.Radius._xl)
+                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                         }
                     }
                     
@@ -381,34 +371,51 @@ extension SwapAndPayForm {
                         .zImage(size: 16, style: Design.Text.tertiary)
                         .padding(8)
                         .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._full)
+                            Circle()
                                 .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                .background {
-                                    RoundedRectangle(cornerRadius: Design.Radius._full)
-                                        .stroke(Design.Utility.Gray._100.color(colorScheme))
-                                }
+                                .frame(width: 32, height: 32)
                         }
                         .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
                         .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+//                        .background {
+//                            RoundedRectangle(cornerRadius: Design.Radius._xl)
+//                                .fill(Design.screenBackground.color(colorScheme))
+//                        }
                 }
                 .padding(.bottom, 32)
 
-                quoteLineContent(L10n.SwapAndPay.payFrom, "Zashi")
-                    .padding(.bottom, 12)
+                quoteLineContent(
+                    store.isSwapExperienceEnabled
+                    ? L10n.SwapAndPay.swapFrom
+                    : L10n.SwapAndPay.payFrom,
+                    L10n.SwapAndPay.Quote.zashi
+                )
+                .padding(.bottom, 12)
                 
-                quoteLineContent(L10n.SwapAndPay.payTo, "0xcaC4Df16470B6b266C...")
-                    .padding(.bottom, 12)
+                quoteLineContent(
+                    store.isSwapExperienceEnabled
+                    ? L10n.SwapAndPay.swapTo
+                    : L10n.SwapAndPay.payTo,
+                    store.address.zip316
+                )
+                .padding(.bottom, 12)
 
-                quoteLineContent(L10n.SwapAndPay.fee, "0.001 ZEC")
-                    .padding(.bottom, 12)
-
-                quoteLineContent(L10n.SwapAndPay.maxSlippage("1"), "0.02453084 ZEC")
+                quoteLineContent(L10n.SwapAndPay.fee, "\(store.feeStr) \(tokenName)")
                 HStack(spacing: 0) {
                     Spacer()
 
-                    Text("$1.00")
+                    Text(store.feeUsdStr)
                         .zFont(.medium, size: 12, style: Design.Text.tertiary)
                 }
+                .padding(.bottom, 12)
+
+//                quoteLineContent(L10n.SwapAndPay.maxSlippage(store.currentSlippageString), "*****")
+//                HStack(spacing: 0) {
+//                    Spacer()
+//
+//                    Text("*****")
+//                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
+//                }
 
                 Divider()
                     .frame(height: 1)
@@ -421,19 +428,19 @@ extension SwapAndPayForm {
 
                     Spacer()
 
-                    Text("2.50314644 ZEC")
+                    Text(store.totalZecToBeSpendInQuote)
                         .zFont(.medium, size: 14, style: Design.Text.primary)
                 }
                 HStack(spacing: 0) {
                     Spacer()
 
-                    Text("$102.04")
+                    Text(store.totalZecUsdToBeSpendInQuote)
                         .zFont(.medium, size: 12, style: Design.Text.tertiary)
                 }
                 .padding(.bottom, 32)
                 
                 ZashiButton(L10n.General.confirm) {
-                    
+                    store.send(.confirmButtonTapped)
                 }
                 .padding(.bottom, 24)
             }

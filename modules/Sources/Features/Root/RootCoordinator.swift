@@ -263,6 +263,18 @@ extension Root {
                 state.path = nil
                 return .send(.home(.smartBanner(.closeAndCleanupBanner)))
 
+                // MARK: - Swap and Pay Coord Flow
+
+            case .swapAndPayCoordFlow(.swapAndPay(.cancelPaymentTapped)):
+                state.path = nil
+                return .none
+                
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
+                state.path = nil
+                return .none
+
                 // MARK: - Transactions Coord Flow
                 
             case .transactionsCoordFlow(.transactionDetails(.closeDetailTapped)):

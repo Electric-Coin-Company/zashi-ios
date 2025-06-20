@@ -2,28 +2,43 @@
 //  SwapQuote.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 30.05.2025.
+//  Created by Lukáš Korba on 2025-06-18.
 //
 
-struct AppFee: Codable, Equatable, Hashable {
-    let recipient: String
-    let fee: Int
-}
+import ZcashLightClientKit
+import Foundation
 
-struct SwapQuote: Codable, Equatable, Hashable {
-    let dry: Bool
-    let swapType: String
-    let slippageTolerance: Int
-    let originAsset: String
-    let depositType: String
-    let destinationAsset: String
-    let amount: String
-    let refundTo: String
-    let refundType: String
-    let recipient: String
-    let recipientType: String
-    let deadline: String
-    let referral: String
-    let quoteWaitingTimeMs: Int
-    let appFees: [AppFee]
+public struct SwapQuote: Codable, Equatable, Hashable {
+    /// Deposit address (ZEC)
+    public let depositAddress: String
+    /// Amount of Zatoshi
+    public let amountIn: Int64
+    /// USD value of the Zatoshi amount, localized (0.1 vs. 0,1)
+    public let amountInUsd: String
+    /// Minimal amount of Zatoshi so this quote can be procesed
+    public let minAmountIn: Int64
+    /// Amount that should be ideally received on the destination address
+    public let amountOut: Decimal
+    /// USD value of the amount that will be received on the destination address, localized (0.1 vs. 0,1)
+    public let amountOutUsd: String
+    /// Number of seconds it takes to process this quote
+    public let timeEstimate: TimeInterval
+    
+    init(
+        depositAddress: String,
+        amountIn: Int64,
+        amountInUsd: String,
+        minAmountIn: Int64,
+        amountOut: Decimal,
+        amountOutUsd: String,
+        timeEstimate: TimeInterval
+    ) {
+        self.depositAddress = depositAddress
+        self.amountIn = amountIn
+        self.amountInUsd = amountInUsd
+        self.minAmountIn = minAmountIn
+        self.amountOut = amountOut
+        self.amountOutUsd = amountOutUsd
+        self.timeEstimate = timeEstimate
+    }
 }

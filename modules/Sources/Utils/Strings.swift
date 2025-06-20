@@ -31,6 +31,18 @@ public extension String {
             return self.zip316
         }
     }
+    
+    var localeUsd: String? {
+        let usFormatter = NumberFormatter()
+        usFormatter.locale = Locale(identifier: "en_US")
+        usFormatter.numberStyle = .decimal
+
+        guard let number = usFormatter.number(from: self) else {
+            return nil
+        }
+
+        return Decimal(number.doubleValue).formatted(.currency(code: "USD"))
+    }
 }
 
 extension String: @retroactive Error {}

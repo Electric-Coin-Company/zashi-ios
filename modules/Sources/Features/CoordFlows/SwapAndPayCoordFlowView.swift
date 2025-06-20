@@ -15,6 +15,8 @@ import Generated
 import AddressBook
 import Scan
 import SwapAndPayForm
+import SendConfirmation
+import TransactionDetails
 
 public struct SwapAndPayCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -50,6 +52,16 @@ public struct SwapAndPayCoordFlowView: View {
                         AddressBookContactView(store: store)
                     case let .scan(store):
                         ScanView(store: store)
+                    case let .sending(store):
+                        SendingView(store: store, tokenName: tokenName)
+                    case let .sendResultFailure(store):
+                        FailureView(store: store, tokenName: tokenName)
+                    case let .sendResultResubmission(store):
+                        ResubmissionView(store: store, tokenName: tokenName)
+                    case let .sendResultSuccess(store):
+                        SuccessView(store: store, tokenName: tokenName)
+                    case let .transactionDetails(store):
+                        TransactionDetailsView(store: store, tokenName: tokenName)
                     }
                 }
                 .navigationBarHidden(!store.path.isEmpty)
@@ -70,7 +82,7 @@ public struct SwapAndPayCoordFlowView: View {
                 }
             }
             .applyScreenBackground()
-            .zashiBack()
+            .zashiBack(store.isSwapInFlight)
             .zashiTitle {
                 HStack(spacing: 0) {
                     operationChip(index: 0, text: "Swap", colorScheme)

@@ -12,11 +12,26 @@ import ComposableArchitecture
 
 extension SwapAndPayClient: DependencyKey {
     public static let liveValue = Self(
+        submitDepositTxId: { txId, depositAddress in
+            try await Near1Click.liveValue.submitDepositTxId(
+                txId,
+                depositAddress
+            )
+        },
         swapAssets: {
             try await Near1Click.liveValue.swapAssets()
         },
-        quote: {
-            try await Near1Click.liveValue.quote()
+        quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
+            try await Near1Click.liveValue.quote(
+                dry,
+                exactInput,
+                slippageTolerance,
+                zecAsset,
+                toAsset,
+                refundTo,
+                destination,
+                amount
+            )
         }
     )
 }

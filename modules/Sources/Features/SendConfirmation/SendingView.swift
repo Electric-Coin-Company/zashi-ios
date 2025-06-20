@@ -48,12 +48,12 @@ public struct SendingView: View {
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(store.isShielding ? L10n.Send.shieldingInfo : L10n.Send.sendingInfo)
+                Text(store.sendingInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
 
-                if !store.isShielding {
+                if !store.isShielding && !store.isSwap {
                     Text(store.address.zip316)
                         .zFont(addressFont: true, size: 14, style: Design.Text.primary)
                         .padding(.top, 4)

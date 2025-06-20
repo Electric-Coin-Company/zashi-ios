@@ -58,6 +58,7 @@ public struct SendConfirmation {
         public var isKeystoneCodeFound = false
         public var isSending = false
         public var isShielding = false
+        public var isSwap = false
         public var isTransparentAddress = false
         public var message: String
         public var messageToBeShared: String?
@@ -179,6 +180,9 @@ public struct SendConfirmation {
         case resetPCZTs
         case resolvePCZT
         case sharePCZT
+        
+        // Swap
+        case checkStatusTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -406,6 +410,9 @@ public struct SendConfirmation {
                 state.sendingScreenOnAppearTimestamp = Date().timeIntervalSince1970
                 return .none
                 
+            case .checkStatusTapped:
+                return .none
+                
                 // MARK: - Keystone
                 
             case .getSignatureTapped:
@@ -591,6 +598,32 @@ public struct SendConfirmation {
                 return .none
             }
         }
+    }
+}
+
+extension SendConfirmation.State {
+    public var sendingInfo: String {
+        isShielding
+        ? L10n.Send.shieldingInfo
+        : isSwap
+        ? L10n.SwapAndPay.sendingInfo
+        : L10n.Send.sendingInfo
+    }
+    
+    public var successInfo: String {
+        isShielding
+        ? L10n.Send.successShieldingInfo
+        : isSwap
+        ? L10n.SwapAndPay.successInfo
+        : L10n.Send.successInfo
+    }
+
+    public var failureInfo: String {
+        isShielding
+        ? L10n.Send.failureShieldingInfo
+        : isSwap
+        ? L10n.SwapAndPay.failureInfo
+        : L10n.Send.failureInfo
     }
 }
 
