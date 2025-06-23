@@ -131,6 +131,7 @@ public struct SwapAndPayForm: View {
                         
                         Button {
                             isAmountFocused = false
+                            isAddressFocused = false
                         } label: {
                             Text(L10n.General.done.uppercased())
                                 .zFont(.regular, size: 14, style: Design.Text.primary)

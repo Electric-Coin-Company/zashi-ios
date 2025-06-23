@@ -1474,6 +1474,8 @@ public enum L10n {
     public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: "for the swap.")
     /// Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.
     public static let slippageWarn = L10n.tr("Localizable", "swapAndPay.slippageWarn", fallback: "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.")
+    /// Status
+    public static let status = L10n.tr("Localizable", "swapAndPay.status", fallback: "Status")
     /// You successfully initiated a swap. Follow its status on the transaction screen.
     public static let successInfo = L10n.tr("Localizable", "swapAndPay.successInfo", fallback: "You successfully initiated a swap. Follow its status on the transaction screen.")
     /// Swap
@@ -1507,6 +1509,14 @@ public enum L10n {
     public enum Quote {
       /// Zashi
       public static let zashi = L10n.tr("Localizable", "swapAndPay.quote.zashi", fallback: "Zashi")
+    }
+    public enum Status {
+      /// Pending
+      public static let pending = L10n.tr("Localizable", "swapAndPay.status.pending", fallback: "Pending")
+      /// Refunded
+      public static let refunded = L10n.tr("Localizable", "swapAndPay.status.refunded", fallback: "Refunded")
+      /// Success
+      public static let success = L10n.tr("Localizable", "swapAndPay.status.success", fallback: "Success")
     }
   }
   public enum Sync {

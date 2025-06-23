@@ -199,3 +199,371 @@ extension Near1Click {
         }
     )
 }
+
+/*
+ 
+ {
+   "status": "SUCCESS",
+   "swapDetails": {
+     "intentHashes": [
+       "3T2ZsfkmCyms3r18r6MgxZjZbmcuKuN8KrX2DBrxVjm2"
+     ],
+     "nearTxHashes": [
+       "G8eJHbMt3bS3Mey1oZs8VZHcm5EARyTWuKAQ12VwKofq",
+       "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C"
+     ],
+     "amountIn": "2388503",
+     "amountInFormatted": "0.02388503",
+     "amountInUsd": "0.9993",
+     "amountOut": "1000000",
+     "amountOutFormatted": "1.0",
+     "amountOutUsd": "0.9999",
+     "slippage": 0,
+     "refundedAmount": "0",
+     "refundedAmountFormatted": "0",
+     "refundedAmountUsd": "0",
+     "originChainTxHashes": [],
+     "destinationChainTxHashes": [
+       {
+         "hash": "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C",
+         "explorerUrl": ""
+       }
+     ]
+   },
+       "swapType": "EXACT_OUTPUT",
+       "slippageTolerance": 200,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+       "amount": "1000000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-20T08:10:55.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "2438412",
+       "amountInFormatted": "0.02438412",
+       "amountInUsd": "1.0216",
+       "minAmountIn": "2389644",
+       "amountOut": "1000000",
+       "amountOutFormatted": "1.0",
+       "amountOutUsd": "0.9999",
+       "minAmountOut": "1000000",
+       "timeWhenInactive": "2025-06-21T08:00:59.109Z",
+       "depositAddress": "t1SLqm2JGH8ectbEpvN1x1GPVDjwJpNLepo",
+       "deadline": "2025-06-21T08:00:59.109Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ {
+   "status": "REFUNDED",
+   "updatedAt": "2025-06-20T10:57:41.000Z",
+   "swapDetails": {
+     "intentHashes": [
+       "2vkMVKd5BKmChUwZSL772uvBB2dqjYMHem1SDxbk8qqS"
+     ],
+     "nearTxHashes": [
+       "6BkmfLGnNzS3NkQi5LQoSWUSJw7ZdVkWcBJCVXH9XBo4",
+       "Dn3kRwf33rawayWwQ3ZCwo8r6Zrm83tp7e6KqwhoB3ms"
+     ],
+     "amountIn": null,
+     "amountInFormatted": null,
+     "amountInUsd": null,
+     "amountOut": null,
+     "amountOutFormatted": null,
+     "amountOutUsd": null,
+     "slippage": null,
+     "refundedAmount": "53000",
+     "refundedAmountFormatted": "0.00053",
+     "refundedAmountUsd": "0.0222",
+     "originChainTxHashes": [
+       {
+         "hash": "0839045295a9ea2967e673773626ef9ff3ee97ffa2ce4411f2d988930dfc297b",
+         "explorerUrl": ""
+       }
+     ],
+     "destinationChainTxHashes": []
+   },
+   "quoteResponse": {
+     "timestamp": "2025-06-20T10:45:25.435Z",
+     "signature": "ed25519:2bVVxD95TSyQrNQK2fKhjaknafHab9GEmyH7u83fGSFNHzb3aFwHLjPrg6HEgRa1rfrMsBzpD1NkEmMePEBYLnUf",
+     "quoteRequest": {
+       "dry": false,
+       "swapType": "EXACT_INPUT",
+       "slippageTolerance": 1,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+       "amount": "100000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-20T10:55:25.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "100000",
+       "amountInFormatted": "0.001",
+       "amountInUsd": "0.0419",
+       "minAmountIn": "100000",
+       "amountOut": "41977",
+       "amountOutFormatted": "0.041977",
+       "amountOutUsd": "0.0420",
+       "minAmountOut": "41973",
+       "timeWhenInactive": "2025-06-21T10:45:28.809Z",
+       "depositAddress": "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22",
+       "deadline": "2025-06-21T10:45:28.809Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ {
+   "status": "PENDING_DEPOSIT",
+   "updatedAt": "2025-06-22T10:31:58.821Z",
+   "swapDetails": {
+     "intentHashes": [],
+     "nearTxHashes": [],
+     "amountIn": null,
+     "amountInFormatted": null,
+     "amountInUsd": null,
+     "amountOut": null,
+     "amountOutFormatted": null,
+     "amountOutUsd": null,
+     "slippage": null,
+     "refundedAmount": "0",
+     "refundedAmountFormatted": "0",
+     "refundedAmountUsd": "0",
+     "originChainTxHashes": [],
+     "destinationChainTxHashes": []
+   },
+   "quoteResponse": {
+     "timestamp": "2025-06-22T10:31:52.430Z",
+     "signature": "ed25519:3ueLEvcRsGfwdihGc8BVCywJCVcGDrwi3WbZNPq7ktLUtC4n7VLjZAUtcNyveFcgNri3g8HS2KBRCUzcerYATpaq",
+     "quoteRequest": {
+       "dry": false,
+       "swapType": "EXACT_INPUT",
+       "slippageTolerance": 100,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near",
+       "amount": "100000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-22T10:41:52.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "100000",
+       "amountInFormatted": "0.001",
+       "amountInUsd": "0.0385",
+       "minAmountIn": "100000",
+       "amountOut": "523180024550103497",
+       "amountOutFormatted": "0.523180024550103497",
+       "amountOutUsd": "0.0362",
+       "minAmountOut": "517948224304602462",
+       "timeWhenInactive": "2025-06-23T10:31:58.816Z",
+       "depositAddress": "t1evCZ4Zc3h1fueaZTbgwZkXcssajcWUKCV",
+       "deadline": "2025-06-23T10:31:58.816Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ */
+
+
+
+/*
+ 
+ {
+   "status": "SUCCESS",
+   "updatedAt": "2025-06-20T08:04:23.000Z",
+   "swapDetails": {
+     "intentHashes": [
+       "3T2ZsfkmCyms3r18r6MgxZjZbmcuKuN8KrX2DBrxVjm2"
+     ],
+     "nearTxHashes": [
+       "G8eJHbMt3bS3Mey1oZs8VZHcm5EARyTWuKAQ12VwKofq",
+       "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C"
+     ],
+     "amountIn": "2388503",
+     "amountInFormatted": "0.02388503",
+     "amountInUsd": "0.9993",
+     "amountOut": "1000000",
+     "amountOutFormatted": "1.0",
+     "amountOutUsd": "0.9999",
+     "slippage": 0,
+     "refundedAmount": "0",
+     "refundedAmountFormatted": "0",
+     "refundedAmountUsd": "0",
+     "originChainTxHashes": [],
+     "destinationChainTxHashes": [
+       {
+         "hash": "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C",
+         "explorerUrl": ""
+       }
+     ]
+   },
+   "quoteResponse": {
+     "timestamp": "2025-06-20T08:00:55.511Z",
+     "signature": "ed25519:K6syLxwbFx68SYb9dTYRor5YXyagpU7Hn9MKm6XEx3RRz2G2GcVtdZkrYNiVjQmz3dLxGGy3Czx1UP9jUpz1Kpk",
+     "quoteRequest": {
+       "dry": false,
+       "swapType": "EXACT_OUTPUT",
+       "slippageTolerance": 200,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+       "amount": "1000000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-20T08:10:55.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "2438412",
+       "amountInFormatted": "0.02438412",
+       "amountInUsd": "1.0216",
+       "minAmountIn": "2389644",
+       "amountOut": "1000000",
+       "amountOutFormatted": "1.0",
+       "amountOutUsd": "0.9999",
+       "minAmountOut": "1000000",
+       "timeWhenInactive": "2025-06-21T08:00:59.109Z",
+       "depositAddress": "t1SLqm2JGH8ectbEpvN1x1GPVDjwJpNLepo",
+       "deadline": "2025-06-21T08:00:59.109Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ {
+   "status": "REFUNDED",
+   "updatedAt": "2025-06-20T10:57:41.000Z",
+   "swapDetails": {
+     "intentHashes": [
+       "2vkMVKd5BKmChUwZSL772uvBB2dqjYMHem1SDxbk8qqS"
+     ],
+     "nearTxHashes": [
+       "6BkmfLGnNzS3NkQi5LQoSWUSJw7ZdVkWcBJCVXH9XBo4",
+       "Dn3kRwf33rawayWwQ3ZCwo8r6Zrm83tp7e6KqwhoB3ms"
+     ],
+     "amountIn": null,
+     "amountInFormatted": null,
+     "amountInUsd": null,
+     "amountOut": null,
+     "amountOutFormatted": null,
+     "amountOutUsd": null,
+     "slippage": null,
+     "refundedAmount": "53000",
+     "refundedAmountFormatted": "0.00053",
+     "refundedAmountUsd": "0.0222",
+     "originChainTxHashes": [
+       {
+         "hash": "0839045295a9ea2967e673773626ef9ff3ee97ffa2ce4411f2d988930dfc297b",
+         "explorerUrl": ""
+       }
+     ],
+     "destinationChainTxHashes": []
+   },
+   "quoteResponse": {
+     "timestamp": "2025-06-20T10:45:25.435Z",
+     "signature": "ed25519:2bVVxD95TSyQrNQK2fKhjaknafHab9GEmyH7u83fGSFNHzb3aFwHLjPrg6HEgRa1rfrMsBzpD1NkEmMePEBYLnUf",
+     "quoteRequest": {
+       "dry": false,
+       "swapType": "EXACT_INPUT",
+       "slippageTolerance": 1,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+       "amount": "100000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-20T10:55:25.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "100000",
+       "amountInFormatted": "0.001",
+       "amountInUsd": "0.0419",
+       "minAmountIn": "100000",
+       "amountOut": "41977",
+       "amountOutFormatted": "0.041977",
+       "amountOutUsd": "0.0420",
+       "minAmountOut": "41973",
+       "timeWhenInactive": "2025-06-21T10:45:28.809Z",
+       "depositAddress": "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22",
+       "deadline": "2025-06-21T10:45:28.809Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ {
+   "status": "PENDING_DEPOSIT",
+   "updatedAt": "2025-06-22T10:31:58.821Z",
+   "swapDetails": {
+     "intentHashes": [],
+     "nearTxHashes": [],
+     "amountIn": null,
+     "amountInFormatted": null,
+     "amountInUsd": null,
+     "amountOut": null,
+     "amountOutFormatted": null,
+     "amountOutUsd": null,
+     "slippage": null,
+     "refundedAmount": "0",
+     "refundedAmountFormatted": "0",
+     "refundedAmountUsd": "0",
+     "originChainTxHashes": [],
+     "destinationChainTxHashes": []
+   },
+   "quoteResponse": {
+     "timestamp": "2025-06-22T10:31:52.430Z",
+     "signature": "ed25519:3ueLEvcRsGfwdihGc8BVCywJCVcGDrwi3WbZNPq7ktLUtC4n7VLjZAUtcNyveFcgNri3g8HS2KBRCUzcerYATpaq",
+     "quoteRequest": {
+       "dry": false,
+       "swapType": "EXACT_INPUT",
+       "slippageTolerance": 100,
+       "originAsset": "nep141:zec.omft.near",
+       "depositType": "ORIGIN_CHAIN",
+       "destinationAsset": "nep141:aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near",
+       "amount": "100000",
+       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
+       "refundType": "ORIGIN_CHAIN",
+       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
+       "recipientType": "DESTINATION_CHAIN",
+       "deadline": "2025-06-22T10:41:52.000Z",
+       "appFees": []
+     },
+     "quote": {
+       "amountIn": "100000",
+       "amountInFormatted": "0.001",
+       "amountInUsd": "0.0385",
+       "minAmountIn": "100000",
+       "amountOut": "523180024550103497",
+       "amountOutFormatted": "0.523180024550103497",
+       "amountOutUsd": "0.0362",
+       "minAmountOut": "517948224304602462",
+       "timeWhenInactive": "2025-06-23T10:31:58.816Z",
+       "depositAddress": "t1evCZ4Zc3h1fueaZTbgwZkXcssajcWUKCV",
+       "deadline": "2025-06-23T10:31:58.816Z",
+       "timeEstimate": 105
+     }
+   }
+ }
+ 
+ */

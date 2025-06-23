@@ -156,8 +156,12 @@ extension SwapAndPayForm {
                                 Spacer()
                                 
                                 TextField(
-                                    store.slippage0String,
-                                    text: $store.customSlippage
+                                    "",
+                                    text: $store.customSlippage,
+                                    prompt:
+                                        Text(store.slippage0String)
+                                        .font(.custom(FontFamily.Inter.medium.name, size: 16))
+                                        .foregroundColor(Design.Switcher.selectedText.color(colorScheme))
                                 )
                                 .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
                                 .multilineTextAlignment(.center)
@@ -377,10 +381,6 @@ extension SwapAndPayForm {
                         }
                         .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
                         .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
-//                        .background {
-//                            RoundedRectangle(cornerRadius: Design.Radius._xl)
-//                                .fill(Design.screenBackground.color(colorScheme))
-//                        }
                 }
                 .padding(.bottom, 32)
 
@@ -409,14 +409,6 @@ extension SwapAndPayForm {
                 }
                 .padding(.bottom, 12)
 
-//                quoteLineContent(L10n.SwapAndPay.maxSlippage(store.currentSlippageString), "*****")
-//                HStack(spacing: 0) {
-//                    Spacer()
-//
-//                    Text("*****")
-//                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
-//                }
-
                 Divider()
                     .frame(height: 1)
                     .background(Design.Surfaces.strokeSecondary.color(colorScheme))
@@ -428,7 +420,7 @@ extension SwapAndPayForm {
 
                     Spacer()
 
-                    Text(store.totalZecToBeSpendInQuote)
+                    Text("\(store.totalZecToBeSpendInQuote) \(tokenName)")
                         .zFont(.medium, size: 14, style: Design.Text.primary)
                 }
                 HStack(spacing: 0) {

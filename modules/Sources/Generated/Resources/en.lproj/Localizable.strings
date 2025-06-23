@@ -779,3 +779,7 @@
 "swapAndPay.failureInfo" = "There was an error initiating a swap. Try it again, please.";
 "swapAndPay.checkStatus" = "Check status";
 "swapAndPay.custom" = "Custom";
+"swapAndPay.status" = "Status";
+"swapAndPay.status.pending" = "Pending";
+"swapAndPay.status.success" = "Success";
+"swapAndPay.status.refunded" = "Refunded";

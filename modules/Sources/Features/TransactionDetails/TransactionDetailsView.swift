@@ -104,8 +104,19 @@ public struct TransactionDetailsView: View {
                         transactionDetailsList()
                             .screenHorizontalPadding()
                     }
+                    
+                    if store.isSwap {
+                        HStack(spacing: 0) {
+                            Text(L10n.SwapAndPay.status)
+                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                            Spacer()
+                            SwapBadge(.pending)
+                        }
+                        .padding(.top, 16)
+                        .screenHorizontalPadding()
+                    }
                 }
-                
+
                 Spacer()
                 
                 HStack(spacing: 12) {
