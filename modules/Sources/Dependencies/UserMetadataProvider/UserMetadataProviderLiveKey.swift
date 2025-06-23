@@ -22,7 +22,9 @@ extension UserMetadataProviderClient: DependencyKey {
             addAnnotationFor: { ums.add(annotation: $0, for: $1) },
             deleteAnnotationFor: { ums.deleteAnnotationFor(txId: $0) },
             isRead: { ums.isRead(txId: $0, txTimestamp: $1) },
-            readTx: { ums.readTx(txId: $0) }
+            readTx: { ums.readTx(txId: $0) },
+            isSwapTransaction: { ums.isSwapTransaction(txId: $0) },
+            markTransactionAsSwapFor: { ums.markTransactionAsSwapFor(txId: $0) }
         )
     }()
 }

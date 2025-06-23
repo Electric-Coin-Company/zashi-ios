@@ -103,8 +103,12 @@ extension SwapAndPayCoordFlow {
                             await send(.updateTxIdToExpand(txIds.last))
                         case .success(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
+                            if let txId = txIds.last {
+                                // store the txId into metadata
+                                userMetadataProvider.markTransactionAsSwapFor(txId)
+                            }
                             await send(.sendDone)
-                            if let txId = txIds.first {
+                            if let txId = txIds.last {
                                 // inform service to speed up the transaction processing
                                 try? await swapAndPay.submitDepositTxId(txId, depositAddress)
                             }
@@ -115,6 +119,9 @@ extension SwapAndPayCoordFlow {
                 }
 
             case .sendDone:
+                if let account = state.selectedWalletAccount?.account {
+                    try? userMetadataProvider.store(account)
+                }
 //                state.isSending = false
                 let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
                 let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime

@@ -36,4 +36,8 @@ public struct UserMetadataProviderClient {
     // Read
     public let isRead: (String, TimeInterval?) -> Bool
     public let readTx: (String) -> Void
+    
+    // Swap Id
+    public let isSwapTransaction: (String) -> Bool
+    public let markTransactionAsSwapFor: (String) -> Void
 }

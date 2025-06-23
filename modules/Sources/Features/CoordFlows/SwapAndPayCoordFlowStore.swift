@@ -28,6 +28,7 @@ import ZcashSDKEnvironment
 //import KeystoneHandler
 //import TransactionDetails
 //import AddressBook
+import UserMetadataProvider
 
 // Path
 import AddressBook
@@ -97,6 +98,7 @@ public struct SwapAndPayCoordFlow {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
     @Dependency(\.swapAndPay) var swapAndPay

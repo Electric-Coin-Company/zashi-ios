@@ -259,6 +259,7 @@ let package = Package(
                 "TransactionDetails",
                 "TransactionsManager",
                 "UIComponents",
+                "UserMetadataProvider",
                 "Utils",
                 "WalletBirthday",
                 "WalletStorage",

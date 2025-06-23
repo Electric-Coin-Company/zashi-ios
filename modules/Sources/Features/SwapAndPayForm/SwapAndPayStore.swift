@@ -21,7 +21,7 @@ public struct SwapAndPay {
     @ObservableState
     public struct State {
         public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
-        public var amountText = "0,001"
+        public var amountText = "0,0001"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial

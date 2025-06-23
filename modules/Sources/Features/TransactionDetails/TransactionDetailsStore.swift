@@ -24,18 +24,6 @@ import UserMetadataProvider
 public struct TransactionDetails {
     @ObservableState
     public struct State: Equatable {
-        public var swapTxIds = [
-            "208622b4dabfb4dabe06fa2c26431f729ee795f6995cc7cd002086c89f06c82b",
-            "00b61343a47ccf5015fd075054a2500da06380c05513cd776bc74f3545f68cdf",
-            "73abfa467bd784486a087c94439b30aea1ac43dc0c8d3a41e1fa478ba4f2f120",
-            "f4bbe379e53a653d12257fc2dc1bd8c8b33244571f2131ae8d09d6d0366bc673",
-            "c07b3f5a3e015e37874653af2971af0a456c92af1f77d00c74a429a8194336df",
-            "78e802e3ea9b783c0cb30366f156dc943ff5c1e870fd0fddc13b3ea04718af39",
-            "bc3c9ead1754717eb4d1bca57bcd20db40ae88cca64f8d7e1516dd774d8a318e",
-            "c97e6d2490b2ccdd162e0da5c7dfea2a7f81155445178dac9c04692a1a00dd9f",
-            "c12970bda2c06c0213b4a2840cef376bd233393dd345389d10d048e0959a55e4"
-        ]
-
         public var CancelId = UUID()
         
         enum Constants {
@@ -124,7 +112,7 @@ public struct TransactionDetails {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.isSwap = state.swapTxIds.contains(state.transaction.id)
+                state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
                 state.hasInteractedWithBookmark = false
                 state.areDetailsExpanded = false
                 state.messageStates = []

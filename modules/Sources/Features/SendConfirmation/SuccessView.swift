@@ -65,7 +65,7 @@ public struct SuccessView: View {
                 
                 ZashiButton(
                     L10n.General.close,
-                    type: .ghost
+                    type: store.isSwap ? .ghost : .primary
                 ) {
                     store.send(.closeTapped)
                 }
