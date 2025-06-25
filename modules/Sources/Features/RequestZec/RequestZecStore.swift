@@ -16,6 +16,7 @@ import UIComponents
 import ZcashSDKEnvironment
 import ZcashPaymentURI
 import Models
+import URIParser
 
 @Reducer
 public struct RequestZec {
@@ -90,9 +91,10 @@ public struct RequestZec {
                 return .none
 
             case .generateQRCode:
-                if let recipient = RecipientAddress(value: state.address.data) {
+                if let recipient = RecipientAddress(value: state.address.data, context: ParserContext.from(networkType: zcashSDKEnvironment.network.networkType)) {
                     do {
-                        let payment = Payment(
+                        // TODO: handle this error. there's a problem either with the recipient address or the amount requested
+                        let payment = try Payment(
                             recipientAddress: recipient,
                             amount: try Amount(value: state.requestedZec.decimalValue.doubleValue),
                             memo: state.memoState.text.isEmpty ? nil : try MemoBytes(utf8String: state.memoState.text),

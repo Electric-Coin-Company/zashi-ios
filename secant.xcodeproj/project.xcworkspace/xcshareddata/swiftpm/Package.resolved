@@ -491,8 +491,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pacu/zcash-swift-payment-uri",
       "state" : {
-        "revision" : "c24dd72a60cf0f2bca4a9a6503ef63e079c96f77",
-        "version" : "0.1.0-beta.10"
+        "revision" : "1427a6507033b66a2fc2a13692c7794334b6d582",
+        "version" : "1.0.0"
       }
     },
     {

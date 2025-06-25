@@ -64,7 +64,7 @@ extension Root {
                 return .none
 
             case .destination(.deeplink(let url)):
-                if let _ = uriParser.checkRP(url.absoluteString) {
+                if let _ = uriParser.checkRP(url.absoluteString, zcashSDKEnvironment.network.networkType) {
                     // The deeplink is some zip321, we ignore it and let users know in a warning screen
                     return .send(.destination(.updateDestination(.deeplinkWarning)))
                 }

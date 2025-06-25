@@ -12,8 +12,8 @@ extension URIParserClient: DependencyKey {
         isValidURI: { uri, network in
             URIParser().isValidURI(uri, network: network)
         },
-        checkRP: { data in
-            RequestPaymentParser().checkRP(data)
+        checkRP: { data, network in
+            RequestPaymentParser(network: network).checkRP(data)
         }
     )
 }

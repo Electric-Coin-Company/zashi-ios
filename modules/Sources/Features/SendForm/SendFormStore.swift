@@ -392,7 +392,8 @@ public struct SendForm {
                         if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
                             state.memoState.text = memo.toString() ?? ""
                         }
-                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        // Amount can be nil since ZIP-321 requests can contain no amount. Will default to zero
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount?.toString() ?? "0") ?? ""
                         audioServices.systemSoundVibrate()
                         return .concatenate(
                             .send(.zecAmountUpdated(numberLocale.redacted)),
