@@ -8,6 +8,9 @@
 import SwiftUI
 import Generated
 
+/// Codable struct for JSON serialization
+/// Supported Near tokens 
+/// https://docs.near-intents.org/near-intents/integration/distribution-channels/1click-api#get-v0-tokens
 public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public var id: String {
         "\(chain).\(token)".lowercased()

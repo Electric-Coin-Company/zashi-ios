@@ -739,7 +739,7 @@
 "swapAndPay.select" = "Select...";
 "swapAndPay.getQuote" = "Get a quote";
 "swapAndPay.recipientGets" = "Recipient gets";
-"swapAndPay.slippage" = "Slippage tolerance";
+"swapAndPay.slippage" = "Slippage";
 "swapAndPay.youPay" = "You pay";
 "swapAndPay.slippageDesc" = "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.";
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
@@ -781,5 +781,5 @@
 "swapAndPay.custom" = "Custom";
 "swapAndPay.status" = "Status";
 "swapAndPay.status.pending" = "Pending";
-"swapAndPay.status.success" = "Success";
+"swapAndPay.status.success" = "Completed";
 "swapAndPay.status.refunded" = "Refunded";

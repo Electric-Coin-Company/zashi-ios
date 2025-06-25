@@ -1460,8 +1460,8 @@ public enum L10n {
     public static let selectToken = L10n.tr("Localizable", "swapAndPay.selectToken", fallback: "Select asset")
     /// Your coins are being sent to the deposit address...
     public static let sendingInfo = L10n.tr("Localizable", "swapAndPay.sendingInfo", fallback: "Your coins are being sent to the deposit address...")
-    /// Slippage tolerance
-    public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage tolerance")
+    /// Slippage
+    public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage")
     /// This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.
     public static let slippageDesc = L10n.tr("Localizable", "swapAndPay.slippageDesc", fallback: "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.")
     /// You will pay up to 
@@ -1515,8 +1515,8 @@ public enum L10n {
       public static let pending = L10n.tr("Localizable", "swapAndPay.status.pending", fallback: "Pending")
       /// Refunded
       public static let refunded = L10n.tr("Localizable", "swapAndPay.status.refunded", fallback: "Refunded")
-      /// Success
-      public static let success = L10n.tr("Localizable", "swapAndPay.status.success", fallback: "Success")
+      /// Completed
+      public static let success = L10n.tr("Localizable", "swapAndPay.status.success", fallback: "Completed")
     }
   }
   public enum Sync {

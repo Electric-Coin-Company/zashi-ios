@@ -609,20 +609,10 @@ public struct SwapAndPayForm: View {
         } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
             return Design.Utility.WarningYellow._50.color(colorScheme)
         } else {
-            return Design.Utility.ErrorRed._50.color(colorScheme)
+            return Design.Utility.ErrorRed._100.color(colorScheme)
         }
     }
-    
-    public func slippageWarnIconColor(_ colorScheme: ColorScheme) -> Color {
-        if store.slippageInSheet <= 10.0 {
-            return Design.Utility.Gray._600.color(colorScheme)
-        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
-            return Design.Utility.WarningYellow._600.color(colorScheme)
-        } else {
-            return Design.Utility.ErrorRed._600.color(colorScheme)
-        }
-    }
-    
+
     public func slippageWarnTextStyle() -> Colorable {
         if store.slippageInSheet <= 10.0 {
             return Design.Utility.Gray._900

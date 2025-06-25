@@ -46,7 +46,7 @@ public struct SwapAndPay {
         public var slippageInSheet: Decimal = 1.0
         public var selectedSlippageChip = 1
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
         public var walletBalancesState: WalletBalances.State
@@ -417,12 +417,15 @@ public struct SwapAndPay {
                 return .none
                 
             case .swapAssetsLoaded(let swapAssets):
-                state.swapAssets = swapAssets
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil {
                     state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
+                // exclude all tokens with price == 0
+                // exclude zec token
+                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                state.$swapAssets.withLock { $0 = filteredSwapAssets }
                 return .send(.updateAssetsAccordingToSearchTerm)
 
             case .walletBalances:

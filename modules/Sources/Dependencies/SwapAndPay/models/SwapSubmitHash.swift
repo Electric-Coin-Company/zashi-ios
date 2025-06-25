@@ -6,8 +6,8 @@
 //
 
 /// Codable struct for JSON serialization
-/// Check the status of Near's Swap
-/// https://docs.near-intents.org/near-intents/integration/distribution-channels/1click-api#get-v0-status
+/// Submit transaction hash to speed up the process of swap on Near's side.
+/// https://docs.near-intents.org/near-intents/integration/distribution-channels/1click-api#post-v0-deposit-submit
 struct SwapSubmitHash: Codable, Equatable, Hashable {
     let txHash: String
     let depositAddress: String

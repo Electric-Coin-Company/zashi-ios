@@ -275,6 +275,10 @@ extension Root {
                 state.path = nil
                 return .none
 
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
+                state.path = nil
+                return .none
+
                 // MARK: - Transactions Coord Flow
                 
             case .transactionsCoordFlow(.transactionDetails(.closeDetailTapped)):

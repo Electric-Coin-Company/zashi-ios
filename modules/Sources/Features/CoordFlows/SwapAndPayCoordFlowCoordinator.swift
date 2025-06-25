@@ -39,14 +39,14 @@ extension SwapAndPayCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.checkStatusTapped))):
-//                if let txid = sendConfirmationState.txIdToExpand {
-//                    if let index = state.transactions.index(id: txid) {
-//                        var transactionDetailsState = TransactionDetails.State.initial
-//                        transactionDetailsState.transaction = state.transactions[index]
-//                        transactionDetailsState.isCloseButtonRequired = true
-//                        state.path.append(.transactionDetails(transactionDetailsState))
-//                    }
-//                }
+                if let txid = state.txIdToExpand {
+                    if let index = state.transactions.index(id: txid) {
+                        var transactionDetailsState = TransactionDetails.State.initial
+                        transactionDetailsState.transaction = state.transactions[index]
+                        transactionDetailsState.isCloseButtonRequired = true
+                        state.path.append(.transactionDetails(transactionDetailsState))
+                    }
+                }
                 return .none
 
                 // MARK: - Self

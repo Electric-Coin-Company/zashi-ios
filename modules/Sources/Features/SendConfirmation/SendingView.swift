@@ -52,6 +52,7 @@ public struct SendingView: View {
                     .zFont(size: 14, style: Design.Text.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
+                    .padding(.horizontal, store.isSwap ? 24 : 0)
 
                 if !store.isShielding && !store.isSwap {
                     Text(store.address.zip316)

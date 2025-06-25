@@ -73,7 +73,7 @@ public struct TransactionDetailsView: View {
                 ScrollView {
                     if store.transaction.isSentTransaction {
                         transactionDetailsList()
-                            .padding(.bottom, 20)
+                            .padding(.bottom, store.isSwap ? 16 : 20)
                             .screenHorizontalPadding()
                         
                         if store.areMessagesResolved && !store.transaction.isShieldingTransaction {
@@ -106,14 +106,13 @@ public struct TransactionDetailsView: View {
                     }
                     
                     if store.isSwap {
-                        HStack(spacing: 0) {
-                            Text(L10n.SwapAndPay.status)
-                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                            Spacer()
-                            SwapBadge(.pending)
-                        }
-                        .padding(.top, 16)
-                        .screenHorizontalPadding()
+                        swapAssetsView()
+
+                        swapSlippageView()
+                            .padding(.top, 20)
+
+                        swapStatusView()
+                            .padding(.top, 16)
                     }
                 }
 
@@ -129,7 +128,7 @@ public struct TransactionDetailsView: View {
                         store.send(.noteButtonTapped)
                     }
 
-                    if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
+                    if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction && !store.isSwap {
                         if store.alias == nil {
                             ZashiButton(L10n.TransactionHistory.saveAddress) {
                                 store.send(.saveAddressTapped)
@@ -271,7 +270,7 @@ extension TransactionDetailsView {
 
     @ViewBuilder func transactionDetailsList() -> some View {
         WithPerceptionTracking {
-            if store.transaction.isTransparentRecipient || store.transaction.isShieldingTransaction {
+            if (store.transaction.isTransparentRecipient || store.transaction.isShieldingTransaction) && !store.isSwap {
                 transactionDetailsListTransparent()
             } else {
                 transactionDetailsListShielded()

@@ -66,7 +66,9 @@ public struct SwapAndPayCoordFlow {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectedOperationChip = 0
         public var swapAndPayState = SwapAndPay.State.initial
-
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
+        public var txIdToExpand: String?
+        
         public var isSwapInFlight: Bool {
             swapAndPayState.isQuoteRequestInFlight
         }
@@ -122,6 +124,10 @@ public struct SwapAndPayCoordFlow {
                 
             case .helpSheetRequested:
                 state.isHelpSheetPresented.toggle()
+                return .none
+                
+            case .updateTxIdToExpand(let txId):
+                state.txIdToExpand = txId
                 return .none
                 
             default: return .none

@@ -19,13 +19,15 @@ import AddressBookClient
 import UIComponents
 import AddressBookClient
 import UserMetadataProvider
+import SwapAndPay
 
 @Reducer
 public struct TransactionDetails {
     @ObservableState
     public struct State: Equatable {
         public var CancelId = UUID()
-        
+        public var SwapDetailsCancelId = UUID()
+
         enum Constants {
             static let messageExpandThreshold: Int = 130
             static let annotationMaxLength: Int = 90
@@ -38,6 +40,7 @@ public struct TransactionDetails {
         }
         
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var annotationRequest = false
         public var areMessagesResolved = false
         public var alias: String?
         public var areDetailsExpanded = false
@@ -51,11 +54,12 @@ public struct TransactionDetails {
         public var annotation = ""
         public var annotationOrigin = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        public var swapDetails: SwapDetails?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
-        public var annotationRequest = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public var isAnnotationModified: Bool {
@@ -82,6 +86,8 @@ public struct TransactionDetails {
         case addressTapped
         case binding(BindingAction<TransactionDetails.State>)
         case bookmarkTapped
+        case checkSwapAssets
+        case checkSwapStatus
         case closeDetailTapped
         case deleteNoteTapped
         case memosLoaded([Memo])
@@ -95,13 +101,17 @@ public struct TransactionDetails {
         case saveNoteTapped
         case sendAgainTapped
         case sentToRowTapped
+        case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
+        case swapDetailsLoaded(SwapDetails?)
         case transactionIdTapped
         case transactionsUpdated
     }
 
     @Dependency(\.addressBook) var addressBook
+    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.userMetadataProvider) var userMetadataProvider
 
     public init() { }
@@ -113,6 +123,12 @@ public struct TransactionDetails {
             switch action {
             case .onAppear:
                 state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
+                
+                // TODO: remove
+                if state.transaction.address == "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22" {
+                    state.isSwap = true
+                }
+                
                 state.hasInteractedWithBookmark = false
                 state.areDetailsExpanded = false
                 state.messageStates = []
@@ -142,18 +158,63 @@ public struct TransactionDetails {
                         try? userMetadataProvider.store(account)
                     }
                 }
-                return .cancel(id: state.CancelId)
+                return .merge(
+                    .cancel(id: state.CancelId),
+                    .cancel(id: state.SwapDetailsCancelId)
+                )
                 
             case .observeTransactionChange:
                 if state.transaction.isPending {
-                    return .publisher {
-                        state.$transactions.publisher
-                            .map { _ in
-                                TransactionDetails.Action.transactionsUpdated
-                            }
-                    }
-                    .cancellable(id: state.CancelId, cancelInFlight: true)
+                    return .merge(
+                        .publisher {
+                            state.$transactions.publisher
+                                .map { _ in
+                                    TransactionDetails.Action.transactionsUpdated
+                                }
+                        }
+                        .cancellable(id: state.CancelId, cancelInFlight: true),
+                        .send(.checkSwapAssets)
+                    )
                 }
+                return .send(.checkSwapAssets)
+                
+            case .checkSwapAssets:
+                guard state.swapAssets.isEmpty else {
+                    return .send(.checkSwapStatus)
+                }
+                return .run { send in
+                    let swapAssets = try? await swapAndPay.swapAssets()
+                    if let swapAssets {
+                        await send(.swapAssetsLoaded(swapAssets))
+                    }
+                }
+                
+            case .swapAssetsLoaded(let swapAssets):
+                // exclude all tokens with price == 0
+                // exclude zec token
+                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                state.$swapAssets.withLock { $0 = filteredSwapAssets }
+                return .send(.checkSwapStatus)
+                
+            case .checkSwapStatus:
+                //return .none
+                guard state.isSwap else {
+                    return .none
+                }
+                return .run { [address = state.transaction.address] send in
+                    let swapDetails = try? await swapAndPay.status(address)
+                    await send(.swapDetailsLoaded(swapDetails))
+                    
+                    // fire another check if not done
+                    if swapDetails?.status != .success {
+                        try? await mainQueue.sleep(for: .seconds(10))
+                        await send(.checkSwapStatus)
+                    }
+                }
+                .cancellable(id: state.SwapDetailsCancelId, cancelInFlight: true)
+                
+            case .swapDetailsLoaded(let swapDetails):
+                state.swapDetails = swapDetails
                 return .none
                 
             case .transactionsUpdated:
@@ -263,5 +324,94 @@ public struct TransactionDetails {
                 return .none
             }
         }
+    }
+}
+
+extension TransactionDetails.State {
+    public var slippageFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    public var conversionFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    public var swapStatus: SwapBadge.Status? {
+        guard let status = swapDetails?.status else {
+            return nil
+        }
+        
+        switch status {
+        case .pending: return .pending
+        case .refunded: return .refunded
+        case .success: return .success
+        }
+    }
+    
+    public var swapSlippage: String? {
+        guard let slippage = swapDetails?.slippage else {
+            return nil
+        }
+        
+        let value = slippageFormatter.string(from: NSDecimalNumber(decimal: slippage)) ?? ""
+        
+        return "\(value)%"
+    }
+    
+    public var swapAmountIn: String? {
+        guard let amountInFormatted = swapDetails?.amountInFormatted else {
+            return nil
+        }
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: amountInFormatted))
+    }
+    
+    public var swapAmountInUsd: String? {
+        swapDetails?.amountInUsd
+    }
+    
+    public var swapAmountOut: String? {
+        guard let amountOutFormatted = swapDetails?.amountOutFormatted else {
+            return nil
+        }
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: amountOutFormatted))
+    }
+    
+    public var swapAmountOutUsd: String? {
+        swapDetails?.amountOutUsd
+    }
+    
+    public var swapIsSwap: Bool {
+        swapDetails?.isSwap ?? false
+    }
+    
+    public var swapDestinationAsset: SwapAsset? {
+        guard !swapAssets.isEmpty else {
+            return nil
+        }
+        
+        guard swapAmountOut != nil else {
+            return nil
+        }
+        
+        guard let swapDetailsDestinationAssetId = swapDetails?.destinationAsset?.lowercased() else {
+            return nil
+        }
+        
+        return swapAssets.first { $0.assetId.lowercased() == swapDetailsDestinationAssetId }
     }
 }

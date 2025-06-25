@@ -43,6 +43,13 @@ public extension String {
 
         return Decimal(number.doubleValue).formatted(.currency(code: "USD"))
     }
+    
+    var usDecimal: Decimal? {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.numberStyle = .decimal
+        return formatter.number(from: self)?.decimalValue
+    }
 }
 
 extension String: @retroactive Error {}
