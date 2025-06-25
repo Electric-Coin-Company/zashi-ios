@@ -38,7 +38,9 @@ extension SwapAndPayCoordFlow {
                 state.sendingScreenOnAppearTimestamp = Date().timeIntervalSince1970
                 return .none
 
-            case .path(.element(id: _, action: .sendResultSuccess(.checkStatusTapped))):
+            case .path(.element(id: _, action: .sendResultSuccess(.checkStatusTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
                 if let txid = state.txIdToExpand {
                     if let index = state.transactions.index(id: txid) {
                         var transactionDetailsState = TransactionDetails.State.initial
@@ -144,7 +146,6 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.address = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.isSwap = true
-                state.path.append(.sending(sendConfirmationState))
                 switch result {
                 case .failure:
                     state.path.append(.sendResultFailure(sendConfirmationState))

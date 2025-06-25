@@ -20,8 +20,8 @@ import SwapAndPay
 public struct SwapAndPay {
     @ObservableState
     public struct State {
-        public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
-        public var amountText = "0,0001"
+        public var address = ""// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        public var amountText = ""// "0,0006"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
@@ -419,6 +419,7 @@ public struct SwapAndPay {
             case .swapAssetsLoaded(let swapAssets):
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil {
+//                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "btc" && $0.chain.lowercased() == "btc" })
                     state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
@@ -593,7 +594,7 @@ extension SwapAndPay.State {
             return "0"
         }
         
-        return quote.amountInUsd
+        return quote.amountInUsd.localeUsd ?? "0"
     }
     
     public var tokenToBeReceivedInQuote: String {
@@ -609,7 +610,7 @@ extension SwapAndPay.State {
             return "0"
         }
         
-        return quote.amountOutUsd
+        return quote.amountOutUsd.localeUsd ?? "0"
     }
     
     public var feeStr: String {
@@ -668,20 +669,53 @@ extension SwapAndPay.State {
         return totalAmountUsd.formatted(.currency(code: CurrencyISO4217.usd.code))
     }
     
-    public var swapProviderFeeStr: String {
+    public var swapProviderFeeZECStr: String {
         guard let quote else {
             return "0"
         }
         
-        return ""
+        guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
+            return "0"
+        }
+
+        guard let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
+            return "0"
+        }
+        
+        guard let zecAsset else {
+            return "0"
+        }
+
+        let feeDecimal = amountInUsdDecimal - amountOutUsdDecimal
+        let zatoshiDecimal = NSDecimalNumber(decimal: (feeDecimal / zecAsset.usdPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi))
+        let zatoshi = Zatoshi(Int64(zatoshiDecimal.doubleValue))
+
+        return zatoshi.decimalString()
     }
     
     public var swapProviderFeeUsdStr: String {
         guard let quote else {
             return "0"
         }
+        
+        guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
+            return "0"
+        }
 
-        return ""
+        guard let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
+            return "0"
+        }
+        
+        let fee = amountInUsdDecimal - amountOutUsdDecimal
+        
+        if fee < 0.01 {
+            let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
+                .precision(.fractionLength(4))
+            
+            return NSDecimalNumber(decimal: fee).doubleValue.formatted(formatter)
+        } else {
+            return fee.formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
     }
 }
 

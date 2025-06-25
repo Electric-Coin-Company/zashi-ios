@@ -44,7 +44,7 @@ public struct FailureView: View {
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                if store.txIdToExpand != nil {
+                if store.txIdToExpand != nil || store.isSwap {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,
@@ -57,14 +57,21 @@ public struct FailureView: View {
 
                 Spacer()
                 
-                ZashiButton(L10n.General.close) {
+                ZashiButton(
+                    L10n.General.close,
+                    type: store.isSwap
+                    ? .ghost
+                    : .primary
+                ) {
                     store.send(.backFromFailureTapped)
                 }
                 .padding(.bottom, 8)
 
                 ZashiButton(
                     L10n.Send.report,
-                    type: .ghost
+                    type: store.isSwap
+                    ? .primary
+                    : .ghost
                 ) {
                     store.send(.reportTapped)
                 }

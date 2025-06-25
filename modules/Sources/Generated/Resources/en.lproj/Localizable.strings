@@ -775,7 +775,8 @@
 "swapAndPay.help.payDesc" = "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ";
 "swapAndPay.quote.zashi" = "Zashi";
 "swapAndPay.sendingInfo" = "Your coins are being sent to the deposit address...";
-"swapAndPay.successInfo" = "You successfully initiated a swap. Follow its status on the transaction screen.";
+"swapAndPay.successSwapInfo" = "You successfully initiated a swap. Follow its status on the transaction screen.";
+"swapAndPay.successPayInfo" = "You successfully initiated a cross-chain payment. Follow its status on the transaction screen.";
 "swapAndPay.failureInfo" = "There was an error initiating a swap. Try it again, please.";
 "swapAndPay.checkStatus" = "Check status";
 "swapAndPay.custom" = "Custom";
@@ -783,3 +784,5 @@
 "swapAndPay.status.pending" = "Pending";
 "swapAndPay.status.success" = "Completed";
 "swapAndPay.status.refunded" = "Refunded";
+"swapAndPay.providerFee" = "Swap Provider fee";
+"swapAndPay.providerFeeAndSlippage" = "Provider fee + slippage";

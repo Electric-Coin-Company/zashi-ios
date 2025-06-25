@@ -398,8 +398,21 @@ extension SwapAndPayForm {
                     Text(store.feeUsdStr)
                         .zFont(.medium, size: 12, style: Design.Text.tertiary)
                 }
-                .padding(.bottom, 12)
 
+                quoteLineContent(
+                    store.isSwapExperienceEnabled
+                    ? L10n.SwapAndPay.providerFee
+                    : L10n.SwapAndPay.providerFeeAndSlippage,
+                    "\(store.swapProviderFeeZECStr) \(tokenName)"
+                )
+                .padding(.top, 12)
+                HStack(spacing: 0) {
+                    Spacer()
+                    
+                    Text(store.swapProviderFeeUsdStr)
+                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                }
+                
                 Divider()
                     .frame(height: 1)
                     .background(Design.Surfaces.strokeSecondary.color(colorScheme))

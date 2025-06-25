@@ -1446,6 +1446,10 @@ public enum L10n {
     public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay now")
     /// Pay to
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
+    /// Swap Provider fee
+    public static let providerFee = L10n.tr("Localizable", "swapAndPay.providerFee", fallback: "Swap Provider fee")
+    /// Provider fee + slippage
+    public static let providerFeeAndSlippage = L10n.tr("Localizable", "swapAndPay.providerFeeAndSlippage", fallback: "Provider fee + slippage")
     /// Quote Unavailable
     public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
     /// Rate
@@ -1476,8 +1480,10 @@ public enum L10n {
     public static let slippageWarn = L10n.tr("Localizable", "swapAndPay.slippageWarn", fallback: "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.")
     /// Status
     public static let status = L10n.tr("Localizable", "swapAndPay.status", fallback: "Status")
+    /// You successfully initiated a cross-chain payment. Follow its status on the transaction screen.
+    public static let successPayInfo = L10n.tr("Localizable", "swapAndPay.successPayInfo", fallback: "You successfully initiated a cross-chain payment. Follow its status on the transaction screen.")
     /// You successfully initiated a swap. Follow its status on the transaction screen.
-    public static let successInfo = L10n.tr("Localizable", "swapAndPay.successInfo", fallback: "You successfully initiated a swap. Follow its status on the transaction screen.")
+    public static let successSwapInfo = L10n.tr("Localizable", "swapAndPay.successSwapInfo", fallback: "You successfully initiated a swap. Follow its status on the transaction screen.")
     /// Swap
     public static let swap = L10n.tr("Localizable", "swapAndPay.swap", fallback: "Swap")
     /// Swap from

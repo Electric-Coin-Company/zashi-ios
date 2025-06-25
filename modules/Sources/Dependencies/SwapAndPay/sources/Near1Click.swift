@@ -145,13 +145,13 @@ extension Near1Click {
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
             }
-            
-            if httpResponse.statusCode >= 400 {
+
+            if httpResponse.statusCode >= 400 && exactInput {
                 // evaluate error
                 if let errorMsg = jsonObject["message"] as? String {
                     // insufficient amount
                     var errorMsgConverted = errorMsg
-                    if errorMsg.contains("Amount is too low for bridge, try at least3") {
+                    if errorMsg.contains("Amount is too low for bridge, try at least") {
                         if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last, let valueInt = Int(value) {
                             let zecAmount = NSDecimalNumber(decimal: Decimal(valueInt) / Decimal(Zatoshi.Constants.oneZecInZatoshi))
                             
@@ -182,19 +182,17 @@ extension Near1Click {
                   let timeEstimate = quote["timeEstimate"] as? Int,
                   let amountIn = Int64(amountInString),
                   let minAmountIn = Int64(minAmountInString),
-                  let amountOutInt = Int64(amountOutString),
-                  let amountInUsd = amountInUsdString.localeUsd,
-                  let amountOutUsd = amountOutUsdString.localeUsd else {
+                  let amountOutInt = Int64(amountOutString) else {
                 throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
             }
             
             return SwapQuote(
                 depositAddress: depositAddress,
                 amountIn: amountIn,
-                amountInUsd: amountInUsd,
+                amountInUsd: amountInUsdString,
                 minAmountIn: minAmountIn,
                 amountOut: Decimal(amountOutInt) / Decimal(pow(10.0, Double(toAsset.decimals))),
-                amountOutUsd: amountOutUsd,
+                amountOutUsd: amountOutUsdString,
                 timeEstimate: TimeInterval(timeEstimate)
             )
         },
@@ -253,26 +251,16 @@ extension Near1Click {
                 amountInFormattedDecimal = amountInFormatted.usDecimal
             }
 
-            var amountInUsdDecimal: String?
-            if let amountInUsd = swapDetailsDict["amountInUsd"] as? String {
-                amountInUsdDecimal = amountInUsd.localeUsd
-            }
-
             var amountOutFormattedDecimal: Decimal?
             if let amountOutFormatted = swapDetailsDict["amountOutFormatted"] as? String {
                 amountOutFormattedDecimal = amountOutFormatted.usDecimal
             }
 
-            var amountOutUsdDecimal: String?
-            if let amountOutUsd = swapDetailsDict["amountOutUsd"] as? String {
-                amountOutUsdDecimal = amountOutUsd.localeUsd
-            }
-
             return SwapDetails(
                 amountInFormatted: amountInFormattedDecimal,
-                amountInUsd: amountInUsdDecimal,
+                amountInUsd: swapDetailsDict["amountInUsd"] as? String,
                 amountOutFormatted: amountOutFormattedDecimal,
-                amountOutUsd: amountOutUsdDecimal,
+                amountOutUsd: swapDetailsDict["amountOutUsd"] as? String,
                 destinationAsset: destinationAsset,
                 isSwap: swapType == "EXACT_INPUT",
                 slippage: slippage,

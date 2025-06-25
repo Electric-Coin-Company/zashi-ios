@@ -380,7 +380,7 @@ extension TransactionDetails.State {
     }
     
     public var swapAmountInUsd: String? {
-        swapDetails?.amountInUsd
+        swapDetails?.amountInUsd?.localeUsd
     }
     
     public var swapAmountOut: String? {
@@ -392,7 +392,7 @@ extension TransactionDetails.State {
     }
     
     public var swapAmountOutUsd: String? {
-        swapDetails?.amountOutUsd
+        swapDetails?.amountOutUsd?.localeUsd
     }
     
     public var swapIsSwap: Bool {

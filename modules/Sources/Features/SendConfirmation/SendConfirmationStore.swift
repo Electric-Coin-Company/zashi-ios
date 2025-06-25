@@ -614,8 +614,8 @@ extension SendConfirmation.State {
         isShielding
         ? L10n.Send.successShieldingInfo
         : isSwap
-        ? L10n.SwapAndPay.successInfo
-        : L10n.Send.successInfo
+        ? L10n.SwapAndPay.successSwapInfo
+        : L10n.SwapAndPay.successPayInfo
     }
 
     public var failureInfo: String {

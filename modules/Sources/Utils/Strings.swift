@@ -31,8 +31,8 @@ public extension String {
             return self.zip316
         }
     }
-    
-    var localeUsd: String? {
+
+    var localeUsdDecimal: Decimal? {
         let usFormatter = NumberFormatter()
         usFormatter.locale = Locale(identifier: "en_US")
         usFormatter.numberStyle = .decimal
@@ -41,7 +41,11 @@ public extension String {
             return nil
         }
 
-        return Decimal(number.doubleValue).formatted(.currency(code: "USD"))
+        return Decimal(number.doubleValue)
+    }
+
+    var localeUsd: String? {
+        self.localeUsdDecimal?.formatted(.currency(code: "USD"))
     }
     
     var usDecimal: Decimal? {
