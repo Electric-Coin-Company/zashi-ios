@@ -727,14 +727,37 @@ extension SwapAndPay.State {
     }
     
     public var slippageDiff: String {
-        guard let selectedAsset else {
-            return formatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        guard let zecAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
         }
         
-        let amountInUsd = amount * (isInputInUsd ? 1.0 : selectedAsset.usdPrice)
-        let amountInUsdWithSlippage = amountInUsd + (slippageInSheet * 0.001 * amountInUsd)
+        guard let selectedAsset else {
+            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        }
+
+        var amountInUsd: Decimal = 0
         
-        return (amountInUsdWithSlippage - amountInUsd).formatted(.currency(code: CurrencyISO4217.usd.code))
+        switch (isSwapExperienceEnabled, isInputInUsd) {
+        case (true, false):
+            amountInUsd = amount * zecAsset.usdPrice
+        case (true, true):
+            amountInUsd = amount / zecAsset.usdPrice
+        case (false, false):
+            amountInUsd = amount * selectedAsset.usdPrice
+        case (false, true):
+            amountInUsd = amount / zecAsset.usdPrice
+        }
+        
+        let amountInUsdWithSlippage = slippageInSheet * 0.01 * amountInUsd
+        
+        if amountInUsdWithSlippage < 0.01 {
+            let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
+                .precision(.fractionLength(4))
+            
+            return NSDecimalNumber(decimal: amountInUsdWithSlippage).doubleValue.formatted(formatter)
+        } else {
+            return amountInUsdWithSlippage.formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
     }
     
     public var localePlaceholder: String {
