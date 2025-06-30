@@ -55,7 +55,7 @@ extension SwapAndPayCoordFlow {
 
             case .swapAndPay(.scanTapped):
                 var scanState = Scan.State.initial
-                scanState.checkers = [.anyStringScanChecker]
+                scanState.checkers = [.swapStringScanChecker]
                 state.path.append(.scan(scanState))
                 return .none
                 

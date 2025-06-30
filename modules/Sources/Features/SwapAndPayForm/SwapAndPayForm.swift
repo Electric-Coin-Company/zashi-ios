@@ -18,12 +18,17 @@ public struct SwapAndPayForm: View {
     private enum InputID: Hashable {
         case addressBookHint
     }
+    
+    enum Constants {
+        static let maxAllowedSlippage = "30%"
+    }
 
     @State var keyboardVisible: Bool = false
     
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
-    @FocusState var isSlippageFocused
+//    @FocusState var isSlippageFocused
+    @State var isSlippageFocused: Bool = false
     
     @State var safeAreaHeight: CGFloat = 0
 
@@ -145,7 +150,7 @@ public struct SwapAndPayForm: View {
                     .opacity(keyboardVisible ? 1 : 0)
                 }
             )
-            .popover(isPresented: $store.isSlippagePresented) {
+            .sheet(isPresented: $store.isSlippagePresented) {
                 slippageContent(colorScheme)
                     .screenHorizontalPadding()
                     .applyScreenBackground()
@@ -249,7 +254,7 @@ public struct SwapAndPayForm: View {
                                 prompt:
                                     Text(store.localePlaceholder)
                                     .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
-                                    .foregroundColor(Design.Text.primary.color(colorScheme))
+                                    .foregroundColor(Design.Text.tertiary.color(colorScheme))
                             )
                             .disabled(store.isQuoteRequestInFlight)
                             .frame(maxWidth: .infinity)
@@ -387,7 +392,7 @@ public struct SwapAndPayForm: View {
                             prompt:
                                 Text(store.localePlaceholder)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
-                                .foregroundColor(Design.Text.primary.color(colorScheme))
+                                .foregroundColor(Design.Text.tertiary.color(colorScheme))
                         )
                         .disabled(store.isQuoteRequestInFlight)
                         .frame(maxWidth: .infinity)
@@ -604,9 +609,9 @@ public struct SwapAndPayForm: View {
     }
     
     public func slippageWarnBcgColor(_ colorScheme: ColorScheme) -> Color {
-        if store.slippageInSheet <= 10.0 {
+        if store.slippageInSheet <= 1.0 {
             return Design.Utility.Gray._50.color(colorScheme)
-        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
+        } else if store.slippageInSheet > 1.0 && store.slippageInSheet <= 2.0 {
             return Design.Utility.WarningYellow._50.color(colorScheme)
         } else {
             return Design.Utility.ErrorRed._100.color(colorScheme)
@@ -614,9 +619,9 @@ public struct SwapAndPayForm: View {
     }
 
     public func slippageWarnTextStyle() -> Colorable {
-        if store.slippageInSheet <= 10.0 {
+        if store.slippageInSheet <= 1.0 {
             return Design.Utility.Gray._900
-        } else if store.slippageInSheet > 10.0 && store.slippageInSheet < 30.0 {
+        } else if store.slippageInSheet > 1.0 && store.slippageInSheet <= 2.0 {
             return Design.Utility.WarningYellow._900
         } else {
             return Design.Utility.ErrorRed._900

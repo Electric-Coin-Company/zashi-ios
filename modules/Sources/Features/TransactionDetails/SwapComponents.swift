@@ -31,7 +31,7 @@ extension TransactionDetailsView {
     
     @ViewBuilder func swapSlippageView() -> some View {
         HStack(spacing: 0) {
-            Text(L10n.SwapAndPay.slippage)
+            Text(L10n.SwapAndPay.executedSlippage)
                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
             Spacer()
             

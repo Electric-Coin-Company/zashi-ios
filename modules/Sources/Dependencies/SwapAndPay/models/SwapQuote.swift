@@ -12,11 +12,11 @@ public struct SwapQuote: Codable, Equatable, Hashable {
     /// Deposit address (ZEC)
     public let depositAddress: String
     /// Amount of Zatoshi
-    public let amountIn: Int64
+    public let amountIn: Decimal
     /// USD value of the Zatoshi amount, localized (0.1 vs. 0,1)
     public let amountInUsd: String
     /// Minimal amount of Zatoshi so this quote can be procesed
-    public let minAmountIn: Int64
+    public let minAmountIn: Decimal
     /// Amount that should be ideally received on the destination address
     public let amountOut: Decimal
     /// USD value of the amount that will be received on the destination address, localized (0.1 vs. 0,1)
@@ -26,9 +26,9 @@ public struct SwapQuote: Codable, Equatable, Hashable {
     
     init(
         depositAddress: String,
-        amountIn: Int64,
+        amountIn: Decimal,
         amountInUsd: String,
-        minAmountIn: Int64,
+        minAmountIn: Decimal,
         amountOut: Decimal,
         amountOutUsd: String,
         timeEstimate: TimeInterval

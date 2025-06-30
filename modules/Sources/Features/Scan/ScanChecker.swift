@@ -97,11 +97,18 @@ public struct KeystonePcztScanChecker: ScanChecker, Equatable {
     }
 }
 
-public struct AnyStringScanChecker: ScanChecker, Equatable {
+public struct SwapStringScanChecker: ScanChecker, Equatable {
     public let id = 4
     
     public func checkQRCode(_ qrCode: String) -> Scan.Action? {
-        .foundString(qrCode)
+        var stringFound = qrCode
+        
+        // cut ethereum:
+        if stringFound.hasPrefix("ethereum:") {
+            stringFound.removeSubrange(stringFound.startIndex..<stringFound.index(stringFound.startIndex, offsetBy: 9))
+        }
+        
+        return .foundString(stringFound)
     }
 }
 
@@ -112,7 +119,7 @@ public struct ScanCheckerWrapper: Equatable {
     public static let requestZecScanChecker = ScanCheckerWrapper(RequestZecScanChecker())
     public static let keystoneScanChecker = ScanCheckerWrapper(KeystoneScanChecker())
     public static let keystonePCZTScanChecker = ScanCheckerWrapper(KeystonePcztScanChecker())
-    public static let anyStringScanChecker = ScanCheckerWrapper(AnyStringScanChecker())
+    public static let swapStringScanChecker = ScanCheckerWrapper(SwapStringScanChecker())
 
     static public func == (lhs: ScanCheckerWrapper, rhs: ScanCheckerWrapper) -> Bool {
         return lhs.checker.id == rhs.checker.id

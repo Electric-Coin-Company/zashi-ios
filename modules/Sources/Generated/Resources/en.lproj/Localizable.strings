@@ -756,8 +756,11 @@
 "swapAndPay.totalAmount" = "Total Amount";
 "swapAndPay.search" = "Search by name or ticker...";
 "swapAndPay.slippageSet1" = "You will pay up to ";
-"swapAndPay.slippageSet2" = "%@% (%@) ";
-"swapAndPay.slippageSet3" = "for the swap.";
+"swapAndPay.slippageSet2a" = "%@% (%@)";
+"swapAndPay.slippageSet2b" = "%@%";
+"swapAndPay.slippageSet3" = " for the swap.";
+"swapAndPay.maxAllowedSlippage1" = "Please enter maximum slippage of";
+"swapAndPay.maxAllowedSlippage2" = " %@.";
 "swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
 "swapAndPay.customSlippage" = "Enter custom slippage";
 "swapAndPay.from" = "From";
@@ -784,5 +787,8 @@
 "swapAndPay.status.pending" = "Pending";
 "swapAndPay.status.success" = "Completed";
 "swapAndPay.status.refunded" = "Refunded";
-"swapAndPay.providerFee" = "Swap Provider fee";
-"swapAndPay.providerFeeAndSlippage" = "Provider fee + slippage";
+"swapAndPay.providerFee" = "Swap fee";
+"swapAndPay.emptyAssets.title" = "No results";
+"swapAndPay.emptyAssets.subtitle" = "We tried but couldn’t find anything.";
+"swapAndPay.swapQuoteSlippageWarn" = "You could receive up to %@ less based on the %@ slippage you set.";
+"swapAndPay.executedSlippage" = "Executed slippage";

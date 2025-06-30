@@ -179,19 +179,20 @@ extension Near1Click {
                   let minAmountInString = quote["minAmountIn"] as? String,
                   let amountOutString = quote["amountOut"] as? String,
                   let amountOutUsdString = quote["amountOutUsd"] as? String,
-                  let timeEstimate = quote["timeEstimate"] as? Int,
-                  let amountIn = Int64(amountInString),
-                  let minAmountIn = Int64(minAmountInString),
-                  let amountOutInt = Int64(amountOutString) else {
+                  let timeEstimate = quote["timeEstimate"] as? Int else {
                 throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
             }
+            
+            let amountIn = NSDecimalNumber(string: amountInString).decimalValue
+            let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
+            let amountOutInt = NSDecimalNumber(string: amountOutString).decimalValue
             
             return SwapQuote(
                 depositAddress: depositAddress,
                 amountIn: amountIn,
                 amountInUsd: amountInUsdString,
                 minAmountIn: minAmountIn,
-                amountOut: Decimal(amountOutInt) / Decimal(pow(10.0, Double(toAsset.decimals))),
+                amountOut: amountOutInt / Decimal(pow(10.0, Double(toAsset.decimals))),
                 amountOutUsd: amountOutUsdString,
                 timeEstimate: TimeInterval(timeEstimate)
             )

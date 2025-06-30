@@ -5,6 +5,7 @@
 //  Created by Lukáš Korba on 26.05.2025.
 //
 
+import UIKit
 import SwiftUI
 import ComposableArchitecture
 import Generated
@@ -14,6 +15,63 @@ import SwapAndPay
 import BalanceBreakdown
 
 extension SwapAndPayForm {
+    @ViewBuilder func assetsEmptyComposition(_ colorScheme: ColorScheme) -> some View {
+        List {
+            WithPerceptionTracking {
+                ForEach(0..<15) { _ in
+                    NoTransactionPlaceholder()
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Asset.Colors.background.color)
+                        .listRowSeparator(.hidden)
+                }
+            }
+        }
+        .disabled(true)
+        .padding(.vertical, 1)
+        .background(Asset.Colors.background.color)
+        .listStyle(.plain)
+    }
+    
+    @ViewBuilder func assetsLoadingComposition(_ colorScheme: ColorScheme) -> some View {
+        WithPerceptionTracking {
+            ZStack {
+                VStack(spacing: 0) {
+                    ForEach(0..<5) { _ in
+                        NoTransactionPlaceholder()
+                    }
+                    
+                    Spacer()
+                }
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .clear, location: 0.0),
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.3)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                
+                VStack(spacing: 0) {
+                    Asset.Assets.Illustrations.emptyState.image
+                        .resizable()
+                        .frame(width: 164, height: 164)
+                        .padding(.bottom, 20)
+                    
+                    Text(L10n.SwapAndPay.EmptyAssets.title)
+                        .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+                    
+                    Text(L10n.SwapAndPay.EmptyAssets.subtitle)
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .padding(.bottom, 20)
+                }
+                .padding(.top, 40)
+            }
+        }
+    }
+    
     @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
@@ -53,19 +111,25 @@ extension SwapAndPayForm {
                 .padding(.bottom, 32)
                 .padding(.horizontal, 20)
                 
-                List {
-                    WithPerceptionTracking {
-                        ForEach(store.swapAssetsToPresent, id: \.self) { asset in
-                            assetView(asset, colorScheme)
-                                .listRowInsets(EdgeInsets())
-                                .listRowBackground(Asset.Colors.background.color)
-                                .listRowSeparator(.hidden)
+                if store.swapAssetsToPresent.isEmpty && !store.searchTerm.isEmpty {
+                    assetsLoadingComposition(colorScheme)
+                } else if store.swapAssetsToPresent.isEmpty && store.searchTerm.isEmpty {
+                    assetsEmptyComposition(colorScheme)
+                } else {
+                    List {
+                        WithPerceptionTracking {
+                            ForEach(store.swapAssetsToPresent, id: \.self) { asset in
+                                assetView(asset, colorScheme)
+                                    .listRowInsets(EdgeInsets())
+                                    .listRowBackground(Asset.Colors.background.color)
+                                    .listRowSeparator(.hidden)
+                            }
                         }
                     }
+                    .padding(.vertical, 1)
+                    .background(Asset.Colors.background.color)
+                    .listStyle(.plain)
                 }
-                .padding(.vertical, 1)
-                .background(Asset.Colors.background.color)
-                .listStyle(.plain)
             }
         }
     }
@@ -155,20 +219,23 @@ extension SwapAndPayForm {
                             HStack(spacing: 0) {
                                 Spacer()
                                 
-                                TextField(
-                                    "",
+                                FocusableTextField(
                                     text: $store.customSlippage,
-                                    prompt:
-                                        Text(store.slippage0String)
-                                        .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                                        .foregroundColor(Design.Switcher.selectedText.color(colorScheme))
+                                    isFirstResponder: $isSlippageFocused,
+                                    placeholder: store.slippage0String,
+                                    colorScheme: colorScheme
                                 )
-                                .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
                                 .multilineTextAlignment(.center)
+                                .frame(maxWidth:
+                                    store.customSlippage.isEmpty
+                                       ? .infinity
+                                       : (store.customSlippage.contains(".") || store.customSlippage.contains(","))
+                                       ? CGFloat(store.customSlippage.count - 1) * 13.0 + 2.0
+                                       : CGFloat(store.customSlippage.count) * 13.0
+                                )
                                 .keyboardType(.decimalPad)
-                                .focused($isSlippageFocused)
                                 .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                         isSlippageFocused = true
                                     }
                                 }
@@ -210,18 +277,28 @@ extension SwapAndPayForm {
                     .padding(.top, 24)
 
                     Group {
-                        Text(L10n.SwapAndPay.slippageSet1)
-                        + Text(
-                            L10n.SwapAndPay.slippageSet2(
-                                store.currentSlippageInSheetString,
-                                store.slippageDiff
-                            )
-                        ).bold()
-                        + Text(L10n.SwapAndPay.slippageSet3)
+                        if store.slippageInSheet > 30.0 {
+                            Text(L10n.SwapAndPay.maxAllowedSlippage1)
+                            + Text(L10n.SwapAndPay.maxAllowedSlippage2(Constants.maxAllowedSlippage)).bold()
+                        } else if let slippageDiff = store.slippageDiff {
+                            Text(L10n.SwapAndPay.slippageSet1)
+                            + Text(
+                                L10n.SwapAndPay.slippageSet2a(
+                                    store.currentSlippageInSheetString,
+                                    slippageDiff
+                                )
+                            ).bold()
+                            + Text(L10n.SwapAndPay.slippageSet3)
+                        } else {
+                            Text(L10n.SwapAndPay.slippageSet1)
+                            + Text(L10n.SwapAndPay.slippageSet2b(store.currentSlippageInSheetString)).bold()
+                            + Text(L10n.SwapAndPay.slippageSet3)
+                        }
                     }
                     .zFont(size: 12, style: slippageWarnTextStyle())
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                     .background {
@@ -240,6 +317,7 @@ extension SwapAndPayForm {
                         store.send(.slippageSetConfirmTapped)
                     }
                     .padding(.top, 36)
+                    .disabled(store.slippageInSheet > 30.0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -400,9 +478,7 @@ extension SwapAndPayForm {
                 }
 
                 quoteLineContent(
-                    store.isSwapExperienceEnabled
-                    ? L10n.SwapAndPay.providerFee
-                    : L10n.SwapAndPay.providerFeeAndSlippage,
+                    L10n.SwapAndPay.providerFee,
                     "\(store.swapProviderFeeZECStr) \(tokenName)"
                 )
                 .padding(.top, 12)
@@ -411,6 +487,20 @@ extension SwapAndPayForm {
                     
                     Text(store.swapProviderFeeUsdStr)
                         .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                }
+                
+                if !store.isSwapExperienceEnabled {
+                    quoteLineContent(
+                        L10n.SwapAndPay.maxSlippage(store.currentSlippageString),
+                        "\(store.swapSlippageStr) \(tokenName)"
+                    )
+                    .padding(.top, 12)
+                    HStack(spacing: 0) {
+                        Spacer()
+                        
+                        Text(store.swapSlippageUsdStr)
+                            .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                    }
                 }
                 
                 Divider()
@@ -435,6 +525,19 @@ extension SwapAndPayForm {
                 }
                 .padding(.bottom, 32)
                 
+                if store.isSwapExperienceEnabled {
+                    HStack(spacing: 0) {
+                        Asset.Assets.infoOutline.image
+                            .zImage(size: 20, style: Design.Text.tertiary)
+                            .padding(.trailing, 12)
+                        
+                        Text(L10n.SwapAndPay.swapQuoteSlippageWarn(store.swapQuoteSlippageUsdStr, store.currentSlippageString))
+                    }
+                    .zFont(size: 12, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, 24)
+                }
+                
                 ZashiButton(L10n.General.confirm) {
                     store.send(.confirmButtonTapped)
                 }
@@ -455,6 +558,70 @@ extension SwapAndPayForm {
 
             Text(value)
                 .zFont(.medium, size: 14, style: Design.Text.primary)
+        }
+    }
+}
+
+struct FocusableTextField: UIViewRepresentable {
+    @Binding var text: String
+    @Binding var isFirstResponder: Bool
+    var placeholder: String = ""
+    let colorScheme: ColorScheme
+
+    func makeUIView(context: Context) -> UITextField {
+        let textField = UITextField()
+        textField.delegate = context.coordinator
+        textField.attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                .foregroundColor: UIColor(Design.Switcher.selectedText.color(colorScheme)),
+                .font: FontFamily.Inter.medium.font(size: 16)
+            ]
+        )
+        textField.textAlignment = .center
+        textField.borderStyle = .none
+        textField.backgroundColor = .clear
+        textField.keyboardType = .decimalPad
+        textField.addTarget(context.coordinator, action: #selector(Coordinator.textDidChange(_:)), for: .editingChanged)
+        textField.font = FontFamily.Inter.medium.font(size: 16)
+        textField.textColor = UIColor(Design.Switcher.selectedText.color(colorScheme))
+
+        return textField
+    }
+
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        uiView.text = text
+
+        if isFirstResponder && !uiView.isFirstResponder {
+            uiView.becomeFirstResponder()
+        } else if !isFirstResponder && uiView.isFirstResponder {
+            uiView.resignFirstResponder()
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text, isFirstResponder: $isFirstResponder)
+    }
+
+    class Coordinator: NSObject, UITextFieldDelegate {
+        @Binding var text: String
+        @Binding var isFirstResponder: Bool
+
+        init(text: Binding<String>, isFirstResponder: Binding<Bool>) {
+            _text = text
+            _isFirstResponder = isFirstResponder
+        }
+
+        @objc func textDidChange(_ textField: UITextField) {
+            text = textField.text ?? ""
+        }
+
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            isFirstResponder = true
+        }
+
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            isFirstResponder = false
         }
     }
 }
