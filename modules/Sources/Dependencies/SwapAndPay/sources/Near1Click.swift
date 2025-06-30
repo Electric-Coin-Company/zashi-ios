@@ -146,26 +146,39 @@ extension Near1Click {
                 throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
             }
 
-            if httpResponse.statusCode >= 400 && exactInput {
+            if httpResponse.statusCode >= 400 {
                 // evaluate error
                 if let errorMsg = jsonObject["message"] as? String {
-                    // insufficient amount
                     var errorMsgConverted = errorMsg
+
+                    // insufficient amount transformations
                     if errorMsg.contains("Amount is too low for bridge, try at least") {
-                        if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last, let valueInt = Int(value) {
-                            let zecAmount = NSDecimalNumber(decimal: Decimal(valueInt) / Decimal(Zatoshi.Constants.oneZecInZatoshi))
-                            
+                        if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last {
+                            let valueDecimal = NSDecimalNumber(string: String(value)).decimalValue
+
                             let formatter = NumberFormatter()
                             formatter.numberStyle = .decimal
                             formatter.minimumFractionDigits = 2
                             formatter.maximumFractionDigits = 8
                             formatter.usesGroupingSeparator = false
                             formatter.locale = Locale.current
-                            let localeValue = formatter.string(from: zecAmount) ?? "\(zecAmount)"
-                            
-                            errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
+
+                            // ZEC asset
+                            if exactInput {
+                                let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
+
+                                let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
+                                errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
+                            } else {
+                                // selected Asset
+                                let tokenAmount = (valueDecimal / Decimal(pow(10.0, Double(toAsset.decimals)))).simplified
+
+                                let localeValue = formatter.string(from: NSDecimalNumber(decimal: tokenAmount)) ?? "\(tokenAmount)"
+                                errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
+                            }
                         }
                     }
+                    
                     throw SwapAndPayClient.EndpointError.message(errorMsgConverted)
                 } else {
                     throw SwapAndPayClient.EndpointError.message("Unknown error")
@@ -185,14 +198,14 @@ extension Near1Click {
             
             let amountIn = NSDecimalNumber(string: amountInString).decimalValue
             let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
-            let amountOutInt = NSDecimalNumber(string: amountOutString).decimalValue
+            let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
             
             return SwapQuote(
                 depositAddress: depositAddress,
                 amountIn: amountIn,
                 amountInUsd: amountInUsdString,
                 minAmountIn: minAmountIn,
-                amountOut: amountOutInt / Decimal(pow(10.0, Double(toAsset.decimals))),
+                amountOut: amountOut / Decimal(pow(10.0, Double(toAsset.decimals))),
                 amountOutUsd: amountOutUsdString,
                 timeEstimate: TimeInterval(timeEstimate)
             )

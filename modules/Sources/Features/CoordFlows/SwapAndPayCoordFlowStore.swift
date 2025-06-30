@@ -77,6 +77,7 @@ public struct SwapAndPayCoordFlow {
     }
 
     public enum Action: BindableAction {
+        case backButtonTapped
         case binding(BindingAction<SwapAndPayCoordFlow.State>)
         case helpSheetRequested
         case operationChipTapped(Int)

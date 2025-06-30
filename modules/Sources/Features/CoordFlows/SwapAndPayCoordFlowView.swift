@@ -82,7 +82,9 @@ public struct SwapAndPayCoordFlowView: View {
                 }
             }
             .applyScreenBackground()
-            .zashiBack(store.isSwapInFlight)
+            .zashiBack {
+                store.send(.backButtonTapped)
+            }
             .zashiTitle {
                 HStack(spacing: 0) {
                     operationChip(index: 0, text: "Swap", colorScheme)

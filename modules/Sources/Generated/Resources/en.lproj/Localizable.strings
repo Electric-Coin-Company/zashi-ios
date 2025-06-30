@@ -792,3 +792,7 @@
 "swapAndPay.emptyAssets.subtitle" = "We tried but couldn’t find anything.";
 "swapAndPay.swapQuoteSlippageWarn" = "You could receive up to %@ less based on the %@ slippage you set.";
 "swapAndPay.executedSlippage" = "Executed slippage";
+"swapAndPay.canceltitle" = "Are you sure?";
+"swapAndPay.cancelMsg" = "If you leave this screen, all the information you entered will be lost.";
+"swapAndPay.cancelSwap" = "Cancel swap";
+"swapAndPay.cancelDont" = "Don’t cancel";

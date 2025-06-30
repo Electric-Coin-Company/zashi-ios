@@ -22,14 +22,15 @@ public struct SwapAndPay {
     public struct State {
         public var SwapAssetsCancelId = UUID()
 
-        public var address = ""// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
-        public var amountText = ""// "0,0004"// "0,0006"
+        public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        public var amountText = "0,0006"// "0,0004"// "0,0006"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
         public var chain: String?
         public var customSlippage = ""
         public var isAddressBookHintVisible = false
+        public var isCancelSheetVisible = false
         public var isInputInUsd = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
@@ -37,6 +38,7 @@ public struct SwapAndPay {
         public var isQuotePresented = false
         public var isQuoteUnavailablePresented = false
         public var isSlippagePresented = false
+        public var isSwapCanceled = false
         public var isSwapExperienceEnabled = true
         public var proposal: Proposal?
         public var quote: SwapQuote?
@@ -111,13 +113,17 @@ public struct SwapAndPay {
     public enum Action: BindableAction {
         case assetSelectRequested
         case assetTapped(SwapAsset)
+        case backButtonTapped(Bool)
         case balances(Balances.Action)
         case binding(BindingAction<SwapAndPay.State>)
         case cancelPaymentTapped
+        case cancelSwapTapped
         case closeAssetsSheetTapped
         case closeSlippageSheetTapped
         case confirmButtonTapped
+        case customBackRequired
         case dismissRequired
+        case dontCancelTapped
         case editPaymentTapped
         case enableSwapExperience(Bool)
         case eraseSearchTermTapped
@@ -139,7 +145,7 @@ public struct SwapAndPay {
         case updateAssetsAccordingToSearchTerm
         case walletBalances(WalletBalances.Action)
     }
-    
+
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -182,6 +188,31 @@ public struct SwapAndPay {
 
             case .onDisappear:
                 return .cancel(id: state.SwapAssetsCancelId)
+                
+            case .backButtonTapped(let isSwapInFlight):
+                if !isSwapInFlight {
+                    return .send(.customBackRequired)
+                }
+                state.isCancelSheetVisible = true
+                return .none
+                
+            case .customBackRequired:
+                return .none
+                
+            case .cancelSwapTapped:
+                state.isCancelSheetVisible = false
+                state.isSwapCanceled = true
+                return .concatenate(
+                    .send(.onDisappear),
+                    .send(.customBackRequired)
+                )
+                
+            case .dontCancelTapped:
+                state.isCancelSheetVisible = false
+                if state.proposal != nil {
+                    state.isQuotePresented = true
+                }
+                return .none
                 
             case .refreshSwapAssets:
                 return .run { send in
@@ -398,8 +429,13 @@ public struct SwapAndPay {
                 }
 
             case .proposal(let proposal):
+                if state.isSwapCanceled {
+                    return .none
+                }
                 state.proposal = proposal
-                state.isQuotePresented = true
+                if !state.isCancelSheetVisible {
+                    state.isQuotePresented = true
+                }
                 state.isQuoteRequestInFlight = false
                 return .none
                 

@@ -27,7 +27,6 @@ public struct SwapAndPayForm: View {
     
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
-//    @FocusState var isSlippageFocused
     @State var isSlippageFocused: Bool = false
     
     @State var safeAreaHeight: CGFloat = 0
@@ -189,6 +188,11 @@ public struct SwapAndPayForm: View {
             }
             .zashiSheet(isPresented: $store.isQuoteUnavailablePresented) {
                 quoteUnavailableContent(colorScheme)
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.isCancelSheetVisible) {
+                cancelSheetContent(colorScheme)
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }

@@ -53,6 +53,9 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Self
 
+            case .backButtonTapped:
+                return .send(.swapAndPay(.backButtonTapped(state.isSwapInFlight)))
+                
             case .swapAndPay(.scanTapped):
                 var scanState = Scan.State.initial
                 scanState.checkers = [.swapStringScanChecker]

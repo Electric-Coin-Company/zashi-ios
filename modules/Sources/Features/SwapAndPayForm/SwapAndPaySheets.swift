@@ -560,6 +560,43 @@ extension SwapAndPayForm {
                 .zFont(.medium, size: 14, style: Design.Text.primary)
         }
     }
+    
+    @ViewBuilder func cancelSheetContent(_ colorScheme: ColorScheme) -> some View {
+        VStack(spacing: 0) {
+            Asset.Assets.Icons.logOut.image
+                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
+                .background {
+                    Circle()
+                        .fill(Design.Utility.ErrorRed._100.color(colorScheme))
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.top, 48)
+                .padding(.bottom, 20)
+
+            Text(L10n.SwapAndPay.canceltitle)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.bottom, 8)
+
+            Text(L10n.SwapAndPay.cancelMsg)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
+                .padding(.bottom, 32)
+
+            ZashiButton(
+                L10n.SwapAndPay.cancelSwap,
+                type: .destructive1
+            ) {
+                store.send(.cancelSwapTapped)
+            }
+            .padding(.bottom, 8)
+            
+            ZashiButton(L10n.SwapAndPay.cancelDont) {
+                store.send(.dontCancelTapped)
+            }
+            .padding(.bottom, 24)
+        }
+    }
 }
 
 struct FocusableTextField: UIViewRepresentable {
