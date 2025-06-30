@@ -111,6 +111,8 @@ public struct SwapAndPay {
     }
 
     public enum Action: BindableAction {
+        case addNewContactTapped(RedactableString)
+        case addressBookTapped
         case assetSelectRequested
         case assetTapped(SwapAsset)
         case backButtonTapped(Bool)
@@ -214,6 +216,12 @@ public struct SwapAndPay {
                 }
                 return .none
                 
+            case .addNewContactTapped(let contact):
+                return .none
+                
+            case .addressBookTapped:
+                return .none
+
             case .refreshSwapAssets:
                 return .run { send in
                     let swapAssets = try? await swapAndPay.swapAssets()

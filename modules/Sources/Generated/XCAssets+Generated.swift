@@ -65,6 +65,7 @@ public enum Asset {
     public static let splashHi = ImageAsset(name: "SplashHi")
     public enum Tickers {
       public static let near = ImageAsset(name: "near")
+      public static let nearChain = ImageAsset(name: "nearChain")
       public static let `none` = ImageAsset(name: "none")
     }
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")

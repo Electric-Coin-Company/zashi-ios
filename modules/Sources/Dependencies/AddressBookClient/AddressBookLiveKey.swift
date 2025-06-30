@@ -62,8 +62,9 @@ extension AddressBookClient: DependencyKey {
                     let encryptedFileURL = documentsDirectory.appendingPathComponent(try AddressBookClient.filenameForEncryptedFile(account: account))
 
                     if let contactsData = try? Data(contentsOf: encryptedFileURL) {
-                        let contacts = try AddressBookClient.contactsFrom(encryptedData: contactsData, account: account)
-                        
+                        let result = try AddressBookClient.contactsFrom(encryptedData: contactsData, account: account)
+                        let contacts = result.0
+
                         // file exists and was successfully decrypted and parsed;
                         // try to find the unencrypted file and delete it
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
@@ -80,7 +81,8 @@ extension AddressBookClient: DependencyKey {
                         if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
                             // Unencrypted file exists; ensure data are parsed, re-saved as encrypted, and the original file deleted.
 
-                            var contacts = try AddressBookClient.contactsFrom(plainData: contactsData)
+                            let result = try AddressBookClient.contactsFrom(plainData: contactsData)
+                            var contacts = result.0
 
                             // try to encrypt and store the data
                             var remoteStoreResult: RemoteStoreResult
@@ -209,7 +211,8 @@ extension AddressBookClient: DependencyKey {
         do {
             let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile(account: account)
             let encryptedData = try remoteStorage.loadDataFromFile(filenameForEncryptedFile)
-            remoteContacts = try AddressBookClient.contactsFrom(encryptedData: encryptedData, account: account)
+            let result = try AddressBookClient.contactsFrom(encryptedData: encryptedData, account: account)
+            remoteContacts = result.0
         } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
             // If the remote file doesn't exist, always try to write it when
             // storeAfterSync is true.

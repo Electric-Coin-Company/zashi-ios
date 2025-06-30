@@ -396,4 +396,10 @@ public extension TransactionsManager {
 
         return !userMetadataProvider.isRead(transaction.id, transaction.timestamp)
     }
+    
+    static func isSwap(_ transaction: TransactionState) -> Bool {
+        @Dependency(\.userMetadataProvider) var userMetadataProvider
+
+        return userMetadataProvider.isSwapTransaction(transaction.id)
+    }
 }

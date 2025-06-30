@@ -81,7 +81,7 @@ extension AddressBookClient {
     ///     [Encrypted data]        `address book version`
     ///     [Encrypted data]        `timestamp`
     ///     [Encrypted data]        `contacts`
-    static func contactsFrom(encryptedData: Data, account: Account) throws -> AddressBookContacts {
+    static func contactsFrom(encryptedData: Data, account: Account) throws -> (AddressBookContacts, Bool) {
         @Dependency(\.walletStorage) var walletStorage
         
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {
@@ -95,7 +95,7 @@ extension AddressBookClient {
         offset += Constants.int64Size
         
         guard let encryptionVersion = AddressBookClient.bytesToInt(Array(encryptionVersionBytes)) else {
-            return .empty
+            return (.empty, false)
         }
         
         if encryptionVersion == AddressBookEncryptionKeys.Constants.version {
@@ -119,7 +119,7 @@ extension AddressBookClient {
     ///     [Unencrypted data]        `address book version`
     ///     [Unencrypted data]        `timestamp`
     ///     [Unencrypted data]        `contacts`
-    static func contactsFrom(plainData: Data) throws -> AddressBookContacts {
+    static func contactsFrom(plainData: Data) throws -> (AddressBookContacts, Bool) {
         var offset = 0
         
         // Deserialize `version`
@@ -127,13 +127,24 @@ extension AddressBookClient {
         offset += Constants.int64Size
         
         // Deserialize and check `address book version`
-        guard let version = AddressBookClient.bytesToInt(Array(versionBytes)), version == AddressBookContacts.Constants.version else {
-            return .empty
+        guard let version = AddressBookClient.bytesToInt(Array(versionBytes)) else {
+            return (.empty, false)
         }
         
+        guard version == AddressBookContacts.Constants.version else {
+            // Attempt to migrate
+            switch version {
+            case 1:
+                let latestAddressBook = try AddressBookClient.contactsFromV1(plainData: plainData, offset: offset)
+                return (latestAddressBook, true)
+            default:
+                return (.empty, false)
+            }
+        }
+
         // Deserialize `lastUpdated`
         guard let lastUpdated = try AddressBookClient.deserializeDate(from: plainData, at: &offset) else {
-            return .empty
+            return (.empty, false)
         }
         
         // Deserialize `contactsCount`
@@ -141,7 +152,7 @@ extension AddressBookClient {
         offset += Constants.int64Size
         
         guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
-            return .empty
+            return (.empty, false)
         }
         
         var contacts: [Contact] = []
@@ -157,14 +168,14 @@ extension AddressBookClient {
             contacts: IdentifiedArrayOf(uniqueElements: contacts)
         )
         
-        return abContacts
+        return (abContacts, false)
     }
 }
     
 // MARK: - Helper methods for the data handling
 
 extension AddressBookClient {
-    private static func serializeContact(_ contact: Contact) -> Data {
+    static func serializeContact(_ contact: Contact) -> Data {
         var data = Data()
         
         // Serialize `lastUpdated`
@@ -179,11 +190,20 @@ extension AddressBookClient {
         let nameBytes = stringToBytes(contact.name)
         data.append(contentsOf: intToBytes(nameBytes.count))
         data.append(contentsOf: nameBytes)
-        
+
+        // Serialize `chainId` (length + UTF-8 bytes)
+        if let chainId = contact.chainId {
+            let chainIdBytes = stringToBytes(chainId)
+            data.append(contentsOf: intToBytes(chainIdBytes.count))
+            data.append(contentsOf: chainIdBytes)
+        } else {
+            data.append(contentsOf: intToBytes(0))
+        }
+
         return data
     }
     
-    private static func deserializeContact(from data: Data, at offset: inout Int) throws -> Contact? {
+    static func deserializeContact(from data: Data, at offset: inout Int) throws -> Contact? {
         // Deserialize `lastUpdated`
         guard let lastUpdated = try AddressBookClient.deserializeDate(from: data, at: &offset) else {
             return nil
@@ -198,23 +218,31 @@ extension AddressBookClient {
         guard let name = try readString(from: data, at: &offset) else {
             return nil
         }
-        
-        return Contact(address: address, name: name, lastUpdated: lastUpdated)
+
+        // Deserialize `chainId`
+        let chainId = try? readString(from: data, at: &offset)
+
+        return Contact(
+            address: address,
+            name: name,
+            lastUpdated: lastUpdated,
+            chainId: chainId
+        )
     }
     
-    private static func stringToBytes(_ string: String) -> [UInt8] {
+    static func stringToBytes(_ string: String) -> [UInt8] {
         return Array(string.utf8)
     }
     
-    private static func bytesToString(_ bytes: [UInt8]) -> String? {
+    static func bytesToString(_ bytes: [UInt8]) -> String? {
         return String(bytes: bytes, encoding: .utf8)
     }
     
-    private static func intToBytes(_ value: Int) -> [UInt8] {
+    static func intToBytes(_ value: Int) -> [UInt8] {
         withUnsafeBytes(of: value.bigEndian, Array.init)
     }
     
-    private static func bytesToInt(_ bytes: [UInt8]) -> Int? {
+    static func bytesToInt(_ bytes: [UInt8]) -> Int? {
         guard bytes.count == Constants.int64Size else {
             return nil
         }
@@ -224,7 +252,7 @@ extension AddressBookClient {
         }
     }
     
-    private static func serializeDate(_ date: Date) -> [UInt8] {
+    static func serializeDate(_ date: Date) -> [UInt8] {
         // Convert Date to Unix time (number of seconds since 1970)
         let timestamp = Int(date.timeIntervalSince1970)
         
@@ -232,7 +260,7 @@ extension AddressBookClient {
         return AddressBookClient.intToBytes(timestamp)
     }
     
-    private static func deserializeDate(from data: Data, at offset: inout Int) throws -> Date? {
+    static func deserializeDate(from data: Data, at offset: inout Int) throws -> Date? {
         // Extract the bytes for the timestamp (assume it's stored as an Int)
         let timestampBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
@@ -245,7 +273,7 @@ extension AddressBookClient {
     }
     
     // Helper function to read a string from the data using a length prefix
-    private static func readString(from data: Data, at offset: inout Int) throws -> String? {
+    static func readString(from data: Data, at offset: inout Int) throws -> String? {
         // Read the length first (assumes the length is stored as an Int)
         let lengthBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
@@ -257,7 +285,7 @@ extension AddressBookClient {
         return AddressBookClient.bytesToString(Array(stringBytes))
     }
     
-    private static func subdata(of data: Data, in range: Range<Data.Index>) throws -> Data {
+    static func subdata(of data: Data, in range: Range<Data.Index>) throws -> Data {
         guard data.count >= range.upperBound else {
             throw AddressBookClient.AddressBookClientError.subdataRange
         }

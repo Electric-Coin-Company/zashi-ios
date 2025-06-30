@@ -35,6 +35,7 @@ public struct AddressBook {
         public var isChainFocused = false
         public var isInSelectMode = false
         public var isNameFocused = false
+        public var isSwapFlowActive = false
         public var isTokenFocused = false
         public var isValidForm = false
         public var isValidZcashAddress = false

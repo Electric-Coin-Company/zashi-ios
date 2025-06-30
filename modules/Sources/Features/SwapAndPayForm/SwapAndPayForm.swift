@@ -493,17 +493,17 @@ public struct SwapAndPayForm: View {
             accessoryView:
                 HStack(spacing: 4) {
                     WithPerceptionTracking {
-//                                    fieldButton(
-//                                        icon: store.isNotAddressInAddressBook
-//                                        ? Asset.Assets.Icons.userPlus.image
-//                                        : Asset.Assets.Icons.user.image
-//                                    ) {
-//                                        if store.isNotAddressInAddressBook {
-//                                            //store.send(.addNewContactTapped(store.address))
-//                                        } else {
-//                                            //store.send(.addressBookTapped)
-//                                        }
-//                                    }
+                        fieldButton(
+                            icon: store.isNotAddressInAddressBook
+                            ? Asset.Assets.Icons.userPlus.image
+                            : Asset.Assets.Icons.user.image
+                        ) {
+                            if store.isNotAddressInAddressBook {
+                                store.send(.addNewContactTapped(store.address))
+                            } else {
+                                store.send(.addressBookTapped)
+                            }
+                        }
                         
                         fieldButton(icon: Asset.Assets.Icons.qr.image) {
                             store.send(.scanTapped)
