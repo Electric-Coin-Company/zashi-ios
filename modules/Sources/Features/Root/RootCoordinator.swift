@@ -282,7 +282,7 @@ extension Root {
                 return .none
                 
             case .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
-                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped)))),
                     .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
                 state.path = nil
                 return .none
