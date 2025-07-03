@@ -25,7 +25,9 @@ public struct SwapDetails: Codable, Equatable, Hashable {
     public let isSwap: Bool
     public let slippage: Decimal?
     public let status: Status
-    
+    public let refundedAmountFormatted: Decimal?
+    public let swapRecipient: String?
+
     init(
         amountInFormatted: Decimal?,
         amountInUsd: String?,
@@ -34,7 +36,9 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         destinationAsset: String?,
         isSwap: Bool,
         slippage: Decimal?,
-        status: Status
+        status: Status,
+        refundedAmountFormatted: Decimal?,
+        swapRecipient: String?
     ) {
         self.amountInFormatted = amountInFormatted
         self.amountInUsd = amountInUsd
@@ -44,5 +48,7 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         self.isSwap = isSwap
         self.slippage = slippage
         self.status = status
+        self.refundedAmountFormatted = refundedAmountFormatted
+        self.swapRecipient = swapRecipient
     }
 }

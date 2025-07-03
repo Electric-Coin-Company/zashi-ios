@@ -291,8 +291,19 @@ extension Near1Click {
                 var slippage: Decimal?
                 if let slippageInt = swapDetailsDict["slippage"] as? Int {
                     slippage = Decimal(slippageInt) * 0.01
+                } else if status == .refunded {
+                    if let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
+                       let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any],
+                       let slippageInt = quoteRequestDict["slippageTolerance"] as? Int {
+                        slippage = Decimal(slippageInt) * 0.01
+                    }
                 }
-                
+
+                var refundedAmountFormattedDecimal: Decimal?
+                if let refundedAmountFormatted = swapDetailsDict["refundedAmountFormatted"] as? String, status == .refunded {
+                    refundedAmountFormattedDecimal = refundedAmountFormatted.usDecimal
+                }
+
                 var amountInFormattedDecimal: Decimal?
                 if let amountInFormatted = swapDetailsDict["amountInFormatted"] as? String {
                     amountInFormattedDecimal = amountInFormatted.usDecimal
@@ -303,6 +314,13 @@ extension Near1Click {
                     amountOutFormattedDecimal = amountOutFormatted.usDecimal
                 }
                 
+                var swapRecipient: String?
+                if let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
+                   let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any],
+                   let recipient = quoteRequestDict["recipient"] as? String {
+                    swapRecipient = recipient
+                }
+                
                 return SwapDetails(
                     amountInFormatted: amountInFormattedDecimal,
                     amountInUsd: swapDetailsDict["amountInUsd"] as? String,
@@ -311,7 +329,9 @@ extension Near1Click {
                     destinationAsset: destinationAsset,
                     isSwap: swapType == "EXACT_INPUT",
                     slippage: slippage,
-                    status: status
+                    status: status,
+                    refundedAmountFormatted: refundedAmountFormattedDecimal,
+                    swapRecipient: swapRecipient
                 )
             }
         )

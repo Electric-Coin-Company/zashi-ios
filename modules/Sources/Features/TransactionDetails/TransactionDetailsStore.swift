@@ -103,6 +103,7 @@ public struct TransactionDetails {
         case sentToRowTapped
         case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
         case swapDetailsLoaded(SwapDetails?)
+        case swapRecipientTapped
         case transactionIdTapped
         case transactionsUpdated
     }
@@ -124,8 +125,8 @@ public struct TransactionDetails {
             case .onAppear:
                 state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
                 
-                // TODO: remove
-                if state.transaction.address == "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22" {
+                // TODO: remove this refunded hardcoded one
+                if state.transaction.id == "00b61343a47ccf5015fd075054a2500da06380c05513cd776bc74f3545f68cdf" {
                     state.isSwap = true
                 }
                 
@@ -322,6 +323,13 @@ public struct TransactionDetails {
                 pasteboard.setString(state.transaction.id.redacted)
                 state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
                 return .none
+                
+            case .swapRecipientTapped:
+                if let recipient = state.swapRecipient {
+                    pasteboard.setString(recipient.redacted)
+                    state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
+                }
+                return .none
             }
         }
     }
@@ -413,5 +421,17 @@ extension TransactionDetails.State {
         }
         
         return swapAssets.first { $0.assetId.lowercased() == swapDetailsDestinationAssetId }
+    }
+    
+    public var refundedAmount: String? {
+        guard let refundedAmountFormatted = swapDetails?.refundedAmountFormatted else {
+            return nil
+        }
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: refundedAmountFormatted)) ?? ""
+    }
+    
+    public var swapRecipient: String? {
+        swapDetails?.swapRecipient
     }
 }

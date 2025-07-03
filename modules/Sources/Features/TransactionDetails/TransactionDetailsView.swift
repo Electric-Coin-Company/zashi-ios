@@ -106,13 +106,23 @@ public struct TransactionDetailsView: View {
                     }
                     
                     if store.isSwap {
-                        swapAssetsView()
+                        if store.swapStatus != .refunded {
+                            swapAssetsView()
+                        }
 
                         swapSlippageView()
-                            .padding(.top, 20)
+                            .padding(.top, store.swapStatus != .refunded ? 20 : 0)
 
                         swapStatusView()
                             .padding(.top, 16)
+
+                        if store.swapStatus == .refunded {
+                            swapRefundAmountView()
+                                .padding(.top, 16)
+                            
+                            swapRefundInfoView()
+                                .padding(.top, 16)
+                        }
                     }
                 }
 
@@ -191,7 +201,9 @@ extension TransactionDetailsView {
 // Header
 extension TransactionDetailsView {
     func transationIcon() -> Image {
-        if store.transaction.isShieldingTransaction {
+        if store.swapStatus == .refunded {
+            return Asset.Assets.Icons.refreshSingleCCW.image
+        } else if store.transaction.isShieldingTransaction {
             return Asset.Assets.Icons.switchHorizontal.image
         } else if store.transaction.isSentTransaction {
             return Asset.Assets.Icons.sent.image
@@ -456,6 +468,18 @@ extension TransactionDetailsView {
                 }
 
                 if store.areDetailsExpanded || !store.transaction.isSentTransaction {
+                    if let recipient = store.swapRecipient, store.isSwap {
+                        detailView(
+                            title: L10n.SwapAndPay.recipient,
+                            value: recipient.zip316,
+                            icon: Asset.Assets.copy.image,
+                            rowAppereance: .middle
+                        )
+                        .onTapGesture {
+                            store.send(.swapRecipientTapped)
+                        }
+                    }
+
                     detailView(
                         title: L10n.TransactionList.transactionId,
                         value: store.transaction.id.truncateMiddle,
@@ -532,6 +556,7 @@ extension TransactionDetailsView {
             Text(value)
                 .zFont(.medium, size: 14, style: Design.Text.primary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.6)
                 
             if let icon {
                 icon

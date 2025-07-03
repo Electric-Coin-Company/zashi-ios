@@ -753,6 +753,8 @@
 "swapAndPay.payTo" = "Pay to";
 "swapAndPay.fee" = "ZEC transaction fee";
 "swapAndPay.maxSlippage" = "Max slippage %@%";
+"swapAndPay.maxSlippageTitle" = "Max slippage";
+"swapAndPay.refundedAmount" = "Refunded amount";
 "swapAndPay.totalAmount" = "Total Amount";
 "swapAndPay.search" = "Search by name or ticker...";
 "swapAndPay.slippageSet1" = "You will pay up to ";
@@ -807,3 +809,6 @@
 "swapAndPay.optIn.warn" = "Note for the super privacy-conscious: Transactions executed via the NEAR API are transparent which means all transaction information is public.";
 "swapAndPay.forcedOptIn.optionOne" = "I understand that Zashi makes API requests to the NEAR API every time I interact with a Swap/Pay transaction.";
 "swapAndPay.forcedOptIn.optionTwo" = "I understand that by not enabling Tor, my IP address will be leaked by the NEAR API.";
+"swapAndPay.refundTitle" = "Payment Refunded";
+"swapAndPay.refundInfo" = "Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.";
+"swapAndPay.recipient" = "Recipient";

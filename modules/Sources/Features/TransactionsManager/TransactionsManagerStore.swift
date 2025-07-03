@@ -400,6 +400,11 @@ public extension TransactionsManager {
     static func isSwap(_ transaction: TransactionState) -> Bool {
         @Dependency(\.userMetadataProvider) var userMetadataProvider
 
+        // TODO: remove this refunded hardcoded one
+        if transaction.id == "00b61343a47ccf5015fd075054a2500da06380c05513cd776bc74f3545f68cdf" {
+            return true
+        }
+
         return userMetadataProvider.isSwapTransaction(transaction.id)
     }
 }

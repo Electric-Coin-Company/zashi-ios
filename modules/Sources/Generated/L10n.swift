@@ -1452,6 +1452,8 @@ public enum L10n {
     public static func maxSlippage(_ p1: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.maxSlippage", String(describing: p1), fallback: "Max slippage %@%")
     }
+    /// Max slippage
+    public static let maxSlippageTitle = L10n.tr("Localizable", "swapAndPay.maxSlippageTitle", fallback: "Max slippage")
     /// 1 ZEC = %@ %@
     public static func oneZecRate(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.oneZecRate", String(describing: p1), String(describing: p2), fallback: "1 ZEC = %@ %@")
@@ -1470,8 +1472,16 @@ public enum L10n {
     public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
     /// Rate
     public static let rate = L10n.tr("Localizable", "swapAndPay.rate", fallback: "Rate")
+    /// Recipient
+    public static let recipient = L10n.tr("Localizable", "swapAndPay.recipient", fallback: "Recipient")
     /// Recipient gets
     public static let recipientGets = L10n.tr("Localizable", "swapAndPay.recipientGets", fallback: "Recipient gets")
+    /// Refunded amount
+    public static let refundedAmount = L10n.tr("Localizable", "swapAndPay.refundedAmount", fallback: "Refunded amount")
+    /// Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.
+    public static let refundInfo = L10n.tr("Localizable", "swapAndPay.refundInfo", fallback: "Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.")
+    /// Payment Refunded
+    public static let refundTitle = L10n.tr("Localizable", "swapAndPay.refundTitle", fallback: "Payment Refunded")
     /// Search by name or ticker...
     public static let search = L10n.tr("Localizable", "swapAndPay.search", fallback: "Search by name or ticker...")
     /// Select...

@@ -23,6 +23,7 @@ extension TransactionDetailsView {
             } else {
                 RoundedRectangle(cornerRadius: Design.Radius._sm)
                     .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                    .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
                     .frame(width: 72, height: 20)
             }
         }
@@ -31,8 +32,12 @@ extension TransactionDetailsView {
     
     @ViewBuilder func swapSlippageView() -> some View {
         HStack(spacing: 0) {
-            Text(L10n.SwapAndPay.executedSlippage)
-                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+            Text(store.swapStatus != .refunded
+                 ? L10n.SwapAndPay.executedSlippage
+                 : L10n.SwapAndPay.maxSlippageTitle
+            )
+            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+            
             Spacer()
             
             if let slippage = store.swapSlippage {
@@ -42,10 +47,51 @@ extension TransactionDetailsView {
             } else {
                 RoundedRectangle(cornerRadius: Design.Radius._sm)
                     .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                    .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
                     .frame(width: 86, height: 20)
             }
         }
         .screenHorizontalPadding()
+    }
+    
+    @ViewBuilder func swapRefundAmountView() -> some View {
+        HStack(spacing: 0) {
+            Text(L10n.SwapAndPay.refundedAmount)
+                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+            
+            Spacer()
+            
+            if let refundedAmount = store.refundedAmount {
+                Text("\(refundedAmount) \(tokenName)")
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .frame(height: 20)
+            }
+        }
+        .screenHorizontalPadding()
+    }
+    
+    @ViewBuilder func swapRefundInfoView() -> some View {
+        HStack(alignment: .top, spacing: 0) {
+            Asset.Assets.infoOutline.image
+                .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                .padding(.trailing, 12)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.SwapAndPay.refundTitle)
+                    .zFont(.medium, size: 14, style: Design.Utility.WarningYellow._700)
+
+                Text(L10n.SwapAndPay.refundInfo)
+                    .zFont(size: 12, style: Design.Utility.WarningYellow._800)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(16)
+        .background {
+            RoundedRectangle(cornerRadius: Design.Radius._xl)
+                .fill(Design.Utility.WarningYellow._50.color(colorScheme))
+        }
+        .padding(.horizontal, 16)
     }
     
     @ViewBuilder func swapAssetsView() -> some View {
@@ -58,7 +104,7 @@ extension TransactionDetailsView {
                                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
-                                .frame(height: 20)
+                                .frame(height: 18)
 
                             zecTickerLogo(colorScheme)
                                 .scaleEffect(0.8)
@@ -74,7 +120,7 @@ extension TransactionDetailsView {
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
-                            .frame(height: 14)
+                            .frame(height: 18)
                     } else {
                         unknownValue()
                     }
@@ -93,7 +139,7 @@ extension TransactionDetailsView {
                                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
-                                .frame(height: 20)
+                                .frame(height: 18)
                         } else {
                             unknownValue()
                         }
@@ -111,7 +157,7 @@ extension TransactionDetailsView {
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
-                            .frame(height: 14)
+                            .frame(height: 18)
                     } else {
                         unknownValue()
                     }
@@ -154,7 +200,7 @@ extension TransactionDetailsView {
     @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme) -> some View {
         Asset.Assets.Brandmarks.brandmarkMax.image
             .zImage(size: 24, style: Design.Text.primary)
-            .padding(.trailing, 2)
+            .padding(.trailing, 12)
             .overlay {
                 Asset.Assets.Icons.shieldBcg.image
                     .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
@@ -170,6 +216,7 @@ extension TransactionDetailsView {
     @ViewBuilder func unknownTickerLogo(_ colorScheme: ColorScheme) -> some View {
         Circle()
             .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(Circle())
             .frame(width: 24, height: 24)
             .overlay {
                 Circle()
@@ -179,6 +226,7 @@ extension TransactionDetailsView {
                     .overlay {
                         Circle()
                             .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                            .shimmer(true).clipShape(Circle())
                             .frame(width: 14, height: 14)
                             .offset(x: 8, y: 6)
                     }
@@ -189,6 +237,7 @@ extension TransactionDetailsView {
     @ViewBuilder func unknownValue() -> some View {
         RoundedRectangle(cornerRadius: Design.Radius._sm)
             .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-            .frame(width: 44, height: 20)
+            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+            .frame(width: 44, height: 18)
     }
 }

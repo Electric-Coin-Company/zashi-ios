@@ -127,6 +127,7 @@ public enum Asset {
       public static let plus = ImageAsset(name: "plus")
       public static let qr = ImageAsset(name: "qr")
       public static let received = ImageAsset(name: "received")
+      public static let refreshSingleCCW = ImageAsset(name: "refreshSingleCCW")
       public static let save = ImageAsset(name: "save")
       public static let scan = ImageAsset(name: "scan")
       public static let search = ImageAsset(name: "search")
