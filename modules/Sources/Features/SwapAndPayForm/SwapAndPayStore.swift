@@ -9,6 +9,7 @@ import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
 import ZcashSDKEnvironment
+import Utils
 
 import Models
 import BalanceBreakdown
@@ -33,6 +34,7 @@ public struct SwapAndPay {
         public var isCancelSheetVisible = false
         public var isInputInUsd = false
         public var isNotAddressInAddressBook = false
+        public var isOptInFlow = false
         public var isPopToRootBack = false
         public var isQuoteRequestInFlight = false
         public var isQuotePresented = false
@@ -40,6 +42,9 @@ public struct SwapAndPay {
         public var isSlippagePresented = false
         public var isSwapCanceled = false
         public var isSwapExperienceEnabled = true
+        public var optionOneChecked = false
+        public var optionTwoChecked = false
+        public var selectedOperationChip = 0
         public var proposal: Proposal?
         public var quote: SwapQuote?
         public var quoteUnavailableErrorMsg = ""
@@ -130,9 +135,12 @@ public struct SwapAndPay {
         case enableSwapExperience(Bool)
         case eraseSearchTermTapped
         case getQuoteTapped
+        case helpSheetRequested(Int)
+        case internalBackButtonTapped
         case nextTapped
         case onAppear
         case onDisappear
+        case operationChipTapped(Int)
         case proposal(Proposal)
         case quoteUnavailable(String)
         case refreshSwapAssets
@@ -146,6 +154,14 @@ public struct SwapAndPay {
         case switchInputTapped
         case updateAssetsAccordingToSearchTerm
         case walletBalances(WalletBalances.Action)
+        
+        // Opt-in
+        case confirmForcedOptInTapped
+        case confirmOptInTapped
+        case goBackForcedOptInTapped
+        case optionOneTapped
+        case optionTwoTapped
+        case skipOptInTapped
     }
 
     @Dependency(\.mainQueue) var mainQueue
@@ -198,6 +214,12 @@ public struct SwapAndPay {
                 state.isCancelSheetVisible = true
                 return .none
                 
+            case .internalBackButtonTapped:
+                return .none
+                
+            case .helpSheetRequested:
+                return .none
+                
             case .customBackRequired:
                 return .none
                 
@@ -215,6 +237,10 @@ public struct SwapAndPay {
                     state.isQuotePresented = true
                 }
                 return .none
+                
+            case .operationChipTapped(let index):
+                state.selectedOperationChip = index
+                return .send(.enableSwapExperience(index == 0))
                 
             case .addNewContactTapped(let contact):
                 return .none
@@ -500,6 +526,30 @@ public struct SwapAndPay {
                 return .send(.updateAssetsAccordingToSearchTerm)
 
             case .walletBalances:
+                return .none
+                
+            // MARK: - Opt-in
+                
+            case .skipOptInTapped:
+                state.optionOneChecked = false
+                state.optionTwoChecked = false
+                return .none
+                
+            case .confirmOptInTapped:
+                return .none
+                
+            case .goBackForcedOptInTapped:
+                return .none
+                
+            case .confirmForcedOptInTapped:
+                return .none
+                
+            case .optionOneTapped:
+                state.optionOneChecked.toggle()
+                return .none
+
+            case .optionTwoTapped:
+                state.optionTwoChecked.toggle()
                 return .none
             }
         }

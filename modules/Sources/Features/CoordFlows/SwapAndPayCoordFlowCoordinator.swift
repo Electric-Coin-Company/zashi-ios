@@ -162,6 +162,31 @@ extension SwapAndPayCoordFlow {
                 }
                 return .none
 
+            // MARK: - Self Opt-in
+                
+            case .swapAndPay(.skipOptInTapped):
+                state.swapAndPayState.optionOneChecked = false
+                state.swapAndPayState.optionTwoChecked = false
+                state.path.append(.swapAndPayOptInForced(state.swapAndPayState))
+                return .none
+
+            case .swapAndPay(.confirmOptInTapped):
+                try? walletStorage.importSwapAPIAccess(.protected)
+                state.path.append(.swapAndPayForm(state.swapAndPayState))
+                return .none
+
+            case .path(.element(id: _, action: .swapAndPayOptInForced(.confirmForcedOptInTapped))):
+                try? walletStorage.importSwapAPIAccess(.direct)
+                state.path.append(.swapAndPayForm(state.swapAndPayState))
+                return .none
+
+            case .path(.element(id: _, action: .swapAndPayOptInForced(.goBackForcedOptInTapped))):
+                let _ = state.path.popLast()
+                return .none
+
+            case .path(.element(id: _, action: .swapAndPayForm(.internalBackButtonTapped))):
+                return .send(.swapAndPay(.backButtonTapped(state.isSwapInFlight)))
+
             default: return .none
             }
         }

@@ -30,6 +30,7 @@ public struct WalletStorage {
         public static let zcashStoredWalletBackupAcknowledged = "zcashStoredWalletBackupAcknowledged"
         public static let zcashStoredShieldingAcknowledged = "zcashStoredShieldingAcknowledged"
         public static let zcashStoredTorSetupFlag = "zcashStoredTorSetupFlag"
+        public static let zcashStoredSwapAPIAccess = "zcashStoredSwapAPIAccess"
 
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
@@ -37,6 +38,16 @@ public struct WalletStorage {
         public static func accountMetadataFilename(account: Account) -> String {
             Constants.zcashStoredUserMetadataEncryptionKeys + "_\(account.name?.lowercased() ?? "")"
         }
+    }
+    
+    /// States of the Swap API access opt-in
+    public enum SwapAPIAccess: Equatable, Codable, Hashable {
+        /// Waiting to be resolved, the prompt to opt-in must be always trigegred
+        case notResolved
+        /// A user decided to allow the API access over Tor
+        case protected
+        /// A user skipped the protected step by use over Tor so the swaps are done via direct calls, no IP protection
+        case direct
     }
 
     public enum KeychainError: Error, Equatable {
@@ -375,6 +386,36 @@ public struct WalletStorage {
         }
         
         return (try? decode(json: reqData, as: Bool.self)) ?? false
+    }
+
+    public func importSwapAPIAccess(_ state: WalletStorage.SwapAPIAccess) throws {
+        guard let data = try? encode(object: state) else {
+            throw KeychainError.encoding
+        }
+
+        do {
+            try setData(data, forKey: Constants.zcashStoredSwapAPIAccess)
+        } catch KeychainError.duplicate {
+            try updateData(data, forKey: Constants.zcashStoredSwapAPIAccess)
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportSwapAPIAccess() -> WalletStorage.SwapAPIAccess {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredSwapAPIAccess)
+        } catch {
+            return .notResolved
+        }
+        
+        guard let reqData else {
+            return .notResolved
+        }
+        
+        return (try? decode(json: reqData, as: WalletStorage.SwapAPIAccess.self)) ?? .notResolved
     }
 
     public func importTorSetupFlag(_ enabled: Bool) throws {

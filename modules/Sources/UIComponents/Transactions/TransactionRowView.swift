@@ -72,13 +72,13 @@ public struct TransactionRowView: View {
                         
                         if isSwap {
                             Asset.Assets.Tickers.nearChain.image
-                                .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
-                                .offset(x: 7, y: 11)
+                                .zImage(size: 20, color: Design.screenBackground.color(colorScheme))
+                                .offset(x: 9, y: 12)
                                 .overlay {
                                     Asset.Assets.Tickers.nearChain.image
                                         .resizable()
-                                        .frame(width: 13, height: 13)
-                                        .offset(x: 7, y: 11)
+                                        .frame(width: 18, height: 18)
+                                        .offset(x: 9, y: 12)
                                 }
                         }
                     }

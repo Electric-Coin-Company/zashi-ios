@@ -1428,8 +1428,8 @@ public enum L10n {
     public static let editPayment = L10n.tr("Localizable", "swapAndPay.editPayment", fallback: "Edit payment")
     /// Enter address...
     public static let enterAddress = L10n.tr("Localizable", "swapAndPay.enterAddress", fallback: "Enter address...")
-    /// Executed slippage
-    public static let executedSlippage = L10n.tr("Localizable", "swapAndPay.executedSlippage", fallback: "Executed slippage")
+    /// Realized slippage
+    public static let executedSlippage = L10n.tr("Localizable", "swapAndPay.executedSlippage", fallback: "Realized slippage")
     /// There was an error initiating a swap. Try it again, please.
     public static let failureInfo = L10n.tr("Localizable", "swapAndPay.failureInfo", fallback: "There was an error initiating a swap. Try it again, please.")
     /// ZEC transaction fee
@@ -1456,6 +1456,8 @@ public enum L10n {
     public static func oneZecRate(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.oneZecRate", String(describing: p1), String(describing: p2), fallback: "1 ZEC = %@ %@")
     }
+    /// Pay
+    public static let pay = L10n.tr("Localizable", "swapAndPay.pay", fallback: "Pay")
     /// Pay from
     public static let payFrom = L10n.tr("Localizable", "swapAndPay.payFrom", fallback: "Pay from")
     /// Pay now
@@ -1526,6 +1528,12 @@ public enum L10n {
       /// No results
       public static let title = L10n.tr("Localizable", "swapAndPay.emptyAssets.title", fallback: "No results")
     }
+    public enum ForcedOptIn {
+      /// I understand that Zashi makes API requests to the NEAR API every time I interact with a Swap/Pay transaction.
+      public static let optionOne = L10n.tr("Localizable", "swapAndPay.forcedOptIn.optionOne", fallback: "I understand that Zashi makes API requests to the NEAR API every time I interact with a Swap/Pay transaction.")
+      /// I understand that by not enabling Tor, my IP address will be leaked by the NEAR API.
+      public static let optionTwo = L10n.tr("Localizable", "swapAndPay.forcedOptIn.optionTwo", fallback: "I understand that by not enabling Tor, my IP address will be leaked by the NEAR API.")
+    }
     public enum Help {
       /// Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. 
       public static let payDesc = L10n.tr("Localizable", "swapAndPay.help.payDesc", fallback: "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ")
@@ -1539,6 +1547,22 @@ public enum L10n {
       public static let swapWith = L10n.tr("Localizable", "swapAndPay.help.swapWith", fallback: "Swap with")
       /// Swap with NEAR
       public static let swapWithNear = L10n.tr("Localizable", "swapAndPay.help.swapWithNear", fallback: "Swap with NEAR")
+    }
+    public enum OptIn {
+      /// This feature is powered by a third-party NEAR API. Zashi needs to make networking calls to fetch rates, quotes, execute transactions and check their status in the transaction history which can leak your IP address. We recommend you to allow Tor connection to protect your IP address at all times.
+      public static let desc = L10n.tr("Localizable", "swapAndPay.optIn.desc", fallback: "This feature is powered by a third-party NEAR API. Zashi needs to make networking calls to fetch rates, quotes, execute transactions and check their status in the transaction history which can leak your IP address. We recommend you to allow Tor connection to protect your IP address at all times.")
+      /// Enable API calls to the NEAR API.
+      public static let optionOneSubtitle = L10n.tr("Localizable", "swapAndPay.optIn.optionOneSubtitle", fallback: "Enable API calls to the NEAR API.")
+      /// Allow Third-Party Requests
+      public static let optionOneTitle = L10n.tr("Localizable", "swapAndPay.optIn.optionOneTitle", fallback: "Allow Third-Party Requests")
+      /// Protect IP address with Tor connection.
+      public static let optionTwoSubtitle = L10n.tr("Localizable", "swapAndPay.optIn.optionTwoSubtitle", fallback: "Protect IP address with Tor connection.")
+      /// Turn on IP Address Protection
+      public static let optionTwoTitle = L10n.tr("Localizable", "swapAndPay.optIn.optionTwoTitle", fallback: "Turn on IP Address Protection")
+      /// Swap or Pay with
+      public static let title = L10n.tr("Localizable", "swapAndPay.optIn.title", fallback: "Swap or Pay with")
+      /// Note for the super privacy-conscious: Transactions executed via the NEAR API are transparent which means all transaction information is public.
+      public static let warn = L10n.tr("Localizable", "swapAndPay.optIn.warn", fallback: "Note for the super privacy-conscious: Transactions executed via the NEAR API are transparent which means all transaction information is public.")
     }
     public enum Quote {
       /// Zashi

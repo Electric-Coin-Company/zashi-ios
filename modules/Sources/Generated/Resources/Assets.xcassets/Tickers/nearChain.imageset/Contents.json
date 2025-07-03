@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "near2.png",
+      "filename" : "near2black.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "near2 1.png",
       "idiom" : "universal"
     }
   ],

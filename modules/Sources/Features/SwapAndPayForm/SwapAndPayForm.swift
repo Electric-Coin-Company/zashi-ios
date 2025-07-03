@@ -112,11 +112,33 @@ public struct SwapAndPayForm: View {
                 observeKeyboardNotifications()
             }
             .applyScreenBackground()
-            .zashiTitle {
-                Text(L10n.SendSelect.swapAndPay)
-                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                    .fixedSize()
+            .zashiBack {
+                store.send(.internalBackButtonTapped)
             }
+            .zashiTitle {
+                HStack(spacing: 0) {
+                    operationChip(index: 0, text: L10n.SwapAndPay.swap, colorScheme)
+                    operationChip(index: 1, text: L10n.SwapAndPay.pay, colorScheme)
+                }
+                .padding(.horizontal, 2)
+                .frame(minWidth: 180)
+                .padding(.vertical, 2)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._lg)
+                        .fill(Design.Switcher.surfacePrimary.color(colorScheme))
+                }
+            }
+            .navigationBarHidden(!store.isOptInFlow)
+            .navigationBarItems(
+                trailing:
+                    Button {
+                        store.send(.helpSheetRequested(store.selectedOperationChip))
+                    } label: {
+                        Asset.Assets.Icons.help.image
+                            .zImage(size: 24, style: Design.Text.primary)
+                            .padding(8)
+                    }
+            )
             .popover(isPresented: $store.assetSelectBinding) {
                 assetContent(colorScheme)
                     .padding(.horizontal, 4)
@@ -203,6 +225,36 @@ public struct SwapAndPayForm: View {
                 let safeFrame = window.safeAreaLayoutGuide.layoutFrame
                 safeAreaHeight = safeFrame.height
             }
+        }
+    }
+    
+    @ViewBuilder private func operationChip(index: Int, text: String, _ colorScheme: ColorScheme) -> some View {
+        if store.selectedOperationChip == index {
+            Text(text)
+                .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
+                .frame(minWidth: 90)
+                .fixedSize()
+                .frame(height: 36)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._lg)
+                        .fill(Design.Switcher.selectedBg.color(colorScheme))
+                        .background {
+                            RoundedRectangle(cornerRadius: Design.Radius._lg)
+                                .stroke(Design.Switcher.selectedStroke.color(colorScheme))
+                        }
+                }
+                .onTapGesture {
+                    store.send(.operationChipTapped(index))
+                }
+        } else {
+            Text(text)
+                .zFont(.medium, size: 16, style: Design.Switcher.defaultText)
+                .frame(minWidth: 90)
+                .fixedSize()
+                .frame(height: 36)
+                .onTapGesture {
+                    store.send(.operationChipTapped(index))
+                }
         }
     }
     
@@ -499,7 +551,7 @@ public struct SwapAndPayForm: View {
                             : Asset.Assets.Icons.user.image
                         ) {
                             if store.isNotAddressInAddressBook {
-                                store.send(.addNewContactTapped(store.address))
+                                store.send(.addNewContactTapped(store.address.redacted))
                             } else {
                                 store.send(.addressBookTapped)
                             }

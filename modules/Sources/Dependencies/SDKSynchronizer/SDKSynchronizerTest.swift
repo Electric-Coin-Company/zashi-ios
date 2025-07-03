@@ -13,6 +13,18 @@ import Models
 import Utils
 import URKit
 
+extension HTTPURLResponse {
+    public static var mockResponse: HTTPURLResponse {
+        let url = URL(string: "https://example.com")!
+        return HTTPURLResponse(
+            url: url,
+            statusCode: 200,
+            httpVersion: "HTTP/1.1",
+            headerFields: ["Content-Type": "application/json"]
+        )!
+    }
+}
+
 extension SDKSynchronizerClient: TestDependencyKey {
     public static let testValue = Self(
         stateStream: unimplemented("\(Self.self).stateStream", placeholder: Empty().eraseToAnyPublisher()),
@@ -52,7 +64,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         getCustomUnifiedAddress: unimplemented("\(Self.self).getCustomUnifiedAddress", placeholder: nil),
         torEnabled: unimplemented("\(Self.self).torEnabled"),
         exchangeRateEnabled: unimplemented("\(Self.self).exchangeRateEnabled"),
-        isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil)
+        isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil),
+        httpRequestOverTor: unimplemented("\(Self.self).httpRequestOverTor", placeholder: (Data(), HTTPURLResponse.mockResponse))
     )
 }
 
@@ -95,7 +108,8 @@ extension SDKSynchronizerClient {
         getCustomUnifiedAddress: { _, _ in nil },
         torEnabled: { _ in },
         exchangeRateEnabled: { _ in },
-        isTorSuccessfullyInitialized: { nil }
+        isTorSuccessfullyInitialized: { nil },
+        httpRequestOverTor: { _ in (data: Data(), response: HTTPURLResponse.mockResponse) }
     )
 
     public static let mock = Self.mocked()
@@ -209,7 +223,8 @@ extension SDKSynchronizerClient {
         getCustomUnifiedAddress: @escaping (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress? = { _, _ in nil },
         torEnabled: @escaping (Bool) async throws -> Void = { _ in },
         exchangeRateEnabled: @escaping (Bool) async throws -> Void = { _ in },
-        isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil }
+        isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil },
+        httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -249,7 +264,8 @@ extension SDKSynchronizerClient {
             getCustomUnifiedAddress: getCustomUnifiedAddress,
             torEnabled: torEnabled,
             exchangeRateEnabled: exchangeRateEnabled,
-            isTorSuccessfullyInitialized: isTorSuccessfullyInitialized
+            isTorSuccessfullyInitialized: isTorSuccessfullyInitialized,
+            httpRequestOverTor: httpRequestOverTor
         )
     }
 }

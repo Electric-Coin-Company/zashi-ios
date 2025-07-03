@@ -293,6 +293,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             isTorSuccessfullyInitialized: {
                 await synchronizer.isTorSuccessfullyInitialized()
+            },
+            httpRequestOverTor: { request in
+                try await synchronizer.httpRequestOverTor(for: request)
             }
         )
     }

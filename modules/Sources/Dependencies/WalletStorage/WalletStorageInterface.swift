@@ -103,4 +103,8 @@ public struct WalletStorageClient {
     /// Tor setup flag
     public var importTorSetupFlag: (Bool) throws -> Void
     public var exportTorSetupFlag: () -> Bool? = { nil }
+
+    /// Swap  API opt-in acknowledge state
+    public var importSwapAPIAccess: (WalletStorage.SwapAPIAccess) throws -> Void
+    public var exportSwapAPIAccess: () -> WalletStorage.SwapAPIAccess = { .notResolved }
 }

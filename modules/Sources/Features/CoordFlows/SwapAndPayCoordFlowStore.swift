@@ -48,6 +48,8 @@ public struct SwapAndPayCoordFlow {
         case sendResultFailure(SendConfirmation)
         case sendResultResubmission(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
+        case swapAndPayForm(SwapAndPay)
+        case swapAndPayOptInForced(SwapAndPay)
         case transactionDetails(TransactionDetails)
     }
     
@@ -61,11 +63,13 @@ public struct SwapAndPayCoordFlow {
         
         public var failedDescription = ""
         public var isHelpSheetPresented = false
+        public var isOptInFlow = false
         public var path = StackState<Path.State>()
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectedOperationChip = 0
         public var swapAndPayState = SwapAndPay.State.initial
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var txIdToExpand: String?
         
@@ -79,7 +83,9 @@ public struct SwapAndPayCoordFlow {
     public enum Action: BindableAction {
         case backButtonTapped
         case binding(BindingAction<SwapAndPayCoordFlow.State>)
+        case customBackRequired
         case helpSheetRequested
+        case onAppear
         case operationChipTapped(Int)
         case path(StackActionOf<Path>)
         case sendDone
@@ -119,6 +125,14 @@ public struct SwapAndPayCoordFlow {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                // Here must be the determination if the start is to the opt-in screens or direct to the form
+                let swapAPIAccess = walletStorage.exportSwapAPIAccess()
+                state.$swapAPIAccess.withLock { $0 = swapAPIAccess }
+                state.isOptInFlow = swapAPIAccess == .notResolved
+                state.swapAndPayState.isOptInFlow = state.isOptInFlow
+                return .none
+                
             case .operationChipTapped(let index):
                 state.selectedOperationChip = index
                 return .send(.swapAndPay(.enableSwapExperience(index == 0)))
@@ -126,7 +140,12 @@ public struct SwapAndPayCoordFlow {
             case .helpSheetRequested:
                 state.isHelpSheetPresented.toggle()
                 return .none
-                
+
+            case .path(.element(id: _, action: .swapAndPayForm(.helpSheetRequested(let index)))):
+                state.selectedOperationChip = index
+                state.isHelpSheetPresented.toggle()
+                return .none
+
             case .updateTxIdToExpand(let txId):
                 state.txIdToExpand = txId
                 return .none

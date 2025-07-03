@@ -3,6 +3,16 @@
     {
       "filename" : "NearLogo.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "NearLogo2.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

@@ -35,15 +35,26 @@ public struct SwapAndPayCoordFlowView: View {
         WithPerceptionTracking {
             WithPerceptionTracking {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                    SwapAndPayForm(
-                        store:
-                            store.scope(
-                                state: \.swapAndPayState,
-                                action: \.swapAndPay
-                            ),
-                        tokenName: tokenName
-                    )
-                    .navigationBarHidden(true)
+                    if store.isOptInFlow {
+                        SwapAndPayOptInView(
+                            store:
+                                store.scope(
+                                    state: \.swapAndPayState,
+                                    action: \.swapAndPay
+                                )
+                        )
+                        .navigationBarHidden(true)
+                    } else {
+                        SwapAndPayForm(
+                            store:
+                                store.scope(
+                                    state: \.swapAndPayState,
+                                    action: \.swapAndPay
+                                ),
+                            tokenName: tokenName
+                        )
+                        .navigationBarHidden(true)
+                    }
                 } destination: { store in
                     switch store.case {
                     case let .addressBookChainToken(store):
@@ -60,6 +71,10 @@ public struct SwapAndPayCoordFlowView: View {
                         ResubmissionView(store: store, tokenName: tokenName)
                     case let .sendResultSuccess(store):
                         SuccessView(store: store, tokenName: tokenName)
+                    case let .swapAndPayForm(store):
+                        SwapAndPayForm(store: store, tokenName: tokenName)
+                    case let .swapAndPayOptInForced(store):
+                        SwapAndPayOptInForcedView(store: store)
                     case let .transactionDetails(store):
                         TransactionDetailsView(store: store, tokenName: tokenName)
                     }
@@ -74,21 +89,27 @@ public struct SwapAndPayCoordFlowView: View {
                                 .zImage(size: 24, style: Design.Text.primary)
                                 .padding(8)
                         }
+                        .disabled(store.isOptInFlow)
+                        .opacity(store.isOptInFlow ? 0 : 1)
                 )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                     moreContent()
                         .screenHorizontalPadding()
                         .applyScreenBackground()
                 }
+                .onAppear { store.send(.onAppear) }
             }
             .applyScreenBackground()
-            .zashiBack {
+            .zashiBack(hidden: store.isOptInFlow) {
                 store.send(.backButtonTapped)
+            }
+            .zashiBackV2(hidden: !store.isOptInFlow) {
+                store.send(.customBackRequired)
             }
             .zashiTitle {
                 HStack(spacing: 0) {
-                    operationChip(index: 0, text: "Swap", colorScheme)
-                    operationChip(index: 1, text: "Pay", colorScheme)
+                    operationChip(index: 0, text: L10n.SwapAndPay.swap, colorScheme)
+                    operationChip(index: 1, text: L10n.SwapAndPay.pay, colorScheme)
                 }
                 .padding(.horizontal, 2)
                 .frame(minWidth: 180)
@@ -97,6 +118,8 @@ public struct SwapAndPayCoordFlowView: View {
                     RoundedRectangle(cornerRadius: Design.Radius._lg)
                         .fill(Design.Switcher.surfacePrimary.color(colorScheme))
                 }
+                .disabled(store.isOptInFlow)
+                .opacity(store.isOptInFlow ? 0 : 1)
             }
         }
     }

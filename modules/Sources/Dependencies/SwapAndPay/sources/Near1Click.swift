@@ -8,6 +8,8 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
+import SDKSynchronizer
+import WalletStorage
 
 struct Near1Click {
     let submitDepositTxId: (String, String) async throws -> Void
@@ -17,271 +19,303 @@ struct Near1Click {
 }
 
 extension Near1Click {
-    public static let liveValue = Self(
-        submitDepositTxId: { txId, depositAddress in
-            guard let url = URL(string: "https://1click.chaindefuser.com/v0/deposit/submit") else {
-                throw URLError(.badURL)
-            }
+    public static let liveValue: Near1Click = Self.live()
+    
+    public static func live() -> Self {
+        @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
 
-            let requestData = SwapSubmitHash(
-                txHash: txId,
-                depositAddress: depositAddress
-            )
-            
-            guard let jsonData = try? JSONEncoder().encode(requestData) else {
-                fatalError("Failed to encode JSON")
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = jsonData
-            
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw SwapAndPayClient.EndpointError.message("Submit deposit id: Invalid response")
-            }
-            
-            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                throw SwapAndPayClient.EndpointError.message("Submit deposit id: Cannot parse response")
-            }
-        },
-        swapAssets: {
-            guard let url = URL(string: "https://1click.chaindefuser.com/v0/tokens") else {
-                throw URLError(.badURL)
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-            
-            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
-                throw URLError(.cannotParseResponse)
-            }
-
-            let formatter = NumberFormatter()
-            formatter.locale = Locale(identifier: "en_US")
-            formatter.numberStyle = .decimal
-            
-            let chainAssets = jsonObject.compactMap { dict -> SwapAsset? in
-                guard let chain = dict["blockchain"] as? String else {
-                    return nil
+        return Near1Click(
+            //    public static let liveValue = Self(
+            submitDepositTxId: { txId, depositAddress in
+                guard swapAPIAccess != .notResolved else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
                 }
 
-                guard let symbol = dict["symbol"] as? String else {
-                    return nil
+                guard let url = URL(string: "https://1click.chaindefuser.com/v0/deposit/submit") else {
+                    throw URLError(.badURL)
                 }
-
-                guard let assetId = dict["assetId"] as? String else {
-                    return nil
-                }
-
-                guard let usdPrice = dict["price"] as? Double else {
-                    return nil
-                }
-
-                guard let decimals = dict["decimals"] as? Int else {
-                    return nil
-                }
-
-                return SwapAsset(
-                    chain: chain,
-                    token: symbol,
-                    assetId: assetId,
-                    usdPrice: Decimal(usdPrice),
-                    decimals: decimals
+                
+                let requestData = SwapSubmitHash(
+                    txHash: txId,
+                    depositAddress: depositAddress
                 )
-            }
-            
-            return IdentifiedArrayOf(uniqueElements: chainAssets)
-        },
-        quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
-            guard let url = URL(string: "https://1click.chaindefuser.com/v0/quote") else {
-                throw URLError(.badURL)
-            }
-            
-            // Deadline in ISO 8601 UTC format
-            let now = Date()
-            let tenMinutesLater = now.addingTimeInterval(10 * 60)
-            let isoFormatter = ISO8601DateFormatter()
-            isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
-            isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            
-            let deadline = isoFormatter.string(from: tenMinutesLater)
-            
-            let requestData = SwapQuoteRequest(
-                dry: dry,
-                swapType: exactInput ? "EXACT_INPUT" : "EXACT_OUTPUT",
-                slippageTolerance: slippageTolerance,
-                originAsset: zecAsset.assetId,
-                depositType: "ORIGIN_CHAIN",
-                destinationAsset: toAsset.assetId,
-                amount: amount,
-                refundTo: refundTo,
-                refundType: "ORIGIN_CHAIN",
-                recipient: destination,
-                recipientType: "DESTINATION_CHAIN",
-                deadline: deadline,
-                quoteWaitingTimeMs: 3000
-            )
-            
-            guard let jsonData = try? JSONEncoder().encode(requestData) else {
-                fatalError("Failed to encode JSON")
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = jsonData
-            
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw SwapAndPayClient.EndpointError.message("Quote: Invalid response")
-            }
-            
-            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
-            }
+                
+                guard let jsonData = try? JSONEncoder().encode(requestData) else {
+                    fatalError("Failed to encode JSON")
+                }
+                
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.httpBody = jsonData
+                
+                let (data, response) = swapAPIAccess == .direct
+                ? try await URLSession.shared.data(for: request)
+                : try await sdkSynchronizer.httpRequestOverTor(request)
 
-            if httpResponse.statusCode >= 400 {
-                // evaluate error
-                if let errorMsg = jsonObject["message"] as? String {
-                    var errorMsgConverted = errorMsg
+                guard let _ = response as? HTTPURLResponse else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: Invalid response")
+                }
+                
+                guard let _ = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: Cannot parse response")
+                }
+            },
+            swapAssets: {
+                guard swapAPIAccess != .notResolved else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
+                }
 
-                    // insufficient amount transformations
-                    if errorMsg.contains("Amount is too low for bridge, try at least") {
-                        if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last {
-                            let valueDecimal = NSDecimalNumber(string: String(value)).decimalValue
+                guard let url = URL(string: "https://1click.chaindefuser.com/v0/tokens") else {
+                    throw URLError(.badURL)
+                }
+                
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                
+                let (data, _) = swapAPIAccess == .direct
+                ? try await URLSession.shared.data(for: request)
+                : try await sdkSynchronizer.httpRequestOverTor(request)
 
-                            let formatter = NumberFormatter()
-                            formatter.numberStyle = .decimal
-                            formatter.minimumFractionDigits = 2
-                            formatter.maximumFractionDigits = 8
-                            formatter.usesGroupingSeparator = false
-                            formatter.locale = Locale.current
-
-                            // ZEC asset
-                            if exactInput {
-                                let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
-
-                                let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
-                                errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
-                            } else {
-                                // selected Asset
-                                let tokenAmount = (valueDecimal / Decimal(pow(10.0, Double(toAsset.decimals)))).simplified
-
-                                let localeValue = formatter.string(from: NSDecimalNumber(decimal: tokenAmount)) ?? "\(tokenAmount)"
-                                errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
-                            }
-                        }
+                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
+                    throw URLError(.cannotParseResponse)
+                }
+                
+                let formatter = NumberFormatter()
+                formatter.locale = Locale(identifier: "en_US")
+                formatter.numberStyle = .decimal
+                
+                let chainAssets = jsonObject.compactMap { dict -> SwapAsset? in
+                    guard let chain = dict["blockchain"] as? String else {
+                        return nil
                     }
                     
-                    throw SwapAndPayClient.EndpointError.message(errorMsgConverted)
-                } else {
-                    throw SwapAndPayClient.EndpointError.message("Unknown error")
+                    guard let symbol = dict["symbol"] as? String else {
+                        return nil
+                    }
+                    
+                    guard let assetId = dict["assetId"] as? String else {
+                        return nil
+                    }
+                    
+                    guard let usdPrice = dict["price"] as? Double else {
+                        return nil
+                    }
+                    
+                    guard let decimals = dict["decimals"] as? Int else {
+                        return nil
+                    }
+                    
+                    return SwapAsset(
+                        chain: chain,
+                        token: symbol,
+                        assetId: assetId,
+                        usdPrice: Decimal(usdPrice),
+                        decimals: decimals
+                    )
                 }
-            }
+                
+                return IdentifiedArrayOf(uniqueElements: chainAssets)
+            },
+            quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
+                guard swapAPIAccess != .notResolved else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
+                }
 
-            guard let quote = jsonObject["quote"] as? [String: Any],
-                  let depositAddress = quote["depositAddress"] as? String,
-                  let amountInString = quote["amountIn"] as? String,
-                  let amountInUsdString = quote["amountInUsd"] as? String,
-                  let minAmountInString = quote["minAmountIn"] as? String,
-                  let amountOutString = quote["amountOut"] as? String,
-                  let amountOutUsdString = quote["amountOutUsd"] as? String,
-                  let timeEstimate = quote["timeEstimate"] as? Int else {
-                throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
-            }
-            
-            let amountIn = NSDecimalNumber(string: amountInString).decimalValue
-            let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
-            let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
-            
-            return SwapQuote(
-                depositAddress: depositAddress,
-                amountIn: amountIn,
-                amountInUsd: amountInUsdString,
-                minAmountIn: minAmountIn,
-                amountOut: amountOut / Decimal(pow(10.0, Double(toAsset.decimals))),
-                amountOutUsd: amountOutUsdString,
-                timeEstimate: TimeInterval(timeEstimate)
-            )
-        },
-        status: { depositAddress in
-            guard let url = URL(string: "https://1click.chaindefuser.com/v0/status?depositAddress=\(depositAddress)") else {
-                throw URLError(.badURL)
-            }
+                guard let url = URL(string: "https://1click.chaindefuser.com/v0/quote") else {
+                    throw URLError(.badURL)
+                }
+                
+                // Deadline in ISO 8601 UTC format
+                let now = Date()
+                let tenMinutesLater = now.addingTimeInterval(10 * 60)
+                let isoFormatter = ISO8601DateFormatter()
+                isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
+                isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                
+                let deadline = isoFormatter.string(from: tenMinutesLater)
+                
+                let requestData = SwapQuoteRequest(
+                    dry: dry,
+                    swapType: exactInput ? "EXACT_INPUT" : "EXACT_OUTPUT",
+                    slippageTolerance: slippageTolerance,
+                    originAsset: zecAsset.assetId,
+                    depositType: "ORIGIN_CHAIN",
+                    destinationAsset: toAsset.assetId,
+                    amount: amount,
+                    refundTo: refundTo,
+                    refundType: "ORIGIN_CHAIN",
+                    recipient: destination,
+                    recipientType: "DESTINATION_CHAIN",
+                    deadline: deadline,
+                    quoteWaitingTimeMs: 3000
+                )
+                
+                guard let jsonData = try? JSONEncoder().encode(requestData) else {
+                    fatalError("Failed to encode JSON")
+                }
+                
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.httpBody = jsonData
 
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
+                let (data, response) = swapAPIAccess == .direct
+                ? try await URLSession.shared.data(for: request)
+                : try await sdkSynchronizer.httpRequestOverTor(request)
 
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Invalid response")
-            }
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw SwapAndPayClient.EndpointError.message("Quote: Invalid response")
+                }
+                
+                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
+                }
+                
+                if httpResponse.statusCode >= 400 {
+                    // evaluate error
+                    if let errorMsg = jsonObject["message"] as? String {
+                        var errorMsgConverted = errorMsg
+                        
+                        // insufficient amount transformations
+                        if errorMsg.contains("Amount is too low for bridge, try at least") {
+                            if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last {
+                                let valueDecimal = NSDecimalNumber(string: String(value)).decimalValue
+                                
+                                let formatter = NumberFormatter()
+                                formatter.numberStyle = .decimal
+                                formatter.minimumFractionDigits = 2
+                                formatter.maximumFractionDigits = 8
+                                formatter.usesGroupingSeparator = false
+                                formatter.locale = Locale.current
+                                
+                                // ZEC asset
+                                if exactInput {
+                                    let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
+                                    
+                                    let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
+                                    errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
+                                } else {
+                                    // selected Asset
+                                    let tokenAmount = (valueDecimal / Decimal(pow(10.0, Double(toAsset.decimals)))).simplified
+                                    
+                                    let localeValue = formatter.string(from: NSDecimalNumber(decimal: tokenAmount)) ?? "\(tokenAmount)"
+                                    errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
+                                }
+                            }
+                        }
+                        
+                        throw SwapAndPayClient.EndpointError.message(errorMsgConverted)
+                    } else {
+                        throw SwapAndPayClient.EndpointError.message("Unknown error")
+                    }
+                }
+                
+                guard let quote = jsonObject["quote"] as? [String: Any],
+                      let depositAddress = quote["depositAddress"] as? String,
+                      let amountInString = quote["amountIn"] as? String,
+                      let amountInUsdString = quote["amountInUsd"] as? String,
+                      let minAmountInString = quote["minAmountIn"] as? String,
+                      let amountOutString = quote["amountOut"] as? String,
+                      let amountOutUsdString = quote["amountOutUsd"] as? String,
+                      let timeEstimate = quote["timeEstimate"] as? Int else {
+                    throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
+                }
+                
+                let amountIn = NSDecimalNumber(string: amountInString).decimalValue
+                let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
+                let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
+                
+                return SwapQuote(
+                    depositAddress: depositAddress,
+                    amountIn: amountIn,
+                    amountInUsd: amountInUsdString,
+                    minAmountIn: minAmountIn,
+                    amountOut: amountOut / Decimal(pow(10.0, Double(toAsset.decimals))),
+                    amountOutUsd: amountOutUsdString,
+                    timeEstimate: TimeInterval(timeEstimate)
+                )
+            },
+            status: { depositAddress in
+                guard swapAPIAccess != .notResolved else {
+                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
+                }
 
-            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")
-            }
+                guard let url = URL(string: "https://1click.chaindefuser.com/v0/status?depositAddress=\(depositAddress)") else {
+                    throw URLError(.badURL)
+                }
+                
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                
+                let (data, response) = swapAPIAccess == .direct
+                ? try await URLSession.shared.data(for: request)
+                : try await sdkSynchronizer.httpRequestOverTor(request)
 
-            guard let statusStr = jsonObject["status"] as? String else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
+                guard let _ = response as? HTTPURLResponse else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Invalid response")
+                }
+                
+                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")
+                }
+                
+                guard let statusStr = jsonObject["status"] as? String else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
+                }
+                let status: SwapDetails.Status = switch statusStr {
+                case "PENDING_DEPOSIT": .pending
+                case "REFUNDED": .refunded
+                case "SUCCESS": .success
+                default: .pending
+                }
+                
+                guard let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
+                      let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any] else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `quoteRequest` parameter.")
+                }
+                
+                guard let swapType = quoteRequestDict["swapType"] as? String else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
+                }
+                
+                guard let destinationAsset = quoteRequestDict["destinationAsset"] as? String else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
+                }
+                
+                guard let swapDetailsDict = jsonObject["swapDetails"] as? [String: Any] else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapDetails` parameter.")
+                }
+                
+                var slippage: Decimal?
+                if let slippageInt = swapDetailsDict["slippage"] as? Int {
+                    slippage = Decimal(slippageInt) * 0.01
+                }
+                
+                var amountInFormattedDecimal: Decimal?
+                if let amountInFormatted = swapDetailsDict["amountInFormatted"] as? String {
+                    amountInFormattedDecimal = amountInFormatted.usDecimal
+                }
+                
+                var amountOutFormattedDecimal: Decimal?
+                if let amountOutFormatted = swapDetailsDict["amountOutFormatted"] as? String {
+                    amountOutFormattedDecimal = amountOutFormatted.usDecimal
+                }
+                
+                return SwapDetails(
+                    amountInFormatted: amountInFormattedDecimal,
+                    amountInUsd: swapDetailsDict["amountInUsd"] as? String,
+                    amountOutFormatted: amountOutFormattedDecimal,
+                    amountOutUsd: swapDetailsDict["amountOutUsd"] as? String,
+                    destinationAsset: destinationAsset,
+                    isSwap: swapType == "EXACT_INPUT",
+                    slippage: slippage,
+                    status: status
+                )
             }
-            let status: SwapDetails.Status = switch statusStr {
-            case "PENDING_DEPOSIT": .pending
-            case "REFUNDED": .refunded
-            case "SUCCESS": .success
-            default: .pending
-            }
-
-            guard let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
-                  let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any] else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Missing `quoteRequest` parameter.")
-            }
-
-            guard let swapType = quoteRequestDict["swapType"] as? String else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
-            }
-
-            guard let destinationAsset = quoteRequestDict["destinationAsset"] as? String else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
-            }
-
-            guard let swapDetailsDict = jsonObject["swapDetails"] as? [String: Any] else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapDetails` parameter.")
-            }
-            
-            var slippage: Decimal?
-            if let slippageInt = swapDetailsDict["slippage"] as? Int {
-                slippage = Decimal(slippageInt) * 0.01
-            }
-
-            var amountInFormattedDecimal: Decimal?
-            if let amountInFormatted = swapDetailsDict["amountInFormatted"] as? String {
-                amountInFormattedDecimal = amountInFormatted.usDecimal
-            }
-
-            var amountOutFormattedDecimal: Decimal?
-            if let amountOutFormatted = swapDetailsDict["amountOutFormatted"] as? String {
-                amountOutFormattedDecimal = amountOutFormatted.usDecimal
-            }
-
-            return SwapDetails(
-                amountInFormatted: amountInFormattedDecimal,
-                amountInUsd: swapDetailsDict["amountInUsd"] as? String,
-                amountOutFormatted: amountOutFormattedDecimal,
-                amountOutUsd: swapDetailsDict["amountOutUsd"] as? String,
-                destinationAsset: destinationAsset,
-                isSwap: swapType == "EXACT_INPUT",
-                slippage: slippage,
-                status: status
-            )
-        }
-    )
+        )
+    }
 }
 
 /*

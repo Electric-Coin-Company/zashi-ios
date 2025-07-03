@@ -83,6 +83,12 @@ extension WalletStorageClient: DependencyKey {
             },
             exportTorSetupFlag: {
                 walletStorage.exportTorSetupFlag()
+            },
+            importSwapAPIAccess: { state in
+                try walletStorage.importSwapAPIAccess(state)
+            },
+            exportSwapAPIAccess: {
+                walletStorage.exportSwapAPIAccess()
             }
         )
     }
