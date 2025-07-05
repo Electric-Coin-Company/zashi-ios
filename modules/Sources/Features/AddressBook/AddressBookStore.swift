@@ -34,6 +34,7 @@ public struct AddressBook {
         public var isAddressFocused = false
         public var editId: String?
         public var isChainFocused = false
+        public var isEditingContactWithChain = false
         public var isInSelectMode = false
         public var isNameFocused = false
         public var isSwapFlowActive = false
@@ -78,6 +79,8 @@ public struct AddressBook {
             : isSwapFlowActive
             ? (isValidZcashAddress ? L10n.SwapAndPay.addressBookZcash : nil)
             : (isValidZcashAddress || address.isEmpty)
+            ? nil
+            : isEditingContactWithChain
             ? nil
             : L10n.AddressBook.Error.invalidAddress
         }
@@ -139,8 +142,10 @@ public struct AddressBook {
                     let uniqueByChain = Dictionary(grouping: state.swapAssets, by: { $0.chain })
                         .compactMapValues { $0.first }
                         .values
-                        .sorted(by: { $0.chain < $1.chain })
+                        .sorted(by: { $0.chainName < $1.chainName })
                     state.chains = uniqueByChain
+                } else {
+                    state.chains = SwapAsset.hardcodedChains()
                 }
                 if let editId = state.editId {
                     return .concatenate(
@@ -185,7 +190,7 @@ public struct AddressBook {
 
             case .binding:
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
-                state.isValidForm = !state.name.isEmpty && (state.isValidZcashAddress || state.isSwapFlowActive)
+                state.isValidForm = !state.name.isEmpty && (state.isValidZcashAddress || state.isSwapFlowActive || state.isEditingContactWithChain)
                 return .send(.checkDuplicates)
 
             case .deleteId(let id):
@@ -240,6 +245,8 @@ public struct AddressBook {
                 state.isValidForm = true
                 state.isNameFocused = true
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
+                state.isEditingContactWithChain = record.chainId != nil
+                state.selectedChain = state.chains.first { $0.chain == record.chainId }
                 return .none
 
             case .saveButtonTapped:
@@ -301,8 +308,6 @@ public struct AddressBook {
                 var abContactsCopy = abContacts
                 if state.isSwapFlowActive {
                     abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId != nil }
-                } else {
-                    abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId == nil }
                 }
                 state.addressBookContactsToShow = abContactsCopy
                 if requestToSync {

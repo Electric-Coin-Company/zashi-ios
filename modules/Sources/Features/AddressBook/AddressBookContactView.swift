@@ -43,10 +43,10 @@ public struct AddressBookContactView: View {
                     error: store.invalidNameErrorText
                 )
                 .padding(.top, 20)
-                .padding(.bottom, store.isSwapFlowActive ? 0 : 20)
+                .padding(.bottom, (store.isSwapFlowActive || store.isEditingContactWithChain) ? 0 : 20)
                 .focused($isNameFocused)
 
-                if store.isSwapFlowActive {
+                if store.isSwapFlowActive || store.isEditingContactWithChain {
                     VStack(alignment: .leading, spacing: 0) {
                         Text(L10n.SwapAndPay.addressBookSelectChain)
                             .zFont(.medium, size: 14, style: Design.Dropdowns.Default.label)

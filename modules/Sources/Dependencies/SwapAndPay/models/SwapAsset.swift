@@ -63,7 +63,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         return Image(uiImage: icon)
     }
 
-    public let chain: String
+    public var chain: String
     public let token: String
     public let assetId: String
     public let usdPrice: Decimal
@@ -81,5 +81,27 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         self.assetId = assetId
         self.usdPrice = usdPrice
         self.decimals = decimals
+    }
+}
+
+public extension SwapAsset {
+    static func hardcodedChains() -> [SwapAsset] {
+        var template = SwapAsset(chain: "", token: "", assetId: "", usdPrice: 0, decimals: 0)
+        
+        let arb = template; template.chain = "arb"
+        let base = template; template.chain = "base"
+        let bera = template; template.chain = "bera"
+        let btc = template; template.chain = "btc"
+        let eth = template; template.chain = "eth"
+        let gnosis = template; template.chain = "gnosis"
+        let near = template; template.chain = "near"
+        let sol = template; template.chain = "sol"
+        let tron = template; template.chain = "tron"
+        let xrp = template; template.chain = "xrp"
+        let doge = template; template.chain = "doge"
+
+        return [
+            arb, base, bera, btc, eth, gnosis, near, sol, tron, xrp, doge
+        ]
     }
 }
