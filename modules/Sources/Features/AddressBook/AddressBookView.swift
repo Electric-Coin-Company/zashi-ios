@@ -37,7 +37,7 @@ public struct AddressBookView: View {
                 if store.isInSelectMode && store.walletAccounts.count > 1 {
                     contactsList()
                 } else {
-                    if store.addressBookContacts.contacts.isEmpty {
+                    if store.addressBookContactsToShow.contacts.isEmpty {
                         Spacer()
                         
                         VStack(spacing: 40) {
@@ -62,7 +62,8 @@ public struct AddressBookView: View {
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .screenTitle(
-                store.isInSelectMode && (!store.addressBookContacts.contacts.isEmpty || store.walletAccounts.count > 1)
+                store.isInSelectMode
+                && (!store.addressBookContactsToShow.contacts.isEmpty || store.walletAccounts.count > 1 || store.isSwapFlowActive)
                 ? L10n.AddressBook.selectRecipient
                 : L10n.AddressBook.title
             )
@@ -174,7 +175,7 @@ public struct AddressBookView: View {
                     }
                 }
                 
-                if store.addressBookContacts.contacts.isEmpty {
+                if store.addressBookContactsToShow.contacts.isEmpty {
                     VStack(spacing: 40) {
                         emptyComposition()
                         
@@ -203,17 +204,18 @@ public struct AddressBookView: View {
                 }
             }
 
-            ForEach(store.addressBookContacts.contacts, id: \.self) { record in
+            ForEach(store.addressBookContactsToShow.contacts, id: \.self) { record in
                 VStack {
                     ContactView(
                         iconText: record.name.initials,
+                        tickerIcon: AddressBook.contactTicker(chainId: record.chainId),
                         title: record.name,
                         desc: record.id.trailingZip316
                     ) {
                         store.send(.editId(record.id))
                     }
 
-                    if let last = store.addressBookContacts.contacts.last, last != record {
+                    if let last = store.addressBookContactsToShow.contacts.last, last != record {
                         Design.Surfaces.divider.color(colorScheme)
                             .frame(height: 1)
                             .padding(.top, 12)

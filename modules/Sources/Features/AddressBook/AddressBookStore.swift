@@ -15,6 +15,7 @@ import Models
 import ZcashSDKEnvironment
 import AudioServices
 import ZcashLightClientKit
+import SwapAndPay
 
 @Reducer
 public struct AddressBook {
@@ -27,8 +28,8 @@ public struct AddressBook {
         public var address = ""
         public var addressAlreadyExists = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var addressBookContactsToShow: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
-        public var chain = ""
         public var deleteIdToConfirm: String?
         public var isAddressFocused = false
         public var editId: String?
@@ -44,10 +45,16 @@ public struct AddressBook {
         public var originalAddress = ""
         public var originalName = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var token = ""
+        @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
+        // swaps
+        public var chains: [SwapAsset] = []
+        public var chainSelectBinding = false
+        public var searchTerm = ""
+        public var selectedChain: SwapAsset?
+        
         public var isEditChange: Bool {
             (address != originalAddress || name != originalName) && isValidForm
         }
@@ -61,11 +68,15 @@ public struct AddressBook {
             || isNameOverMaxLength
             || nameAlreadyExists
             || addressAlreadyExists
+            || (isSwapFlowActive && selectedChain == nil)
+            || (isSwapFlowActive && isValidZcashAddress)
         }
         
         public var invalidAddressErrorText: String? {
             addressAlreadyExists
             ? L10n.AddressBook.Error.addressExists
+            : isSwapFlowActive
+            ? (isValidZcashAddress ? L10n.SwapAndPay.addressBookZcash : nil)
             : (isValidZcashAddress || address.isEmpty)
             ? nil
             : L10n.AddressBook.Error.invalidAddress
@@ -99,6 +110,12 @@ public struct AddressBook {
         case saveButtonTapped
         case scanButtonTapped
         case walletAccountTapped(WalletAccount)
+        
+        // swaps
+        case chainTapped(SwapAsset)
+        case closeChainsSheetTapped
+        case eraseSearchTermTapped
+        case selectChainTapped
     }
 
     public init() { }
@@ -118,6 +135,13 @@ public struct AddressBook {
                 state.deleteIdToConfirm = nil
                 state.nameAlreadyExists = false
                 state.addressAlreadyExists = false
+                if state.isSwapFlowActive {
+                    let uniqueByChain = Dictionary(grouping: state.swapAssets, by: { $0.chain })
+                        .compactMapValues { $0.first }
+                        .values
+                        .sorted(by: { $0.chain < $1.chain })
+                    state.chains = uniqueByChain
+                }
                 if let editId = state.editId {
                     return .concatenate(
                         .send(.editId(editId)),
@@ -161,7 +185,7 @@ public struct AddressBook {
 
             case .binding:
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
-                state.isValidForm = !state.name.isEmpty && state.isValidZcashAddress
+                state.isValidForm = !state.name.isEmpty && (state.isValidZcashAddress || state.isSwapFlowActive)
                 return .send(.checkDuplicates)
 
             case .deleteId(let id):
@@ -223,7 +247,14 @@ public struct AddressBook {
                     return .none
                 }
                 do {
-                    let result = try addressBook.storeContact(account.account, Contact(address: state.address, name: state.name))
+                    let result = try addressBook.storeContact(
+                        account.account,
+                        Contact(
+                            address: state.address,
+                            name: state.name,
+                            chainId: state.selectedChain?.chain
+                        )
+                    )
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -243,6 +274,7 @@ public struct AddressBook {
                 state.name = ""
                 state.isAddressFocused = false
                 state.isNameFocused = false
+                state.selectedChain = nil
                 return .none
 
             case .fetchABContactsRequested:
@@ -266,6 +298,13 @@ public struct AddressBook {
                     return .none
                 }
                 state.$addressBookContacts.withLock { $0 = abContacts }
+                var abContactsCopy = abContacts
+                if state.isSwapFlowActive {
+                    abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId != nil }
+                } else {
+                    abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId == nil }
+                }
+                state.addressBookContactsToShow = abContactsCopy
                 if requestToSync {
                     return .run { send in
                         do {
@@ -287,8 +326,39 @@ public struct AddressBook {
 
             case .dismissDeleteContactRequired:
                 return .none
+                
+                // MARK: - Swaps
+                
+            case .eraseSearchTermTapped:
+                return .none
+                
+            case .selectChainTapped:
+                state.searchTerm = ""
+                state.chainSelectBinding = true
+                return .none
+                
+            case .closeChainsSheetTapped:
+                state.chainSelectBinding = false
+                return .none
+                
+            case .chainTapped(let chain):
+                state.selectedChain = chain
+                state.chainSelectBinding = false
+                return .none
             }
         }
+    }
+}
+
+extension AddressBook {
+    static public func contactTicker(chainId: String?) -> Image? {
+        guard let chainId else { return nil }
+        
+        guard let icon = UIImage(named: chainId.lowercased()) else {
+            return Asset.Assets.Tickers.none.image
+        }
+
+        return Image(uiImage: icon)
     }
 }
 

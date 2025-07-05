@@ -144,6 +144,35 @@ public struct SwapAndPayForm: View {
                     .padding(.horizontal, 4)
                     .applyScreenBackground()
             }
+            .overlayPreferenceValue(UnknownAddressPreferenceKey.self) { preferences in
+                if isAddressFocused && store.isAddressBookHintVisible {
+                    GeometryReader { geometry in
+                        preferences.map {
+                            HStack(alignment: .top, spacing: 0) {
+                                Asset.Assets.Icons.userPlus.image
+                                    .zImage(size: 20, style: Design.HintTooltips.titleText)
+                                    .padding(.trailing, 12)
+                                
+                                Text(L10n.Send.addressNotInBook)
+                                    .zFont(.medium, size: 14, style: Design.HintTooltips.titleText)
+                                    .padding(.top, 2)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                
+                                Spacer(minLength: 0)
+                            }
+                            .padding(.horizontal, 10)
+                            .frame(height: 40)
+                            .background {
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .fill(Design.HintTooltips.surfacePrimary.color(colorScheme))
+                            }
+                            .frame(width: geometry.size.width - 48)
+                            .offset(x: 24, y: geometry[$0].minY + geometry[$0].height + 8)
+                        }
+                    }
+                }
+            }
             .overlay(
                 VStack(spacing: 0) {
                     Spacer()
@@ -551,7 +580,7 @@ public struct SwapAndPayForm: View {
                             : Asset.Assets.Icons.user.image
                         ) {
                             if store.isNotAddressInAddressBook {
-                                store.send(.addNewContactTapped(store.address.redacted))
+                                store.send(.notInAddressBookButtonTapped(store.address))
                             } else {
                                 store.send(.addressBookTapped)
                             }
@@ -563,8 +592,39 @@ public struct SwapAndPayForm: View {
                     }
                 }
                 .frame(height: 20)
-                .offset(x: 8)
+                .offset(x: 8),
+            inputReplacementView:
+                store.selectedContact != nil
+            ? HStack(spacing: 0) {
+                Text(store.selectedContact?.name ?? "")
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .padding(.trailing, 3)
+
+                Button {
+                    store.send(.selectedContactClearTapped)
+                } label: {
+                    Asset.Assets.buttonCloseX.image
+                        .zImage(size: 14, style: Design.Tags.tcHoverFg)
+                        .padding(3)
+                        .background {
+                            Circle()
+                                .fill(Design.Tags.tcHoverBg.color(colorScheme))
+                        }
+                }
+            }
+            .padding(4)
+            .background {
+                RoundedRectangle(cornerRadius: Design.Radius._sm)
+                    .fill(Design.Tags.surfacePrimary.color(colorScheme))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: Design.Radius._sm)
+                            .stroke(Design.Tags.surfaceStroke.color(colorScheme))
+
+                    }
+            }
+            : nil
         )
+        .frame(minHeight: 44)
         .disabled(store.isQuoteRequestInFlight)
         .id(InputID.addressBookHint)
         .keyboardType(.alphabet)

@@ -1408,6 +1408,14 @@ public enum L10n {
   public enum SwapAndPay {
     /// Address
     public static let address = L10n.tr("Localizable", "swapAndPay.address", fallback: "Address")
+    /// Add new contact
+    public static let addressBookNewContact = L10n.tr("Localizable", "swapAndPay.addressBookNewContact", fallback: "Add new contact")
+    /// Select...
+    public static let addressBookSelect = L10n.tr("Localizable", "swapAndPay.addressBookSelect", fallback: "Select...")
+    /// Select Chain
+    public static let addressBookSelectChain = L10n.tr("Localizable", "swapAndPay.addressBookSelectChain", fallback: "Select Chain")
+    /// Zcash address is not allowed
+    public static let addressBookZcash = L10n.tr("Localizable", "swapAndPay.addressBookZcash", fallback: "Zcash address is not allowed")
     /// Don’t cancel
     public static let cancelDont = L10n.tr("Localizable", "swapAndPay.cancelDont", fallback: "Don’t cancel")
     /// If you leave this screen, all the information you entered will be lost.

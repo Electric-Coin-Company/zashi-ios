@@ -29,6 +29,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         case "tron": return "Tron"
         case "xrp": return "Ripple"
         case "zec": return "Zcash"
+        case "doge": return "Doge"
         default: return chain
         }
     }

@@ -20,12 +20,60 @@ extension SwapAndPayCoordFlow {
         Reduce { state, action in
             switch action {
 
+                // MARK: - Address Book
+
+            case .path(.element(id: _, action: .addressBook(.editId(let address)))):
+                state.path.removeAll()
+                audioServices.systemSoundVibrate()
+                return .send(.swapAndPay(.addressBookContactSelected(address)))
+
+            case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isAddressFocused = true
+                addressBookState.isSwapFlowActive = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
+
+            case .path(.element(id: _, action: .addressBook(.scanButtonTapped))):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.swapStringScanChecker]
+                state.path.append(.scan(scanState))
+                return .none
+
+                // MARK: - Address Book Contact
+
+            case .path(.element(id: _, action: .addressBookContact(.dismissAddContactRequired))):
+                for element in state.path {
+                    if element.is(\.scan) {
+                        let _ = state.path.popLast()
+                        break
+                    }
+                }
+                let _ = state.path.popLast()
+                if state.path.ids.isEmpty {
+                    return .send(.swapAndPay(.checkSelectedContact))
+                } else if let last = state.path.ids.last {
+                    return .send(.path(.element(id: last, action: .swapAndPayForm(.checkSelectedContact))))
+                }
+                return .none
+
                 // MARK: - Scan
                 
             case .path(.element(id: _, action: .scan(.foundString(let address)))):
-                let _ = state.path.removeLast()
-                audioServices.systemSoundVibrate()
-                state.swapAndPayState.address = address
+                // handle direct scan from the form
+                if state.path.count == 1 {
+                    let _ = state.path.removeLast()
+                    audioServices.systemSoundVibrate()
+                    state.swapAndPayState.address = address
+                } else {
+                    // handle scan inside add a new contact flow
+                    audioServices.systemSoundVibrate()
+                    var addressBookState = AddressBook.State.initial
+                    addressBookState.address = address
+                    addressBookState.isNameFocused = true
+                    addressBookState.isSwapFlowActive = true
+                    state.path.append(.addressBookContact(addressBookState))
+                }
                 return .none
 
             case .path(.element(id: _, action: .scan(.cancelTapped))):
@@ -52,6 +100,21 @@ extension SwapAndPayCoordFlow {
                 return .none
 
                 // MARK: - Self
+
+            case .swapAndPay(.addressBookTapped):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isSwapFlowActive = true
+                addressBookState.isInSelectMode = true
+                state.path.append(.addressBook(addressBookState))
+                return .none
+
+            case .swapAndPay(.notInAddressBookButtonTapped(let address)):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isSwapFlowActive = true
+                addressBookState.address = address
+                addressBookState.isNameFocused = true
+                state.path.append(.addressBookContact(addressBookState))
+                return .none
 
             case .backButtonTapped:
                 return .send(.swapAndPay(.backButtonTapped(state.isSwapInFlight)))
@@ -172,13 +235,15 @@ extension SwapAndPayCoordFlow {
 
             case .swapAndPay(.confirmOptInTapped):
                 try? walletStorage.importSwapAPIAccess(.protected)
+                state.$swapAPIAccess.withLock { $0 = .protected }
                 state.path.append(.swapAndPayForm(state.swapAndPayState))
-                return .none
+                return .send(.swapAndPay(.refreshSwapAssets))
 
             case .path(.element(id: _, action: .swapAndPayOptInForced(.confirmForcedOptInTapped))):
                 try? walletStorage.importSwapAPIAccess(.direct)
+                state.$swapAPIAccess.withLock { $0 = .direct }
                 state.path.append(.swapAndPayForm(state.swapAndPayState))
-                return .none
+                return .send(.swapAndPay(.refreshSwapAssets))
 
             case .path(.element(id: _, action: .swapAndPayOptInForced(.goBackForcedOptInTapped))):
                 let _ = state.path.popLast()

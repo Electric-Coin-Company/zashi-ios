@@ -16,15 +16,19 @@ import BalanceBreakdown
 import SDKSynchronizer
 import WalletBalances
 import SwapAndPay
+import AddressBookClient
+import WalletStorage
 
 @Reducer
 public struct SwapAndPay {
     @ObservableState
     public struct State {
         public var SwapAssetsCancelId = UUID()
+        public var ABCancelId = UUID()
 
-        public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
-        public var amountText = "0,0006"// "0,0004"// "0,0006"
+        public var address = ""// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var amountText = ""// "0,0004"// "0,0006"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
@@ -44,6 +48,7 @@ public struct SwapAndPay {
         public var isSwapExperienceEnabled = true
         public var optionOneChecked = false
         public var optionTwoChecked = false
+        public var selectedContact: Contact?
         public var selectedOperationChip = 0
         public var proposal: Proposal?
         public var quote: SwapQuote?
@@ -55,6 +60,7 @@ public struct SwapAndPay {
         public var slippageInSheet: Decimal = 1.0
         public var selectedSlippageChip = 1
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
@@ -116,8 +122,6 @@ public struct SwapAndPay {
     }
 
     public enum Action: BindableAction {
-        case addNewContactTapped(RedactableString)
-        case addressBookTapped
         case assetSelectRequested
         case assetTapped(SwapAsset)
         case backButtonTapped(Bool)
@@ -162,8 +166,19 @@ public struct SwapAndPay {
         case optionOneTapped
         case optionTwoTapped
         case skipOptInTapped
+        
+        // Address Book
+        case addressBookContactSelected(String)
+        case addressBookTapped
+        case addressBookUpdated
+        case checkSelectedContact
+        case dismissAddressBookHint
+        case notInAddressBookButtonTapped(String)
+        case selectedContactClearTapped
+        case selectedContactUpdated
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -203,9 +218,15 @@ public struct SwapAndPay {
                 
             case .binding(\.searchTerm):
                 return .send(.updateAssetsAccordingToSearchTerm)
+                
+            case .binding(\.address):
+                return .send(.checkSelectedContact)
 
             case .onDisappear:
-                return .cancel(id: state.SwapAssetsCancelId)
+                return .merge(
+                    .cancel(id: state.SwapAssetsCancelId),
+                    .cancel(id: state.ABCancelId)
+                )
                 
             case .backButtonTapped(let isSwapInFlight):
                 if !isSwapInFlight {
@@ -241,14 +262,11 @@ public struct SwapAndPay {
             case .operationChipTapped(let index):
                 state.selectedOperationChip = index
                 return .send(.enableSwapExperience(index == 0))
-                
-            case .addNewContactTapped(let contact):
-                return .none
-                
-            case .addressBookTapped:
-                return .none
 
             case .refreshSwapAssets:
+                guard state.swapAPIAccess != .notResolved && state.swapAPIAccess != nil else {
+                    return .none
+                }
                 return .run { send in
                     let swapAssets = try? await swapAndPay.swapAssets()
                     if let swapAssets {
@@ -295,15 +313,20 @@ public struct SwapAndPay {
                 return .none
                 
             case .updateAssetsAccordingToSearchTerm:
+                var swapAssets = state.swapAssets
+                if let chainId = state.selectedContact?.chainId {
+                    let filteredSwapAssets = state.swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
+                    swapAssets = filteredSwapAssets
+                }
                 guard !state.searchTerm.isEmpty else {
-                    state.swapAssetsToPresent = state.swapAssets
+                    state.swapAssetsToPresent = swapAssets
                     return .none
                 }
                 state.swapAssetsToPresent.removeAll()
-                let tokenNameMatch = state.swapAssets.filter { $0.tokenName.localizedCaseInsensitiveContains(state.searchTerm) }
-                let tokenMatch = state.swapAssets.filter { $0.token.localizedCaseInsensitiveContains(state.searchTerm) }
-                let chainNameMatch = state.swapAssets.filter { $0.chainName.localizedCaseInsensitiveContains(state.searchTerm) }
-                let chainMatch = state.swapAssets.filter { $0.chain.localizedCaseInsensitiveContains(state.searchTerm) }
+                let tokenNameMatch = swapAssets.filter { $0.tokenName.localizedCaseInsensitiveContains(state.searchTerm) }
+                let tokenMatch = swapAssets.filter { $0.token.localizedCaseInsensitiveContains(state.searchTerm) }
+                let chainNameMatch = swapAssets.filter { $0.chainName.localizedCaseInsensitiveContains(state.searchTerm) }
+                let chainMatch = swapAssets.filter { $0.chain.localizedCaseInsensitiveContains(state.searchTerm) }
                 state.swapAssetsToPresent.append(contentsOf: tokenNameMatch)
                 state.swapAssetsToPresent.append(contentsOf: tokenMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainNameMatch)
@@ -353,8 +376,9 @@ public struct SwapAndPay {
                 return .none
                 
             case .assetSelectRequested:
+                state.searchTerm = ""
                 state.assetSelectBinding = true
-                return .none
+                return .send(.updateAssetsAccordingToSearchTerm)
                 
             case .slippageChipTapped(let index):
                 state.selectedSlippageChip = index
@@ -514,15 +538,26 @@ public struct SwapAndPay {
                 
             case .swapAssetsLoaded(let swapAssets):
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
-                if state.selectedAsset == nil {
+                if state.selectedAsset == nil && state.selectedContact == nil {
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "btc" && $0.chain.lowercased() == "btc" })
                     state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
+
                 // exclude all tokens with price == 0
                 // exclude zec token
                 let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
                 state.$swapAssets.withLock { $0 = filteredSwapAssets }
+                
+                if let selectedContactChainId = state.selectedContact?.chainId,
+                    let selectedAssetChainId = state.selectedAsset?.chain, selectedContactChainId != selectedAssetChainId {
+                    state.selectedAsset = nil
+                    return .concatenate(
+                        .send(.selectedContactUpdated),
+                        .send(.updateAssetsAccordingToSearchTerm)
+                    )
+                }
+
                 return .send(.updateAssetsAccordingToSearchTerm)
 
             case .walletBalances:
@@ -543,7 +578,7 @@ public struct SwapAndPay {
                 
             case .confirmForcedOptInTapped:
                 return .none
-                
+
             case .optionOneTapped:
                 state.optionOneChecked.toggle()
                 return .none
@@ -551,6 +586,76 @@ public struct SwapAndPay {
             case .optionTwoTapped:
                 state.optionTwoChecked.toggle()
                 return .none
+                
+                // MARK: - Addreess Book
+                
+            case .notInAddressBookButtonTapped:
+                return .none
+
+            case .addressBookTapped:
+                return .none
+
+            case .addressBookContactSelected(let address):
+                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
+                state.address = address
+                return .send(.selectedContactUpdated)
+
+            case .selectedContactClearTapped:
+                state.selectedContact = nil
+                state.address = ""
+                return .send(.selectedContactUpdated)
+                
+            case .selectedContactUpdated:
+                guard let chainId = state.selectedContact?.chainId else {
+                    state.swapAssetsToPresent = state.swapAssets
+                    return .none
+                }
+                let filteredSwapAssets = state.swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
+                state.swapAssetsToPresent = filteredSwapAssets
+                if filteredSwapAssets.count == 1 {
+                    state.selectedAsset = filteredSwapAssets.first
+                } else if state.selectedAsset?.chain != chainId {
+                    state.selectedAsset = nil
+                }
+                return .none
+
+            case .addressBookUpdated:
+                guard state.address.count >= 3 else {
+                    state.isNotAddressInAddressBook = false
+                    return .none
+                }
+                state.isNotAddressInAddressBook = true
+                var isNotAddressInAddressBook = state.isNotAddressInAddressBook
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == state.address {
+                        state.isNotAddressInAddressBook = false
+                        isNotAddressInAddressBook = false
+                        break
+                    }
+                }
+                if isNotAddressInAddressBook {
+                    state.isAddressBookHintVisible = true
+                    return .run { send in
+                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                        await send(.dismissAddressBookHint)
+                    }
+                    .cancellable(id: state.ABCancelId)
+                } else {
+                    state.isAddressBookHintVisible = false
+                    return .cancel(id: state.ABCancelId)
+                }
+                
+            case .dismissAddressBookHint:
+                state.isAddressBookHintVisible = false
+                return .none
+                
+            case .checkSelectedContact:
+                let address = state.address
+                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
+                return .merge(
+                    .send(.selectedContactUpdated),
+                    .send(.addressBookUpdated)
+                )
             }
         }
     }

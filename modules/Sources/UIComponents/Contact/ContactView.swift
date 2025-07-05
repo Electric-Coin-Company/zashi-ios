@@ -12,17 +12,20 @@ public struct ContactView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     var iconText: String
+    var tickerIcon: Image?
     var title: String
     var desc: String?
     var action: () -> Void
     
     public init(
         iconText: String,
+        tickerIcon: Image? = nil,
         title: String,
         desc: String? = nil,
         action: @escaping () -> Void
     ) {
         self.iconText = iconText
+        self.tickerIcon = tickerIcon
         self.title = title
         self.desc = desc
         self.action = action
@@ -34,17 +37,31 @@ public struct ContactView: View {
         } label: {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    Text(iconText)
-                        .minimumScaleFactor(0.5)
-                        .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                        .zForegroundColor(Design.Avatars.textFg)
-                        .frame(width: 20, height: 20)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .fill(Design.Avatars.bg.color(colorScheme))
+                    ZStack {
+                        Text(iconText)
+                            .minimumScaleFactor(0.5)
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                            .zForegroundColor(Design.Avatars.textFg)
+                            .frame(width: 20, height: 20)
+                            .padding(10)
+                            .background {
+                                Circle()
+                                    .fill(Design.Avatars.bg.color(colorScheme))
+                            }
+                            .padding(.trailing, 16)
+                        
+                        if let tickerIcon {
+                            tickerIcon
+                                .zImage(size: 25, style: Design.screenBackground)
+                                .offset(x: 10, y: 12)
+                                .overlay {
+                                    tickerIcon
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .offset(x: 10, y: 12)
+                                }
                         }
-                        .padding(.trailing, 16)
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text(title)

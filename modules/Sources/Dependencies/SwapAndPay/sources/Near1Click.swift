@@ -28,7 +28,7 @@ extension Near1Click {
         return Near1Click(
             //    public static let liveValue = Self(
             submitDepositTxId: { txId, depositAddress in
-                guard swapAPIAccess != .notResolved else {
+                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
                     throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
                 }
 
@@ -63,7 +63,7 @@ extension Near1Click {
                 }
             },
             swapAssets: {
-                guard swapAPIAccess != .notResolved else {
+                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
                     throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
                 }
 
@@ -119,7 +119,7 @@ extension Near1Click {
                 return IdentifiedArrayOf(uniqueElements: chainAssets)
             },
             quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
-                guard swapAPIAccess != .notResolved else {
+                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
                     throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
                 }
 
@@ -238,7 +238,7 @@ extension Near1Click {
                 )
             },
             status: { depositAddress in
-                guard swapAPIAccess != .notResolved else {
+                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
                     throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
                 }
 

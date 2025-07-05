@@ -812,3 +812,7 @@
 "swapAndPay.refundTitle" = "Payment Refunded";
 "swapAndPay.refundInfo" = "Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.";
 "swapAndPay.recipient" = "Recipient";
+"swapAndPay.addressBookSelectChain" = "Select Chain";
+"swapAndPay.addressBookSelect" = "Select...";
+"swapAndPay.addressBookNewContact" = "Add new contact";
+"swapAndPay.addressBookZcash" = "Zcash address is not allowed";

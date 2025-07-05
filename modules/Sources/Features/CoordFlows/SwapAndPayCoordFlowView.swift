@@ -57,8 +57,8 @@ public struct SwapAndPayCoordFlowView: View {
                     }
                 } destination: { store in
                     switch store.case {
-                    case let .addressBookChainToken(store):
-                        AddressBookChainTokenView(store: store)
+                    case let .addressBook(store):
+                        AddressBookView(store: store)
                     case let .addressBookContact(store):
                         AddressBookContactView(store: store)
                     case let .scan(store):

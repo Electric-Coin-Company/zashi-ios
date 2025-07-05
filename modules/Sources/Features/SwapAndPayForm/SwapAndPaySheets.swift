@@ -1,8 +1,8 @@
 //
-//  BalancesSheet.swift
-//  modules
+//  SwapAndPaySheets.swift
+//  Zashi
 //
-//  Created by Lukáš Korba on 26.05.2025.
+//  Created by Lukáš Korba on 2025-05-26.
 //
 
 import UIKit
@@ -15,11 +15,11 @@ import SwapAndPay
 import BalanceBreakdown
 
 extension SwapAndPayForm {
-    @ViewBuilder func assetsEmptyComposition(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func assetsLoadingComposition(_ colorScheme: ColorScheme) -> some View {
         List {
             WithPerceptionTracking {
                 ForEach(0..<15) { _ in
-                    NoTransactionPlaceholder()
+                    NoTransactionPlaceholder(true)
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Asset.Colors.background.color)
                         .listRowSeparator(.hidden)
@@ -32,7 +32,7 @@ extension SwapAndPayForm {
         .listStyle(.plain)
     }
     
-    @ViewBuilder func assetsLoadingComposition(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func assetsEmptyComposition(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
             ZStack {
                 VStack(spacing: 0) {
@@ -112,9 +112,9 @@ extension SwapAndPayForm {
                 .padding(.horizontal, 20)
                 
                 if store.swapAssetsToPresent.isEmpty && !store.searchTerm.isEmpty {
-                    assetsLoadingComposition(colorScheme)
-                } else if store.swapAssetsToPresent.isEmpty && store.searchTerm.isEmpty {
                     assetsEmptyComposition(colorScheme)
+                } else if store.swapAssetsToPresent.isEmpty && store.searchTerm.isEmpty {
+                    assetsLoadingComposition(colorScheme)
                 } else {
                     List {
                         WithPerceptionTracking {

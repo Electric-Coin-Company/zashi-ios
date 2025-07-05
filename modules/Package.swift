@@ -144,6 +144,7 @@ let package = Package(
                 "Generated",
                 "Models",
                 "Scan",
+                "SwapAndPay",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")

@@ -22,12 +22,12 @@ import ZcashSDKEnvironment
 //import BalanceFormatter
 //import WalletBalances
 //import LocalAuthenticationHandler
-//import AddressBookClient
+import AddressBookClient
 //import MessageUI
 //import SupportDataGenerator
 //import KeystoneHandler
 //import TransactionDetails
-//import AddressBook
+import AddressBook
 import UserMetadataProvider
 
 // Path
@@ -41,7 +41,7 @@ import TransactionDetails
 public struct SwapAndPayCoordFlow {
     @Reducer
     public enum Path {
-        case addressBookChainToken(AddressBook)
+        case addressBook(AddressBook)
         case addressBookContact(AddressBook)
         case scan(Scan)
         case sending(SendConfirmation)
