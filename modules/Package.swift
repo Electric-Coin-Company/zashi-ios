@@ -140,6 +140,7 @@ let package = Package(
             dependencies: [
                 "AddressBookClient",
                 "AudioServices",
+                "BalanceBreakdown",
                 "DerivationTool",
                 "Generated",
                 "Models",
@@ -913,6 +914,7 @@ let package = Package(
             name: "SwapAndPay",
             dependencies: [
                 "Models",
+                "SDKSynchronizer",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],

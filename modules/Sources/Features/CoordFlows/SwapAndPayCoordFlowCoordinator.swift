@@ -101,14 +101,16 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Self
 
-            case .swapAndPay(.addressBookTapped):
+            case .swapAndPay(.addressBookTapped),
+                    .path(.element(id: _, action: .swapAndPayForm(.addressBookTapped))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isSwapFlowActive = true
                 addressBookState.isInSelectMode = true
                 state.path.append(.addressBook(addressBookState))
                 return .none
 
-            case .swapAndPay(.notInAddressBookButtonTapped(let address)):
+            case .swapAndPay(.notInAddressBookButtonTapped(let address)),
+                    .path(.element(id: _, action: .swapAndPayForm(.notInAddressBookButtonTapped(let address)))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isSwapFlowActive = true
                 addressBookState.address = address
@@ -119,13 +121,15 @@ extension SwapAndPayCoordFlow {
             case .backButtonTapped:
                 return .send(.swapAndPay(.backButtonTapped(state.isSwapInFlight)))
                 
-            case .swapAndPay(.scanTapped):
+            case .swapAndPay(.scanTapped),
+                    .path(.element(id: _, action: .swapAndPayForm(.scanTapped))):
                 var scanState = Scan.State.initial
                 scanState.checkers = [.swapStringScanChecker]
                 state.path.append(.scan(scanState))
                 return .none
                 
-            case .swapAndPay(.confirmButtonTapped):
+            case .swapAndPay(.confirmButtonTapped),
+                    .path(.element(id: _, action: .swapAndPayForm(.confirmButtonTapped))):
                 return .run { send in
                     guard await localAuthentication.authenticate() else {
                         await send(.stopSending)

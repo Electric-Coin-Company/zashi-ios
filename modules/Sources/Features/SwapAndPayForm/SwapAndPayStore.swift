@@ -1,6 +1,6 @@
 //
 //  SwapAndPayStore.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 23.05.2025.
 //
