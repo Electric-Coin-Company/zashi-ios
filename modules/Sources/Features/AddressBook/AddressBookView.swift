@@ -145,7 +145,7 @@ public struct AddressBookView: View {
     
     @ViewBuilder func contactsList() -> some View {
         List {
-            if store.walletAccounts.count > 1 && store.isInSelectMode {
+            if store.walletAccounts.count > 1 && store.isInSelectMode && !store.isSwapFlowActive {
                 Text(L10n.Accounts.AddressBook.your)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.top, 24)

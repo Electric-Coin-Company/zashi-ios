@@ -132,6 +132,7 @@ public struct SwapAndPay {
         case closeAssetsSheetTapped
         case closeSlippageSheetTapped
         case confirmButtonTapped
+        case confirmWithKeystoneTapped
         case customBackRequired
         case dismissRequired
         case dontCancelTapped
@@ -243,7 +244,7 @@ public struct SwapAndPay {
                 
             case .customBackRequired:
                 return .none
-                
+
             case .cancelSwapTapped:
                 state.isCancelSheetVisible = false
                 state.isSwapCanceled = true
@@ -656,6 +657,12 @@ public struct SwapAndPay {
                     .send(.selectedContactUpdated),
                     .send(.addressBookUpdated)
                 )
+                
+                // MARK: - Keystone
+                
+            case .confirmWithKeystoneTapped:
+                state.isQuotePresented = false
+                return .none
             }
         }
     }

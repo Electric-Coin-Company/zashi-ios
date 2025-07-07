@@ -152,7 +152,8 @@ extension Root {
                 // MARK: - Keystone
 
             case .sendCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))),
-                    .signWithKeystoneCoordFlow(.sendConfirmation(.rejectTapped)):
+                    .signWithKeystoneCoordFlow(.sendConfirmation(.rejectTapped)),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))):
                 state.path = nil
                 return .none
 

@@ -23,7 +23,7 @@ extension SwapAndPayCoordFlow {
                 // MARK: - Address Book
 
             case .path(.element(id: _, action: .addressBook(.editId(let address)))):
-                state.path.removeAll()
+                let _ = state.path.popLast()
                 audioServices.systemSoundVibrate()
                 return .send(.swapAndPay(.addressBookContactSelected(address)))
 
@@ -54,6 +54,82 @@ extension SwapAndPayCoordFlow {
                     return .send(.swapAndPay(.checkSelectedContact))
                 } else if let last = state.path.ids.last {
                     return .send(.path(.element(id: last, action: .swapAndPayForm(.checkSelectedContact))))
+                }
+                return .none
+
+                // MARK: - Keystone
+                
+            case .swapAndPay(.confirmWithKeystoneTapped):
+                var sendConfirmationState = SendConfirmation.State.initial
+                sendConfirmationState.proposal = state.swapAndPayState.proposal
+                state.path.append(.confirmWithKeystone(sendConfirmationState))
+                if let last = state.path.ids.last {
+                    return .send(.path(.element(id: last, action: .confirmWithKeystone(.resolvePCZT))))
+                }
+                return .none
+
+            case .path(.element(id: _, action: .confirmWithKeystone(.getSignatureTapped))):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.keystonePCZTScanChecker]
+                state.path.append(.scan(scanState))
+                return .none
+
+            case .path(.element(id: _, action: .scan(.foundPCZT(let pcztWithSigs)))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        state.path.append(.sending(sendConfirmationState))
+                        return .send(.path(.element(id: id, action: .confirmWithKeystone(.foundPCZT(pcztWithSigs)))))
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .confirmWithKeystone(.updateResult(let result)))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        return .run { send in
+                            await send(.updateTxIdToExpand(sendConfirmationState.txIdToExpand))
+                            await send(
+                                .updateFailedData(
+                                    sendConfirmationState.failedCode,
+                                    sendConfirmationState.failedDescription ?? "",
+                                    sendConfirmationState.failedPcztMsg
+                                )
+                            )
+
+                            switch result {
+                            case .success:
+                                if let txId = sendConfirmationState.txIdToExpand {
+                                    userMetadataProvider.markTransactionAsSwapFor(txId)
+                                }
+                                await send(.updateResult(.success))
+                            case .failure:
+                                await send(.updateResult(.failure))
+                            case .resubmission:
+                                await send(.updateResult(.resubmission))
+                            default: return
+                            }
+                        }
+                    }
+                }
+                return .none
+                
+            case .path(.element(id: _, action: .confirmWithKeystone(.pcztSendFailed(let error)))):
+                for element in state.path.reversed() {
+                    if element.is(\.sending) {
+                        for (id, element2) in zip(state.path.ids, state.path) {
+                            if element2.is(\.confirmWithKeystone) {
+                                return .send(.path(.element(id: id, action: .confirmWithKeystone(.sendFailed(error?.toZcashError(), true)))))
+                            }
+                        }
+                        break
+                    } else if element.is(\.scan) || element.is(\.confirmWithKeystone) {
+                        for element2 in state.path {
+                            if case .confirmWithKeystone(let sendConfirmationState) = element2 {
+                                state.path.append(.preSendingFailure(sendConfirmationState))
+                            }
+                        }
+                        break
+                    }
                 }
                 return .none
 
@@ -100,6 +176,14 @@ extension SwapAndPayCoordFlow {
                 return .none
 
                 // MARK: - Self
+
+            case let .updateFailedData(code, desc, pcztMsg):
+                state.failedCode = code
+                state.failedDescription = desc
+                #if DEBUG
+                state.failedPcztMsg = pcztMsg
+                #endif
+                return .none
 
             case .swapAndPay(.addressBookTapped),
                     .path(.element(id: _, action: .swapAndPayForm(.addressBookTapped))):

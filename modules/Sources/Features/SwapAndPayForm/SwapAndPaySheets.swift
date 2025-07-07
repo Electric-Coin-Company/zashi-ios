@@ -537,11 +537,18 @@ extension SwapAndPayForm {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.bottom, 24)
                 }
-                
-                ZashiButton(L10n.General.confirm) {
-                    store.send(.confirmButtonTapped)
+
+                if store.selectedWalletAccount?.vendor == .keystone {
+                    ZashiButton(L10n.Keystone.confirm) {
+                        store.send(.confirmWithKeystoneTapped)
+                    }
+                    .padding(.bottom, 24)
+                } else {
+                    ZashiButton(L10n.General.confirm) {
+                        store.send(.confirmButtonTapped)
+                    }
+                    .padding(.bottom, 24)
                 }
-                .padding(.bottom, 24)
             }
         }
     }

@@ -40,20 +40,18 @@ extension HomeView {
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
             
-            if !store.isKeystoneAccountActive {
-                ActionRow(
-                    icon: walletStatus == .restoring
-                    ? Asset.Assets.Partners.payWithNearDisabled.image
-                    : Asset.Assets.Partners.payWithNear.image,
-                    title: L10n.SendSelect.swapAndPay,
-                    desc: L10n.SendSelect.SwapAndPay.desc,
-                    customIcon: true,
-                    divider: store.featureFlags.flexa
-                ) {
-                    store.send(.swapAndPayTapped)
-                }
-                .disabled(walletStatus == .restoring)
+            ActionRow(
+                icon: walletStatus == .restoring
+                ? Asset.Assets.Partners.payWithNearDisabled.image
+                : Asset.Assets.Partners.payWithNear.image,
+                title: L10n.SendSelect.swapAndPay,
+                desc: L10n.SendSelect.SwapAndPay.desc,
+                customIcon: true,
+                divider: store.featureFlags.flexa
+            ) {
+                store.send(.swapAndPayTapped)
             }
+            .disabled(walletStatus == .restoring)
 
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(
@@ -61,25 +59,28 @@ extension HomeView {
                     title: L10n.Settings.buyZecCB,
                     desc: L10n.Settings.coinbaseDesc,
                     customIcon: true,
-                    divider: store.featureFlags.flexa
+                    divider: store.featureFlags.flexa && !store.isKeystoneAccountActive
                 ) {
                     store.send(.coinbaseTapped)
                 }
+                .padding(.bottom, store.isKeystoneAccountActive ? 24 : 0)
             }
             
-            ActionRow(
-                icon: walletStatus == .restoring
-                ? Asset.Assets.Partners.flexaDisabled.image
-                : Asset.Assets.Partners.flexa.image,
-                title: L10n.Settings.flexa,
-                desc: L10n.Settings.flexaDesc,
-                customIcon: true,
-                divider: !store.isKeystoneConnected
-            ) {
-                store.send(.flexaTapped)
+            if !store.isKeystoneAccountActive {
+                ActionRow(
+                    icon: walletStatus == .restoring
+                    ? Asset.Assets.Partners.flexaDisabled.image
+                    : Asset.Assets.Partners.flexa.image,
+                    title: L10n.Settings.flexa,
+                    desc: L10n.Settings.flexaDesc,
+                    customIcon: true,
+                    divider: !store.isKeystoneConnected
+                ) {
+                    store.send(.flexaTapped)
+                }
+                .disabled(walletStatus == .restoring)
+                .padding(.bottom, store.isKeystoneConnected ? 24 : 0)
             }
-            .disabled(walletStatus == .restoring)
-            .padding(.bottom, store.isKeystoneConnected ? 24 : 0)
             
             if !store.isKeystoneConnected {
                 ActionRow(

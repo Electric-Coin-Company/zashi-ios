@@ -43,6 +43,8 @@ public struct SwapAndPayCoordFlow {
     public enum Path {
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
+        case confirmWithKeystone(SendConfirmation)
+        case preSendingFailure(SendConfirmation)
         case scan(Scan)
         case sending(SendConfirmation)
         case sendResultFailure(SendConfirmation)
@@ -61,7 +63,9 @@ public struct SwapAndPayCoordFlow {
             case success
         }
         
+        public var failedCode: Int?
         public var failedDescription = ""
+        public var failedPcztMsg: String?
         public var isHelpSheetPresented = false
         public var isOptInFlow = false
         public var path = StackState<Path.State>()
@@ -93,7 +97,7 @@ public struct SwapAndPayCoordFlow {
         case stopSending
         case swapAndPay(SwapAndPay.Action)
         case swapRequested
-        case updateFailedData(Int, String, String)
+        case updateFailedData(Int?, String, String?)
         case updateResult(State.Result?)
         case updateTxIdToExpand(String?)
     }
@@ -127,6 +131,7 @@ public struct SwapAndPayCoordFlow {
             switch action {
             case .onAppear:
                 // Here must be the determination if the start is to the opt-in screens or direct to the form
+                //let swapAPIAccess = WalletStorage.SwapAPIAccess.notResolved
                 let swapAPIAccess = walletStorage.exportSwapAPIAccess()
                 state.$swapAPIAccess.withLock { $0 = swapAPIAccess }
                 state.isOptInFlow = swapAPIAccess == .notResolved
