@@ -11,22 +11,11 @@ import ZcashLightClientKit
 
 import AudioServices
 import Models
-//import Utils
 import MnemonicClient
 import SDKSynchronizer
 import WalletStorage
 import ZcashSDKEnvironment
-//import UIComponents
-//import Models
-//import Generated
-//import BalanceFormatter
-//import WalletBalances
-//import LocalAuthenticationHandler
 import AddressBookClient
-//import MessageUI
-//import SupportDataGenerator
-//import KeystoneHandler
-//import TransactionDetails
 import AddressBook
 import UserMetadataProvider
 
@@ -103,11 +92,8 @@ public struct SwapAndPayCoordFlow {
     }
 
     @Dependency(\.audioServices) var audioServices
-//    @Dependency(\.addressBook) var addressBook
-//    @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
-//    @Dependency(\.keystoneHandler) var keystoneHandler
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer

@@ -278,7 +278,6 @@ extension SwapAndPayCoordFlow {
                 if let account = state.selectedWalletAccount?.account {
                     try? userMetadataProvider.store(account)
                 }
-//                state.isSending = false
                 let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
                 let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
                 return .run { send in

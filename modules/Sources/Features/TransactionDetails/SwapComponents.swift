@@ -32,7 +32,7 @@ extension TransactionDetailsView {
     
     @ViewBuilder func swapSlippageView() -> some View {
         HStack(spacing: 0) {
-            Text(store.swapStatus != .refunded
+            Text(store.swapStatus == .success
                  ? L10n.SwapAndPay.executedSlippage
                  : L10n.SwapAndPay.maxSlippageTitle
             )

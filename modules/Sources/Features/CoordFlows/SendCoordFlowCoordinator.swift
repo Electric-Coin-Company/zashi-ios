@@ -200,6 +200,7 @@ extension SendCoordFlow {
                 return .send(.sendForm(.addressUpdated(address)))
 
             case .path(.element(id: _, action: .scan(.foundRequestZec(let requestPayment)))):
+                let _ = state.path.popLast()
                 return .send(.sendForm(.requestZec(requestPayment)))
 
             case .path(.element(id: _, action: .scan(.cancelTapped))):

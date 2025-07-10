@@ -291,10 +291,8 @@ extension Near1Click {
                 var slippage: Decimal?
                 if let slippageInt = swapDetailsDict["slippage"] as? Int {
                     slippage = Decimal(slippageInt) * 0.01
-                } else if status == .refunded {
-                    if let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
-                       let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any],
-                       let slippageInt = quoteRequestDict["slippageTolerance"] as? Int {
+                } else if status != .success {
+                    if let slippageInt = quoteRequestDict["slippageTolerance"] as? Int {
                         slippage = Decimal(slippageInt) * 0.01
                     }
                 }
@@ -309,23 +307,40 @@ extension Near1Click {
                     amountInFormattedDecimal = amountInFormatted.usDecimal
                 }
                 
+                var amountInUsd = swapDetailsDict["amountInUsd"] as? String
+                
                 var amountOutFormattedDecimal: Decimal?
                 if let amountOutFormatted = swapDetailsDict["amountOutFormatted"] as? String {
                     amountOutFormattedDecimal = amountOutFormatted.usDecimal
                 }
                 
+                var amountOutUsd = swapDetailsDict["amountOutUsd"] as? String
+                
                 var swapRecipient: String?
-                if let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
-                   let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any],
-                   let recipient = quoteRequestDict["recipient"] as? String {
+                if let recipient = quoteRequestDict["recipient"] as? String {
                     swapRecipient = recipient
+                }
+                
+                if status == .pending {
+                    if let quoteDict = quoteResponseDict["quote"] as? [String: Any] {
+                        if let amountInFormatted = quoteDict["amountInFormatted"] as? String {
+                            amountInFormattedDecimal = amountInFormatted.usDecimal
+                        }
+
+                        if let amountOutFormatted = quoteDict["amountOutFormatted"] as? String {
+                            amountOutFormattedDecimal = amountOutFormatted.usDecimal
+                        }
+
+                        amountInUsd = quoteDict["amountInUsd"] as? String
+                        amountOutUsd = quoteDict["amountOutUsd"] as? String
+                    }
                 }
                 
                 return SwapDetails(
                     amountInFormatted: amountInFormattedDecimal,
-                    amountInUsd: swapDetailsDict["amountInUsd"] as? String,
+                    amountInUsd: amountInUsd,
                     amountOutFormatted: amountOutFormattedDecimal,
-                    amountOutUsd: swapDetailsDict["amountOutUsd"] as? String,
+                    amountOutUsd: amountOutUsd,
                     destinationAsset: destinationAsset,
                     isSwap: swapType == "EXACT_INPUT",
                     slippage: slippage,

@@ -395,7 +395,8 @@ extension Root {
                 }
                 return .merge(
                     .send(.loadContacts),
-                    .send(.loadUserMetadata)
+                    .send(.loadUserMetadata),
+                    .send(.loadSwapAPIAccess)
                 )
 
             case .resolveMetadataEncryptionKeys:

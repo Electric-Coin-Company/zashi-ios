@@ -102,7 +102,7 @@ public struct ZashiTextField<PrefixContent, InputReplacementContent, AccessoryCo
                     }
                 }
             }
-            .padding(.vertical, inputReplacementView == nil ? 12 : 8)
+            .padding(.vertical, (inputReplacementView is EmptyView) ? 12 : 8)
             .padding(.horizontal, 12)
             .background(
                 RoundedRectangle(cornerRadius: Design.Radius._lg)
