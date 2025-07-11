@@ -12,7 +12,7 @@ public protocol Colorable {
     func color(_ colorScheme: ColorScheme) -> Color
 }
 
-public enum Design {
+public enum Design: Colorable {
 
     case screenBackground
     
@@ -517,7 +517,7 @@ public extension Design.Btns.Brand {
 public extension Design.Btns.Ghost {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark950.color, colorScheme)
         case .bgHover: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.gray900.color, colorScheme)
         case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)

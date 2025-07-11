@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Opt-in for connection over Tor.
+
 ## 2.0.4 build 1 (2025-06-16)
 
 ### Added

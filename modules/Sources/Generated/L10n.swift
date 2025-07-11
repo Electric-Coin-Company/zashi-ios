@@ -1104,6 +1104,8 @@ public enum L10n {
     public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
     /// Pair your Keystone hardware wallet with Zashi to sign transactions.
     public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
+    /// Privacy Settings
+    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Privacy Settings")
     /// Zashi Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.
@@ -1210,6 +1212,14 @@ public enum L10n {
         public static let info = L10n.tr("Localizable", "smartBanner.content.syncingError.info", fallback: "Attempting to resolve")
         /// Error encountered while syncing
         public static let title = L10n.tr("Localizable", "smartBanner.content.syncingError.title", fallback: "Error encountered while syncing")
+      }
+      public enum Tor {
+        /// Start
+        public static let button = L10n.tr("Localizable", "smartBanner.content.tor.button", fallback: "Start")
+        /// Enable Tor connection
+        public static let info = L10n.tr("Localizable", "smartBanner.content.tor.info", fallback: "Enable Tor connection")
+        /// Protect your IP with Tor
+        public static let title = L10n.tr("Localizable", "smartBanner.content.tor.title", fallback: "Protect your IP with Tor")
       }
       public enum UpdatingBalance {
         /// Waiting for last transaction to process
@@ -1407,6 +1417,30 @@ public enum L10n {
       public static let desc = L10n.tr("Localizable", "tooltip.exchangeRate.desc", fallback: "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.")
       /// Exchange rate unavailable
       public static let title = L10n.tr("Localizable", "tooltip.exchangeRate.title", fallback: "Exchange rate unavailable")
+    }
+  }
+  public enum TorSetup {
+    /// Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.
+    public static let desc1 = L10n.tr("Localizable", "torSetup.desc1", fallback: "Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.")
+    /// This protects your IP address from everyone, including Zcash servers.
+    public static let desc2 = L10n.tr("Localizable", "torSetup.desc2", fallback: "This protects your IP address from everyone, including Zcash servers.")
+    /// Don’t protect my IP address.
+    public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t protect my IP address.")
+    /// Protect my IP address.
+    public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Protect my IP address.")
+    /// Enable Tor Connection
+    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Enable Tor Connection")
+    public enum Option1 {
+      /// Use Tor connection to protect your IP address.
+      public static let desc = L10n.tr("Localizable", "torSetup.option1.desc", fallback: "Use Tor connection to protect your IP address.")
+      /// IP Address Protection
+      public static let title = L10n.tr("Localizable", "torSetup.option1.title", fallback: "IP Address Protection")
+    }
+    public enum Option2 {
+      /// Do not leak your data to any servers.
+      public static let desc = L10n.tr("Localizable", "torSetup.option2.desc", fallback: "Do not leak your data to any servers.")
+      /// Stay Private
+      public static let title = L10n.tr("Localizable", "torSetup.option2.title", fallback: "Stay Private")
     }
   }
   public enum Transaction {

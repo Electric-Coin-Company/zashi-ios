@@ -41,9 +41,10 @@ public struct SmartBanner {
             case priority5 // updating balance
             case priority6 // wallet backup
             case priority7 // shielding
+            case priority75 // tor
             case priority8 // currency conversion
             case priority9 // auto-shielding
-            
+
             public func next() -> PriorityContent {
                 PriorityContent.init(rawValue: self.rawValue - 1) ?? .priority9
             }
@@ -123,6 +124,7 @@ public struct SmartBanner {
         case evaluatePriority5
         case evaluatePriority6
         case evaluatePriority7
+        case evaluatePriority75
         case evaluatePriority8
         case evaluatePriority9
         case networkMonitorChanged(Bool)
@@ -144,6 +146,8 @@ public struct SmartBanner {
         case currencyConversionScreenRequested
         case currencyConversionTapped
         case shieldFundsTapped
+        case torSetupScreenRequested
+        case torSetupTapped
         case walletBackupTapped
     }
 
@@ -274,6 +278,8 @@ public struct SmartBanner {
                     if state.isShieldingAcknowledgedAtKeychain {
                         return .none
                     }
+                } else if state.priorityContent == .priority75 {
+                    return .send(.torSetupScreenRequested)
                 } else if state.priorityContent == .priority8 {
                     return .send(.currencyConversionScreenRequested)
                 }
@@ -446,9 +452,16 @@ public struct SmartBanner {
                             await send(.triggerPriority(.priority7))
                         }
                     } else {
-                        await send(.evaluatePriority8)
+                        await send(.evaluatePriority75)
                     }
                 }
+                
+                // tor
+            case .evaluatePriority75:
+                if walletStorage.exportTorSetupFlag() == nil {
+                    return .send(.triggerPriority(.priority75))
+                }
+                return .send(.evaluatePriority8)
 
                 // currency conversion
             case .evaluatePriority8:
@@ -525,6 +538,12 @@ public struct SmartBanner {
                 return .none
                 
             case .currencyConversionTapped:
+                return .send(.smartBannerContentTapped)
+
+            case .torSetupScreenRequested:
+                return .none
+
+            case .torSetupTapped:
                 return .send(.smartBannerContentTapped)
 
             case .shieldFundsTapped:

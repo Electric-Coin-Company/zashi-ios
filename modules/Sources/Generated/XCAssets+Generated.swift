@@ -56,6 +56,7 @@ public enum Asset {
       public static let keystonePromo = ImageAsset(name: "keystonePromo")
       public static let keystoneSeekLogo = ImageAsset(name: "keystoneSeekLogo")
       public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
+      public static let torLogo = ImageAsset(name: "torLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
@@ -101,6 +102,7 @@ public enum Asset {
       public static let integrations = ImageAsset(name: "integrations")
       public static let key = ImageAsset(name: "key")
       public static let loading = ImageAsset(name: "loading")
+      public static let lockLocked = ImageAsset(name: "lockLocked")
       public static let lockUnlocked = ImageAsset(name: "lockUnlocked")
       public static let magicWand = ImageAsset(name: "magicWand")
       public static let menu = ImageAsset(name: "menu")

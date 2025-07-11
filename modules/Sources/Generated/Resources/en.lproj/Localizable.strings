@@ -624,6 +624,10 @@
 "smartBanner.content.shield.titleShorter" = "Transparent Balance";
 "smartBanner.content.shield.button" = "Shield";
 
+"smartBanner.content.tor.title" = "Protect your IP with Tor";
+"smartBanner.content.tor.info" = "Enable Tor connection";
+"smartBanner.content.tor.button" = "Start";
+
 "smartBanner.content.currencyConversion.title" = "Currency Conversion";
 "smartBanner.content.currencyConversion.info" = "Enable to display USD values";
 "smartBanner.content.currencyConversion.button" = "Start";
@@ -680,3 +684,15 @@
 "recoveryPhraseDisplay.warningHeight.info" = "The block height at which your wallet was created can significantly speed up the wallet recovery process.";
 
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
+
+"torSetup.title" = "Enable Tor Connection";
+"torSetup.desc1" = "Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.";
+"torSetup.desc2" = "This protects your IP address from everyone, including Zcash servers.";
+
+"torSetup.option1.title" = "IP Address Protection";
+"torSetup.option1.desc" = "Use Tor connection to protect your IP address.";
+"torSetup.option2.title" = "Stay Private";
+"torSetup.option2.desc" = "Do not leak your data to any servers.";
+"settings.private" = "Privacy Settings";
+"torSetup.enableDesc" = "Protect my IP address.";
+"torSetup.disableDesc" = "Don’t protect my IP address.";

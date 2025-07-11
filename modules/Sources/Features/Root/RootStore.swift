@@ -41,6 +41,7 @@ import RecoveryPhraseDisplay
 import CoordFlows
 import ServerSetup
 import Settings
+import TorSetup
 
 @Reducer
 public struct Root {
@@ -67,6 +68,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case torSetup
             case transactionsCoordFlow
             case walletBackup
         }
@@ -125,6 +127,7 @@ public struct Root {
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
+        public var torSetupState = TorSetup.State.initial
 
         public init(
             appInitializationState: InitializationState = .uninitialized,
@@ -212,6 +215,7 @@ public struct Root {
         case signWithKeystoneRequested
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
         case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
+        case torSetup(TorSetup.Action)
 
         // Transactions
         case observeTransactions
@@ -341,6 +345,10 @@ public struct Root {
 
         Scope(state: \.signWithKeystoneCoordFlowState, action: \.signWithKeystoneCoordFlow) {
             SignWithKeystoneCoordFlow()
+        }
+
+        Scope(state: \.torSetupState, action: \.torSetup) {
+            TorSetup()
         }
 
         initializationReduce()

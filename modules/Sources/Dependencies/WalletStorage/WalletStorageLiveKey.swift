@@ -77,6 +77,12 @@ extension WalletStorageClient: DependencyKey {
             },
             exportShieldingAcknowledged: {
                 walletStorage.exportShieldingAcknowledged()
+            },
+            importTorSetupFlag: { enabled in
+                try walletStorage.importTorSetupFlag(enabled)
+            },
+            exportTorSetupFlag: {
+                walletStorage.exportTorSetupFlag()
             }
         )
     }

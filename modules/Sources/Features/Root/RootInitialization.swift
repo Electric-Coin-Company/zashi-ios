@@ -312,9 +312,12 @@ extension Root {
                     let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-
+                    let torConnectionEnabled = walletStorage.exportTorSetupFlag() ?? false
+                    
                     return .run { send in
                         do {
+                            await LwdConnectionOverTorFlag.shared.update(torConnectionEnabled)
+                            
                             try await sdkSynchronizer.prepareWith(
                                 seedBytes,
                                 birthday,

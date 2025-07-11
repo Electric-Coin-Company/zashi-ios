@@ -55,7 +55,16 @@ public struct AdvancedSettingsView: View {
                             ) {
                                 store.send(.operationAccessCheck(.chooseServer))
                             }
-                            
+                        }
+
+                        ActionRow(
+                            icon: Asset.Assets.Icons.shieldZap.image,
+                            title: L10n.Settings.private
+                        ) {
+                            store.send(.operationAccessCheck(.torSetup))
+                        }
+
+                        if store.isEnoughFreeSpaceMode {
                             ActionRow(
                                 icon: Asset.Assets.Icons.currencyDollar.image,
                                 title: L10n.CurrencyConversion.title

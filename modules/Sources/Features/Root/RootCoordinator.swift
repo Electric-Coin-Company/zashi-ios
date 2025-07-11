@@ -128,7 +128,12 @@ extension Root {
                 state.currencyConversionSetupState = .initial
                 state.path = .currencyConversionSetup
                 return .none
-                
+
+            case .home(.torSetupTapped):
+                state.torSetupState = .initial
+                state.path = .torSetup
+                return .none
+
             case .home(.smartBanner(.walletBackupTapped)):
                 state.walletBackupCoordFlowState = .initial
                 state.path = .walletBackup
@@ -246,6 +251,12 @@ extension Root {
             case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
                 state.signWithKeystoneCoordFlowBinding = false
                 return .none
+
+                // MARK: - Tor Setup
+                
+            case .torSetup(.skipTapped), .torSetup(.enableTapped):
+                state.path = nil
+                return .send(.home(.smartBanner(.closeAndCleanupBanner)))
 
                 // MARK: - Transactions Coord Flow
                 

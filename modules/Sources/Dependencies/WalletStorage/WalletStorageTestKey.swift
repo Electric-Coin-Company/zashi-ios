@@ -28,7 +28,9 @@ extension WalletStorageClient: TestDependencyKey {
         importWalletBackupAcknowledged: unimplemented("\(Self.self).importWalletBackupAcknowledged"),
         exportWalletBackupAcknowledged: unimplemented("\(Self.self).exportWalletBackupAcknowledged", placeholder: false),
         importShieldingAcknowledged: unimplemented("\(Self.self).importShieldingAcknowledged"),
-        exportShieldingAcknowledged: unimplemented("\(Self.self).exportShieldingAcknowledged", placeholder: false)
+        exportShieldingAcknowledged: unimplemented("\(Self.self).exportShieldingAcknowledged", placeholder: false),
+        importTorSetupFlag: unimplemented("\(Self.self).importTorSetupFlag"),
+        exportTorSetupFlag: unimplemented("\(Self.self).exportTorSetupFlag", placeholder: nil)
     )
 }
 
@@ -52,6 +54,8 @@ extension WalletStorageClient {
         importWalletBackupAcknowledged: { _ in },
         exportWalletBackupAcknowledged: { false },
         importShieldingAcknowledged: { _ in },
-        exportShieldingAcknowledged: { false }
+        exportShieldingAcknowledged: { false },
+        importTorSetupFlag: { _ in },
+        exportTorSetupFlag: { false }
     )
 }

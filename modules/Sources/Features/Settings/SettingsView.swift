@@ -16,6 +16,7 @@ import Scan
 import ServerSetup
 import SendFeedback
 import WhatsNew
+import TorSetup
 
 public struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -144,6 +145,8 @@ public struct SettingsView: View {
                     ScanView(store: store)
                 case let .sendUsFeedback(store):
                     SendFeedbackView(store: store)
+                case let .torSetup(store):
+                    TorSetupView(store: store)
                 case let .whatsNew(store):
                     WhatsNewView(store: store)
                 }
