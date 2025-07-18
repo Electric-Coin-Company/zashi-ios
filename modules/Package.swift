@@ -275,6 +275,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "UIComponents",
                 "UserPreferencesStorage",
+                "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Features/CurrencyConversionSetup"
@@ -732,6 +733,7 @@ let package = Package(
             dependencies: [
                 "DatabaseFiles",
                 "Models",
+                "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
@@ -924,6 +926,7 @@ let package = Package(
                 "Models",
                 "SDKSynchronizer",
                 "UIComponents",
+                "UserPreferencesStorage",
                 "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")

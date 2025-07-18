@@ -13,6 +13,7 @@ import DatabaseFiles
 import Models
 import ZcashSDKEnvironment
 import KeystoneSDK
+import WalletStorage
 
 extension SDKSynchronizerClient: DependencyKey {
     public static let liveValue: SDKSynchronizerClient = Self.live()
@@ -21,7 +22,10 @@ extension SDKSynchronizerClient: DependencyKey {
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+        @Dependency(\.walletStorage) var walletStorage
 
+        let isTorEnabled: Bool = walletStorage.exportTorSetupFlag() ?? false
+        
         let network = zcashSDKEnvironment.network
         
         #if DEBUG
@@ -41,7 +45,8 @@ extension SDKSynchronizerClient: DependencyKey {
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
             outputParamsURL: databaseFiles.outputParamsURLFor(network),
             saplingParamsSourceURL: SaplingParamsSourceURL.default,
-            loggingPolicy: loggingPolicy
+            loggingPolicy: loggingPolicy,
+            isTorEnabled: isTorEnabled
         )
         
         let synchronizer = SDKSynchronizer(initializer: initializer)
@@ -276,6 +281,12 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             getCustomUnifiedAddress: { accountUUID, receivers in
                 try await synchronizer.getCustomUnifiedAddress(accountUUID: accountUUID, receivers: receivers)
+            },
+            torEnabled: { enabled in
+                try await synchronizer.tor(enabled: enabled)
+            },
+            isTorSuccessfullyInitialized: {
+                await synchronizer.isTorSuccessfullyInitialized()
             }
         )
     }

@@ -47,9 +47,6 @@ public struct SmartBannerView: View {
                         priorityContent()
                             .padding(.vertical, 16)
                             .padding(.top, SBConstants.fixedHeight)
-                            .onTapGesture {
-                                store.send(.smartBannerContentTapped)
-                            }
                             .screenHorizontalPadding()
                     }
                     
@@ -85,6 +82,9 @@ public struct SmartBannerView: View {
                     Design.screenBackground.color(colorScheme)
                         .frame(height: 2)
                         .frame(maxWidth: .infinity)
+                }
+                .onTapGesture {
+                    store.send(.smartBannerContentTapped)
                 }
             }
             .clipShape( Rectangle() )

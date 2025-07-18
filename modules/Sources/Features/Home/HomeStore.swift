@@ -176,7 +176,7 @@ public struct Home {
                 )
                 
             case .receiveScreenRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone)
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])

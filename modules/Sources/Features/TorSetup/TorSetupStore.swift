@@ -8,10 +8,12 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 
+import SDKSynchronizer
 import Generated
 import ExchangeRate
 import WalletStorage
 import Models
+import UserPreferencesStorage
 
 @Reducer
 public struct TorSetup {
@@ -44,32 +46,37 @@ public struct TorSetup {
         }
         
         public enum LearnMoreOptions: CaseIterable {
-            case ipAddress
-            case stayPrivate
-            
+            case currencyConversion
+            case transactions
+            case integrations
+
             public func title() -> String {
                 switch self {
-                case .ipAddress: return L10n.TorSetup.Option1.title
-                case .stayPrivate: return L10n.TorSetup.Option2.title
+                case .currencyConversion: return L10n.TorSetup.Option1.title
+                case .transactions: return L10n.TorSetup.Option2.title
+                case .integrations: return L10n.TorSetup.Option3.title
                 }
             }
 
             public func subtitle() -> String {
                 switch self {
-                case .ipAddress: return L10n.TorSetup.Option1.desc
-                case .stayPrivate: return L10n.TorSetup.Option2.desc
+                case .currencyConversion: return L10n.TorSetup.Option1.desc
+                case .transactions: return L10n.TorSetup.Option2.desc
+                case .integrations: return L10n.TorSetup.Option3.desc
                 }
             }
 
             public func icon() -> ImageAsset {
                 switch self {
-                case .ipAddress: return Asset.Assets.Icons.shieldZap
-                case .stayPrivate: return Asset.Assets.Icons.lockLocked
+                case .currencyConversion: return Asset.Assets.Icons.currencyDollar
+                case .transactions: return Asset.Assets.Icons.sent
+                case .integrations: return Asset.Assets.Icons.integrations
                 }
             }
         }
 
         public var activeSettingsOption: SettingsOptions?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
 
@@ -90,14 +97,18 @@ public struct TorSetup {
     
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<TorSetup.State>)
+        case disableTapped
         case enableTapped
         case onAppear
         case saveChangesTapped
         case settingsOptionChanged(State.SettingsOptions)
         case settingsOptionTapped(State.SettingsOptions)
-        case skipTapped
+        case torInitFailed
     }
 
+    @Dependency(\.exchangeRate) var exchangeRate
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
@@ -122,8 +133,14 @@ public struct TorSetup {
                 
             case .enableTapped:
                 try? walletStorage.importTorSetupFlag(true)
-                return .run { _ in
-                    await LwdConnectionOverTorFlag.shared.update(true)
+                try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
+                exchangeRate.refreshExchangeRateUSD()
+                return .run { send in
+                    do {
+                        try await sdkSynchronizer.torEnabled(true)
+                    } catch {
+                        await send(.torInitFailed)
+                    }
                 }
 
             case .settingsOptionChanged:
@@ -138,16 +155,36 @@ public struct TorSetup {
                 try? walletStorage.importTorSetupFlag(newFlag)
                 state.activeSettingsOption = state.currentSettingsOption
                 let currentSettingsOption = state.currentSettingsOption
+                if state.currentSettingsOption == .optOut {
+                    try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
+                    state.$currencyConversion.withLock { $0 = nil }
+                } else {
+                    try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
+                    exchangeRate.refreshExchangeRateUSD()
+                }
                 return .run { send in
                     await send(.settingsOptionChanged(currentSettingsOption))
-                    await LwdConnectionOverTorFlag.shared.update(newFlag)
+                    if newFlag {
+                        do {
+                            try await sdkSynchronizer.torEnabled(newFlag)
+                        } catch {
+                            await send(.torInitFailed)
+                        }
+                    } else {
+                        try? await sdkSynchronizer.torEnabled(newFlag)
+                    }
                 }
 
-            case .skipTapped:
+            case .disableTapped:
                 try? walletStorage.importTorSetupFlag(false)
+                try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
+                state.$currencyConversion.withLock { $0 = nil }
                 return .run { _ in
-                    await LwdConnectionOverTorFlag.shared.update(false)
+                    try? await sdkSynchronizer.torEnabled(false)
                 }
+                
+            case .torInitFailed:
+                return .none
             }
         }
     }

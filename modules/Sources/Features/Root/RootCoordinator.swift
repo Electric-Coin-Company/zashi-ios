@@ -254,7 +254,7 @@ extension Root {
 
                 // MARK: - Tor Setup
                 
-            case .torSetup(.skipTapped), .torSetup(.enableTapped):
+            case .torSetup(.disableTapped), .torSetup(.enableTapped):
                 state.path = nil
                 return .send(.home(.smartBanner(.closeAndCleanupBanner)))
 

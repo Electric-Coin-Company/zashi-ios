@@ -49,7 +49,9 @@ extension SDKSynchronizerClient: TestDependencyKey {
         urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil),
         redactPCZTForSigner: unimplemented("\(Self.self).redactPCZTForSigner", placeholder: Pczt()),
         fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: []),
-        getCustomUnifiedAddress: unimplemented("\(Self.self).getCustomUnifiedAddress", placeholder: nil)
+        getCustomUnifiedAddress: unimplemented("\(Self.self).getCustomUnifiedAddress", placeholder: nil),
+        torEnabled: unimplemented("\(Self.self).torEnabled"),
+        isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil)
     )
 }
 
@@ -89,7 +91,9 @@ extension SDKSynchronizerClient {
         urEncoderForPCZT: { _ in nil },
         redactPCZTForSigner: { _ in Pczt() },
         fetchTxidsWithMemoContaining: { _ in [] },
-        getCustomUnifiedAddress: { _, _ in nil }
+        getCustomUnifiedAddress: { _, _ in nil },
+        torEnabled: { _ in },
+        isTorSuccessfullyInitialized: { nil }
     )
 
     public static let mock = Self.mocked()
@@ -200,7 +204,9 @@ extension SDKSynchronizerClient {
         urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil },
         redactPCZTForSigner: @escaping (Pczt) async throws -> Pczt = { _ in Pczt() },
         fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] },
-        getCustomUnifiedAddress: @escaping (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress? = { _, _ in nil }
+        getCustomUnifiedAddress: @escaping (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress? = { _, _ in nil },
+        torEnabled: @escaping (Bool) async throws -> Void = { _ in },
+        isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -237,7 +243,9 @@ extension SDKSynchronizerClient {
             urEncoderForPCZT: urEncoderForPCZT,
             redactPCZTForSigner: redactPCZTForSigner,
             fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining,
-            getCustomUnifiedAddress: getCustomUnifiedAddress
+            getCustomUnifiedAddress: getCustomUnifiedAddress,
+            torEnabled: torEnabled,
+            isTorSuccessfullyInitialized: isTorSuccessfullyInitialized
         )
     }
 }

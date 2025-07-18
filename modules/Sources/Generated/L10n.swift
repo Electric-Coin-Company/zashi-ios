@@ -1104,8 +1104,8 @@ public enum L10n {
     public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
     /// Pair your Keystone hardware wallet with Zashi to sign transactions.
     public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
-    /// Privacy Settings
-    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Privacy Settings")
+    /// Tor Protection
+    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Tor Protection")
     /// Zashi Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.
@@ -1216,10 +1216,10 @@ public enum L10n {
       public enum Tor {
         /// Start
         public static let button = L10n.tr("Localizable", "smartBanner.content.tor.button", fallback: "Start")
-        /// Enable Tor connection
-        public static let info = L10n.tr("Localizable", "smartBanner.content.tor.info", fallback: "Enable Tor connection")
-        /// Protect your IP with Tor
-        public static let title = L10n.tr("Localizable", "smartBanner.content.tor.title", fallback: "Protect your IP with Tor")
+        /// Protect your IP address
+        public static let info = L10n.tr("Localizable", "smartBanner.content.tor.info", fallback: "Protect your IP address")
+        /// Beta: Enable Tor Protection
+        public static let title = L10n.tr("Localizable", "smartBanner.content.tor.title", fallback: "Beta: Enable Tor Protection")
       }
       public enum UpdatingBalance {
         /// Waiting for last transaction to process
@@ -1420,27 +1420,65 @@ public enum L10n {
     }
   }
   public enum TorSetup {
-    /// Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.
-    public static let desc1 = L10n.tr("Localizable", "torSetup.desc1", fallback: "Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.")
-    /// This protects your IP address from everyone, including Zcash servers.
-    public static let desc2 = L10n.tr("Localizable", "torSetup.desc2", fallback: "This protects your IP address from everyone, including Zcash servers.")
-    /// Don’t protect my IP address.
-    public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t protect my IP address.")
-    /// Protect my IP address.
-    public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Protect my IP address.")
+    /// Don’t connect over Tor.
+    public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t connect over Tor.")
+    /// Connect over Tor.
+    public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Connect over Tor.")
     /// Enable Tor Connection
     public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Enable Tor Connection")
+    public enum Alert {
+      /// Disable
+      public static let disable = L10n.tr("Localizable", "torSetup.alert.disable", fallback: "Disable")
+      /// Don’t disable
+      public static let dontDisable = L10n.tr("Localizable", "torSetup.alert.dontDisable", fallback: "Don’t disable")
+      /// Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.
+      public static let msg = L10n.tr("Localizable", "torSetup.alert.msg", fallback: "Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.")
+      /// Disable Tor?
+      public static let title = L10n.tr("Localizable", "torSetup.alert.title", fallback: "Disable Tor?")
+    }
+    public enum CcSheet {
+      /// Tor Protection is a beta feature that provides additional protections for your IP address. USD exchange rates are only available when it is enabled.
+      public static let desc1 = L10n.tr("Localizable", "torSetup.ccSheet.desc1", fallback: "Tor Protection is a beta feature that provides additional protections for your IP address. USD exchange rates are only available when it is enabled.")
+      /// If Tor is permitted in your region, we recommend enabling it. You can manage it in Advanced Settings.
+      public static let desc2 = L10n.tr("Localizable", "torSetup.ccSheet.desc2", fallback: "If Tor is permitted in your region, we recommend enabling it. You can manage it in Advanced Settings.")
+      /// Enable
+      public static let enable = L10n.tr("Localizable", "torSetup.ccSheet.enable", fallback: "Enable")
+      /// Do it later
+      public static let later = L10n.tr("Localizable", "torSetup.ccSheet.later", fallback: "Do it later")
+      /// Tor Required for Currency Conversion
+      public static let title = L10n.tr("Localizable", "torSetup.ccSheet.title", fallback: "Tor Required for Currency Conversion")
+    }
+    public enum Learn {
+      /// Opt in
+      public static let btnIn = L10n.tr("Localizable", "torSetup.learn.btnIn", fallback: "Opt in")
+      /// Opt out
+      public static let btnOut = L10n.tr("Localizable", "torSetup.learn.btnOut", fallback: "Opt out")
+      /// This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.
+      public static let desc = L10n.tr("Localizable", "torSetup.learn.desc", fallback: "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.")
+    }
     public enum Option1 {
-      /// Use Tor connection to protect your IP address.
-      public static let desc = L10n.tr("Localizable", "torSetup.option1.desc", fallback: "Use Tor connection to protect your IP address.")
-      /// IP Address Protection
-      public static let title = L10n.tr("Localizable", "torSetup.option1.title", fallback: "IP Address Protection")
+      /// Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)
+      public static let desc = L10n.tr("Localizable", "torSetup.option1.desc", fallback: "Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)")
+      /// Currency Conversion
+      public static let title = L10n.tr("Localizable", "torSetup.option1.title", fallback: "Currency Conversion")
     }
     public enum Option2 {
-      /// Do not leak your data to any servers.
-      public static let desc = L10n.tr("Localizable", "torSetup.option2.desc", fallback: "Do not leak your data to any servers.")
-      /// Stay Private
-      public static let title = L10n.tr("Localizable", "torSetup.option2.title", fallback: "Stay Private")
+      /// Send and retrieve transaction data over Tor for added privacy.
+      public static let desc = L10n.tr("Localizable", "torSetup.option2.desc", fallback: "Send and retrieve transaction data over Tor for added privacy.")
+      /// Transactions
+      public static let title = L10n.tr("Localizable", "torSetup.option2.title", fallback: "Transactions")
+    }
+    public enum Option3 {
+      /// Access third-party APIs (e.g. NEAR) over Tor for added privacy.
+      public static let desc = L10n.tr("Localizable", "torSetup.option3.desc", fallback: "Access third-party APIs (e.g. NEAR) over Tor for added privacy.")
+      /// Integrations
+      public static let title = L10n.tr("Localizable", "torSetup.option3.title", fallback: "Integrations")
+    }
+    public enum Settings {
+      /// This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.
+      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.")
+      /// Note: Exchange rates are only available when this feature is enabled.
+      public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "Note: Exchange rates are only available when this feature is enabled.")
     }
   }
   public enum Transaction {

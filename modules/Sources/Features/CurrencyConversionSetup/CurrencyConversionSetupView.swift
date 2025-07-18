@@ -41,9 +41,56 @@ public struct CurrencyConversionSetupView: View {
             .onAppear { store.send(.onAppear) }
             .navigationBarBackButtonHidden(!store.isSettingsView)
             .zashiBackV2()
+            .zashiSheet(isPresented: $store.isTorSheetPresented) {
+                torSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
+    }
+    
+    @ViewBuilder private func torSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            RoundedRectangle(cornerRadius: Design.Radius._full)
+                .fill(Design.Text.primary.color(colorScheme))
+                .frame(width: 40, height: 40)
+                .overlay {
+                    Asset.Assets.Partners.torLogo.image
+                        .zImage(width: 22, height: 15, style: Design.Text.opposite)
+                }
+                .padding(.top, 32)
+                .padding(.bottom, 12)
+
+            Text(L10n.TorSetup.CcSheet.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(L10n.TorSetup.CcSheet.desc1)
+                .zFont(size: 16, style: Design.Text.tertiary)
+                .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(L10n.TorSetup.CcSheet.desc2)
+                .zFont(size: 16, style: Design.Text.tertiary)
+                .padding(.bottom, 32)
+                .fixedSize(horizontal: false, vertical: true)
+
+            ZashiButton(
+                L10n.TorSetup.CcSheet.later,
+                type: .ghost
+            ) {
+                store.send(.laterTapped)
+            }
+            .padding(.bottom, 12)
+
+            ZashiButton(L10n.TorSetup.CcSheet.enable) {
+                store.send(.enableTorTapped)
+            }
+            .padding(.bottom, 24)
+        }
     }
     
     private func settingsLayout() -> some View {

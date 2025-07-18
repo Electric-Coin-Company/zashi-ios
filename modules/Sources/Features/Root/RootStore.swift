@@ -83,6 +83,7 @@ public struct Root {
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var debugState: DebugState
         public var deeplinkWarningState: DeeplinkWarning.State = .initial
         public var destinationState: DestinationState
@@ -238,6 +239,12 @@ public struct Root {
         case reportShieldingFailure
         case shareFinished
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
+        
+        // Tor
+        case observeTorInit
+        case torInitFailed
+        case torDisableTapped
+        case torDontDisableTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -366,6 +373,8 @@ public struct Root {
         coordinatorReduce()
         
         shieldingProcessorReduce()
+        
+        torInitCheckReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -610,6 +619,21 @@ extension AlertState where Action == Root.Action {
             TextState(L10n.ShieldFunds.Error.title)
         } message: {
             TextState(L10n.ShieldFunds.Error.Gprc.message)
+        }
+    }
+    
+    public static func torInitFailedRequest() -> AlertState {
+        AlertState {
+            TextState(L10n.TorSetup.Alert.title)
+        } actions: {
+            ButtonState(action: .torDisableTapped) {
+                TextState(L10n.TorSetup.Alert.disable)
+            }
+            ButtonState(action: .torDontDisableTapped) {
+                TextState(L10n.TorSetup.Alert.dontDisable)
+            }
+        } message: {
+            TextState(L10n.TorSetup.Alert.msg)
         }
     }
 }

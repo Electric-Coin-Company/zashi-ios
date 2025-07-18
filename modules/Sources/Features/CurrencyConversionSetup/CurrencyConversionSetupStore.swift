@@ -11,6 +11,8 @@ import Generated
 import ExchangeRate
 import UserPreferencesStorage
 import Models
+import WalletStorage
+import SDKSynchronizer
 
 @Reducer
 public struct CurrencyConversionSetup {
@@ -72,6 +74,7 @@ public struct CurrencyConversionSetup {
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
+        public var isTorSheetPresented = false
 
         public var isSaveButtonDisabled: Bool {
             currentSettingsOption == activeSettingsOption
@@ -91,15 +94,20 @@ public struct CurrencyConversionSetup {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<CurrencyConversionSetup.State>)
         case enableTapped
+        case enableTorTapped
+        case laterTapped
         case onAppear
         case saveChangesTapped
         case settingsOptionChanged(State.SettingsOptions)
         case settingsOptionTapped(State.SettingsOptions)
         case skipTapped
+        case torInitFailed
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
 
@@ -134,6 +142,9 @@ public struct CurrencyConversionSetup {
 
             case .settingsOptionTapped(let newOption):
                 state.currentSettingsOption = newOption
+                if let torEnabled = walletStorage.exportTorSetupFlag(), !torEnabled && newOption == .optIn {
+                    state.isTorSheetPresented = true
+                }
                 return .none
                 
             case .saveChangesTapped:
@@ -144,6 +155,25 @@ public struct CurrencyConversionSetup {
 
             case .skipTapped:
                 try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
+                return .none
+                
+            case .enableTorTapped:
+                state.isTorSheetPresented = false
+                try? walletStorage.importTorSetupFlag(true)
+                return .run { send in
+                    await send(.saveChangesTapped)
+                    do {
+                        try await sdkSynchronizer.torEnabled(true)
+                    } catch {
+                        await send(.torInitFailed)
+                    }
+                }
+                
+            case .laterTapped:
+                state.isTorSheetPresented = false
+                return .send(.settingsOptionTapped(.optOut))
+                
+            case .torInitFailed:
                 return .none
             }
         }

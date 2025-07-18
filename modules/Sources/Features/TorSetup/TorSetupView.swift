@@ -48,7 +48,7 @@ public struct TorSetupView: View {
     
     private func settingsLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(desc1: L10n.TorSetup.desc1, desc2: L10n.TorSetup.desc2)
+            header(desc1: L10n.TorSetup.Settings.desc1, desc2: L10n.TorSetup.Settings.desc2)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 20)
 
@@ -97,7 +97,7 @@ public struct TorSetupView: View {
     
     private func learnMoreLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(desc1: L10n.TorSetup.desc1, desc2: L10n.TorSetup.desc2)
+            header(desc1: L10n.TorSetup.Learn.desc, desc2: "")
 
             ForEach(TorSetup.State.LearnMoreOptions.allCases, id: \.self) { option in
                 HStack(alignment: .top, spacing: 0) {
@@ -123,13 +123,13 @@ public struct TorSetupView: View {
     private func learnMoreFooter() -> some View {
         VStack {
             ZashiButton(
-                L10n.CurrencyConversion.skipBtn,
+                L10n.TorSetup.Learn.btnOut,
                 type: .ghost
             ) {
-                store.send(.skipTapped)
+                store.send(.disableTapped)
             }
             
-            ZashiButton(L10n.CurrencyConversion.enable) {
+            ZashiButton(L10n.TorSetup.Learn.btnIn) {
                 store.send(.enableTapped)
             }
             .padding(.bottom, 24)
@@ -142,36 +142,23 @@ public struct TorSetupView: View {
 
 extension TorSetupView {
     private func icons() -> some View {
-        HStack(spacing: 0) {
-            Circle()
-                .frame(width: 64, height: 64)
-                .zForegroundColor(Design.Surfaces.bgTertiary)
-                .overlay {
-                    Asset.Assets.Icons.shieldZap.image
-                        .zImage(size: 32, style: Design.Text.primary)
-                }
-
-            ZStack {
-                Circle()
-                    .frame(width: 70, height: 70)
-                    .zForegroundColor(Design.screenBackground)
-
-                RoundedRectangle(cornerRadius: Design.Radius._full)
-                    .fill(Design.Text.primary.color(colorScheme))
-                    .frame(width: 64, height: 64)
-                    .overlay {
-                        Asset.Assets.Partners.torLogo.image
-                            .zImage(width: 36, height: 24, style: Design.Text.opposite)
-                    }
+        RoundedRectangle(cornerRadius: Design.Radius._full)
+            .fill(Design.Text.primary.color(colorScheme))
+            .frame(width: 64, height: 64)
+            .overlay {
+                Asset.Assets.Partners.torLogo.image
+                    .zImage(width: 36, height: 24, style: Design.Text.opposite)
             }
-            .offset(x: -12)
-        }
-        .padding(.top, 24)
+            .padding(.top, 24)
     }
     
     private func title() -> some View {
-        Text(L10n.TorSetup.title)
-            .zFont(.semiBold, size: 24, style: Design.Text.primary)
+        Text(
+            store.isSettingsView
+            ? L10n.Settings.private
+            : L10n.TorSetup.title
+        )
+        .zFont(.semiBold, size: 24, style: Design.Text.primary)
     }
     
     private func note() -> some View {
@@ -224,11 +211,13 @@ extension TorSetupView {
             
             Text(desc1)
                 .zFont(size: 14, style: Design.Text.tertiary)
-                .padding(.bottom, store.isSettingsView ? 4 : 16)
+                .padding(.bottom, store.isSettingsView ? 16 : 12)
 
-            Text(desc2)
-                .zFont(size: 14, style: Design.Text.tertiary)
-                .padding(.bottom, 12)
+            if store.isSettingsView {
+                Text(desc2)
+                    .zFont(size: 14, style: Design.Text.tertiary)
+                    .padding(.bottom, 12)
+            }
         }
     }
 }

@@ -624,8 +624,8 @@
 "smartBanner.content.shield.titleShorter" = "Transparent Balance";
 "smartBanner.content.shield.button" = "Shield";
 
-"smartBanner.content.tor.title" = "Protect your IP with Tor";
-"smartBanner.content.tor.info" = "Enable Tor connection";
+"smartBanner.content.tor.title" = "Beta: Enable Tor Protection";
+"smartBanner.content.tor.info" = "Protect your IP address";
 "smartBanner.content.tor.button" = "Start";
 
 "smartBanner.content.currencyConversion.title" = "Currency Conversion";
@@ -686,13 +686,31 @@
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
 
 "torSetup.title" = "Enable Tor Connection";
-"torSetup.desc1" = "Once you enable Tor, Zashi will begin to fetch and submit all of your transactions over Tor.";
-"torSetup.desc2" = "This protects your IP address from everyone, including Zcash servers.";
+"torSetup.learn.desc" = "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.";
 
-"torSetup.option1.title" = "IP Address Protection";
-"torSetup.option1.desc" = "Use Tor connection to protect your IP address.";
-"torSetup.option2.title" = "Stay Private";
-"torSetup.option2.desc" = "Do not leak your data to any servers.";
-"settings.private" = "Privacy Settings";
-"torSetup.enableDesc" = "Protect my IP address.";
-"torSetup.disableDesc" = "Don’t protect my IP address.";
+"torSetup.settings.desc1" = "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.";
+"torSetup.settings.desc2" = "Note: Exchange rates are only available when this feature is enabled.";
+
+"torSetup.option1.title" = "Currency Conversion";
+"torSetup.option1.desc" = "Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)";
+"torSetup.option2.title" = "Transactions";
+"torSetup.option2.desc" = "Send and retrieve transaction data over Tor for added privacy.";
+"torSetup.option3.title" = "Integrations";
+"torSetup.option3.desc" = "Access third-party APIs (e.g. NEAR) over Tor for added privacy.";
+"settings.private" = "Tor Protection";
+"torSetup.enableDesc" = "Connect over Tor.";
+"torSetup.disableDesc" = "Don’t connect over Tor.";
+
+"torSetup.learn.btnIn" = "Opt in";
+"torSetup.learn.btnOut" = "Opt out";
+
+"torSetup.ccSheet.title" = "Tor Required for Currency Conversion";
+"torSetup.ccSheet.desc1" = "Tor Protection is a beta feature that provides additional protections for your IP address. USD exchange rates are only available when it is enabled.";
+"torSetup.ccSheet.desc2" = "If Tor is permitted in your region, we recommend enabling it. You can manage it in Advanced Settings.";
+"torSetup.ccSheet.later" = "Do it later";
+"torSetup.ccSheet.enable" = "Enable";
+
+"torSetup.alert.title" = "Disable Tor?";
+"torSetup.alert.msg" = "Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.";
+"torSetup.alert.disable" = "Disable";
+"torSetup.alert.dontDisable" = "Don’t disable";
