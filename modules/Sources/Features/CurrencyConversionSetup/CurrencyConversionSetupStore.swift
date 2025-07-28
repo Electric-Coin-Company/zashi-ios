@@ -93,6 +93,7 @@ public struct CurrencyConversionSetup {
     
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<CurrencyConversionSetup.State>)
+        case delayedDismisalRequested
         case enableTapped
         case enableTorTapped
         case laterTapped
@@ -105,6 +106,7 @@ public struct CurrencyConversionSetup {
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
+    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
@@ -141,9 +143,10 @@ public struct CurrencyConversionSetup {
                 return .none
 
             case .settingsOptionTapped(let newOption):
-                state.currentSettingsOption = newOption
-                if let torEnabled = walletStorage.exportTorSetupFlag(), !torEnabled && newOption == .optIn {
+                if walletStorage.exportTorSetupFlag() != true {
                     state.isTorSheetPresented = true
+                } else {
+                    state.currentSettingsOption = newOption
                 }
                 return .none
                 
@@ -164,14 +167,19 @@ public struct CurrencyConversionSetup {
                     await send(.saveChangesTapped)
                     do {
                         try await sdkSynchronizer.torEnabled(true)
+                        try? await mainQueue.sleep(for: .seconds(0.2))
+                        await send(.delayedDismisalRequested)
                     } catch {
                         await send(.torInitFailed)
                     }
                 }
+
+            case .delayedDismisalRequested:
+                return .none
                 
             case .laterTapped:
                 state.isTorSheetPresented = false
-                return .send(.settingsOptionTapped(.optOut))
+                return .none
                 
             case .torInitFailed:
                 return .none

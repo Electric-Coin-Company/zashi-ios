@@ -626,7 +626,7 @@
 
 "smartBanner.content.tor.title" = "Beta: Enable Tor Protection";
 "smartBanner.content.tor.info" = "Protect your IP address";
-"smartBanner.content.tor.button" = "Start";
+"smartBanner.content.tor.button" = "Review";
 
 "smartBanner.content.currencyConversion.title" = "Currency Conversion";
 "smartBanner.content.currencyConversion.info" = "Enable to display USD values";
@@ -685,7 +685,7 @@
 
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
 
-"torSetup.title" = "Enable Tor Connection";
+"torSetup.title" = "Tor Connection";
 "torSetup.learn.desc" = "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.";
 
 "torSetup.settings.desc1" = "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.";

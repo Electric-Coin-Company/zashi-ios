@@ -159,13 +159,8 @@ public struct CurrencyConversionSetupView: View {
     }
  
     private func settingsFooter() -> some View {
-        VStack {
-            note()
-                .padding(.bottom, 20)
-            
-            primaryButton(L10n.CurrencyConversion.saveBtn, disabled: store.isSaveButtonDisabled) {
-                store.send(.saveChangesTapped)
-            }
+        primaryButton(L10n.CurrencyConversion.saveBtn, disabled: store.isSaveButtonDisabled) {
+            store.send(.saveChangesTapped)
         }
         .padding(.bottom, 24)
     }

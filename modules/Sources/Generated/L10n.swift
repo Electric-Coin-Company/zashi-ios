@@ -1214,8 +1214,8 @@ public enum L10n {
         public static let title = L10n.tr("Localizable", "smartBanner.content.syncingError.title", fallback: "Error encountered while syncing")
       }
       public enum Tor {
-        /// Start
-        public static let button = L10n.tr("Localizable", "smartBanner.content.tor.button", fallback: "Start")
+        /// Review
+        public static let button = L10n.tr("Localizable", "smartBanner.content.tor.button", fallback: "Review")
         /// Protect your IP address
         public static let info = L10n.tr("Localizable", "smartBanner.content.tor.info", fallback: "Protect your IP address")
         /// Beta: Enable Tor Protection
@@ -1424,8 +1424,8 @@ public enum L10n {
     public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t connect over Tor.")
     /// Connect over Tor.
     public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Connect over Tor.")
-    /// Enable Tor Connection
-    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Enable Tor Connection")
+    /// Tor Connection
+    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Tor Connection")
     public enum Alert {
       /// Disable
       public static let disable = L10n.tr("Localizable", "torSetup.alert.disable", fallback: "Disable")

@@ -15,6 +15,7 @@ import Utils
 import ZcashLightClientKit
 import ZcashSDKEnvironment
 import UserPreferencesStorage
+import WalletStorage
 
 @Reducer
 public struct WalletBalances {
@@ -95,6 +96,7 @@ public struct WalletBalances {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -104,7 +106,7 @@ public struct WalletBalances {
             switch action {
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic {
+                if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic && walletStorage.exportTorSetupFlag() == true {
                     state.isExchangeRateFeatureOn = true
                 } else {
                     state.isExchangeRateFeatureOn = false

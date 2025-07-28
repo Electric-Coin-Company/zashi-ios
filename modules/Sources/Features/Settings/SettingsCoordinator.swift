@@ -105,6 +105,12 @@ extension Settings {
                 }
                 return .none
                 
+                // MARK: - Currency Conversion
+            
+            case .path(.element(id: _, action: .currencyConversionSetup(.delayedDismisalRequested))):
+                let _ = state.path.popLast()
+                return .none
+
                 // MARK: - Integrations
 
             case .path(.element(id: _, action: .integrations(.keystoneTapped))):
@@ -150,7 +156,7 @@ extension Settings {
                 return .none
 
             case .integrationsTapped:
-                var integrationsState = Integrations.State.initial
+                let integrationsState = Integrations.State.initial
                 state.path.append(.integrations(integrationsState))
                 return .none
 
