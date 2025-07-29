@@ -624,6 +624,10 @@
 "smartBanner.content.shield.titleShorter" = "Saldo Transparente";
 "smartBanner.content.shield.button" = "Proteger";
 
+"smartBanner.content.tor.title" = "Beta: Activar protección Tor";
+"smartBanner.content.tor.info" = "Protege tu dirección IP";
+"smartBanner.content.tor.button" = "Revisar";
+
 "smartBanner.content.currencyConversion.title" = "Conversión de Moneda";
 "smartBanner.content.currencyConversion.info" = "Activa para mostrar valores en USD";
 "smartBanner.content.currencyConversion.button" = "Iniciar";
@@ -680,3 +684,33 @@
 "recoveryPhraseDisplay.warningHeight.info" = "La altura del bloque en el que se creó tu billetera puede acelerar significativamente el proceso de recuperación de la billetera.";
 
 "recoveryPhraseDisplay.proceedWarning" = "Mantén esta frase de manera segura oculta. ¡No tomes capturas de pantalla ni la guardes en tu teléfono!";
+
+"torSetup.title" = "Conexión Tor";
+"torSetup.learn.desc" = "Esta función beta brinda protección adicional a tu dirección IP. Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
+
+"torSetup.settings.desc1" = "Esta función beta brinda protección adicional a tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (por ejemplo, NEAR). Si el uso de Tor está permitido en tu región, te recomendamos activarla.";
+"torSetup.settings.desc2" = "Nota: Las tasas de cambio solo están disponibles cuando esta función está activada.";
+
+"torSetup.option1.title" = "Conversión de moneda";
+"torSetup.option1.desc" = "Obtén tasas de cambio desde servidores de terceros sin revelar tu dirección IP. (Disponible solo con Tor activado.)";
+"torSetup.option2.title" = "Transacciones";
+"torSetup.option2.desc" = "Envía y recupera datos de transacciones a través de Tor para mayor privacidad.";
+"torSetup.option3.title" = "Integraciones";
+"torSetup.option3.desc" = "Accede a APIs de terceros (por ejemplo, NEAR) a través de Tor para mayor privacidad.";
+"settings.private" = "Protección Tor";
+"torSetup.enableDesc" = "Conectarse mediante Tor.";
+"torSetup.disableDesc" = "No conectarse mediante Tor.";
+
+"torSetup.learn.btnIn" = "Activar";
+"torSetup.learn.btnOut" = "Desactivar";
+
+"torSetup.ccSheet.title" = "Se requiere Tor para la conversión de moneda";
+"torSetup.ccSheet.desc1" = "La protección Tor es una función beta que brinda protección adicional a tu dirección IP. Las tasas de cambio en USD solo están disponibles cuando está activada.";
+"torSetup.ccSheet.desc2" = "Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
+"torSetup.ccSheet.later" = "Hacerlo después";
+"torSetup.ccSheet.enable" = "Activar";
+
+"torSetup.alert.title" = "¿Desactivar Tor?";
+"torSetup.alert.msg" = "Se detectaron problemas de conexión con Tor. Para mejorar el rendimiento, intenta desactivarlo. Esto detendrá la actualización de tasas de cambio. Puedes volver a activarlo más adelante en Configuración avanzada.";
+"torSetup.alert.disable" = "Desactivar";
+"torSetup.alert.dontDisable" = "No desactivar";
