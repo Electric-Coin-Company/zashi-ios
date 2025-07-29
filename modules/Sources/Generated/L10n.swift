@@ -38,16 +38,16 @@ public enum L10n {
       public static let your = L10n.tr("Localizable", "accounts.addressBook.your", fallback: "Your Wallets")
     }
     public enum Keystone {
-      /// Keystone Shielded Address
-      public static let shieldedAddress = L10n.tr("Localizable", "accounts.keystone.shieldedAddress", fallback: "Keystone Shielded Address")
-      /// Keystone Transparent Address
-      public static let transparentAddress = L10n.tr("Localizable", "accounts.keystone.transparentAddress", fallback: "Keystone Transparent Address")
+      /// Zcash Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.keystone.shieldedAddress", fallback: "Zcash Shielded Address")
+      /// Zcash Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.keystone.transparentAddress", fallback: "Zcash Transparent Address")
     }
     public enum Zashi {
-      /// Zashi Shielded Address
-      public static let shieldedAddress = L10n.tr("Localizable", "accounts.zashi.shieldedAddress", fallback: "Zashi Shielded Address")
-      /// Zashi Transparent Address
-      public static let transparentAddress = L10n.tr("Localizable", "accounts.zashi.transparentAddress", fallback: "Zashi Transparent Address")
+      /// Zcash Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.zashi.shieldedAddress", fallback: "Zcash Shielded Address")
+      /// Zcash Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.zashi.transparentAddress", fallback: "Zcash Transparent Address")
     }
   }
   public enum AddressBook {
@@ -626,6 +626,36 @@ public enum L10n {
       public static let cantExtractTransparentAddress = L10n.tr("Localizable", "receive.error.cantExtractTransparentAddress", fallback: "could not extract transparent receiver from UA")
       /// could not extract UA
       public static let cantExtractUnifiedAddress = L10n.tr("Localizable", "receive.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
+    }
+    public enum Help {
+      public enum Shielded {
+        /// Use this address to receive and store your ZEC privately. Transparent and shielded ZEC sent to this address will be received and stored as shielded ZEC.
+        public static let desc1 = L10n.tr("Localizable", "receive.help.shielded.desc1", fallback: "Use this address to receive and store your ZEC privately. Transparent and shielded ZEC sent to this address will be received and stored as shielded ZEC.")
+        /// A new Zcash Shielded Address is generated each time you open the Receive screen.
+        public static let desc2 = L10n.tr("Localizable", "receive.help.shielded.desc2", fallback: "A new Zcash Shielded Address is generated each time you open the Receive screen.")
+        /// All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.
+        public static let desc3 = L10n.tr("Localizable", "receive.help.shielded.desc3", fallback: "All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.")
+        /// While we recommend using a new address every time, each unique address can be reused.
+        public static let desc4 = L10n.tr("Localizable", "receive.help.shielded.desc4", fallback: "While we recommend using a new address every time, each unique address can be reused.")
+        /// Zcash Shielded Address (Rotating)
+        public static let title = L10n.tr("Localizable", "receive.help.shielded.title", fallback: "Zcash Shielded Address (Rotating)")
+      }
+      public enum Transparent {
+        /// This addresses type works just like Bitcoin addresses and offers NO PRIVACY. The details of transactions sent to this address will be public and visible on the blockchain.
+        public static let desc1 = L10n.tr("Localizable", "receive.help.transparent.desc1", fallback: "This addresses type works just like Bitcoin addresses and offers NO PRIVACY. The details of transactions sent to this address will be public and visible on the blockchain.")
+        /// We don't recommend using this address type unless the wallet or exchange from which ZEC is being sent doesn’t support sending funds to shielded Zcash addresses.
+        public static let desc2 = L10n.tr("Localizable", "receive.help.transparent.desc2", fallback: "We don't recommend using this address type unless the wallet or exchange from which ZEC is being sent doesn’t support sending funds to shielded Zcash addresses.")
+        /// To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.
+        public static let desc3 = L10n.tr("Localizable", "receive.help.transparent.desc3", fallback: "To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.")
+        /// You won't be able to spend your transparent ZEC until you shield it.
+        public static let desc4 = L10n.tr("Localizable", "receive.help.transparent.desc4", fallback: "You won't be able to spend your transparent ZEC until you shield it.")
+        /// Zcash Transparent Address (Static)
+        public static let title = L10n.tr("Localizable", "receive.help.transparent.title", fallback: "Zcash Transparent Address (Static)")
+      }
+    }
+    public enum Ua {
+      /// Rotates every time you use it
+      public static let rotateInfo = L10n.tr("Localizable", "receive.ua.rotateInfo", fallback: "Rotates every time you use it")
     }
   }
   public enum RecoveryPhraseDisplay {

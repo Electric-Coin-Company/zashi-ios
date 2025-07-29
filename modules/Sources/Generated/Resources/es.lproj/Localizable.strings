@@ -467,10 +467,10 @@
 "accounts.addressBook.contacts" = "Contactos del Libro de Direcciones";
 "accounts.keystone" = "Keystone";
 "accounts.zashi" = "Zashi";
-"accounts.zashi.shieldedAddress" = "Dirección Protegida de Zashi";
-"accounts.zashi.transparentAddress" = "Dirección Transparente de Zashi";
-"accounts.keystone.shieldedAddress" = "Dirección Protegida de Keystone";
-"accounts.keystone.transparentAddress" = "Dirección Transparente de Keystone";
+"accounts.zashi.shieldedAddress" = "Dirección Protegida de Zcash";
+"accounts.zashi.transparentAddress" = "Dirección Transparente de Zcash";
+"accounts.keystone.shieldedAddress" = "Dirección Protegida de Zcash";
+"accounts.keystone.transparentAddress" = "Dirección Transparente de Zcash";
 
 // Keystone iteration 1
 "keystoneTransactionReject.title" = "¿Estás seguro?";
@@ -714,3 +714,16 @@
 "torSetup.alert.msg" = "Se detectaron problemas de conexión con Tor. Para mejorar el rendimiento, intenta desactivarlo. Esto detendrá la actualización de tasas de cambio. Puedes volver a activarlo más adelante en Configuración avanzada.";
 "torSetup.alert.disable" = "Desactivar";
 "torSetup.alert.dontDisable" = "No desactivar";
+
+// Receive help
+"receive.help.shielded.title" = "Dirección protegida de Zcash (rotativa)";
+"receive.help.shielded.desc1" = "Usa esta dirección para recibir y almacenar tus ZEC de forma privada. Los ZEC transparentes y protegidos enviados a esta dirección se recibirán y almacenarán como ZEC protegidos.";
+"receive.help.shielded.desc2" = "Se genera una nueva dirección protegida de Zcash cada vez que abres la pantalla de \"Recibir\".";
+"receive.help.shielded.desc3" = "Todas las transacciones enviadas a tus diferentes direcciones protegidas rotativas formarán parte de un mismo saldo de billetera vinculado a tu frase semilla.";
+"receive.help.shielded.desc4" = "Aunque recomendamos usar una nueva dirección cada vez, cada dirección única se puede reutilizar.";
+"receive.help.transparent.title" = "Dirección transparente de Zcash (estática)";
+"receive.help.transparent.desc1" = "Este tipo de dirección funciona como una dirección de Bitcoin y NO OFRECE PRIVACIDAD. Los detalles de las transacciones enviadas a esta dirección serán públicos y visibles en la blockchain.";
+"receive.help.transparent.desc2" = "No recomendamos usar este tipo de dirección a menos que la billetera o casa de cambio desde donde se envían los ZEC no admita direcciones protegidas de Zcash.";
+"receive.help.transparent.desc3" = "Para proteger tu privacidad, Zashi te guiará para proteger cualquier ZEC transparente que recibas con un solo clic.";
+"receive.help.transparent.desc4" = "No podrás gastar tus ZEC transparentes hasta que los protejas.";
+"receive.ua.rotateInfo" = "Rota cada vez que la usas";

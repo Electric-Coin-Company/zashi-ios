@@ -39,6 +39,8 @@ public struct Receive {
         }
 
         public var currentFocus = AddressType.uaAddress
+        public var isAddressExplainerPresented = false
+        public var isExplainerForShielded = false
         public var memo = ""
         public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -65,6 +67,7 @@ public struct Receive {
     public enum Action {
         case addressDetailsRequest(RedactableString, Bool)
         case copyToPastboard(RedactableString)
+        case infoTapped(Bool)
         case path(StackActionOf<Path>)
         case requestTapped(RedactableString, Bool)
         case updateCurrentFocus(State.AddressType)
@@ -81,7 +84,7 @@ public struct Receive {
             switch action {
             case .addressDetailsRequest:
                 return .none
-                
+
             case .copyToPastboard(let text):
                 pasteboard.setString(text)
                 state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
@@ -95,6 +98,11 @@ public struct Receive {
                 return .none
                 
             case .path:
+                return .none
+                
+            case .infoTapped(let shielded):
+                state.isAddressExplainerPresented.toggle()
+                state.isExplainerForShielded = shielded
                 return .none
             }
         }

@@ -104,6 +104,7 @@ public struct TorSetup {
         case settingsOptionChanged(State.SettingsOptions)
         case settingsOptionTapped(State.SettingsOptions)
         case torInitFailed
+        case torInitSucceeded
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
@@ -160,13 +161,13 @@ public struct TorSetup {
                     state.$currencyConversion.withLock { $0 = nil }
                 } else {
                     try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
-                    exchangeRate.refreshExchangeRateUSD()
                 }
                 return .run { send in
                     await send(.settingsOptionChanged(currentSettingsOption))
                     if newFlag {
                         do {
                             try await sdkSynchronizer.torEnabled(newFlag)
+                            await send(.torInitSucceeded)
                         } catch {
                             await send(.torInitFailed)
                         }
@@ -182,6 +183,12 @@ public struct TorSetup {
                 return .run { _ in
                     try? await sdkSynchronizer.torEnabled(false)
                 }
+                
+            case .torInitSucceeded:
+                if state.currentSettingsOption == .optIn {
+                    exchangeRate.refreshExchangeRateUSD()
+                }
+                return .none
                 
             case .torInitFailed:
                 return .none

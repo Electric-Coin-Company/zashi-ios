@@ -467,10 +467,10 @@
 "accounts.addressBook.contacts" = "Address Book Contacts";
 "accounts.keystone" = "Keystone";
 "accounts.zashi" = "Zashi";
-"accounts.zashi.shieldedAddress" = "Zashi Shielded Address";
-"accounts.zashi.transparentAddress" = "Zashi Transparent Address";
-"accounts.keystone.shieldedAddress" = "Keystone Shielded Address";
-"accounts.keystone.transparentAddress" = "Keystone Transparent Address";
+"accounts.zashi.shieldedAddress" = "Zcash Shielded Address";
+"accounts.zashi.transparentAddress" = "Zcash Transparent Address";
+"accounts.keystone.shieldedAddress" = "Zcash Shielded Address";
+"accounts.keystone.transparentAddress" = "Zcash Transparent Address";
 
 // Keystone iteration 1
 "keystoneTransactionReject.title" = "Are you sure?";
@@ -714,3 +714,16 @@
 "torSetup.alert.msg" = "Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.";
 "torSetup.alert.disable" = "Disable";
 "torSetup.alert.dontDisable" = "Don’t disable";
+
+// Receive help
+"receive.help.shielded.title" = "Zcash Shielded Address (Rotating)";
+"receive.help.shielded.desc1" = "Use this address to receive and store your ZEC privately. Transparent and shielded ZEC sent to this address will be received and stored as shielded ZEC.";
+"receive.help.shielded.desc2" = "A new Zcash Shielded Address is generated each time you open the Receive screen.";
+"receive.help.shielded.desc3" = "All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.";
+"receive.help.shielded.desc4" = "While we recommend using a new address every time, each unique address can be reused.";
+"receive.help.transparent.title" = "Zcash Transparent Address (Static)";
+"receive.help.transparent.desc1" = "This addresses type works just like Bitcoin addresses and offers NO PRIVACY. The details of transactions sent to this address will be public and visible on the blockchain.";
+"receive.help.transparent.desc2" = "We don\'t recommend using this address type unless the wallet or exchange from which ZEC is being sent doesn’t support sending funds to shielded Zcash addresses.";
+"receive.help.transparent.desc3" = "To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.";
+"receive.help.transparent.desc4" = "You won\'t be able to spend your transparent ZEC until you shield it.";
+"receive.ua.rotateInfo" = "Rotates every time you use it";
