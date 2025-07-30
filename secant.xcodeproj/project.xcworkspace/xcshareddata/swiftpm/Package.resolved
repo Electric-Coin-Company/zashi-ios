@@ -501,7 +501,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "1577-Opt-in-for-connection-over-Tor",
-        "revision" : "4a212a3f3f850b7865510dbae8a251242b2a1361"
+        "revision" : "c3c47c463cfc86dbe647bf3680d9c637d92595d1"
       }
     }
   ],

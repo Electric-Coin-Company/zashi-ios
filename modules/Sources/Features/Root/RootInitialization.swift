@@ -325,6 +325,7 @@ extension Root {
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
+                            await send(.fetchTransactionsForTheSelectedAccount)
                             await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)
@@ -491,7 +492,6 @@ extension Root {
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
-//                state.$selectedWalletAccountsUA.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
                 state.$transactionMemos.withLock { $0 = [:] }
@@ -605,7 +605,7 @@ extension Root {
                 state.destinationState.destination = .home
                 return .none
                 
-            case .welcome(.debugMenuStartup)://, .tabs(.home(.walletBalances(.debugMenuStartup))):
+            case .welcome(.debugMenuStartup):
                 return .concatenate(
                     Effect.cancel(id: CancelId),
                     .send(.destination(.updateDestination(.startup)))

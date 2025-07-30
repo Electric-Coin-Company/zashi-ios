@@ -1134,8 +1134,8 @@ public enum L10n {
     public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
     /// Pair your Keystone hardware wallet with Zashi to sign transactions.
     public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
-    /// Tor Protection
-    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Tor Protection")
+    /// Beta: Tor Protection
+    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Beta: Tor Protection")
     /// Zashi Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.
@@ -1454,8 +1454,8 @@ public enum L10n {
     public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t connect over Tor.")
     /// Connect over Tor.
     public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Connect over Tor.")
-    /// Tor Connection
-    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Tor Connection")
+    /// Beta: Tor Protection
+    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Beta: Tor Protection")
     public enum Alert {
       /// Disable
       public static let disable = L10n.tr("Localizable", "torSetup.alert.disable", fallback: "Disable")

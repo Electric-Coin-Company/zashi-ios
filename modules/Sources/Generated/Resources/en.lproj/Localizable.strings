@@ -685,7 +685,7 @@
 
 "recoveryPhraseDisplay.proceedWarning" = "Keep this phrase securely hidden. Don’t take screenshots of it or store it on your phone!";
 
-"torSetup.title" = "Tor Connection";
+"torSetup.title" = "Beta: Tor Protection";
 "torSetup.learn.desc" = "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.";
 
 "torSetup.settings.desc1" = "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.";
@@ -697,7 +697,7 @@
 "torSetup.option2.desc" = "Send and retrieve transaction data over Tor for added privacy.";
 "torSetup.option3.title" = "Integrations";
 "torSetup.option3.desc" = "Access third-party APIs (e.g. NEAR) over Tor for added privacy.";
-"settings.private" = "Tor Protection";
+"settings.private" = "Beta: Tor Protection";
 "torSetup.enableDesc" = "Connect over Tor.";
 "torSetup.disableDesc" = "Don’t connect over Tor.";
 

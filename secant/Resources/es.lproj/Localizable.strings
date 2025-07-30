@@ -685,7 +685,7 @@
 
 "recoveryPhraseDisplay.proceedWarning" = "Mantén esta frase de manera segura oculta. ¡No tomes capturas de pantalla ni la guardes en tu teléfono!";
 
-"torSetup.title" = "Conexión Tor";
+"torSetup.title" = "Beta: Protección Tor";
 "torSetup.learn.desc" = "Esta función beta brinda protección adicional a tu dirección IP. Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
 
 "torSetup.settings.desc1" = "Esta función beta brinda protección adicional a tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (por ejemplo, NEAR). Si el uso de Tor está permitido en tu región, te recomendamos activarla.";
@@ -697,7 +697,7 @@
 "torSetup.option2.desc" = "Envía y recupera datos de transacciones a través de Tor para mayor privacidad.";
 "torSetup.option3.title" = "Integraciones";
 "torSetup.option3.desc" = "Accede a APIs de terceros (por ejemplo, NEAR) a través de Tor para mayor privacidad.";
-"settings.private" = "Protección Tor";
+"settings.private" = "Beta: Protección Tor";
 "torSetup.enableDesc" = "Conectarse mediante Tor.";
 "torSetup.disableDesc" = "No conectarse mediante Tor.";
 
