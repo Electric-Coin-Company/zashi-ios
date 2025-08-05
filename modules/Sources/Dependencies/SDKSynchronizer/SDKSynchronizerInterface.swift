@@ -86,5 +86,6 @@ public struct SDKSynchronizerClient {
     
     // Tor
     public var torEnabled: (Bool) async throws -> Void
+    public var exchangeRateEnabled: (Bool) async throws -> Void
     public var isTorSuccessfullyInitialized: () async -> Bool?
 }

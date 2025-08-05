@@ -103,6 +103,7 @@ public struct CurrencyConversionSetup {
         case settingsOptionTapped(State.SettingsOptions)
         case skipTapped
         case torInitFailed
+        case torInitSucceeded
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
@@ -133,8 +134,14 @@ public struct CurrencyConversionSetup {
                 
             case .enableTapped:
                 try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
-                exchangeRate.refreshExchangeRateUSD()
-                return .none
+                return .run { send in
+                    do {
+                        try await sdkSynchronizer.exchangeRateEnabled(true)
+                        await send(.torInitSucceeded)
+                    } catch {
+                        await send(.torInitFailed)
+                    }
+                }
 
             case .settingsOptionChanged(let option):
                 if option == .optOut {
@@ -143,18 +150,26 @@ public struct CurrencyConversionSetup {
                 return .none
 
             case .settingsOptionTapped(let newOption):
-                if walletStorage.exportTorSetupFlag() != true {
-                    state.isTorSheetPresented = true
-                } else {
-                    state.currentSettingsOption = newOption
-                }
+                state.currentSettingsOption = newOption
                 return .none
                 
             case .saveChangesTapped:
                 try? userStoredPreferences.setExchangeRate(UserPreferencesStorage.ExchangeRate(manual: true, automatic: state.currentSettingsOption == .optIn))
-                exchangeRate.refreshExchangeRateUSD()
                 state.activeSettingsOption = state.currentSettingsOption
-                return .send(.settingsOptionChanged(state.currentSettingsOption))
+                let option = state.currentSettingsOption
+                let enabled = state.currentSettingsOption == .optIn
+                return .run { send in
+                    await send(.settingsOptionChanged(option))
+                    
+                    do {
+                        try await sdkSynchronizer.exchangeRateEnabled(enabled)
+                        if enabled {
+                            await send(.torInitSucceeded)
+                        }
+                    } catch {
+                        await send(.torInitFailed)
+                    }
+                }
 
             case .skipTapped:
                 try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
@@ -166,7 +181,7 @@ public struct CurrencyConversionSetup {
                 return .run { send in
                     await send(.saveChangesTapped)
                     do {
-                        try await sdkSynchronizer.torEnabled(true)
+                        //try await sdkSynchronizer.torEnabled(true)
                         try? await mainQueue.sleep(for: .seconds(0.2))
                         await send(.delayedDismisalRequested)
                     } catch {
@@ -182,6 +197,10 @@ public struct CurrencyConversionSetup {
                 return .none
                 
             case .torInitFailed:
+                return .none
+                
+            case .torInitSucceeded:
+                exchangeRate.refreshExchangeRateUSD()
                 return .none
             }
         }

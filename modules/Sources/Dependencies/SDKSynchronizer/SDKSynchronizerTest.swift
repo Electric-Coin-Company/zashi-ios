@@ -51,6 +51,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: []),
         getCustomUnifiedAddress: unimplemented("\(Self.self).getCustomUnifiedAddress", placeholder: nil),
         torEnabled: unimplemented("\(Self.self).torEnabled"),
+        exchangeRateEnabled: unimplemented("\(Self.self).exchangeRateEnabled"),
         isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil)
     )
 }
@@ -93,6 +94,7 @@ extension SDKSynchronizerClient {
         fetchTxidsWithMemoContaining: { _ in [] },
         getCustomUnifiedAddress: { _, _ in nil },
         torEnabled: { _ in },
+        exchangeRateEnabled: { _ in },
         isTorSuccessfullyInitialized: { nil }
     )
 
@@ -206,6 +208,7 @@ extension SDKSynchronizerClient {
         fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] },
         getCustomUnifiedAddress: @escaping (AccountUUID, Set<ReceiverType>) async throws -> UnifiedAddress? = { _, _ in nil },
         torEnabled: @escaping (Bool) async throws -> Void = { _ in },
+        exchangeRateEnabled: @escaping (Bool) async throws -> Void = { _ in },
         isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
@@ -245,6 +248,7 @@ extension SDKSynchronizerClient {
             fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining,
             getCustomUnifiedAddress: getCustomUnifiedAddress,
             torEnabled: torEnabled,
+            exchangeRateEnabled: exchangeRateEnabled,
             isTorSuccessfullyInitialized: isTorSuccessfullyInitialized
         )
     }

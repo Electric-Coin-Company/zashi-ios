@@ -315,6 +315,8 @@ extension Root {
                     
                     return .run { send in
                         do {
+                            exchangeRate.refreshExchangeRateUSD()
+                            
                             try await sdkSynchronizer.prepareWith(
                                 seedBytes,
                                 birthday,
@@ -325,7 +327,7 @@ extension Root {
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
-                            await send(.fetchTransactionsForTheSelectedAccount)
+                            //await send(.fetchTransactionsForTheSelectedAccount)
                             await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)

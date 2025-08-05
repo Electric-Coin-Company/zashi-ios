@@ -396,8 +396,9 @@
 "currencyConversion.title" = "Currency Conversion";
 "currencyConversion.cardTitle" = "New Feature";
 "currencyConversion.cardButton" = "Review";
-"currencyConversion.learnMoreDesc" = "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.";
-"currencyConversion.settingsDesc" = "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.";
+"currencyConversion.learnMoreDesc" = "View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.";
+"currencyConversion.settingsDesc" = "View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.";
+"currencyConversion.settingsDesc2" = "Check if Tor use is permitted in your region before enabling.";
 "currencyConversion.enable" = "Enable";
 "currencyConversion.learnMoreOptionEnableDesc" = "Show me the currency conversion.";
 "currencyConversion.learnMoreOptionDisable" = "Disable";
@@ -405,7 +406,7 @@
 "currencyConversion.note" = "Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.";
 "currencyConversion.saveBtn" = "Save changes";
 "currencyConversion.ipTitle" = "IP Address Protection";
-"currencyConversion.ipDesc" = "Zashi’s currency conversion feature doesn’t compromise your IP address.";
+"currencyConversion.ipDesc" = "Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.";
 "currencyConversion.refresh" = "Rate Refresh";
 "currencyConversion.refreshDesc" = "The rate is refreshed automatically and can also be refreshed manually.";
 
@@ -688,8 +689,8 @@
 "torSetup.title" = "Beta: Tor Protection";
 "torSetup.learn.desc" = "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.";
 
-"torSetup.settings.desc1" = "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.";
-"torSetup.settings.desc2" = "Note: Exchange rates are only available when this feature is enabled.";
+"torSetup.settings.desc1" = "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).";
+"torSetup.settings.desc2" = "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.";
 
 "torSetup.option1.title" = "Currency Conversion";
 "torSetup.option1.desc" = "Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)";

@@ -398,6 +398,7 @@
 "currencyConversion.cardButton" = "Revisar";
 "currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
 "currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD. La función de conversión de moneda de Zashi protege tu dirección IP en todo momento.";
+"currencyConversion.settingsDesc2" = "Check if Tor use is permitted in your region before enabling.";
 "currencyConversion.enable" = "Habilitar";
 "currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
 "currencyConversion.learnMoreOptionDisable" = "Deshabilitar";

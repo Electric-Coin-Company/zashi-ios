@@ -106,7 +106,7 @@ public struct WalletBalances {
             switch action {
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic && walletStorage.exportTorSetupFlag() == true {
+                if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic {
                     state.isExchangeRateFeatureOn = true
                 } else {
                     state.isExchangeRateFeatureOn = false

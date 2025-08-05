@@ -93,7 +93,6 @@ extension Root {
             case .splashFinished:
                 state.splashAppeared = true
                 state.$lastAuthenticationTimestamp.withLock { $0 = Int(Date().timeIntervalSince1970) }
-                exchangeRate.refreshExchangeRateUSD()
                 return .none
 
             case .flexaOnTransactionRequest(let transaction):

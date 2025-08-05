@@ -10,10 +10,8 @@ import ZcashLightClientKit
 
 import SDKSynchronizer
 import Generated
-import ExchangeRate
 import WalletStorage
 import Models
-import UserPreferencesStorage
 
 @Reducer
 public struct TorSetup {
@@ -76,7 +74,6 @@ public struct TorSetup {
         }
 
         public var activeSettingsOption: SettingsOptions?
-        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
 
@@ -107,9 +104,7 @@ public struct TorSetup {
         case torInitSucceeded
     }
 
-    @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
@@ -134,8 +129,6 @@ public struct TorSetup {
                 
             case .enableTapped:
                 try? walletStorage.importTorSetupFlag(true)
-                try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
-                exchangeRate.refreshExchangeRateUSD()
                 return .run { send in
                     do {
                         try await sdkSynchronizer.torEnabled(true)
@@ -156,12 +149,6 @@ public struct TorSetup {
                 try? walletStorage.importTorSetupFlag(newFlag)
                 state.activeSettingsOption = state.currentSettingsOption
                 let currentSettingsOption = state.currentSettingsOption
-                if state.currentSettingsOption == .optOut {
-                    try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
-                    state.$currencyConversion.withLock { $0 = nil }
-                } else {
-                    try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
-                }
                 return .run { send in
                     await send(.settingsOptionChanged(currentSettingsOption))
                     if newFlag {
@@ -178,16 +165,11 @@ public struct TorSetup {
 
             case .disableTapped:
                 try? walletStorage.importTorSetupFlag(false)
-                try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
-                state.$currencyConversion.withLock { $0 = nil }
                 return .run { _ in
                     try? await sdkSynchronizer.torEnabled(false)
                 }
                 
             case .torInitSucceeded:
-                if state.currentSettingsOption == .optIn {
-                    exchangeRate.refreshExchangeRateUSD()
-                }
                 return .none
                 
             case .torInitFailed:

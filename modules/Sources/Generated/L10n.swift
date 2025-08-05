@@ -183,12 +183,12 @@ public enum L10n {
     public static let cardTitle = L10n.tr("Localizable", "currencyConversion.cardTitle", fallback: "New Feature")
     /// Enable
     public static let enable = L10n.tr("Localizable", "currencyConversion.enable", fallback: "Enable")
-    /// Zashi’s currency conversion feature doesn’t compromise your IP address.
-    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Zashi’s currency conversion feature doesn’t compromise your IP address.")
+    /// Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.
+    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.")
     /// IP Address Protection
     public static let ipTitle = L10n.tr("Localizable", "currencyConversion.ipTitle", fallback: "IP Address Protection")
-    /// Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
-    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
+    /// View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
+    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
     /// Disable
     public static let learnMoreOptionDisable = L10n.tr("Localizable", "currencyConversion.learnMoreOptionDisable", fallback: "Disable")
     /// Don’t show the currency conversion.
@@ -203,8 +203,10 @@ public enum L10n {
     public static let refreshDesc = L10n.tr("Localizable", "currencyConversion.refreshDesc", fallback: "The rate is refreshed automatically and can also be refreshed manually.")
     /// Save changes
     public static let saveBtn = L10n.tr("Localizable", "currencyConversion.saveBtn", fallback: "Save changes")
-    /// Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.
-    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.")
+    /// View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.
+    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.")
+    /// Check if Tor use is permitted in your region before enabling.
+    public static let settingsDesc2 = L10n.tr("Localizable", "currencyConversion.settingsDesc2", fallback: "Check if Tor use is permitted in your region before enabling.")
     /// Skip
     public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip")
     /// Currency Conversion
@@ -1505,10 +1507,10 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "torSetup.option3.title", fallback: "Integrations")
     }
     public enum Settings {
-      /// This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.
-      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "This beta feature provides additional protections for your IP address. It uses Tor to fetch exchange rates, send transactions, retrieve transaction data, and connect to third-party APIs (e.g. NEAR). If Tor is permitted in your region, we recommend enabling it.")
-      /// Note: Exchange rates are only available when this feature is enabled.
-      public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "Note: Exchange rates are only available when this feature is enabled.")
+      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).
+      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).")
+      /// As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.
+      public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.")
     }
   }
   public enum Transaction {

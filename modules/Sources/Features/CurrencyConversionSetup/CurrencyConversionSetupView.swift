@@ -95,7 +95,7 @@ public struct CurrencyConversionSetupView: View {
     
     private func settingsLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(L10n.CurrencyConversion.settingsDesc)
+            header(L10n.CurrencyConversion.settingsDesc, desc2: L10n.CurrencyConversion.settingsDesc2)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 20)
 
@@ -167,9 +167,6 @@ public struct CurrencyConversionSetupView: View {
     
     private func learnMoreFooter() -> some View {
         VStack {
-            note()
-                .padding(.bottom, 20)
-
             secondaryButton(L10n.CurrencyConversion.skipBtn) {
                 store.send(.skipTapped)
             }
@@ -276,7 +273,7 @@ extension CurrencyConversionSetupView {
             .padding(.trailing, 16)
     }
     
-    private func header(_ desc: String) -> some View {
+    private func header(_ desc: String, desc2: String? = nil) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 icons()
@@ -290,7 +287,13 @@ extension CurrencyConversionSetupView {
             
             Text(desc)
                 .zFont(size: 14, style: Design.Text.tertiary)
-                .padding(.bottom, 4)
+                .padding(.bottom, desc2 == nil ? 4 : 16)
+
+            if let desc2 {
+                Text(desc2)
+                    .zFont(size: 14, style: Design.Text.tertiary)
+                    .padding(.bottom, 4)
+            }
         }
     }
 }

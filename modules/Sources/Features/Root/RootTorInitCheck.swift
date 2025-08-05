@@ -50,7 +50,7 @@ extension Root {
                 state.homeState.walletBalancesState.isExchangeRateFeatureOn = false
                 return .run { [state] send in
                     await send(.home(.smartBanner(.closeAndCleanupBanner)))
-                    try? await sdkSynchronizer.torEnabled(false)
+                    //try? await sdkSynchronizer.torEnabled(false)
                     
                     for (id, element) in zip(state.settingsState.path.ids, state.settingsState.path) {
                         if element.is(\.torSetup) {
