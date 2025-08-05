@@ -397,8 +397,8 @@
 "currencyConversion.cardTitle" = "Nueva Función";
 "currencyConversion.cardButton" = "Revisar";
 "currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
-"currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD. La función de conversión de moneda de Zashi protege tu dirección IP en todo momento.";
-"currencyConversion.settingsDesc2" = "Check if Tor use is permitted in your region before enabling.";
+"currencyConversion.settingsDesc" = "Mira tu saldo y pagos en USD con mayor seguridad. Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP.";
+"currencyConversion.settingsDesc2" = "Verifica si Tor está permitido en tu región antes de habilitarlo.";
 "currencyConversion.enable" = "Habilitar";
 "currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
 "currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
@@ -406,7 +406,7 @@
 "currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
 "currencyConversion.saveBtn" = "Guardar cambios";
 "currencyConversion.ipTitle" = "Protección de Dirección IP";
-"currencyConversion.ipDesc" = "La función de conversión de moneda de Zashi no compromete tu dirección IP.";
+"currencyConversion.ipDesc" = "Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP. Verifica si el uso de Tor esta permitido en tu region.";
 "currencyConversion.refresh" = "Actualizar tasa";
 "currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
 
@@ -689,8 +689,8 @@
 "torSetup.title" = "Beta: Protección Tor";
 "torSetup.learn.desc" = "Esta función beta brinda protección adicional a tu dirección IP. Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
 
-"torSetup.settings.desc1" = "Esta función beta brinda protección adicional a tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (por ejemplo, NEAR). Si el uso de Tor está permitido en tu región, te recomendamos activarla.";
-"torSetup.settings.desc2" = "Nota: Las tasas de cambio solo están disponibles cuando esta función está activada.";
+"torSetup.settings.desc1" = "Esta función beta brinda protección adicional para tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (p. ej., NEAR, muy pronto!).";
+"torSetup.settings.desc2" = "Al ser una función beta, podría afectar el rendimiento. Si el uso de Tor está permitido en tu región, te recomendamos habilitarlo.";
 
 "torSetup.option1.title" = "Conversión de moneda";
 "torSetup.option1.desc" = "Obtén tasas de cambio desde servidores de terceros sin revelar tu dirección IP. (Disponible solo con Tor activado.)";
