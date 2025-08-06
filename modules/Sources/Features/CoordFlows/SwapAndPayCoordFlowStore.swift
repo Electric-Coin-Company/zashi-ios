@@ -57,6 +57,7 @@ public struct SwapAndPayCoordFlow {
         public var failedPcztMsg: String?
         public var isHelpSheetPresented = false
         public var isOptInFlow = false
+        public var isSwapExperience = true
         public var path = StackState<Path.State>()
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -79,7 +80,6 @@ public struct SwapAndPayCoordFlow {
         case customBackRequired
         case helpSheetRequested
         case onAppear
-        case operationChipTapped(Int)
         case path(StackActionOf<Path>)
         case sendDone
         case sendFailed(ZcashError?, Bool)
@@ -123,11 +123,7 @@ public struct SwapAndPayCoordFlow {
                 state.isOptInFlow = swapAPIAccess == .notResolved
                 state.swapAndPayState.isOptInFlow = state.isOptInFlow
                 return .none
-                
-            case .operationChipTapped(let index):
-                state.selectedOperationChip = index
-                return .send(.swapAndPay(.enableSwapExperience(index == 0)))
-                
+
             case .helpSheetRequested:
                 state.isHelpSheetPresented.toggle()
                 return .none

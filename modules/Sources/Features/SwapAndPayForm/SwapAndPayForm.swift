@@ -93,13 +93,13 @@ public struct SwapAndPayForm: View {
                         ) { }
                         .disabled(true)
                         .padding(.top, keyboardVisible ? 40 : 0)
-                        .padding(.bottom, 40)
+                        .padding(.bottom, 56)
                     } else {
                         ZashiButton(L10n.SwapAndPay.getQuote) {
                             store.send(.getQuoteTapped)
                         }
                         .padding(.top, keyboardVisible ? 40 : 0)
-                        .padding(.bottom, 40)
+                        .padding(.bottom, 56)
                         .disabled(!store.isValidForm)
                     }
                 }
@@ -114,19 +114,6 @@ public struct SwapAndPayForm: View {
             .applyScreenBackground()
             .zashiBack {
                 store.send(.internalBackButtonTapped)
-            }
-            .zashiTitle {
-                HStack(spacing: 0) {
-                    operationChip(index: 0, text: L10n.SwapAndPay.swap, colorScheme)
-                    operationChip(index: 1, text: L10n.SwapAndPay.pay, colorScheme)
-                }
-                .padding(.horizontal, 2)
-                .frame(minWidth: 180)
-                .padding(.vertical, 2)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._lg)
-                        .fill(Design.Switcher.surfacePrimary.color(colorScheme))
-                }
             }
             .navigationBarHidden(!store.isOptInFlow)
             .navigationBarItems(
@@ -256,37 +243,7 @@ public struct SwapAndPayForm: View {
             }
         }
     }
-    
-    @ViewBuilder private func operationChip(index: Int, text: String, _ colorScheme: ColorScheme) -> some View {
-        if store.selectedOperationChip == index {
-            Text(text)
-                .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
-                .frame(minWidth: 90)
-                .fixedSize()
-                .frame(height: 36)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._lg)
-                        .fill(Design.Switcher.selectedBg.color(colorScheme))
-                        .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._lg)
-                                .stroke(Design.Switcher.selectedStroke.color(colorScheme))
-                        }
-                }
-                .onTapGesture {
-                    store.send(.operationChipTapped(index))
-                }
-        } else {
-            Text(text)
-                .zFont(.medium, size: 16, style: Design.Switcher.defaultText)
-                .frame(minWidth: 90)
-                .fixedSize()
-                .frame(height: 36)
-                .onTapGesture {
-                    store.send(.operationChipTapped(index))
-                }
-        }
-    }
-    
+
     @ViewBuilder private func fromView() -> some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
@@ -337,7 +294,7 @@ public struct SwapAndPayForm: View {
                                 "",
                                 text: $store.amountText,
                                 prompt:
-                                    Text(store.localePlaceholder)
+                                    Text(isAmountFocused ? "" : store.localePlaceholder)
                                     .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
                                     .foregroundColor(Design.Text.tertiary.color(colorScheme))
                             )
@@ -402,7 +359,7 @@ public struct SwapAndPayForm: View {
                         } label: {
                             Asset.Assets.Icons.switchHorizontal.image
                                 .zImage(size: 14, style: Design.Btns.Tertiary.fg)
-                                .padding(8)
+                                .padding(5)
                                 .background {
                                     RoundedRectangle(cornerRadius: Design.Radius._md)
                                         .fill(Design.Btns.Tertiary.bg.color(colorScheme))
@@ -552,16 +509,32 @@ public struct SwapAndPayForm: View {
     }
 
     @ViewBuilder private func dividerView() -> some View {
-        ZStack {
+        HStack(spacing: 5) {
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)
             
-            Asset.Assets.Icons.arrowDown.image
-                .zImage(size: 20, style: Design.Text.disabled)
-                .padding(8)
-                .background(Design.screenBackground.color(colorScheme))
-                .rotationEffect(.degrees(store.isSwapExperienceEnabled ? 0 : 180))
+            Button {
+                store.send(.enableSwapExperience)
+            } label: {
+                Asset.Assets.Icons.switchHorizontal.image
+                    .zImage(size: 20, style: Design.Btns.Secondary.fg)
+                    .padding(8)
+                    .rotationEffect(.degrees(90))
+                    .background {
+                        RoundedRectangle(cornerRadius: Design.Radius._md)
+                            .fill(Design.Btns.Secondary.bg.color(colorScheme))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .inset(by: 0.5)
+                                    .stroke(Design.Btns.Secondary.border.color(colorScheme), lineWidth: 1)
+                            )
+                    }
+            }
+            
+            Design.Utility.Gray._100.color(colorScheme)
+                .frame(height: 1)
         }
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
     }
     
@@ -638,7 +611,7 @@ public struct SwapAndPayForm: View {
     
     @ViewBuilder private func slippageView() -> some View {
         HStack(spacing: 0) {
-            Text(L10n.SwapAndPay.slippage)
+            Text(L10n.SwapAndPay.slippageTolerance)
                 .zFont(.medium, size: 14, style: Design.Text.secondary)
             
             Spacer()
@@ -753,7 +726,7 @@ extension View {
                 
                 Text(asset.token)
                     .zFont(.semiBold, size: 14, style: Design.Text.primary)
-                    .padding(.trailing, 4)
+                    .padding(.horizontal, 4)
                     .fixedSize()
                     .minimumScaleFactor(0.7)
             } else {

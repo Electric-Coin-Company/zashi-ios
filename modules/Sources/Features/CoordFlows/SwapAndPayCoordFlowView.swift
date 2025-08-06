@@ -89,7 +89,7 @@ public struct SwapAndPayCoordFlowView: View {
                         Button {
                             store.send(.helpSheetRequested)
                         } label: {
-                            Asset.Assets.Icons.help.image
+                            Asset.Assets.infoCircle.image
                                 .zImage(size: 24, style: Design.Text.primary)
                                 .padding(8)
                         }
@@ -112,52 +112,23 @@ public struct SwapAndPayCoordFlowView: View {
             }
             .zashiTitle {
                 HStack(spacing: 0) {
-                    operationChip(index: 0, text: L10n.SwapAndPay.swap, colorScheme)
-                    operationChip(index: 1, text: L10n.SwapAndPay.pay, colorScheme)
+                    Text(
+                        store.isSwapExperience
+                        ? L10n.SwapAndPay.Help.swapWith
+                        : L10n.SwapAndPay.Help.payWith
+                    )
+                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                    .padding(.trailing, 10)
+                    
+                    Asset.Assets.Partners.nearLogo.image
+                        .zImage(width: 65, height: 16, style: Design.Text.primary)
                 }
-                .padding(.horizontal, 2)
-                .frame(minWidth: 180)
-                .padding(.vertical, 2)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._lg)
-                        .fill(Design.Switcher.surfacePrimary.color(colorScheme))
-                }
-                .disabled(store.isOptInFlow)
-                .opacity(store.isOptInFlow ? 0 : 1)
+                .padding(.trailing, 20)
+                .frame(maxWidth: .infinity)
             }
         }
     }
-    
-    @ViewBuilder private func operationChip(index: Int, text: String, _ colorScheme: ColorScheme) -> some View {
-        if store.selectedOperationChip == index {
-            Text(text)
-                .zFont(.medium, size: 16, style: Design.Switcher.selectedText)
-                .frame(minWidth: 90)
-                .fixedSize()
-                .frame(height: 36)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._lg)
-                        .fill(Design.Switcher.selectedBg.color(colorScheme))
-                        .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._lg)
-                                .stroke(Design.Switcher.selectedStroke.color(colorScheme))
-                        }
-                }
-                .onTapGesture {
-                    store.send(.operationChipTapped(index))
-                }
-        } else {
-            Text(text)
-                .zFont(.medium, size: 16, style: Design.Switcher.defaultText)
-                .frame(minWidth: 90)
-                .fixedSize()
-                .frame(height: 36)
-                .onTapGesture {
-                    store.send(.operationChipTapped(index))
-                }
-        }
-    }
-    
+
     @ViewBuilder func moreContent() -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.4, *) {
@@ -178,12 +149,8 @@ public struct SwapAndPayCoordFlowView: View {
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
-                Text(
-                    store.selectedOperationChip == 0
-                    ? L10n.SwapAndPay.Help.swapWith
-                    : L10n.SwapAndPay.Help.payWith
-                )
-                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                Text(L10n.SwapAndPay.title)
+                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 
                 Asset.Assets.Partners.nearLogo.image
                     .zImage(width: 98, height: 24, style: Design.Text.primary)
@@ -191,13 +158,11 @@ public struct SwapAndPayCoordFlowView: View {
             .padding(.top, 12)
             .padding(.vertical, 24)
 
-            if store.selectedOperationChip == 0 {
-                infoContent(text: L10n.SwapAndPay.Help.swapDesc)
-                    .padding(.bottom, 32)
-            } else {
-                infoContent(text: L10n.SwapAndPay.Help.payDesc)
-                    .padding(.bottom, 32)
-            }
+            infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc)
+                .padding(.bottom, 20)
+            
+            infoContent(index: 1, text: L10n.SwapAndPay.Help.payDesc1, desc2: L10n.SwapAndPay.Help.payDesc2)
+                .padding(.bottom, 32)
             
             ZashiButton(L10n.General.ok.uppercased()) {
                 store.send(.helpSheetRequested)
@@ -206,9 +171,9 @@ public struct SwapAndPayCoordFlowView: View {
         }
     }
     
-    @ViewBuilder private func infoContent(text: String) -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            if store.selectedOperationChip == 0 {
+    @ViewBuilder private func infoContent(index: Int, text: String, desc2: String? = nil) -> some View {
+        HStack(alignment: .top, spacing: 16) {
+            if index == 0 {
                 Asset.Assets.Icons.arrowDown.image
                     .zImage(size: 20, style: Design.Text.primary)
                     .padding(10)
@@ -228,7 +193,7 @@ public struct SwapAndPayCoordFlowView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(
-                    store.selectedOperationChip == 0
+                    index == 0
                     ? L10n.SwapAndPay.Help.swapWithNear
                     : L10n.SwapAndPay.Help.payWithNear
                 )
@@ -238,7 +203,17 @@ public struct SwapAndPayCoordFlowView: View {
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
                     .lineSpacing(1.5)
+                
+                if let desc2 {
+                    Text(desc2)
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineSpacing(1.5)
+                        .padding(.top, 16)
+                }
             }
+            
+            Spacer()
         }
     }
 }

@@ -66,6 +66,7 @@ public enum Design: Colorable {
             case borderHover
             case bgDisabled
             case fgDisabled
+            case disabledStroke
         }
 
         public enum Tertiary: Colorable {
@@ -446,14 +447,15 @@ public extension Design.Btns.Primary {
 public extension Design.Btns.Secondary {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark950.color, colorScheme)
+        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .fgHover: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .border: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .borderHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        case .disabledStroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         }
     }
 }

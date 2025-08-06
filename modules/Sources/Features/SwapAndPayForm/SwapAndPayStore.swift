@@ -56,9 +56,9 @@ public struct SwapAndPay {
         public var searchTerm = ""
         public var selectedAsset: SwapAsset?
         public var sheetHeight: CGFloat = 0.0
-        public var slippage: Decimal = 1.0
-        public var slippageInSheet: Decimal = 1.0
-        public var selectedSlippageChip = 1
+        public var slippage: Decimal = 0.5
+        public var slippageInSheet: Decimal = 0.5
+        public var selectedSlippageChip = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
@@ -137,7 +137,7 @@ public struct SwapAndPay {
         case dismissRequired
         case dontCancelTapped
         case editPaymentTapped
-        case enableSwapExperience(Bool)
+        case enableSwapExperience
         case eraseSearchTermTapped
         case getQuoteTapped
         case helpSheetRequested(Int)
@@ -145,7 +145,6 @@ public struct SwapAndPay {
         case nextTapped
         case onAppear
         case onDisappear
-        case operationChipTapped(Int)
         case proposal(Proposal)
         case quoteUnavailable(String)
         case refreshSwapAssets
@@ -259,10 +258,6 @@ public struct SwapAndPay {
                     state.isQuotePresented = true
                 }
                 return .none
-                
-            case .operationChipTapped(let index):
-                state.selectedOperationChip = index
-                return .send(.enableSwapExperience(index == 0))
 
             case .refreshSwapAssets:
                 guard state.swapAPIAccess != .notResolved && state.swapAPIAccess != nil else {
@@ -278,8 +273,8 @@ public struct SwapAndPay {
                 }
                 .cancellable(id: state.SwapAssetsCancelId, cancelInFlight: true)
 
-            case .enableSwapExperience(let enable):
-                state.isSwapExperienceEnabled = enable
+            case .enableSwapExperience:
+                state.isSwapExperienceEnabled.toggle()
                 if !state.isInputInUsd {
                     if state.isSwapExperienceEnabled {
                         if let zecAsset = state.zecAsset, let selectedAsset = state.selectedAsset, !state.amountText.isEmpty {
@@ -1103,18 +1098,6 @@ extension SwapAndPay.State {
 
     public var slippage2String: String {
         slippageString(value: 2.0)
-    }
-
-    public var slippage0String: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        formatter.locale = Locale.current
-        
-        let value = formatter.string(from: NSNumber(value: 0)) ?? ""
-
-        return "\(value)%"
     }
 }
 

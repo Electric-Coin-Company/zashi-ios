@@ -1514,6 +1514,8 @@ public enum L10n {
     }
     ///  for the swap.
     public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: " for the swap.")
+    /// Slippage tolerance
+    public static let slippageTolerance = L10n.tr("Localizable", "swapAndPay.slippageTolerance", fallback: "Slippage tolerance")
     /// Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.
     public static let slippageWarn = L10n.tr("Localizable", "swapAndPay.slippageWarn", fallback: "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.")
     /// Status
@@ -1534,6 +1536,8 @@ public enum L10n {
     }
     /// Swap to
     public static let swapTo = L10n.tr("Localizable", "swapAndPay.swapTo", fallback: "Swap to")
+    /// Swap or Pay with
+    public static let title = L10n.tr("Localizable", "swapAndPay.title", fallback: "Swap or Pay with")
     /// To
     public static let to = L10n.tr("Localizable", "swapAndPay.to", fallback: "To")
     /// Total Amount
@@ -1553,14 +1557,16 @@ public enum L10n {
       public static let optionTwo = L10n.tr("Localizable", "swapAndPay.forcedOptIn.optionTwo", fallback: "I understand that by not enabling Tor, my IP address will be leaked by the NEAR API.")
     }
     public enum Help {
-      /// Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. 
-      public static let payDesc = L10n.tr("Localizable", "swapAndPay.help.payDesc", fallback: "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ")
+      /// Make cross-chain payments in any NEAR-supported coin or token.
+      public static let payDesc1 = L10n.tr("Localizable", "swapAndPay.help.payDesc1", fallback: "Make cross-chain payments in any NEAR-supported coin or token.")
+      /// If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.
+      public static let payDesc2 = L10n.tr("Localizable", "swapAndPay.help.payDesc2", fallback: "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.")
       /// Pay with
       public static let payWith = L10n.tr("Localizable", "swapAndPay.help.payWith", fallback: "Pay with")
       /// Pay with NEAR
       public static let payWithNear = L10n.tr("Localizable", "swapAndPay.help.payWithNear", fallback: "Pay with NEAR")
-      /// Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. 
-      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. ")
+      /// Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.
+      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.")
       /// Swap with
       public static let swapWith = L10n.tr("Localizable", "swapAndPay.help.swapWith", fallback: "Swap with")
       /// Swap with NEAR

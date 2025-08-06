@@ -88,6 +88,7 @@ public enum Asset {
       public static let alertTriangle = ImageAsset(name: "alertTriangle")
       public static let archive = ImageAsset(name: "archive")
       public static let arrowDown = ImageAsset(name: "arrowDown")
+      public static let arrowNarrowLeft = ImageAsset(name: "arrowNarrowLeft")
       public static let arrowRight = ImageAsset(name: "arrowRight")
       public static let arrowUp = ImageAsset(name: "arrowUp")
       public static let authKey = ImageAsset(name: "authKey")

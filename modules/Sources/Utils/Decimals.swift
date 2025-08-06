@@ -31,7 +31,7 @@ public extension Decimal {
         return self.rounded(scale: maximumFractionDigits)
     }
 
-    private func rounded(scale: Int, mode: NSDecimalNumber.RoundingMode = .plain) -> Decimal {
+    private func rounded(scale: Int, mode: NSDecimalNumber.RoundingMode = .bankers) -> Decimal {
         var result = self
         var value = self
         NSDecimalRound(&result, &value, scale, mode)

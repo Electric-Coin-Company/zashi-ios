@@ -177,6 +177,10 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Self
 
+            case .swapAndPay(.enableSwapExperience):
+                state.isSwapExperience.toggle()
+                return .none
+
             case let .updateFailedData(code, desc, pcztMsg):
                 state.failedCode = code
                 state.failedDescription = desc

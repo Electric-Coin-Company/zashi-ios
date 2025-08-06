@@ -48,7 +48,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     }
 
     public var chainIcon: Image {
-        guard let icon = UIImage(named: chain.lowercased()) else {
+        guard let icon = UIImage(named: "chain_\(chain.lowercased())") else {
             return Asset.Assets.Tickers.none.image
         }
 

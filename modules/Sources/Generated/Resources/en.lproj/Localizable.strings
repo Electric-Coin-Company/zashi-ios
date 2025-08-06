@@ -730,6 +730,7 @@
 "receive.ua.rotateInfo" = "Rotates every time you use it";
 
 // MARK: - Swap and Pay
+"swapAndPay.title" = "Swap or Pay with";
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
 "sendSelect.swapAndPay" = "Swap or Pay with NEAR";
@@ -740,6 +741,7 @@
 "swapAndPay.getQuote" = "Get a quote";
 "swapAndPay.recipientGets" = "Recipient gets";
 "swapAndPay.slippage" = "Slippage";
+"swapAndPay.slippageTolerance" = "Slippage tolerance";
 "swapAndPay.youPay" = "You pay";
 "swapAndPay.slippageDesc" = "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.";
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
@@ -777,8 +779,9 @@
 "swapAndPay.help.payWith" = "Pay with";
 "swapAndPay.help.swapWithNear" = "Swap with NEAR";
 "swapAndPay.help.payWithNear" = "Pay with NEAR";
-"swapAndPay.help.swapDesc" = "Swap out of ZEC into other coins supported by NEAR. Zashi is single-currency only, so you need to enter a receiving address valid for a coin you want to swap into. ";
-"swapAndPay.help.payDesc" = "Send a cross-chain payment in coins supported by NEAR directly from Zashi. Make sure you enter a valid recipient address. If a payment should result in smaller output amount than you set, you will be refunded. ";
+"swapAndPay.help.swapDesc" = "Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.";
+"swapAndPay.help.payDesc1" = "Make cross-chain payments in any NEAR-supported coin or token.";
+"swapAndPay.help.payDesc2" = "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.";
 "swapAndPay.quote.zashi" = "Zashi";
 "swapAndPay.sendingInfo" = "Your coins are being sent to the deposit address...";
 "swapAndPay.successSwapInfo" = "You successfully initiated a swap. Follow its status on the transaction screen.";
@@ -799,7 +802,6 @@
 "swapAndPay.cancelMsg" = "If you leave this screen, all the information you entered will be lost.";
 "swapAndPay.cancelSwap" = "Cancel swap";
 "swapAndPay.cancelDont" = "Don’t cancel";
-
 "swapAndPay.optIn.title" = "Swap or Pay with";
 "swapAndPay.optIn.desc" = "This feature is powered by a third-party NEAR API. Zashi needs to make networking calls to fetch rates, quotes, execute transactions and check their status in the transaction history which can leak your IP address. We recommend you to allow Tor connection to protect your IP address at all times.";
 "swapAndPay.optIn.optionOneTitle" = "Allow Third-Party Requests";

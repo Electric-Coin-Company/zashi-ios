@@ -224,7 +224,7 @@ extension SDKSynchronizerClient {
         torEnabled: @escaping (Bool) async throws -> Void = { _ in },
         exchangeRateEnabled: @escaping (Bool) async throws -> Void = { _ in },
         isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil },
-        httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in }
+        httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in (Data(), HTTPURLResponse.mockResponse) }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,

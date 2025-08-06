@@ -1,17 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "noneLight.png",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "noneDark.png",
+      "filename" : "tickerPlaceholder.png",
       "idiom" : "universal"
     }
   ],

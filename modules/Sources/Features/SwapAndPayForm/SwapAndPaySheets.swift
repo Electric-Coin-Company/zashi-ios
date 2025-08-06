@@ -107,7 +107,6 @@ extension SwapAndPayForm {
                     prefixView: Asset.Assets.Icons.search.image
                         .zImage(size: 20, style: Design.Dropdowns.Default.text)
                 )
-                .padding(.trailing, 8)
                 .padding(.bottom, 32)
                 .padding(.horizontal, 20)
                 
@@ -150,12 +149,12 @@ extension SwapAndPayForm {
                                     Circle()
                                         .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                         .frame(width: 22, height: 22)
-                                        .offset(x: 8, y: 12)
+                                        .offset(x: 9, y: 16)
                                     
                                     asset.chainIcon
                                         .resizable()
                                         .frame(width: 18, height: 18)
-                                        .offset(x: 8, y: 12)
+                                        .offset(x: 9, y: 16)
                                 }
                             }
                         
@@ -222,7 +221,7 @@ extension SwapAndPayForm {
                                 FocusableTextField(
                                     text: $store.customSlippage,
                                     isFirstResponder: $isSlippageFocused,
-                                    placeholder: store.slippage0String,
+                                    placeholder: "%",
                                     colorScheme: colorScheme
                                 )
                                 .multilineTextAlignment(.center)
@@ -526,15 +525,16 @@ extension SwapAndPayForm {
                 .padding(.bottom, 32)
                 
                 if store.isSwapExperienceEnabled {
-                    HStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: 0) {
                         Asset.Assets.infoOutline.image
-                            .zImage(size: 20, style: Design.Text.tertiary)
+                            .zImage(size: 16, style: Design.Text.tertiary)
                             .padding(.trailing, 12)
                         
                         Text(L10n.SwapAndPay.swapQuoteSlippageWarn(store.swapQuoteSlippageUsdStr, store.currentSlippageString))
                     }
                     .zFont(size: 12, style: Design.Text.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 12)
                     .padding(.bottom, 24)
                 }
 

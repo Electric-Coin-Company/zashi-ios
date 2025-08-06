@@ -496,12 +496,12 @@
       }
     },
     {
-      "identity" : "zcash-swift-wallet-sdk",
+      "identity" : "zcashlightclientkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
+      "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "revision" : "ef5ea2e7d7a2e720b273f68fbebd59db84bf0ae4",
-        "version" : "2.3.0"
+        "branch" : "1575-GET-and-POST-requests-over-Tor-API",
+        "revision" : "f0853969b69b0f75c4de794c9fd1dcef5d04e3f6"
       }
     }
   ],
