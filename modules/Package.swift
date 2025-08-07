@@ -935,6 +935,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "SwapAndPay",
                 "UIComponents",
+                "UserMetadataProvider",
                 "UserPreferencesStorage",
                 "Utils",
                 "WalletBalances",

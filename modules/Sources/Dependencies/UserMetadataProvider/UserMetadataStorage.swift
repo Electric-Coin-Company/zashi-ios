@@ -40,6 +40,9 @@ public class UserMetadataStorage {
 
     // Swap Ids
     var swapIds: [String: UMSwapId] = [:]
+    
+    // Last User SwapAssets
+    var lastUsedAssetHistory: [String] = []
 
     public init() { }
     
@@ -188,9 +191,11 @@ public class UserMetadataStorage {
             annotations[annotation.txId] = annotation
         }
 
-        umData.accountMetadata.swapIds.forEach { swapId in
+        umData.accountMetadata.swaps.swapIds.forEach { swapId in
             swapIds[swapId.txId] = swapId
         }
+        
+        lastUsedAssetHistory = umData.accountMetadata.swaps.lastUsedAssetHistory
     }
 
     public func userMetadataFromMemory() -> UserMetadata {
@@ -203,7 +208,11 @@ public class UserMetadataStorage {
             bookmarked: umBookmarked,
             annotations: umAnnotations,
             read: umRead,
-            swapIds: umSwapIds
+            swaps: UMSwaps(
+                swapIds: umSwapIds,
+                lastUsedAssetHistory: lastUsedAssetHistory,
+                lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
+            )
         )
         
         return UserMetadata(
@@ -283,10 +292,21 @@ public class UserMetadataStorage {
         return swapTxId == txId
     }
     
-    public func markTransactionAsSwapFor(txId: String) {
+    public func markTransactionAsSwapFor(txId: String, provider: String) {
         swapIds[txId] = UMSwapId(
             txId: txId,
+            provider: provider,
             lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
         )
+    }
+    
+    // Last Used Asset History
+    public func addLastUsedSwap(asset: String) {
+        lastUsedAssetHistory.removeAll { $0 == asset }
+        lastUsedAssetHistory.insert(asset, at: 0)
+        
+        if lastUsedAssetHistory.count > 10 {
+            lastUsedAssetHistory = Array(lastUsedAssetHistory.prefix(10))
+        }
     }
 }

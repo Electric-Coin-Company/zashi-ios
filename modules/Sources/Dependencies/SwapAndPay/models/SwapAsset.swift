@@ -13,7 +13,7 @@ import Generated
 /// https://docs.near-intents.org/near-intents/integration/distribution-channels/1click-api#get-v0-tokens
 public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public var id: String {
-        "\(chain).\(token)".lowercased()
+        "\(provider).\(chain).\(token)".lowercased()
     }
     
     public var chainName: String {
@@ -63,6 +63,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         return Image(uiImage: icon)
     }
 
+    public var provider: String
     public var chain: String
     public let token: String
     public let assetId: String
@@ -70,12 +71,14 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public let decimals: Int
     
     init(
+        provider: String,
         chain: String,
         token: String,
         assetId: String,
         usdPrice: Decimal,
         decimals: Int
     ) {
+        self.provider = provider
         self.chain = chain
         self.token = token
         self.assetId = assetId
@@ -86,7 +89,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
 
 public extension SwapAsset {
     static func hardcodedChains() -> [SwapAsset] {
-        var template = SwapAsset(chain: "", token: "", assetId: "", usdPrice: 0, decimals: 0)
+        var template = SwapAsset(provider: "", chain: "", token: "", assetId: "", usdPrice: 0, decimals: 0)
         
         let arb = template; template.chain = "arb"
         let base = template; template.chain = "base"

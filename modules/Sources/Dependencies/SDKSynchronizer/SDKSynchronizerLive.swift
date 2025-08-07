@@ -22,12 +22,15 @@ extension SDKSynchronizerClient: DependencyKey {
     public static func live(
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Dependency(\.userStoredPreferences) var userStoredPreferences
         @Dependency(\.walletStorage) var walletStorage
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-        let isTorEnabled: Bool = walletStorage.exportTorSetupFlag() ?? false
-        let isRateEnabled: Bool = userStoredPreferences.exchangeRate()?.automatic ?? false
+        let isTorEnabled = walletStorage.exportTorSetupFlag() ?? false
+        let isRateEnabled = userStoredPreferences.exchangeRate()?.automatic ?? false
+
+        $swapAPIAccess.withLock { $0 = isTorEnabled ? .protected : .direct }
         
         let network = zcashSDKEnvironment.network
         

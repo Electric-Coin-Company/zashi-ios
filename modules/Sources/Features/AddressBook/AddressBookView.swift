@@ -114,33 +114,14 @@ public struct AddressBookView: View {
     }
     
     func emptyComposition() -> some View {
-        ZStack {
-            Asset.Assets.send.image
-                .zImage(size: 32, style: Design.Btns.Tertiary.fg)
-                .zForegroundColor(Design.Btns.Tertiary.fg)
-                .background {
-                    Circle()
-                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
-                        .frame(width: 72, height: 72)
-                }
-
-            ZcashSymbol()
-                .frame(width: 24, height: 24)
-                .zForegroundColor(Design.Surfaces.bgPrimary)
-                .background {
-                    Circle()
-                        .fill(Design.Surfaces.brandPrimary.color(colorScheme))
-                        .frame(width: 32, height: 32)
-                        .background {
-                            Circle()
-                                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                                .frame(width: 36, height: 36)
-                        }
-                }
-                .offset(x: 30, y: 30)
-                .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
-                .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
-        }
+        Asset.Assets.send.image
+            .zImage(size: 32, style: Design.Btns.Tertiary.fg)
+            .zForegroundColor(Design.Btns.Tertiary.fg)
+            .background {
+                Circle()
+                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                    .frame(width: 72, height: 72)
+            }
     }
     
     @ViewBuilder func contactsList() -> some View {

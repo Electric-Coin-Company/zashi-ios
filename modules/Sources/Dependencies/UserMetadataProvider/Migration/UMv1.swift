@@ -44,7 +44,7 @@ public struct UMAccountV1: Codable {
 
 extension UserMetadata {
     static func v1ToLatest(_ userMetadataV1: UserMetadataV1) throws -> UserMetadata {
-        UserMetadata(
+        return UserMetadata(
             version: UserMetadata.Constants.version,
             lastUpdated: userMetadataV1.lastUpdated,
             accountMetadata:
@@ -52,7 +52,11 @@ extension UserMetadata {
                     bookmarked: userMetadataV1.accountMetadata.bookmarked,
                     annotations: userMetadataV1.accountMetadata.annotations,
                     read: userMetadataV1.accountMetadata.read,
-                    swapIds: []
+                    swaps: UMSwaps(
+                        swapIds: [],
+                        lastUsedAssetHistory: [],
+                        lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
+                    )
                 )
         )
     }

@@ -40,13 +40,13 @@ public struct UMAccount: Codable {
         case bookmarked
         case annotations
         case read
-        case swapIds
+        case swaps
     }
     
     let bookmarked: [UMBookmark]
     let annotations: [UMAnnotation]
     let read: [String]
-    let swapIds: [UMSwapId]
+    let swaps: UMSwaps
 }
 
 public struct UMBookmark: Codable {
@@ -73,13 +73,35 @@ public struct UMAnnotation: Codable {
     let lastUpdated: Int64
 }
 
+public struct UMSwaps: Codable {
+    public enum CodingKeys: CodingKey {
+        case lastUsedAssetHistory
+        case swapIds
+        case lastUpdated
+    }
+
+    /// Collection of all swaps that happened in the wallet
+    let swapIds: [UMSwapId]
+    /// Collection of 10 last SwapAssets
+    let lastUsedAssetHistory: [String]
+    let lastUpdated: Int64
+    
+    init(swapIds: [UMSwapId], lastUsedAssetHistory: [String], lastUpdated: Int64) {
+        self.swapIds = swapIds
+        self.lastUsedAssetHistory = lastUsedAssetHistory
+        self.lastUpdated = lastUpdated
+    }
+}
+
 public struct UMSwapId: Codable {
     public enum CodingKeys: CodingKey {
         case txId
+        case provider
         case lastUpdated
     }
     
     let txId: String
+    let provider: String
     let lastUpdated: Int64
 }
 

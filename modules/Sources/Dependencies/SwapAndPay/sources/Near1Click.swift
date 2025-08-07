@@ -12,6 +12,10 @@ import SDKSynchronizer
 import WalletStorage
 
 struct Near1Click {
+    enum Constants {
+        static let near = "near"
+    }
+    
     let submitDepositTxId: (String, String) async throws -> Void
     let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
     let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
@@ -23,15 +27,11 @@ extension Near1Click {
     
     public static func live() -> Self {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
 
         return Near1Click(
             //    public static let liveValue = Self(
             submitDepositTxId: { txId, depositAddress in
-                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
-                }
-
                 guard let url = URL(string: "https://1click.chaindefuser.com/v0/deposit/submit") else {
                     throw URLError(.badURL)
                 }
@@ -63,10 +63,6 @@ extension Near1Click {
                 }
             },
             swapAssets: {
-                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
-                }
-
                 guard let url = URL(string: "https://1click.chaindefuser.com/v0/tokens") else {
                     throw URLError(.badURL)
                 }
@@ -108,6 +104,7 @@ extension Near1Click {
                     }
                     
                     return SwapAsset(
+                        provider: Near1Click.Constants.near,
                         chain: chain,
                         token: symbol,
                         assetId: assetId,
@@ -119,10 +116,6 @@ extension Near1Click {
                 return IdentifiedArrayOf(uniqueElements: chainAssets)
             },
             quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
-                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
-                }
-
                 guard let url = URL(string: "https://1click.chaindefuser.com/v0/quote") else {
                     throw URLError(.badURL)
                 }
@@ -238,10 +231,6 @@ extension Near1Click {
                 )
             },
             status: { depositAddress in
-                guard swapAPIAccess != .notResolved && swapAPIAccess != nil else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: networking hasn't been resolved yet")
-                }
-
                 guard let url = URL(string: "https://1click.chaindefuser.com/v0/status?depositAddress=\(depositAddress)") else {
                     throw URLError(.badURL)
                 }

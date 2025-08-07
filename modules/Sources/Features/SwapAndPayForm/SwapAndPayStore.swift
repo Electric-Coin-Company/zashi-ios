@@ -18,6 +18,7 @@ import WalletBalances
 import SwapAndPay
 import AddressBookClient
 import WalletStorage
+import UserMetadataProvider
 
 @Reducer
 public struct SwapAndPay {
@@ -38,7 +39,6 @@ public struct SwapAndPay {
         public var isCancelSheetVisible = false
         public var isInputInUsd = false
         public var isNotAddressInAddressBook = false
-        public var isOptInFlow = false
         public var isPopToRootBack = false
         public var isQuoteRequestInFlight = false
         public var isQuotePresented = false
@@ -60,7 +60,7 @@ public struct SwapAndPay {
         public var slippageInSheet: Decimal = 0.5
         public var selectedSlippageChip = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
@@ -183,6 +183,7 @@ public struct SwapAndPay {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.swapAndPay) var swapAndPay
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -260,9 +261,6 @@ public struct SwapAndPay {
                 return .none
 
             case .refreshSwapAssets:
-                guard state.swapAPIAccess != .notResolved && state.swapAPIAccess != nil else {
-                    return .none
-                }
                 return .run { send in
                     let swapAssets = try? await swapAndPay.swapAssets()
                     if let swapAssets {
@@ -309,9 +307,10 @@ public struct SwapAndPay {
                 return .none
                 
             case .updateAssetsAccordingToSearchTerm:
+                // all received assets
                 var swapAssets = state.swapAssets
                 if let chainId = state.selectedContact?.chainId {
-                    let filteredSwapAssets = state.swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
+                    let filteredSwapAssets = swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
                     swapAssets = filteredSwapAssets
                 }
                 guard !state.searchTerm.isEmpty else {
@@ -542,8 +541,21 @@ public struct SwapAndPay {
 
                 // exclude all tokens with price == 0
                 // exclude zec token
-                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
-                state.$swapAssets.withLock { $0 = filteredSwapAssets }
+                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                
+                // history assets
+                let historyAssetIds = userMetadataProvider.lastUsedAssetHistory()
+                var historyAssets: IdentifiedArrayOf<SwapAsset> = []
+                historyAssetIds.forEach {
+                    if let index = filteredSwapAssets.index(id: $0) {
+                        historyAssets.append(filteredSwapAssets[index])
+                    }
+                }
+                filteredSwapAssets.removeAll { historyAssetIds.contains($0.id) }
+                var swapAssetsWithHistory = historyAssets
+                swapAssetsWithHistory.append(contentsOf: filteredSwapAssets)
+
+                state.$swapAssets.withLock { $0 = swapAssetsWithHistory }
                 
                 if let selectedContactChainId = state.selectedContact?.chainId,
                     let selectedAssetChainId = state.selectedAsset?.chain, selectedContactChainId != selectedAssetChainId {

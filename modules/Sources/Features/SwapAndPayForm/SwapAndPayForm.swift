@@ -115,7 +115,7 @@ public struct SwapAndPayForm: View {
             .zashiBack {
                 store.send(.internalBackButtonTapped)
             }
-            .navigationBarHidden(!store.isOptInFlow)
+            //.navigationBarHidden(!store.isOptInFlow)
             .navigationBarItems(
                 trailing:
                     Button {

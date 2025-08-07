@@ -86,6 +86,7 @@ extension SwapAndPayCoordFlow {
             case .path(.element(id: _, action: .confirmWithKeystone(.updateResult(let result)))):
                 for (id, element) in zip(state.path.ids, state.path) {
                     if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        let provider = state.provider
                         return .run { send in
                             await send(.updateTxIdToExpand(sendConfirmationState.txIdToExpand))
                             await send(
@@ -99,7 +100,7 @@ extension SwapAndPayCoordFlow {
                             switch result {
                             case .success:
                                 if let txId = sendConfirmationState.txIdToExpand {
-                                    userMetadataProvider.markTransactionAsSwapFor(txId)
+                                    userMetadataProvider.markTransactionAsSwapFor(txId, provider)
                                 }
                                 await send(.updateResult(.success))
                             case .failure:
@@ -177,6 +178,16 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Self
 
+            case .storeLastUsedAsset:
+                guard let selectedAsset = state.swapAndPayState.selectedAsset else {
+                    return .none
+                }
+                userMetadataProvider.addLastUsedSwapAsset(selectedAsset.id)
+                if let account = state.selectedWalletAccount?.account {
+                    try? userMetadataProvider.store(account)
+                }
+                return .none
+                
             case .swapAndPay(.enableSwapExperience):
                 state.isSwapExperience.toggle()
                 return .none
@@ -241,6 +252,7 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.isSwap = true
                 state.path.append(.sending(sendConfirmationState))
+                let provider = state.provider
                 // make the transaction
                 return .run { [depositAddress = state.swapAndPayState.address] send in
                     do {
@@ -265,7 +277,7 @@ extension SwapAndPayCoordFlow {
                             await send(.updateTxIdToExpand(txIds.last))
                             if let txId = txIds.last {
                                 // store the txId into metadata
-                                userMetadataProvider.markTransactionAsSwapFor(txId)
+                                userMetadataProvider.markTransactionAsSwapFor(txId, provider)
                             }
                             await send(.sendDone)
                             if let txId = txIds.last {
@@ -279,9 +291,6 @@ extension SwapAndPayCoordFlow {
                 }
 
             case .sendDone:
-                if let account = state.selectedWalletAccount?.account {
-                    try? userMetadataProvider.store(account)
-                }
                 let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
                 let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
                 return .run { send in
@@ -312,6 +321,7 @@ extension SwapAndPayCoordFlow {
                     break
                 case .success:
                     state.path.append(.sendResultSuccess(sendConfirmationState))
+                    return .send(.storeLastUsedAsset)
                 default: break
                 }
                 return .none
@@ -325,14 +335,10 @@ extension SwapAndPayCoordFlow {
                 return .none
 
             case .swapAndPay(.confirmOptInTapped):
-                try? walletStorage.importSwapAPIAccess(.protected)
-                state.$swapAPIAccess.withLock { $0 = .protected }
                 state.path.append(.swapAndPayForm(state.swapAndPayState))
                 return .send(.swapAndPay(.refreshSwapAssets))
 
             case .path(.element(id: _, action: .swapAndPayOptInForced(.confirmForcedOptInTapped))):
-                try? walletStorage.importSwapAPIAccess(.direct)
-                state.$swapAPIAccess.withLock { $0 = .direct }
                 state.path.append(.swapAndPayForm(state.swapAndPayState))
                 return .send(.swapAndPay(.refreshSwapAssets))
 

@@ -35,26 +35,15 @@ public struct SwapAndPayCoordFlowView: View {
         WithPerceptionTracking {
             WithPerceptionTracking {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                    if store.isOptInFlow {
-                        SwapAndPayOptInView(
-                            store:
-                                store.scope(
-                                    state: \.swapAndPayState,
-                                    action: \.swapAndPay
-                                )
-                        )
-                        .navigationBarHidden(true)
-                    } else {
-                        SwapAndPayForm(
-                            store:
-                                store.scope(
-                                    state: \.swapAndPayState,
-                                    action: \.swapAndPay
-                                ),
-                            tokenName: tokenName
-                        )
-                        .navigationBarHidden(true)
-                    }
+                    SwapAndPayForm(
+                        store:
+                            store.scope(
+                                state: \.swapAndPayState,
+                                action: \.swapAndPay
+                            ),
+                        tokenName: tokenName
+                    )
+                    .navigationBarHidden(true)
                 } destination: { store in
                     switch store.case {
                     case let .addressBook(store):
@@ -84,18 +73,18 @@ public struct SwapAndPayCoordFlowView: View {
                     }
                 }
                 .navigationBarHidden(!store.path.isEmpty)
-                .navigationBarItems(
-                    trailing:
-                        Button {
-                            store.send(.helpSheetRequested)
-                        } label: {
-                            Asset.Assets.infoCircle.image
-                                .zImage(size: 24, style: Design.Text.primary)
-                                .padding(8)
-                        }
-                        .disabled(store.isOptInFlow)
-                        .opacity(store.isOptInFlow ? 0 : 1)
-                )
+//                .navigationBarItems(
+//                    trailing:
+//                        Button {
+//                            store.send(.helpSheetRequested)
+//                        } label: {
+//                            Asset.Assets.infoCircle.image
+//                                .zImage(size: 24, style: Design.Text.primary)
+//                                .padding(8)
+//                        }
+//                        .disabled(store.isOptInFlow)
+//                        .opacity(store.isOptInFlow ? 0 : 1)
+//                )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                     moreContent()
                         .screenHorizontalPadding()
@@ -104,12 +93,12 @@ public struct SwapAndPayCoordFlowView: View {
                 .onAppear { store.send(.onAppear) }
             }
             .applyScreenBackground()
-            .zashiBack(hidden: store.isOptInFlow) {
+            .zashiBack {
                 store.send(.backButtonTapped)
             }
-            .zashiBackV2(hidden: !store.isOptInFlow) {
-                store.send(.customBackRequired)
-            }
+//            .zashiBackV2(hidden: !store.isOptInFlow) {
+//                store.send(.customBackRequired)
+//            }
             .zashiTitle {
                 HStack(spacing: 0) {
                     Text(

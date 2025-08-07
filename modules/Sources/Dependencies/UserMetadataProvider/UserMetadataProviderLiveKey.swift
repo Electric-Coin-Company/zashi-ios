@@ -24,7 +24,9 @@ extension UserMetadataProviderClient: DependencyKey {
             isRead: { ums.isRead(txId: $0, txTimestamp: $1) },
             readTx: { ums.readTx(txId: $0) },
             isSwapTransaction: { ums.isSwapTransaction(txId: $0) },
-            markTransactionAsSwapFor: { ums.markTransactionAsSwapFor(txId: $0) }
+            markTransactionAsSwapFor: { ums.markTransactionAsSwapFor(txId: $0, provider: $1) },
+            lastUsedAssetHistory: { ums.lastUsedAssetHistory },
+            addLastUsedSwapAsset: { ums.addLastUsedSwap(asset: $0) }
         )
     }()
 }

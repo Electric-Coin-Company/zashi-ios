@@ -109,7 +109,7 @@ public struct Root {
         public var signWithKeystoneCoordFlowBinding = false
         public var splashAppeared = false
         public var supportData: SupportData?
-        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess? = nil
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -380,9 +380,7 @@ public struct Root {
         addressBookReduce()
         
         userMetadataReduce()
-        
-        swapAPIAccessReduce()
-        
+
         coordinatorReduce()
         
         shieldingProcessorReduce()
