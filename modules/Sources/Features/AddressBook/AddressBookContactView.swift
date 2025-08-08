@@ -26,6 +26,13 @@ public struct AddressBookContactView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
+                // FIXME: remove for production
+                if store.context == .unknown {
+                    Text("UNKNOWN CONTEXT")
+                        .bold()
+                        .foregroundColor(.red)
+                }
+
                 ZashiTextField(
                     addressFont: true,
                     text: $store.address,
@@ -43,47 +50,81 @@ public struct AddressBookContactView: View {
                     error: store.invalidNameErrorText
                 )
                 .padding(.top, 20)
-                .padding(.bottom, (store.isSwapFlowActive || store.isEditingContactWithChain) ? 0 : 20)
+                .padding(.bottom, (store.context != .send || store.isEditingContactWithChain) ? 0 : 20)
                 .focused($isNameFocused)
 
-                if store.isSwapFlowActive || store.isEditingContactWithChain {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(L10n.SwapAndPay.addressBookSelectChain)
-                            .zFont(.medium, size: 14, style: Design.Dropdowns.Default.label)
-                            .padding(.bottom, 6)
-                        
-                        Button {
-                            store.send(.selectChainTapped)
-                        } label: {
+                if store.context != .send || store.isEditingContactWithChain {
+                    if store.isValidZcashAddress && store.context != .swap {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(L10n.SwapAndPay.addressBookSelectChain)
+                                .zFont(.medium, size: 14, style: Design.Dropdowns.Default.label)
+                                .padding(.bottom, 6)
+                            
                             HStack(spacing: 0) {
-                                if let selectedChain = store.selectedChain {
-                                    selectedChain.chainIcon
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .padding(.trailing, 8)
-
-                                    Text(selectedChain.chainName)
-                                        .zFont(size: 16, style: Design.Dropdowns.Default.text)
-                                } else {
-                                    Text(L10n.SwapAndPay.addressBookSelect)
-                                        .zFont(size: 16, style: Design.Dropdowns.Default.text)
-                                }
+                                store.zecAsset.chainIcon
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .padding(.trailing, 8)
+                                
+                                Text(store.zecAsset.chainName)
+                                    .zFont(size: 16, style: Design.Dropdowns.Disabled.dropdown)
                                 
                                 Spacer()
                                 
                                 Asset.Assets.chevronDown.image
-                                    .zImage(size: 18, style: Design.Text.primary)
+                                    .zImage(size: 18, style: Design.Dropdowns.Disabled.dropdown)
                             }
-                            .padding(.vertical, store.selectedChain == nil ? 10 : 8)
+                            .padding(.vertical, 8)
                             .padding(.horizontal, 14)
                             .background(
                                 RoundedRectangle(cornerRadius: Design.Radius._lg)
-                                    .fill(Design.Inputs.Default.bg.color(colorScheme))
+                                    .fill(Design.Dropdowns.Disabled.bg.color(colorScheme))
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: Design.Radius._lg)
+                                            .stroke(Design.Dropdowns.Disabled.stroke.color(colorScheme))
+                                    }
                             )
                         }
+                        .padding(.top, 20)
+                    } else {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(L10n.SwapAndPay.addressBookSelectChain)
+                                .zFont(.medium, size: 14, style: Design.Dropdowns.Default.label)
+                                .padding(.bottom, 6)
+                            
+                            Button {
+                                store.send(.selectChainTapped)
+                            } label: {
+                                HStack(spacing: 0) {
+                                    if let selectedChain = store.selectedChain {
+                                        selectedChain.chainIcon
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .padding(.trailing, 8)
+                                        
+                                        Text(selectedChain.chainName)
+                                            .zFont(size: 16, style: Design.Dropdowns.Default.text)
+                                    } else {
+                                        Text(L10n.SwapAndPay.addressBookSelect)
+                                            .zFont(size: 16, style: Design.Dropdowns.Default.text)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Asset.Assets.chevronDown.image
+                                        .zImage(size: 18, style: Design.Text.primary)
+                                }
+                                .padding(.vertical, store.selectedChain == nil ? 10 : 8)
+                                .padding(.horizontal, 14)
+                                .background(
+                                    RoundedRectangle(cornerRadius: Design.Radius._lg)
+                                        .fill(Design.Inputs.Default.bg.color(colorScheme))
+                                )
+                            }
+                        }
+                        .padding(.top, 20)
+                        .focused($isChainIdFocused)
                     }
-                    .padding(.top, 20)
-                    .focused($isChainIdFocused)
                 }
 
                 Spacer()

@@ -49,6 +49,7 @@ extension ScanCoordFlow {
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isAddressFocused = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
@@ -177,6 +178,7 @@ extension ScanCoordFlow {
                 addressBookState.isNameFocused = true
                 addressBookState.address = address.data
                 addressBookState.isValidZcashAddress = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
                 
@@ -415,6 +417,7 @@ extension ScanCoordFlow {
             case .path(.element(id: _, action: .sendForm(.addressBookTapped))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isInSelectMode = true
+                addressBookState.context = .send
                 state.path.append(.addressBook(addressBookState))
                 return .none
                 
@@ -423,6 +426,7 @@ extension ScanCoordFlow {
                 addressBookState.isNameFocused = true
                 addressBookState.address = address.data
                 addressBookState.isValidZcashAddress = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
@@ -506,6 +510,7 @@ extension ScanCoordFlow {
                         addressBookState.address = transactionDetailsState.transaction.address
                         addressBookState.isNameFocused = true
                         addressBookState.isValidZcashAddress = true
+                        addressBookState.context = .send
                         state.path.append(.addressBookContact(addressBookState))
                     }
                 }

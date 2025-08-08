@@ -34,6 +34,13 @@ public struct AddressBookView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
+                // FIXME: remove for production
+                if store.context == .unknown {
+                    Text("UNKNOWN CONTEXT")
+                        .bold()
+                        .foregroundColor(.red)
+                }
+                
                 if store.isInSelectMode && store.walletAccounts.count > 1 {
                     contactsList()
                 } else {
@@ -63,7 +70,7 @@ public struct AddressBookView: View {
             .zashiBack()
             .screenTitle(
                 store.isInSelectMode
-                && (!store.addressBookContactsToShow.contacts.isEmpty || store.walletAccounts.count > 1 || store.isSwapFlowActive)
+                && (!store.addressBookContactsToShow.contacts.isEmpty || store.walletAccounts.count > 1 || store.context == .swap)
                 ? L10n.AddressBook.selectRecipient
                 : L10n.AddressBook.title
             )
@@ -126,7 +133,7 @@ public struct AddressBookView: View {
     
     @ViewBuilder func contactsList() -> some View {
         List {
-            if store.walletAccounts.count > 1 && store.isInSelectMode && !store.isSwapFlowActive {
+            if store.walletAccounts.count > 1 && store.isInSelectMode && store.context != .swap {
                 Text(L10n.Accounts.AddressBook.your)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.top, 24)

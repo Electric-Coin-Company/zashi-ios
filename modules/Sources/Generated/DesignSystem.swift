@@ -235,6 +235,12 @@ public enum Design: Colorable {
             case dropdown
             case active
         }
+
+        public enum Disabled: Colorable {
+            case bg
+            case stroke
+            case dropdown
+        }
     }
     
     public enum Utility {
@@ -679,6 +685,16 @@ public extension Design.Dropdowns.Default {
         case .icon: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
         case .dropdown: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         case .active: return Design.col(Asset.Colors.ZDesign.successGreen500.color, Asset.Colors.ZDesign.successGreen400.color, colorScheme)
+        }
+    }
+}
+
+public extension Design.Dropdowns.Disabled {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .stroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .dropdown: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         }
     }
 }

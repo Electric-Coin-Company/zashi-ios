@@ -36,7 +36,6 @@ public struct Settings {
         case currencyConversionSetup(CurrencyConversionSetup)
         case exportPrivateData(PrivateDataConsent)
         case exportTransactionHistory(ExportTransactionHistory)
-        case integrations(Integrations)
         case recoveryPhrase(RecoveryPhraseDisplay)
         case resetZashi(DeleteWallet)
         case scan(Scan)
@@ -77,7 +76,6 @@ public struct Settings {
         case addressBookAccessCheck
         case addressBookTapped
         case advancedSettingsTapped
-        case integrationsTapped
         case onAppear
         case path(StackActionOf<Path>)
         case sendUsFeedbackTapped
@@ -115,9 +113,6 @@ public struct Settings {
                 return .none
 
             case .advancedSettingsTapped:
-                return .none
-
-            case .integrationsTapped:
                 return .none
 
             case .sendUsFeedbackTapped:

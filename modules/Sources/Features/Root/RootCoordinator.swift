@@ -144,11 +144,6 @@ extension Root {
                 state.path = .walletBackup
                 return .none
 
-                // MARK: - Integrations
-
-            case .settings(.path(.element(id: _, action: .integrations(.flexaTapped)))):
-                return .send(.flexaOpenRequest)
-                
                 // MARK: - Keystone
 
             case .sendCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))),

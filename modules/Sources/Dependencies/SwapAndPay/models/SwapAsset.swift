@@ -19,18 +19,13 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public var chainName: String {
         switch chain.lowercased() {
         case "arb": return "Arbitrum"
-        case "base": return "Base"
-        case "bera": return "Bera"
         case "btc": return "Bitcoin"
+        case "ada": return "Cardano"
         case "eth": return "Ethereum"
-        case "gnosis": return "Gnosis"
-        case "near": return "Near"
-        case "sol": return "Solana"
-        case "tron": return "Tron"
         case "xrp": return "Ripple"
+        case "sol": return "Solana"
         case "zec": return "Zcash"
-        case "doge": return "Doge"
-        default: return chain
+        default: return chain.capitalized
         }
     }
     
@@ -70,7 +65,7 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public let usdPrice: Decimal
     public let decimals: Int
     
-    init(
+    public init(
         provider: String,
         chain: String,
         token: String,
@@ -89,22 +84,28 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
 
 public extension SwapAsset {
     static func hardcodedChains() -> [SwapAsset] {
-        var template = SwapAsset(provider: "", chain: "", token: "", assetId: "", usdPrice: 0, decimals: 0)
+        var template = SwapAsset(provider: "", chain: "arb", token: "", assetId: "", usdPrice: 0, decimals: 0)
         
-        let arb = template; template.chain = "arb"
-        let base = template; template.chain = "base"
-        let bera = template; template.chain = "bera"
-        let btc = template; template.chain = "btc"
-        let eth = template; template.chain = "eth"
-        let gnosis = template; template.chain = "gnosis"
-        let near = template; template.chain = "near"
-        let sol = template; template.chain = "sol"
-        let tron = template; template.chain = "tron"
-        let xrp = template; template.chain = "xrp"
-        let doge = template; template.chain = "doge"
+        let arb = template; template.chain = "base"
+        let base = template; template.chain = "bera"
+        let bera = template; template.chain = "btc"
+        let btc = template; template.chain = "eth"
+        let eth = template; template.chain = "gnosis"
+        let gnosis = template; template.chain = "near"
+        let near = template; template.chain = "sol"
+        let sol = template; template.chain = "tron"
+        let tron = template; template.chain = "xrp"
+        let xrp = template; template.chain = "doge"
+        let doge = template; template.chain = "avax"
+        let avax = template; template.chain = "bsc"
+        let bsc = template; template.chain = "op"
+        let op = template; template.chain = "pol"
+        let pol = template; template.chain = "sui"
+        let sui = template; template.chain = "ton"
+        let ton = template
 
         return [
-            arb, base, bera, btc, eth, gnosis, near, sol, tron, xrp, doge
+            arb, avax, base, bera, bsc, btc, doge, eth, gnosis, near, op, pol, sol, sui, ton, tron, xrp
         ]
     }
 }

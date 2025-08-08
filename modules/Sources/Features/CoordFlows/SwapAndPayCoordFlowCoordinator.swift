@@ -30,7 +30,7 @@ extension SwapAndPayCoordFlow {
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isAddressFocused = true
-                addressBookState.isSwapFlowActive = true
+                addressBookState.context = .swap
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
@@ -148,7 +148,7 @@ extension SwapAndPayCoordFlow {
                     var addressBookState = AddressBook.State.initial
                     addressBookState.address = address
                     addressBookState.isNameFocused = true
-                    addressBookState.isSwapFlowActive = true
+                    addressBookState.context = .swap
                     state.path.append(.addressBookContact(addressBookState))
                 }
                 return .none
@@ -203,7 +203,7 @@ extension SwapAndPayCoordFlow {
             case .swapAndPay(.addressBookTapped),
                     .path(.element(id: _, action: .swapAndPayForm(.addressBookTapped))):
                 var addressBookState = AddressBook.State.initial
-                addressBookState.isSwapFlowActive = true
+                addressBookState.context = .swap
                 addressBookState.isInSelectMode = true
                 state.path.append(.addressBook(addressBookState))
                 return .none
@@ -211,7 +211,7 @@ extension SwapAndPayCoordFlow {
             case .swapAndPay(.notInAddressBookButtonTapped(let address)),
                     .path(.element(id: _, action: .swapAndPayForm(.notInAddressBookButtonTapped(let address)))):
                 var addressBookState = AddressBook.State.initial
-                addressBookState.isSwapFlowActive = true
+                addressBookState.context = .swap
                 addressBookState.address = address
                 addressBookState.isNameFocused = true
                 state.path.append(.addressBookContact(addressBookState))

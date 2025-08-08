@@ -111,14 +111,14 @@ extension AddressBookContactView {
                 .padding(.bottom, 32)
                 .padding(.horizontal, 20)
                 
-                if store.chains.isEmpty && !store.searchTerm.isEmpty {
+                if store.chainsToPresent.isEmpty && !store.searchTerm.isEmpty {
                     assetsLoadingComposition(colorScheme)
-                } else if store.chains.isEmpty && store.searchTerm.isEmpty {
+                } else if store.chainsToPresent.isEmpty && store.searchTerm.isEmpty {
                     assetsEmptyComposition(colorScheme)
                 } else {
                     List {
                         WithPerceptionTracking {
-                            ForEach(store.chains, id: \.self) { chain in
+                            ForEach(store.chainsToPresent, id: \.self) { chain in
                                 chainView(chain, colorScheme)
                                     .listRowInsets(EdgeInsets())
                                     .listRowBackground(Asset.Colors.background.color)
@@ -159,7 +159,7 @@ extension AddressBookContactView {
                     .padding(.vertical, 12)
                     .padding(.horizontal, 20)
                     
-                    if store.chains.last != chain {
+                    if store.chainsToPresent.last != chain {
                         Design.Surfaces.divider.color(colorScheme)
                             .frame(height: 1)
                     }

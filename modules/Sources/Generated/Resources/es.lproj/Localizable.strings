@@ -691,7 +691,6 @@
 
 "torSetup.settings.desc1" = "Esta función beta brinda protección adicional para tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (p. ej., NEAR, muy pronto!).";
 "torSetup.settings.desc2" = "Al ser una función beta, podría afectar el rendimiento. Si el uso de Tor está permitido en tu región, te recomendamos habilitarlo.";
-
 "torSetup.option1.title" = "Conversión de moneda";
 "torSetup.option1.desc" = "Obtén tasas de cambio desde servidores de terceros sin revelar tu dirección IP. (Disponible solo con Tor activado.)";
 "torSetup.option2.title" = "Transacciones";

@@ -25,11 +25,19 @@ public struct AddressBook {
     
     @ObservableState
     public struct State: Equatable {
+        public enum Context {
+            case send
+            case settings
+            case swap
+            case unknown
+        }
+        
         public var address = ""
         public var addressAlreadyExists = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var addressBookContactsToShow: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
+        public var context: Context = .unknown
         public var deleteIdToConfirm: String?
         public var isAddressFocused = false
         public var editId: String?
@@ -37,7 +45,6 @@ public struct AddressBook {
         public var isEditingContactWithChain = false
         public var isInSelectMode = false
         public var isNameFocused = false
-        public var isSwapFlowActive = false
         public var isTokenFocused = false
         public var isValidForm = false
         public var isValidZcashAddress = false
@@ -49,15 +56,18 @@ public struct AddressBook {
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+        public var zecAsset = SwapAsset(provider: "", chain: "zec", token: "zec", assetId: "", usdPrice: 0, decimals: 0)
 
         // swaps
-        public var chains: [SwapAsset] = []
+        public var chains: IdentifiedArrayOf<SwapAsset> = []
+        public var chainsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var chainSelectBinding = false
         public var searchTerm = ""
         public var selectedChain: SwapAsset?
         
         public var isEditChange: Bool {
-            (address != originalAddress || name != originalName) && isValidForm
+            (address != originalAddress || name != originalName)
+            && (isValidForm || (context != .send && selectedChain != nil && !isValidZcashAddress))
         }
         
         public var isNameOverMaxLength: Bool {
@@ -69,18 +79,21 @@ public struct AddressBook {
             || isNameOverMaxLength
             || nameAlreadyExists
             || addressAlreadyExists
-            || (isSwapFlowActive && selectedChain == nil)
-            || (isSwapFlowActive && isValidZcashAddress)
+//            || (context == .swap && selectedChain == nil)
+            || (context == .swap && isValidZcashAddress)
+            || (context != .send && selectedChain == nil && !isValidZcashAddress)
         }
         
         public var invalidAddressErrorText: String? {
             addressAlreadyExists
             ? L10n.AddressBook.Error.addressExists
-            : isSwapFlowActive
+            : context == .swap
             ? (isValidZcashAddress ? L10n.SwapAndPay.addressBookZcash : nil)
             : (isValidZcashAddress || address.isEmpty)
             ? nil
             : isEditingContactWithChain
+            ? nil
+            : (!isValidZcashAddress && selectedChain != nil)
             ? nil
             : L10n.AddressBook.Error.invalidAddress
         }
@@ -92,6 +105,8 @@ public struct AddressBook {
             ? L10n.AddressBook.Error.nameExists
             : nil
         }
+        
+        
 
         public init() { }
     }
@@ -119,6 +134,7 @@ public struct AddressBook {
         case closeChainsSheetTapped
         case eraseSearchTermTapped
         case selectChainTapped
+        case updateAssetsAccordingToSearchTerm
     }
 
     public init() { }
@@ -138,22 +154,26 @@ public struct AddressBook {
                 state.deleteIdToConfirm = nil
                 state.nameAlreadyExists = false
                 state.addressAlreadyExists = false
-                if state.isSwapFlowActive {
+                if !state.swapAssets.isEmpty {
                     let uniqueByChain = Dictionary(grouping: state.swapAssets, by: { $0.chain })
                         .compactMapValues { $0.first }
                         .values
                         .sorted(by: { $0.chainName < $1.chainName })
-                    state.chains = uniqueByChain
+                    state.chains = IdentifiedArray(uniqueElements: uniqueByChain)
                 } else {
-                    state.chains = SwapAsset.hardcodedChains()
+                    state.chains = IdentifiedArray(uniqueElements: SwapAsset.hardcodedChains())
                 }
                 if let editId = state.editId {
                     return .concatenate(
                         .send(.editId(editId)),
-                        .send(.fetchABContactsRequested)
+                        .send(.fetchABContactsRequested),
+                        .send(.updateAssetsAccordingToSearchTerm)
                     )
                 }
-                return .send(.fetchABContactsRequested)
+                return .merge(
+                    .send(.fetchABContactsRequested),
+                    .send(.updateAssetsAccordingToSearchTerm)
+                )
 
             case .alert(.presented(let action)):
                 return .send(action)
@@ -188,9 +208,15 @@ public struct AddressBook {
             case .scanButtonTapped:
                 return .none
 
+            case .binding(\.searchTerm):
+                return .send(.updateAssetsAccordingToSearchTerm)
+
             case .binding:
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
-                state.isValidForm = !state.name.isEmpty && (state.isValidZcashAddress || state.isSwapFlowActive || state.isEditingContactWithChain)
+                state.isValidForm = !state.name.isEmpty && (state.isValidZcashAddress || state.context == .swap || state.isEditingContactWithChain)
+                if state.isValidZcashAddress {
+                    state.selectedChain = nil
+                }
                 return .send(.checkDuplicates)
 
             case .deleteId(let id):
@@ -254,6 +280,14 @@ public struct AddressBook {
                     return .none
                 }
                 do {
+                    _ = try addressBook.deleteContact(
+                        account.account,
+                        Contact(
+                            address: state.originalAddress,
+                            name: state.originalName,
+                            chainId: state.selectedChain?.chain
+                        )
+                    )
                     let result = try addressBook.storeContact(
                         account.account,
                         Contact(
@@ -306,8 +340,10 @@ public struct AddressBook {
                 }
                 state.$addressBookContacts.withLock { $0 = abContacts }
                 var abContactsCopy = abContacts
-                if state.isSwapFlowActive {
+                if state.context == .swap {
                     abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId != nil }
+                } else if state.context == .send {
+                    abContactsCopy.contacts = abContactsCopy.contacts.filter { $0.chainId == nil }
                 }
                 state.addressBookContactsToShow = abContactsCopy
                 if requestToSync {
@@ -339,16 +375,32 @@ public struct AddressBook {
                 
             case .selectChainTapped:
                 state.searchTerm = ""
+                state.chainsToPresent = state.chains
                 state.chainSelectBinding = true
                 return .none
                 
             case .closeChainsSheetTapped:
+                state.searchTerm = ""
+                state.chainsToPresent = state.chains
                 state.chainSelectBinding = false
                 return .none
                 
             case .chainTapped(let chain):
                 state.selectedChain = chain
                 state.chainSelectBinding = false
+                return .none
+                
+            case .updateAssetsAccordingToSearchTerm:
+                let swapChains = state.chains
+                guard !state.searchTerm.isEmpty else {
+                    state.chainsToPresent = swapChains
+                    return .none
+                }
+                state.chainsToPresent.removeAll()
+                let chainNameMatch = swapChains.filter { $0.chainName.localizedCaseInsensitiveContains(state.searchTerm) }
+                let chainMatch = swapChains.filter { $0.chain.localizedCaseInsensitiveContains(state.searchTerm) }
+                state.chainsToPresent.append(contentsOf: chainNameMatch)
+                state.chainsToPresent.append(contentsOf: chainMatch)
                 return .none
             }
         }
@@ -359,7 +411,7 @@ extension AddressBook {
     static public func contactTicker(chainId: String?) -> Image? {
         guard let chainId else { return nil }
         
-        guard let icon = UIImage(named: chainId.lowercased()) else {
+        guard let icon = UIImage(named: "chain_\(chainId.lowercased())") else {
             return Asset.Assets.Tickers.none.image
         }
 

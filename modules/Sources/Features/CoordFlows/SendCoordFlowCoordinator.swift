@@ -40,6 +40,7 @@ extension SendCoordFlow {
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isAddressFocused = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
@@ -168,6 +169,7 @@ extension SendCoordFlow {
                 addressBookState.isNameFocused = true
                 addressBookState.address = address.data
                 addressBookState.isValidZcashAddress = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
                 
@@ -189,6 +191,7 @@ extension SendCoordFlow {
                         addressBookState.address = address.data
                         addressBookState.isValidZcashAddress = true
                         addressBookState.isNameFocused = true
+                        addressBookState.context = .send
                         state.path.append(.addressBookContact(addressBookState))
                         audioServices.systemSoundVibrate()
                         return .none
@@ -212,6 +215,7 @@ extension SendCoordFlow {
             case .sendForm(.addressBookTapped):
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isInSelectMode = true
+                addressBookState.context = .send
                 state.path.append(.addressBook(addressBookState))
                 return .none
                 
@@ -220,6 +224,7 @@ extension SendCoordFlow {
                 addressBookState.isNameFocused = true
                 addressBookState.address = address.data
                 addressBookState.isValidZcashAddress = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
@@ -340,6 +345,7 @@ extension SendCoordFlow {
                 addressBookState.address = state.sendFormState.address.data
                 addressBookState.isNameFocused = true
                 addressBookState.isValidZcashAddress = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
 
