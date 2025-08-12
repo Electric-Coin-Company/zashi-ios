@@ -191,7 +191,7 @@ extension SwapAndPayForm {
     
     @ViewBuilder func slippageContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
-            ScrollView {
+//            ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Button {
                         store.send(.closeSlippageSheetTapped)
@@ -208,6 +208,7 @@ extension SwapAndPayForm {
                     
                     Text(L10n.SwapAndPay.slippageDesc)
                         .zFont(size: 14, style: Design.Text.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     HStack(spacing: 0) {
                         slippageChip(index: 0, text: store.slippage05String, colorScheme)
@@ -306,21 +307,17 @@ extension SwapAndPayForm {
                     }
                     .padding(.vertical, 20)
 
-                    Text(L10n.SwapAndPay.slippageWarn)
-                        .zFont(size: 12, style: Design.Text.tertiary)
-                        .fixedSize(horizontal: false, vertical: true)
-
                     Spacer()
                     
                     ZashiButton(L10n.General.confirm) {
                         store.send(.slippageSetConfirmTapped)
                     }
-                    .padding(.top, 36)
+                    .padding(.bottom, keyboardVisible ? 74 : 36)
                     .disabled(store.slippageInSheet > 30.0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(.vertical, 1)
+//            }
+//            .padding(.vertical, 1)
         }
     }
     

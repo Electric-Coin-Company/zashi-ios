@@ -53,6 +53,7 @@ public struct TransactionDetails {
         public var messageStates: [MessageState] = []
         public var annotation = ""
         public var annotationOrigin = ""
+        public var annotationToInput = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapDetails: SwapDetails?
@@ -63,7 +64,7 @@ public struct TransactionDetails {
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public var isAnnotationModified: Bool {
-            annotation.trimmingCharacters(in: .whitespaces) != annotationOrigin
+            annotationToInput.trimmingCharacters(in: .whitespaces) != annotationOrigin
         }
         
         public var feeStr: String {
@@ -100,7 +101,7 @@ public struct TransactionDetails {
         case saveAddressTapped
         case saveNoteTapped
         case sendAgainTapped
-        case sentToRowTapped
+        case showHideButtonTapped
         case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
         case swapDetailsLoaded(SwapDetails?)
         case swapRecipientTapped
@@ -124,14 +125,8 @@ public struct TransactionDetails {
             switch action {
             case .onAppear:
                 state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
-                
-                // TODO: remove this refunded hardcoded one
-                if state.transaction.id == "00b61343a47ccf5015fd075054a2500da06380c05513cd776bc74f3545f68cdf" {
-                    state.isSwap = true
-                }
-                
                 state.hasInteractedWithBookmark = false
-                state.areDetailsExpanded = false
+                state.areDetailsExpanded = state.transaction.isShieldingTransaction
                 state.messageStates = []
                 state.alias = nil
                 for contact in state.addressBookContacts.contacts {
@@ -252,7 +247,7 @@ public struct TransactionDetails {
                 return .none
 
             case .saveNoteTapped, .addNoteTapped:
-                userMetadataProvider.addAnnotationFor(state.annotation, state.transaction.id)
+                userMetadataProvider.addAnnotationFor(state.annotationToInput, state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
                 state.annotationOrigin = ""
                 state.annotationRequest = false
@@ -285,6 +280,7 @@ public struct TransactionDetails {
             case .noteButtonTapped:
                 state.isEditMode = !state.annotation.isEmpty
                 state.annotationOrigin = state.annotation
+                state.annotationToInput = state.annotation
                 state.annotationRequest = true
                 return .none
 
@@ -310,9 +306,9 @@ public struct TransactionDetails {
             case .sendAgainTapped:
                 return .none
                 
-            case .sentToRowTapped:
-                state.areDetailsExpanded.toggle()
-                return .none
+//            case .sentToRowTapped:
+//                state.areDetailsExpanded.toggle()
+//                return .none
                 
             case .addressTapped:
                 pasteboard.setString(state.transaction.address.redacted)
@@ -329,6 +325,10 @@ public struct TransactionDetails {
                     pasteboard.setString(recipient.redacted)
                     state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
                 }
+                return .none
+                
+            case .showHideButtonTapped:
+                state.areDetailsExpanded.toggle()
                 return .none
             }
         }

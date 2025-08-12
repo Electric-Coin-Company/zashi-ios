@@ -44,7 +44,7 @@ public struct ResubmissionView: View {
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                if store.txIdToExpand != nil || store.isSwap {
+                if store.txIdToExpand != nil || store.type != .regular {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,

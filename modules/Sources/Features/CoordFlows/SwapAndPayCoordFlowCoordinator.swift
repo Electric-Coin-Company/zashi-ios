@@ -250,7 +250,7 @@ extension SwapAndPayCoordFlow {
                 var sendConfirmationState = SendConfirmation.State.initial
                 sendConfirmationState.address = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
-                sendConfirmationState.isSwap = true
+                sendConfirmationState.type = .swap
                 state.path.append(.sending(sendConfirmationState))
                 let provider = state.provider
                 // make the transaction
@@ -311,7 +311,7 @@ extension SwapAndPayCoordFlow {
                 var sendConfirmationState = SendConfirmation.State.initial
                 sendConfirmationState.address = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
-                sendConfirmationState.isSwap = true
+                sendConfirmationState.type = .swap
                 switch result {
                 case .failure:
                     state.path.append(.sendResultFailure(sendConfirmationState))

@@ -44,13 +44,13 @@ public struct SuccessView: View {
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                if !store.isShielding && !store.isSwap {
+                if !store.isShielding && store.type == .regular {
                     Text(store.address.zip316)
                         .zFont(addressFont: true, size: 14, style: Design.Text.primary)
                         .padding(.top, 4)
                 }
 
-                if store.txIdToExpand != nil || !store.isSwap {
+                if store.txIdToExpand != nil || store.type == .regular {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,
@@ -65,13 +65,13 @@ public struct SuccessView: View {
                 
                 ZashiButton(
                     L10n.General.close,
-                    type: store.isSwap ? .ghost : .primary
+                    type: store.type != .regular ? .ghost : .primary
                 ) {
                     store.send(.closeTapped)
                 }
-                .padding(.bottom, store.isSwap ? 12 : 24)
+                .padding(.bottom, store.type != .regular ? 12 : 24)
 
-                if store.isSwap {
+                if store.type != .regular {
                     ZashiButton(L10n.SwapAndPay.checkStatus) {
                         store.send(.checkStatusTapped)
                     }

@@ -304,7 +304,7 @@
 "transaction.failedSend" = "Send failed";
 "transaction.failedReceive" = "Receive failed";
 "transaction.shieldingFunds" = "Shielding";
-"transaction.failedShieldedFunds" = "Shielded Funds Failed";
+"transaction.failedShieldedFunds" = "Shielding Failed";
 "transaction.saveAddress" = "Save address";
 "transaction.selectText" = "Select text";
 "transaction.shieldedFunds" = "Shielded";
@@ -761,7 +761,7 @@
 "swapAndPay.slippageSet1" = "You will pay up to ";
 "swapAndPay.slippageSet2a" = "%@% (%@)";
 "swapAndPay.slippageSet2b" = "%@%";
-"swapAndPay.slippageSet3" = " for the swap.";
+"swapAndPay.slippageSet3" = " slippage fee, in addition to transaction fees.";
 "swapAndPay.maxAllowedSlippage1" = "Please enter maximum slippage of";
 "swapAndPay.maxAllowedSlippage2" = " %@.";
 "swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
@@ -785,7 +785,8 @@
 "swapAndPay.sendingInfo" = "Your coins are being sent to the deposit address...";
 "swapAndPay.successSwapInfo" = "You successfully initiated a swap. Follow its status on the transaction screen.";
 "swapAndPay.successPayInfo" = "You successfully initiated a cross-chain payment. Follow its status on the transaction screen.";
-"swapAndPay.failureInfo" = "There was an error initiating a swap. Try it again, please.";
+"swapAndPay.failureSwapInfo" = "There was an error initiating a swap. Try it again, please.";
+"swapAndPay.failurePayInfo" = "There was an error initiating a cross-chain payment. Try it again, please.";
 "swapAndPay.checkStatus" = "Check status";
 "swapAndPay.custom" = "Custom";
 "swapAndPay.status" = "Status";
@@ -817,3 +818,7 @@
 "swapAndPay.addressBookSelect" = "Select...";
 "swapAndPay.addressBookNewContact" = "Add new contact";
 "swapAndPay.addressBookZcash" = "Zcash address is not allowed";
+
+"general.more" = "More";
+"general.less" = "Less";
+"filter.swap" = "Swap";

@@ -102,6 +102,7 @@ extension TransactionsManagerView {
                 HStack(spacing: 8) {
                     FilterView(title: L10n.Filter.notes, active: store.isNotesFilterActive) { store.send(.toggleFilter(.notes)) }
                     FilterView(title: L10n.Filter.bookmarked, active: store.isBookmarkedFilterActive) { store.send(.toggleFilter(.bookmarked)) }
+                    FilterView(title: L10n.Filter.swap, active: store.isSwapFilterActive) { store.send(.toggleFilter(.swap)) }
                 }
 
                 // Hidden for now but possibly released in the near future

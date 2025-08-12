@@ -469,10 +469,10 @@ public extension Design.Btns.Secondary {
 public extension Design.Btns.Tertiary {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
-        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
-        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .fg: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         }

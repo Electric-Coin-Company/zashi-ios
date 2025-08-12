@@ -33,7 +33,7 @@ public struct SwapBadge: View {
             case .pending:
                 return Design.Utility.HyperBlue._700
             case .refunded:
-                return Design.Utility.WarningYellow._700
+                return Design.Utility.ErrorRed._700
             case .success:
                 return Design.Utility.SuccessGreen._700
             }
@@ -44,7 +44,7 @@ public struct SwapBadge: View {
             case .pending:
                 return Design.Utility.HyperBlue._50
             case .refunded:
-                return Design.Utility.WarningYellow._50
+                return Design.Utility.ErrorRed._50
             case .success:
                 return Design.Utility.SuccessGreen._50
             }
@@ -55,7 +55,7 @@ public struct SwapBadge: View {
             case .pending:
                 return Design.Utility.HyperBlue._200
             case .refunded:
-                return Design.Utility.WarningYellow._200
+                return Design.Utility.ErrorRed._200
             case .success:
                 return Design.Utility.SuccessGreen._200
             }

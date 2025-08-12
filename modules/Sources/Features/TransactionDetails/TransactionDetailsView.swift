@@ -71,9 +71,14 @@ public struct TransactionDetailsView: View {
                     .padding(.top, walletStatus == .restoring ? 20 : 0)
 
                 ScrollView {
+                    if store.isSwap {
+                        swapAssetsView()
+                            .padding(.bottom, 12)
+                    }
+
                     if store.transaction.isSentTransaction {
                         transactionDetailsList()
-                            .padding(.bottom, store.isSwap ? 16 : 20)
+                            .padding(.bottom, store.isSwap ? 0 : 20)
                             .screenHorizontalPadding()
                         
                         if store.areMessagesResolved && !store.transaction.isShieldingTransaction {
@@ -105,24 +110,28 @@ public struct TransactionDetailsView: View {
                             .screenHorizontalPadding()
                     }
                     
-                    if store.isSwap {
-                        if store.swapStatus != .refunded {
-                            swapAssetsView()
-                        }
+//                    if store.isSwap {
+//                        if store.swapStatus != .refunded {
+//                            swapAssetsView()
+//                        }
+//
+//                        swapSlippageView()
+//                            .padding(.top, store.swapStatus != .refunded ? 20 : 0)
+//
+//                        swapStatusView()
+//                            .padding(.top, 16)
+//
+//                        if store.swapStatus == .refunded {
+//                            swapRefundAmountView()
+//                                .padding(.top, 16)
+//                            
+//                            swapRefundInfoView()
+//                                .padding(.top, 16)
+//                        }
+//                    }
 
-                        swapSlippageView()
-                            .padding(.top, store.swapStatus != .refunded ? 20 : 0)
-
-                        swapStatusView()
-                            .padding(.top, 16)
-
-                        if store.swapStatus == .refunded {
-                            swapRefundAmountView()
-                                .padding(.top, 16)
-                            
-                            swapRefundInfoView()
-                                .padding(.top, 16)
-                        }
+                    if store.isSwap && store.swapStatus == .refunded {
+                        swapRefundInfoView()
                     }
                 }
 
@@ -280,190 +289,84 @@ extension TransactionDetailsView {
         .padding(.bottom, 24)
     }
 
+    @ViewBuilder func transactionDetailsTitle() -> some View {
+        HStack(spacing: 0) {
+            Text(L10n.TransactionHistory.details)
+                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                .padding(.bottom, 8)
+            
+            Spacer()
+            
+            if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
+                if store.areDetailsExpanded {
+                    ZashiButton(
+                        L10n.General.less,
+                        type: .tertiary,
+                        infinityWidth: false,
+                        fontSize: 14,
+                        horizontalPadding: 12,
+                        verticalPadding: 8,
+                        accessoryView:
+                            Asset.Assets.chevronDown.image
+                            .zImage(size: 20, style: Design.Btns.Tertiary.fg)
+                            .rotationEffect(Angle(degrees: 180))
+                    ) {
+                        store.send(.showHideButtonTapped, animation: .easeInOut)
+                    }
+                } else {
+                    ZashiButton(
+                        L10n.General.more,
+                        type: .tertiary,
+                        infinityWidth: false,
+                        fontSize: 14,
+                        horizontalPadding: 12,
+                        verticalPadding: 8,
+                        accessoryView:
+                            Asset.Assets.chevronDown.image
+                            .zImage(size: 20, style: Design.Btns.Tertiary.fg)
+                    ) {
+                        store.send(.showHideButtonTapped, animation: .easeInOut)
+                    }
+                }
+            }
+        }
+        .padding(.bottom, 8)
+    }
+
     @ViewBuilder func transactionDetailsList() -> some View {
         WithPerceptionTracking {
-            if (store.transaction.isTransparentRecipient || store.transaction.isShieldingTransaction) && !store.isSwap {
-                transactionDetailsListTransparent()
-            } else {
-                transactionDetailsListShielded()
-            }
-        }
-    }
-    
-    @ViewBuilder func transactionDetailsListTransparent() -> some View {
-        WithPerceptionTracking {
             LazyVStack(alignment: .leading, spacing: 0) {
-                Text(L10n.TransactionHistory.details)
-                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                    .padding(.bottom, 8)
+                transactionDetailsTitle()
 
+                if store.isSwap {
+                    detailAnyView(
+                        title: L10n.SwapAndPay.status,
+                        rowAppereance: .top
+                    ) {
+                        if let status = store.swapStatus {
+                            SwapBadge(status)
+                        } else {
+                            RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+                                .frame(width: 72, height: 20)
+                        }
+                    }
+                }
+                
                 if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
-                    if store.areDetailsExpanded {
-                        VStack(alignment: .leading, spacing: 0) {
-                            HStack(spacing: 0) {
-                                Text(L10n.TransactionHistory.sentTo)
-                                    .zFont(size: 14, style: Design.Text.tertiary)
-                                
-                                Spacer()
-                                
-                                if let alias = store.alias {
-                                    Text(alias)
-                                        .zFont(.medium, size: 14, style: Design.Text.primary)
-                                        .lineLimit(1)
-                                }
-                                
-                                Asset.Assets.chevronUp.image
-                                    .zImage(size: 20, style: Design.Text.primary)
-                                    .padding(.leading, 6)
-                            }
-                            .padding(.bottom, store.alias == nil ? 8 : 24)
-                            
-                            VStack(alignment: .leading, spacing: 0) {
-                                if store.alias != nil {
-                                    Text(L10n.TransactionHistory.address)
-                                        .zFont(size: 14, style: Design.Text.tertiary)
-                                        .padding(.bottom, 4)
-                                }
-                                
-                                Text(store.transaction.address)
-                                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                                    .lineSpacing(3)
-                            }
-                            .onTapGesture {
-                                store.send(.addressTapped)
-                            }
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 20)
-                        .background {
-                            CustomRoundedRectangle(corners: RowAppereance.top.corners, radius: 12)
-                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                        }
-                        .padding(.bottom, 1)
-                        .onTapGesture {
-                            store.send(.sentToRowTapped, animation: .easeInOut)
-                        }
-                    } else {
-                        detailView(
-                            title: L10n.TransactionHistory.sentTo,
-                            value: store.alias ?? store.transaction.address.zip316,
-                            icon: store.areDetailsExpanded
-                            ? Asset.Assets.chevronUp.image
-                            : Asset.Assets.chevronDown.image,
-                            rowAppereance: .top
+                    detailView(
+                        title: L10n.TransactionHistory.sentTo,
+                        value: store.alias ?? store.transaction.address.zip316,
+                        icon: Asset.Assets.copy.image,
+                        rowAppereance: store.isSwap
+                        ? (
+                            store.annotation.isEmpty ? .bottom : .middle
                         )
-                        .onTapGesture {
-                            store.send(.sentToRowTapped, animation: .easeInOut)
-                        }
-                    }
-                }
-                
-                detailView(
-                    title: L10n.TransactionList.transactionId,
-                    value: store.transaction.id.truncateMiddle,
-                    icon: Asset.Assets.copy.image,
-                    rowAppereance: store.transaction.isShieldingTransaction
-                    ? .top
-                    : store.transaction.isSentTransaction ? .middle : .top
-                )
-                .onTapGesture {
-                    store.send(.transactionIdTapped)
-                }
-                
-                if store.transaction.isSentTransaction {
-                    if store.transaction.fee == nil {
-                        detailView(
-                            title: L10n.Send.feeSummary,
-                            value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
-                            rowAppereance: .middle
-                        )
-                    } else {
-                        detailView(
-                            title: L10n.Send.feeSummary,
-                            value: "\(store.feeStr) \(tokenName)",
-                            rowAppereance: .middle
-                        )
-                    }
-                }
-                
-                detailView(
-                    title: store.transaction.listDateYearString == nil
-                    ? L10n.TransactionHistory.status
-                    : L10n.TransactionHistory.completed,
-                    value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
-                    rowAppereance: store.annotation.isEmpty ? .bottom : .middle
-                )
-
-                noteView()
-            }
-        }
-    }
-
-    @ViewBuilder func transactionDetailsListShielded() -> some View {
-        WithPerceptionTracking {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                Text(L10n.TransactionHistory.details)
-                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                    .padding(.bottom, 8)
-
-                if store.transaction.isSentTransaction {
-                    if store.areDetailsExpanded {
-                        VStack(alignment: .leading, spacing: 0) {
-                            HStack(spacing: 0) {
-                                Text(L10n.TransactionHistory.sentTo)
-                                    .zFont(size: 14, style: Design.Text.tertiary)
-                                
-                                Spacer()
-                                
-                                if let alias = store.alias {
-                                    Text(alias)
-                                        .zFont(.medium, size: 14, style: Design.Text.primary)
-                                        .lineLimit(1)
-                                }
-                                
-                                Asset.Assets.chevronUp.image
-                                    .zImage(size: 20, style: Design.Text.primary)
-                                    .padding(.leading, 6)
-                            }
-                            .padding(.bottom, store.alias == nil ? 8 : 24)
-                            
-                            VStack(alignment: .leading, spacing: 0) {
-                                if store.alias != nil {
-                                    Text(L10n.TransactionHistory.address)
-                                        .zFont(size: 14, style: Design.Text.tertiary)
-                                        .padding(.bottom, 4)
-                                }
-                                
-                                Text(store.transaction.address)
-                                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                                    .lineSpacing(3)
-                            }
-                            .onTapGesture {
-                                store.send(.addressTapped)
-                            }
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 20)
-                        .background {
-                            CustomRoundedRectangle(corners: RowAppereance.top.corners, radius: 12)
-                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                        }
-                        .padding(.bottom, 1)
-                        .onTapGesture {
-                            store.send(.sentToRowTapped, animation: .easeInOut)
-                        }
-                    } else {
-                        detailView(
-                            title: L10n.TransactionHistory.sentTo,
-                            value: store.alias ?? store.transaction.address.zip316,
-                            icon: store.areDetailsExpanded
-                            ? Asset.Assets.chevronUp.image
-                            : Asset.Assets.chevronDown.image,
-                            rowAppereance: store.areDetailsExpanded ? .top : .full
-                        )
-                        .onTapGesture {
-                            store.send(.sentToRowTapped, animation: .easeInOut)
-                        }
+                        : (!store.annotation.isEmpty || store.areDetailsExpanded) ? .top : .full
+                    )
+                    .onTapGesture {
+                        store.send(.addressTapped)
                     }
                 }
 
@@ -484,25 +387,71 @@ extension TransactionDetailsView {
                         title: L10n.TransactionList.transactionId,
                         value: store.transaction.id.truncateMiddle,
                         icon: Asset.Assets.copy.image,
-                        rowAppereance: store.transaction.isSentTransaction ? .middle : .top
+                        rowAppereance: (store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction) ? .middle : .top
                     )
                     .onTapGesture {
                         store.send(.transactionIdTapped)
                     }
 
                     if store.transaction.isSentTransaction {
-                        if store.transaction.fee == nil {
+                        if store.isSensitiveContentHidden {
                             detailView(
                                 title: L10n.Send.feeSummary,
-                                value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                value: L10n.General.hideBalancesMost,
                                 rowAppereance: .middle
                             )
                         } else {
-                            detailView(
-                                title: L10n.Send.feeSummary,
-                                value: "\(store.feeStr) \(tokenName)",
+                            if store.transaction.fee == nil {
+                                detailView(
+                                    title: L10n.Send.feeSummary,
+                                    value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                    rowAppereance: .middle
+                                )
+                            } else {
+                                detailView(
+                                    title: L10n.Send.feeSummary,
+                                    value: "\(store.feeStr) \(tokenName)",
+                                    rowAppereance: .middle
+                                )
+                            }
+                        }
+                    }
+                    
+                    if store.isSwap {
+                        detailAnyView(
+                            title: store.swapStatus == .success
+                            ? L10n.SwapAndPay.executedSlippage
+                            : L10n.SwapAndPay.maxSlippageTitle,
+                            rowAppereance: .middle
+                        ) {
+                            if let slippage = store.swapSlippage {
+                                Text(slippage)
+                                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                                    .frame(height: 20)
+                            } else {
+                                RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                    .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+                                    .frame(width: 86, height: 20)
+                            }
+                        }
+                        
+                        if store.swapStatus == .refunded {
+                            detailAnyView(
+                                title: L10n.SwapAndPay.refundedAmount,
                                 rowAppereance: .middle
-                            )
+                            ) {
+                                if let refundedAmount = store.refundedAmount {
+                                    Text("\(refundedAmount) \(tokenName)")
+                                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                                        .frame(height: 20)
+                                } else {
+                                    RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                        .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+                                        .frame(width: 86, height: 20)
+                                }
+                            }
                         }
                     }
 
@@ -513,9 +462,9 @@ extension TransactionDetailsView {
                         value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
-                    
-                    noteView()
                 }
+                
+                noteView()
             }
         }
     }
@@ -538,7 +487,6 @@ extension TransactionDetailsView {
                     .fill(Design.Surfaces.bgSecondary.color(colorScheme))
             }
         }
-
     }
 
     @ViewBuilder func detailView(
@@ -563,6 +511,28 @@ extension TransactionDetailsView {
                     .zImage(size: 20, style: Design.Text.primary)
                     .padding(.leading, 6)
             }
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 20)
+        .background {
+            CustomRoundedRectangle(corners: rowAppereance.corners, radius: 12)
+                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+        }
+        .padding(.bottom, rowAppereance == .full || rowAppereance == .bottom ? 0 : 1)
+    }
+    
+    @ViewBuilder func detailAnyView(
+        title: String,
+        rowAppereance: RowAppereance = .full,
+        @ViewBuilder content: () -> some View
+    ) -> some View {
+        HStack(spacing: 0) {
+            Text(title)
+                .zFont(size: 14, style: Design.Text.tertiary)
+            
+            Spacer()
+            
+            content()
         }
         .padding(.vertical, 12)
         .padding(.horizontal, 20)

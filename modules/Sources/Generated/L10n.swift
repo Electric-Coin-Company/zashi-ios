@@ -289,6 +289,8 @@ public enum L10n {
     public static let search = L10n.tr("Localizable", "filter.search", fallback: "Search")
     /// Sent
     public static let sent = L10n.tr("Localizable", "filter.sent", fallback: "Sent")
+    /// Swap
+    public static let swap = L10n.tr("Localizable", "filter.swap", fallback: "Swap")
     /// Filter
     public static let title = L10n.tr("Localizable", "filter.title", fallback: "Filter")
     /// Today
@@ -329,10 +331,14 @@ public enum L10n {
     public static let hideBalancesMost = L10n.tr("Localizable", "general.hideBalancesMost", fallback: "-----")
     /// -----
     public static let hideBalancesMostStandalone = L10n.tr("Localizable", "general.hideBalancesMostStandalone", fallback: "-----")
+    /// Less
+    public static let less = L10n.tr("Localizable", "general.less", fallback: "Less")
     /// Loading
     public static let loading = L10n.tr("Localizable", "general.loading", fallback: "Loading")
     /// Max
     public static let max = L10n.tr("Localizable", "general.max", fallback: "Max")
+    /// More
+    public static let more = L10n.tr("Localizable", "general.more", fallback: "More")
     /// Next
     public static let next = L10n.tr("Localizable", "general.next", fallback: "Next")
     /// No
@@ -1438,8 +1444,10 @@ public enum L10n {
     public static let enterAddress = L10n.tr("Localizable", "swapAndPay.enterAddress", fallback: "Enter address...")
     /// Realized slippage
     public static let executedSlippage = L10n.tr("Localizable", "swapAndPay.executedSlippage", fallback: "Realized slippage")
+    /// There was an error initiating a cross-chain payment. Try it again, please.
+    public static let failurePayInfo = L10n.tr("Localizable", "swapAndPay.failurePayInfo", fallback: "There was an error initiating a cross-chain payment. Try it again, please.")
     /// There was an error initiating a swap. Try it again, please.
-    public static let failureInfo = L10n.tr("Localizable", "swapAndPay.failureInfo", fallback: "There was an error initiating a swap. Try it again, please.")
+    public static let failureSwapInfo = L10n.tr("Localizable", "swapAndPay.failureSwapInfo", fallback: "There was an error initiating a swap. Try it again, please.")
     /// ZEC transaction fee
     public static let fee = L10n.tr("Localizable", "swapAndPay.fee", fallback: "ZEC transaction fee")
     /// From
@@ -1512,8 +1520,8 @@ public enum L10n {
     public static func slippageSet2b(_ p1: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.slippageSet2b", String(describing: p1), fallback: "%@%")
     }
-    ///  for the swap.
-    public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: " for the swap.")
+    ///  slippage fee, in addition to transaction fees.
+    public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: " slippage fee, in addition to transaction fees.")
     /// Slippage tolerance
     public static let slippageTolerance = L10n.tr("Localizable", "swapAndPay.slippageTolerance", fallback: "Slippage tolerance")
     /// Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.
@@ -1730,8 +1738,8 @@ public enum L10n {
     public static let failedReceive = L10n.tr("Localizable", "transaction.failedReceive", fallback: "Receive failed")
     /// Send failed
     public static let failedSend = L10n.tr("Localizable", "transaction.failedSend", fallback: "Send failed")
-    /// Shielded Funds Failed
-    public static let failedShieldedFunds = L10n.tr("Localizable", "transaction.failedShieldedFunds", fallback: "Shielded Funds Failed")
+    /// Shielding Failed
+    public static let failedShieldedFunds = L10n.tr("Localizable", "transaction.failedShieldedFunds", fallback: "Shielding Failed")
     /// Received
     public static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
     /// Receiving

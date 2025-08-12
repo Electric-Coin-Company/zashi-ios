@@ -50,12 +50,12 @@ public struct SendingView: View {
 
                 Text(store.sendingInfo)
                     .zFont(size: 14, style: Design.Text.primary)
-                    .lineLimit(store.isSwap ? 3 : 1)
-                    .minimumScaleFactor(store.isSwap ? 1.0 : 0.5)
+                    .lineLimit(store.type != .regular ? 3 : 1)
+                    .minimumScaleFactor(store.type != .regular ? 1.0 : 0.5)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, store.isSwap ? 30 : 0)
+                    .padding(.horizontal, store.type != .regular ? 30 : 0)
 
-                if !store.isShielding && !store.isSwap {
+                if !store.isShielding && store.type == .regular {
                     Text(store.address.zip316)
                         .zFont(addressFont: true, size: 14, style: Design.Text.primary)
                         .padding(.top, 4)

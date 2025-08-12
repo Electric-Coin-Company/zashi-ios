@@ -31,6 +31,7 @@ extension TransactionsCoordFlow {
                 addressBookState.address = state.transactionDetailsState.transaction.address
                 addressBookState.isValidZcashAddress = true
                 addressBookState.isNameFocused = true
+                addressBookState.context = .send
                 state.path.append(.addressBookContact(addressBookState))
                 return .none
                 
@@ -53,6 +54,7 @@ extension TransactionsCoordFlow {
                         addressBookState.address = transactionDetailsState.transaction.address
                         addressBookState.isValidZcashAddress = true
                         addressBookState.isNameFocused = true
+                        addressBookState.context = .send
                         state.path.append(.addressBookContact(addressBookState))
                     }
                 }

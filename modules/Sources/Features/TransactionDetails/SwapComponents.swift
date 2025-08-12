@@ -11,65 +11,6 @@ import Generated
 import SwapAndPay
 
 extension TransactionDetailsView {
-    @ViewBuilder func swapStatusView() -> some View {
-        HStack(spacing: 0) {
-            Text(L10n.SwapAndPay.status)
-                .zFont(.medium, size: 14, style: Design.Text.tertiary)
-            
-            Spacer()
-            
-            if let status = store.swapStatus {
-                SwapBadge(status)
-            } else {
-                RoundedRectangle(cornerRadius: Design.Radius._sm)
-                    .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                    .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
-                    .frame(width: 72, height: 20)
-            }
-        }
-        .screenHorizontalPadding()
-    }
-    
-    @ViewBuilder func swapSlippageView() -> some View {
-        HStack(spacing: 0) {
-            Text(store.swapStatus == .success
-                 ? L10n.SwapAndPay.executedSlippage
-                 : L10n.SwapAndPay.maxSlippageTitle
-            )
-            .zFont(.medium, size: 14, style: Design.Text.tertiary)
-            
-            Spacer()
-            
-            if let slippage = store.swapSlippage {
-                Text(slippage)
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                    .frame(height: 20)
-            } else {
-                RoundedRectangle(cornerRadius: Design.Radius._sm)
-                    .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                    .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
-                    .frame(width: 86, height: 20)
-            }
-        }
-        .screenHorizontalPadding()
-    }
-    
-    @ViewBuilder func swapRefundAmountView() -> some View {
-        HStack(spacing: 0) {
-            Text(L10n.SwapAndPay.refundedAmount)
-                .zFont(.medium, size: 14, style: Design.Text.tertiary)
-            
-            Spacer()
-            
-            if let refundedAmount = store.refundedAmount {
-                Text("\(refundedAmount) \(tokenName)")
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                    .frame(height: 20)
-            }
-        }
-        .screenHorizontalPadding()
-    }
-    
     @ViewBuilder func swapRefundInfoView() -> some View {
         HStack(alignment: .top, spacing: 0) {
             Asset.Assets.infoOutline.image
@@ -100,11 +41,15 @@ extension TransactionDetailsView {
                 VStack(spacing: 4) {
                     HStack(spacing: 0) {
                         if let swapAmountIn = store.swapAmountIn {
-                            Text(swapAmountIn)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.1)
-                                .frame(height: 18)
+                            Text(
+                                store.isSensitiveContentHidden
+                                ? L10n.General.hideBalancesMost
+                                : swapAmountIn
+                            )
+                            .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.1)
+                            .frame(height: 18)
 
                             zecTickerLogo(colorScheme)
                                 .scaleEffect(0.8)
@@ -116,11 +61,15 @@ extension TransactionDetailsView {
                     }
                     
                     if let swapAmountInUsd = store.swapAmountInUsd {
-                        Text(swapAmountInUsd)
-                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.1)
-                            .frame(height: 18)
+                        Text(
+                            store.isSensitiveContentHidden
+                            ? L10n.General.hideBalancesMost
+                            : swapAmountInUsd
+                        )
+                        .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.1)
+                        .frame(height: 18)
                     } else {
                         unknownValue()
                     }
@@ -135,11 +84,15 @@ extension TransactionDetailsView {
                 VStack(spacing: 4) {
                     HStack(spacing: 2) {
                         if let swapAmountOut = store.swapAmountOut {
-                            Text(swapAmountOut)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.1)
-                                .frame(height: 18)
+                            Text(
+                                store.isSensitiveContentHidden
+                                ? L10n.General.hideBalancesMost
+                                : swapAmountOut
+                            )
+                            .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.1)
+                            .frame(height: 18)
                         } else {
                             unknownValue()
                         }
@@ -153,11 +106,15 @@ extension TransactionDetailsView {
                     }
                     
                     if let swapAmountOutUsd = store.swapAmountOutUsd {
-                        Text(swapAmountOutUsd)
-                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.1)
-                            .frame(height: 18)
+                        Text(
+                            store.isSensitiveContentHidden
+                            ? L10n.General.hideBalancesMost
+                            : swapAmountOutUsd
+                        )
+                        .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.1)
+                        .frame(height: 18)
                     } else {
                         unknownValue()
                     }

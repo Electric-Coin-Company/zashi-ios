@@ -253,13 +253,14 @@ extension Near1Click {
                 guard let statusStr = jsonObject["status"] as? String else {
                     throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
                 }
+
                 let status: SwapDetails.Status = switch statusStr {
                 case "PENDING_DEPOSIT": .pending
                 case "REFUNDED": .refunded
                 case "SUCCESS": .success
                 default: .pending
                 }
-                
+
                 guard let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
                       let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any] else {
                     throw SwapAndPayClient.EndpointError.message("Check status: Missing `quoteRequest` parameter.")
@@ -310,7 +311,7 @@ extension Near1Click {
                     swapRecipient = recipient
                 }
                 
-                if status == .pending {
+                if status == .pending || status == .refunded {
                     if let quoteDict = quoteResponseDict["quote"] as? [String: Any] {
                         if let amountInFormatted = quoteDict["amountInFormatted"] as? String {
                             amountInFormattedDecimal = amountInFormatted.usDecimal
