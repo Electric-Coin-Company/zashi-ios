@@ -292,10 +292,21 @@ public class UserMetadataStorage {
         return swapTxId == txId
     }
     
-    public func markTransactionAsSwapFor(txId: String, provider: String) {
+    public func swapDetailsForTransaction(txId: String) -> UMSwapId? {
+        swapIds[txId]
+    }
+    
+    public func markTransactionAsSwapFor(
+        txId: String,
+        provider: String,
+        totalFees: Int64,
+        totalUSDFees: String
+    ) {
         swapIds[txId] = UMSwapId(
             txId: txId,
             provider: provider,
+            totalFees: totalFees,
+            totalUSDFees: totalUSDFees,
             lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
         )
     }

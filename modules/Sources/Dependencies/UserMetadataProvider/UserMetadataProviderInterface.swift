@@ -39,7 +39,8 @@ public struct UserMetadataProviderClient {
     
     // Swap Id
     public let isSwapTransaction: (String) -> Bool
-    public let markTransactionAsSwapFor: (String, String) -> Void
+    public let swapDetailsForTransaction: (String) -> UMSwapId?
+    public let markTransactionAsSwapFor: (String, String, Int64, String) -> Void
     
     // Last User SwapAssets
     public let lastUsedAssetHistory: () -> [String]

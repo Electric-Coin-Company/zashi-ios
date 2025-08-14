@@ -361,7 +361,7 @@ extension TransactionDetailsView {
                         icon: Asset.Assets.copy.image,
                         rowAppereance: store.isSwap
                         ? (
-                            store.annotation.isEmpty ? .bottom : .middle
+                            (!store.annotation.isEmpty || !store.areDetailsExpanded) ? .bottom : .middle
                         )
                         : (!store.annotation.isEmpty || store.areDetailsExpanded) ? .top : .full
                     )
@@ -401,18 +401,26 @@ extension TransactionDetailsView {
                                 rowAppereance: .middle
                             )
                         } else {
-                            if store.transaction.fee == nil {
+                            if let totalFeesStr = store.totalFeesStr {
                                 detailView(
-                                    title: L10n.Send.feeSummary,
-                                    value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                    title: L10n.SwapAndPay.totalFees,
+                                    value: "\(totalFeesStr) \(tokenName)",
                                     rowAppereance: .middle
                                 )
                             } else {
-                                detailView(
-                                    title: L10n.Send.feeSummary,
-                                    value: "\(store.feeStr) \(tokenName)",
-                                    rowAppereance: .middle
-                                )
+                                if store.transaction.fee == nil {
+                                    detailView(
+                                        title: L10n.Send.feeSummary,
+                                        value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                        rowAppereance: .middle
+                                    )
+                                } else {
+                                    detailView(
+                                        title: L10n.Send.feeSummary,
+                                        value: "\(store.feeStr) \(tokenName)",
+                                        rowAppereance: .middle
+                                    )
+                                }
                             }
                         }
                     }

@@ -84,9 +84,8 @@ extension SwapAndPayCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .confirmWithKeystone(.updateResult(let result)))):
-                for (id, element) in zip(state.path.ids, state.path) {
+                for (_, element) in zip(state.path.ids, state.path) {
                     if case .confirmWithKeystone(let sendConfirmationState) = element {
-                        let provider = state.provider
                         return .run { send in
                             await send(.updateTxIdToExpand(sendConfirmationState.txIdToExpand))
                             await send(
@@ -99,9 +98,6 @@ extension SwapAndPayCoordFlow {
 
                             switch result {
                             case .success:
-                                if let txId = sendConfirmationState.txIdToExpand {
-                                    userMetadataProvider.markTransactionAsSwapFor(txId, provider)
-                                }
                                 await send(.updateResult(.success))
                             case .failure:
                                 await send(.updateResult(.failure))
@@ -252,7 +248,7 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.type = .swap
                 state.path.append(.sending(sendConfirmationState))
-                let provider = state.provider
+
                 // make the transaction
                 return .run { [depositAddress = state.swapAndPayState.address] send in
                     do {
@@ -275,10 +271,6 @@ extension SwapAndPayCoordFlow {
                             await send(.updateTxIdToExpand(txIds.last))
                         case .success(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
-                            if let txId = txIds.last {
-                                // store the txId into metadata
-                                userMetadataProvider.markTransactionAsSwapFor(txId, provider)
-                            }
                             await send(.sendDone)
                             if let txId = txIds.last {
                                 // inform service to speed up the transaction processing

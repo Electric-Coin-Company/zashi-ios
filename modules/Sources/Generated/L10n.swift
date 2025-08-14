@@ -1550,6 +1550,8 @@ public enum L10n {
     public static let to = L10n.tr("Localizable", "swapAndPay.to", fallback: "To")
     /// Total Amount
     public static let totalAmount = L10n.tr("Localizable", "swapAndPay.totalAmount", fallback: "Total Amount")
+    /// Total fees
+    public static let totalFees = L10n.tr("Localizable", "swapAndPay.totalFees", fallback: "Total fees")
     /// You pay
     public static let youPay = L10n.tr("Localizable", "swapAndPay.youPay", fallback: "You pay")
     public enum EmptyAssets {

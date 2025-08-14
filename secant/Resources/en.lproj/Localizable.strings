@@ -818,6 +818,7 @@
 "swapAndPay.addressBookSelect" = "Select...";
 "swapAndPay.addressBookNewContact" = "Add new contact";
 "swapAndPay.addressBookZcash" = "Zcash address is not allowed";
+"swapAndPay.totalFees" = "Total fees";
 
 "general.more" = "More";
 "general.less" = "Less";

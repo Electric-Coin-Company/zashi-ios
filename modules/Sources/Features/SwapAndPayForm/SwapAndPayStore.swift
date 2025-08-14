@@ -825,7 +825,7 @@ extension SwapAndPay.State {
         }
         
         let amount = quote.amountIn / Decimal(Zatoshi.Constants.oneZecInZatoshi)
-        return conversionFormatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(amount)"
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: amount.simplified)) ?? "\(amount)"
     }
     
     public var zecUsdToBeSpendInQuote: String {
@@ -887,7 +887,7 @@ extension SwapAndPay.State {
         }
         
         let amount = (quote.amountIn + Decimal(proposal.totalFeeRequired().amount)) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
-        return conversionFormatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(amount)"
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: amount.simplified)) ?? "\(amount)"
     }
     
     public var totalZecUsdToBeSpendInQuote: String {
@@ -1021,6 +1021,37 @@ extension SwapAndPay.State {
         } else {
             return slippageAmount.formatted(.currency(code: CurrencyISO4217.usd.code))
         }
+    }
+    
+    public var totalFees: Int64 {
+        guard let proposal,
+              let quote,
+              let zecAsset,
+              let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal,
+              let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
+            return 0
+        }
+
+        // transaction fee
+        let transactionFee =  proposal.totalFeeRequired().amount
+        
+        // swap fee
+        let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
+        let feeDecimal = (amountInUsdDecimal - amountOutUsdDecimal) - (amountInUsdDecimal * slippage * 0.01 * swapCoeff)
+        let zatoshiDecimal = NSDecimalNumber(decimal: (feeDecimal / zecAsset.usdPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi))
+        let swapFee = Int64(zatoshiDecimal.doubleValue)
+
+        return transactionFee + swapFee
+    }
+    
+    public var totalUSDFees: String {
+        guard let zecAsset else {
+            return "0.0"
+        }
+
+        let feeIdUsd = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
+
+        return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted()
     }
 }
 

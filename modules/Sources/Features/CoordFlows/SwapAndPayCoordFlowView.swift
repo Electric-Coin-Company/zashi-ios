@@ -73,18 +73,16 @@ public struct SwapAndPayCoordFlowView: View {
                     }
                 }
                 .navigationBarHidden(!store.path.isEmpty)
-//                .navigationBarItems(
-//                    trailing:
-//                        Button {
-//                            store.send(.helpSheetRequested)
-//                        } label: {
-//                            Asset.Assets.infoCircle.image
-//                                .zImage(size: 24, style: Design.Text.primary)
-//                                .padding(8)
-//                        }
-//                        .disabled(store.isOptInFlow)
-//                        .opacity(store.isOptInFlow ? 0 : 1)
-//                )
+                .navigationBarItems(
+                    trailing:
+                        Button {
+                            store.send(.helpSheetRequested)
+                        } label: {
+                            Asset.Assets.infoCircle.image
+                                .zImage(size: 24, style: Design.Text.primary)
+                                .padding(8)
+                        }
+                )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
                     moreContent()
                         .screenHorizontalPadding()
@@ -96,9 +94,6 @@ public struct SwapAndPayCoordFlowView: View {
             .zashiBack {
                 store.send(.backButtonTapped)
             }
-//            .zashiBackV2(hidden: !store.isOptInFlow) {
-//                store.send(.customBackRequired)
-//            }
             .zashiTitle {
                 HStack(spacing: 0) {
                     Text(

@@ -57,6 +57,7 @@ public struct TransactionDetails {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
         public var swapDetails: SwapDetails?
+        public var umSwapId: UMSwapId?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
@@ -73,6 +74,14 @@ public struct TransactionDetails {
         
         public var memos: [String] {
             transactionMemos[transaction.id] ?? []
+        }
+
+        public var totalFeesStr: String? {
+            guard let totalFees = umSwapId?.totalFees else {
+                return nil
+            }
+            
+            return Zatoshi(totalFees).decimalString()
         }
         
         public init(
@@ -125,6 +134,7 @@ public struct TransactionDetails {
             switch action {
             case .onAppear:
                 state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
+                state.umSwapId = userMetadataProvider.swapDetailsForTransaction(state.transaction.id)
                 state.hasInteractedWithBookmark = false
                 state.areDetailsExpanded = state.transaction.isShieldingTransaction
                 state.messageStates = []
