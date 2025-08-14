@@ -38,16 +38,16 @@ public enum L10n {
       public static let your = L10n.tr("Localizable", "accounts.addressBook.your", fallback: "Your Wallets")
     }
     public enum Keystone {
-      /// Keystone Shielded Address
-      public static let shieldedAddress = L10n.tr("Localizable", "accounts.keystone.shieldedAddress", fallback: "Keystone Shielded Address")
-      /// Keystone Transparent Address
-      public static let transparentAddress = L10n.tr("Localizable", "accounts.keystone.transparentAddress", fallback: "Keystone Transparent Address")
+      /// Zcash Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.keystone.shieldedAddress", fallback: "Zcash Shielded Address")
+      /// Zcash Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.keystone.transparentAddress", fallback: "Zcash Transparent Address")
     }
     public enum Zashi {
-      /// Zashi Shielded Address
-      public static let shieldedAddress = L10n.tr("Localizable", "accounts.zashi.shieldedAddress", fallback: "Zashi Shielded Address")
-      /// Zashi Transparent Address
-      public static let transparentAddress = L10n.tr("Localizable", "accounts.zashi.transparentAddress", fallback: "Zashi Transparent Address")
+      /// Zcash Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.zashi.shieldedAddress", fallback: "Zcash Shielded Address")
+      /// Zcash Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.zashi.transparentAddress", fallback: "Zcash Transparent Address")
     }
   }
   public enum AddressBook {
@@ -183,12 +183,12 @@ public enum L10n {
     public static let cardTitle = L10n.tr("Localizable", "currencyConversion.cardTitle", fallback: "New Feature")
     /// Enable
     public static let enable = L10n.tr("Localizable", "currencyConversion.enable", fallback: "Enable")
-    /// Zashi’s currency conversion feature doesn’t compromise your IP address.
-    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Zashi’s currency conversion feature doesn’t compromise your IP address.")
+    /// Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.
+    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.")
     /// IP Address Protection
     public static let ipTitle = L10n.tr("Localizable", "currencyConversion.ipTitle", fallback: "IP Address Protection")
-    /// Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
-    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
+    /// View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
+    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
     /// Disable
     public static let learnMoreOptionDisable = L10n.tr("Localizable", "currencyConversion.learnMoreOptionDisable", fallback: "Disable")
     /// Don’t show the currency conversion.
@@ -203,8 +203,10 @@ public enum L10n {
     public static let refreshDesc = L10n.tr("Localizable", "currencyConversion.refreshDesc", fallback: "The rate is refreshed automatically and can also be refreshed manually.")
     /// Save changes
     public static let saveBtn = L10n.tr("Localizable", "currencyConversion.saveBtn", fallback: "Save changes")
-    /// Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.
-    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.")
+    /// View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.
+    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.")
+    /// Check if Tor use is permitted in your region before enabling.
+    public static let settingsDesc2 = L10n.tr("Localizable", "currencyConversion.settingsDesc2", fallback: "Check if Tor use is permitted in your region before enabling.")
     /// Skip
     public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip")
     /// Currency Conversion
@@ -626,6 +628,36 @@ public enum L10n {
       public static let cantExtractTransparentAddress = L10n.tr("Localizable", "receive.error.cantExtractTransparentAddress", fallback: "could not extract transparent receiver from UA")
       /// could not extract UA
       public static let cantExtractUnifiedAddress = L10n.tr("Localizable", "receive.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
+    }
+    public enum Help {
+      public enum Shielded {
+        /// Use this address to receive and store your ZEC privately. Transparent and shielded ZEC sent to this address will be received and stored as shielded ZEC.
+        public static let desc1 = L10n.tr("Localizable", "receive.help.shielded.desc1", fallback: "Use this address to receive and store your ZEC privately. Transparent and shielded ZEC sent to this address will be received and stored as shielded ZEC.")
+        /// A new Zcash Shielded Address is generated each time you open the Receive screen.
+        public static let desc2 = L10n.tr("Localizable", "receive.help.shielded.desc2", fallback: "A new Zcash Shielded Address is generated each time you open the Receive screen.")
+        /// All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.
+        public static let desc3 = L10n.tr("Localizable", "receive.help.shielded.desc3", fallback: "All transactions sent to your different rotating Shielded Addresses will remain part of one wallet balance under the same seed phrase.")
+        /// While we recommend using a new address every time, each unique address can be reused.
+        public static let desc4 = L10n.tr("Localizable", "receive.help.shielded.desc4", fallback: "While we recommend using a new address every time, each unique address can be reused.")
+        /// Zcash Shielded Address (Rotating)
+        public static let title = L10n.tr("Localizable", "receive.help.shielded.title", fallback: "Zcash Shielded Address (Rotating)")
+      }
+      public enum Transparent {
+        /// This addresses type works just like Bitcoin addresses and offers NO PRIVACY. The details of transactions sent to this address will be public and visible on the blockchain.
+        public static let desc1 = L10n.tr("Localizable", "receive.help.transparent.desc1", fallback: "This addresses type works just like Bitcoin addresses and offers NO PRIVACY. The details of transactions sent to this address will be public and visible on the blockchain.")
+        /// We don't recommend using this address type unless the wallet or exchange from which ZEC is being sent doesn’t support sending funds to shielded Zcash addresses.
+        public static let desc2 = L10n.tr("Localizable", "receive.help.transparent.desc2", fallback: "We don't recommend using this address type unless the wallet or exchange from which ZEC is being sent doesn’t support sending funds to shielded Zcash addresses.")
+        /// To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.
+        public static let desc3 = L10n.tr("Localizable", "receive.help.transparent.desc3", fallback: "To protect your privacy, Zashi will guide you to shield any transparent ZEC you receive with just one click.")
+        /// You won't be able to spend your transparent ZEC until you shield it.
+        public static let desc4 = L10n.tr("Localizable", "receive.help.transparent.desc4", fallback: "You won't be able to spend your transparent ZEC until you shield it.")
+        /// Zcash Transparent Address (Static)
+        public static let title = L10n.tr("Localizable", "receive.help.transparent.title", fallback: "Zcash Transparent Address (Static)")
+      }
+    }
+    public enum Ua {
+      /// Rotates every time you use it
+      public static let rotateInfo = L10n.tr("Localizable", "receive.ua.rotateInfo", fallback: "Rotates every time you use it")
     }
   }
   public enum RecoveryPhraseDisplay {
@@ -1104,6 +1136,8 @@ public enum L10n {
     public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
     /// Pair your Keystone hardware wallet with Zashi to sign transactions.
     public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
+    /// Beta: Tor Protection
+    public static let `private` = L10n.tr("Localizable", "settings.private", fallback: "Beta: Tor Protection")
     /// Zashi Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.
@@ -1210,6 +1244,14 @@ public enum L10n {
         public static let info = L10n.tr("Localizable", "smartBanner.content.syncingError.info", fallback: "Attempting to resolve")
         /// Error encountered while syncing
         public static let title = L10n.tr("Localizable", "smartBanner.content.syncingError.title", fallback: "Error encountered while syncing")
+      }
+      public enum Tor {
+        /// Review
+        public static let button = L10n.tr("Localizable", "smartBanner.content.tor.button", fallback: "Review")
+        /// Protect your IP address
+        public static let info = L10n.tr("Localizable", "smartBanner.content.tor.info", fallback: "Protect your IP address")
+        /// Beta: Enable Tor Protection
+        public static let title = L10n.tr("Localizable", "smartBanner.content.tor.title", fallback: "Beta: Enable Tor Protection")
       }
       public enum UpdatingBalance {
         /// Waiting for last transaction to process
@@ -1407,6 +1449,68 @@ public enum L10n {
       public static let desc = L10n.tr("Localizable", "tooltip.exchangeRate.desc", fallback: "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.")
       /// Exchange rate unavailable
       public static let title = L10n.tr("Localizable", "tooltip.exchangeRate.title", fallback: "Exchange rate unavailable")
+    }
+  }
+  public enum TorSetup {
+    /// Don’t connect over Tor.
+    public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t connect over Tor.")
+    /// Connect over Tor.
+    public static let enableDesc = L10n.tr("Localizable", "torSetup.enableDesc", fallback: "Connect over Tor.")
+    /// Beta: Tor Protection
+    public static let title = L10n.tr("Localizable", "torSetup.title", fallback: "Beta: Tor Protection")
+    public enum Alert {
+      /// Disable
+      public static let disable = L10n.tr("Localizable", "torSetup.alert.disable", fallback: "Disable")
+      /// Don’t disable
+      public static let dontDisable = L10n.tr("Localizable", "torSetup.alert.dontDisable", fallback: "Don’t disable")
+      /// Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.
+      public static let msg = L10n.tr("Localizable", "torSetup.alert.msg", fallback: "Tor connection issues detected. To improve performance, try disabling Tor. This will stop exchange rate updates. You can re-enable it later in Advanced Settings.")
+      /// Disable Tor?
+      public static let title = L10n.tr("Localizable", "torSetup.alert.title", fallback: "Disable Tor?")
+    }
+    public enum CcSheet {
+      /// Tor Protection is a beta feature that provides additional protections for your IP address. USD exchange rates are only available when it is enabled.
+      public static let desc1 = L10n.tr("Localizable", "torSetup.ccSheet.desc1", fallback: "Tor Protection is a beta feature that provides additional protections for your IP address. USD exchange rates are only available when it is enabled.")
+      /// If Tor is permitted in your region, we recommend enabling it. You can manage it in Advanced Settings.
+      public static let desc2 = L10n.tr("Localizable", "torSetup.ccSheet.desc2", fallback: "If Tor is permitted in your region, we recommend enabling it. You can manage it in Advanced Settings.")
+      /// Enable
+      public static let enable = L10n.tr("Localizable", "torSetup.ccSheet.enable", fallback: "Enable")
+      /// Do it later
+      public static let later = L10n.tr("Localizable", "torSetup.ccSheet.later", fallback: "Do it later")
+      /// Tor Required for Currency Conversion
+      public static let title = L10n.tr("Localizable", "torSetup.ccSheet.title", fallback: "Tor Required for Currency Conversion")
+    }
+    public enum Learn {
+      /// Opt in
+      public static let btnIn = L10n.tr("Localizable", "torSetup.learn.btnIn", fallback: "Opt in")
+      /// Opt out
+      public static let btnOut = L10n.tr("Localizable", "torSetup.learn.btnOut", fallback: "Opt out")
+      /// This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.
+      public static let desc = L10n.tr("Localizable", "torSetup.learn.desc", fallback: "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.")
+    }
+    public enum Option1 {
+      /// Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)
+      public static let desc = L10n.tr("Localizable", "torSetup.option1.desc", fallback: "Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)")
+      /// Currency Conversion
+      public static let title = L10n.tr("Localizable", "torSetup.option1.title", fallback: "Currency Conversion")
+    }
+    public enum Option2 {
+      /// Send and retrieve transaction data over Tor for added privacy.
+      public static let desc = L10n.tr("Localizable", "torSetup.option2.desc", fallback: "Send and retrieve transaction data over Tor for added privacy.")
+      /// Transactions
+      public static let title = L10n.tr("Localizable", "torSetup.option2.title", fallback: "Transactions")
+    }
+    public enum Option3 {
+      /// Access third-party APIs (e.g. NEAR) over Tor for added privacy.
+      public static let desc = L10n.tr("Localizable", "torSetup.option3.desc", fallback: "Access third-party APIs (e.g. NEAR) over Tor for added privacy.")
+      /// Integrations
+      public static let title = L10n.tr("Localizable", "torSetup.option3.title", fallback: "Integrations")
+    }
+    public enum Settings {
+      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).
+      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).")
+      /// As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.
+      public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.")
     }
   }
   public enum Transaction {

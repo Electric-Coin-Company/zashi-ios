@@ -312,9 +312,11 @@ extension Root {
                     let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-
+                    
                     return .run { send in
                         do {
+                            exchangeRate.refreshExchangeRateUSD()
+                            
                             try await sdkSynchronizer.prepareWith(
                                 seedBytes,
                                 birthday,
@@ -325,6 +327,7 @@ extension Root {
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
+                            //await send(.fetchTransactionsForTheSelectedAccount)
                             await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)
@@ -375,7 +378,8 @@ extension Root {
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
                     .send(.batteryStateChanged(nil)),
                     .send(.observeTransactions),
-                    .send(.observeShieldingProcessor)
+                    .send(.observeShieldingProcessor),
+                    .send(.observeTorInit)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -490,7 +494,6 @@ extension Root {
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
-//                state.$selectedWalletAccountsUA.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
                 state.$transactionMemos.withLock { $0 = [:] }
@@ -604,7 +607,7 @@ extension Root {
                 state.destinationState.destination = .home
                 return .none
                 
-            case .welcome(.debugMenuStartup)://, .tabs(.home(.walletBalances(.debugMenuStartup))):
+            case .welcome(.debugMenuStartup):
                 return .concatenate(
                     Effect.cancel(id: CancelId),
                     .send(.destination(.updateDestination(.startup)))

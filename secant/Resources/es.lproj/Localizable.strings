@@ -397,7 +397,8 @@
 "currencyConversion.cardTitle" = "Nueva Función";
 "currencyConversion.cardButton" = "Revisar";
 "currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
-"currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD. La función de conversión de moneda de Zashi protege tu dirección IP en todo momento.";
+"currencyConversion.settingsDesc" = "Mira tu saldo y pagos en USD con mayor seguridad. Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP.";
+"currencyConversion.settingsDesc2" = "Verifica si Tor está permitido en tu región antes de habilitarlo.";
 "currencyConversion.enable" = "Habilitar";
 "currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
 "currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
@@ -405,7 +406,7 @@
 "currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
 "currencyConversion.saveBtn" = "Guardar cambios";
 "currencyConversion.ipTitle" = "Protección de Dirección IP";
-"currencyConversion.ipDesc" = "La función de conversión de moneda de Zashi no compromete tu dirección IP.";
+"currencyConversion.ipDesc" = "Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP. Verifica si el uso de Tor esta permitido en tu region.";
 "currencyConversion.refresh" = "Actualizar tasa";
 "currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
 
@@ -467,10 +468,10 @@
 "accounts.addressBook.contacts" = "Contactos del Libro de Direcciones";
 "accounts.keystone" = "Keystone";
 "accounts.zashi" = "Zashi";
-"accounts.zashi.shieldedAddress" = "Dirección Protegida de Zashi";
-"accounts.zashi.transparentAddress" = "Dirección Transparente de Zashi";
-"accounts.keystone.shieldedAddress" = "Dirección Protegida de Keystone";
-"accounts.keystone.transparentAddress" = "Dirección Transparente de Keystone";
+"accounts.zashi.shieldedAddress" = "Dirección Protegida de Zcash";
+"accounts.zashi.transparentAddress" = "Dirección Transparente de Zcash";
+"accounts.keystone.shieldedAddress" = "Dirección Protegida de Zcash";
+"accounts.keystone.transparentAddress" = "Dirección Transparente de Zcash";
 
 // Keystone iteration 1
 "keystoneTransactionReject.title" = "¿Estás seguro?";
@@ -624,6 +625,10 @@
 "smartBanner.content.shield.titleShorter" = "Saldo Transparente";
 "smartBanner.content.shield.button" = "Proteger";
 
+"smartBanner.content.tor.title" = "Beta: Activar protección Tor";
+"smartBanner.content.tor.info" = "Protege tu dirección IP";
+"smartBanner.content.tor.button" = "Revisar";
+
 "smartBanner.content.currencyConversion.title" = "Conversión de Moneda";
 "smartBanner.content.currencyConversion.info" = "Activa para mostrar valores en USD";
 "smartBanner.content.currencyConversion.button" = "Iniciar";
@@ -680,3 +685,46 @@
 "recoveryPhraseDisplay.warningHeight.info" = "La altura del bloque en el que se creó tu billetera puede acelerar significativamente el proceso de recuperación de la billetera.";
 
 "recoveryPhraseDisplay.proceedWarning" = "Mantén esta frase de manera segura oculta. ¡No tomes capturas de pantalla ni la guardes en tu teléfono!";
+
+"torSetup.title" = "Beta: Protección Tor";
+"torSetup.learn.desc" = "Esta función beta brinda protección adicional a tu dirección IP. Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
+
+"torSetup.settings.desc1" = "Esta función beta brinda protección adicional para tu dirección IP. Utiliza Tor para obtener tasas de cambio, enviar transacciones, recuperar datos de transacciones y conectarse a APIs de terceros (p. ej., NEAR, muy pronto!).";
+"torSetup.settings.desc2" = "Al ser una función beta, podría afectar el rendimiento. Si el uso de Tor está permitido en tu región, te recomendamos habilitarlo.";
+
+"torSetup.option1.title" = "Conversión de moneda";
+"torSetup.option1.desc" = "Obtén tasas de cambio desde servidores de terceros sin revelar tu dirección IP. (Disponible solo con Tor activado.)";
+"torSetup.option2.title" = "Transacciones";
+"torSetup.option2.desc" = "Envía y recupera datos de transacciones a través de Tor para mayor privacidad.";
+"torSetup.option3.title" = "Integraciones";
+"torSetup.option3.desc" = "Accede a APIs de terceros (por ejemplo, NEAR) a través de Tor para mayor privacidad.";
+"settings.private" = "Beta: Protección Tor";
+"torSetup.enableDesc" = "Conectarse mediante Tor.";
+"torSetup.disableDesc" = "No conectarse mediante Tor.";
+
+"torSetup.learn.btnIn" = "Activar";
+"torSetup.learn.btnOut" = "Desactivar";
+
+"torSetup.ccSheet.title" = "Se requiere Tor para la conversión de moneda";
+"torSetup.ccSheet.desc1" = "La protección Tor es una función beta que brinda protección adicional a tu dirección IP. Las tasas de cambio en USD solo están disponibles cuando está activada.";
+"torSetup.ccSheet.desc2" = "Si el uso de Tor está permitido en tu región, te recomendamos activarla. Puedes gestionarlo en Configuración avanzada.";
+"torSetup.ccSheet.later" = "Hacerlo después";
+"torSetup.ccSheet.enable" = "Activar";
+
+"torSetup.alert.title" = "¿Desactivar Tor?";
+"torSetup.alert.msg" = "Se detectaron problemas de conexión con Tor. Para mejorar el rendimiento, intenta desactivarlo. Esto detendrá la actualización de tasas de cambio. Puedes volver a activarlo más adelante en Configuración avanzada.";
+"torSetup.alert.disable" = "Desactivar";
+"torSetup.alert.dontDisable" = "No desactivar";
+
+// Receive help
+"receive.help.shielded.title" = "Dirección protegida de Zcash (rotativa)";
+"receive.help.shielded.desc1" = "Usa esta dirección para recibir y almacenar tus ZEC de forma privada. Los ZEC transparentes y protegidos enviados a esta dirección se recibirán y almacenarán como ZEC protegidos.";
+"receive.help.shielded.desc2" = "Se genera una nueva dirección protegida de Zcash cada vez que abres la pantalla de \"Recibir\".";
+"receive.help.shielded.desc3" = "Todas las transacciones enviadas a tus diferentes direcciones protegidas rotativas formarán parte de un mismo saldo de billetera vinculado a tu frase semilla.";
+"receive.help.shielded.desc4" = "Aunque recomendamos usar una nueva dirección cada vez, cada dirección única se puede reutilizar.";
+"receive.help.transparent.title" = "Dirección transparente de Zcash (estática)";
+"receive.help.transparent.desc1" = "Este tipo de dirección funciona como una dirección de Bitcoin y NO OFRECE PRIVACIDAD. Los detalles de las transacciones enviadas a esta dirección serán públicos y visibles en la blockchain.";
+"receive.help.transparent.desc2" = "No recomendamos usar este tipo de dirección a menos que la billetera o casa de cambio desde donde se envían los ZEC no admita direcciones protegidas de Zcash.";
+"receive.help.transparent.desc3" = "Para proteger tu privacidad, Zashi te guiará para proteger cualquier ZEC transparente que recibas con un solo clic.";
+"receive.help.transparent.desc4" = "No podrás gastar tus ZEC transparentes hasta que los protejas.";
+"receive.ua.rotateInfo" = "Rota cada vez que la usas";

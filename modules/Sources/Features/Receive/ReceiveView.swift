@@ -25,6 +25,8 @@ public struct ReceiveView: View {
     let networkType: NetworkType
     let tokenName: String
 
+    @State var explainer = false
+    
     public init(store: StoreOf<Receive>, networkType: NetworkType, tokenName: String) {
         self.store = store
         self.networkType = networkType
@@ -41,7 +43,7 @@ public struct ReceiveView: View {
                                 addressBlock(
                                     prefixIcon: Asset.Assets.Partners.keystoneSeekLogo.image,
                                     title: L10n.Accounts.Keystone.shieldedAddress,
-                                    address: store.unifiedAddress,
+                                    address: L10n.Receive.Ua.rotateInfo,
                                     iconFg: Design.Utility.Indigo._800,
                                     iconBg: Design.Utility.Indigo._100,
                                     bcgColor: Design.Utility.Indigo._50.color(colorScheme),
@@ -83,7 +85,7 @@ public struct ReceiveView: View {
                                 addressBlock(
                                     prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
                                     title: L10n.Accounts.Zashi.shieldedAddress,
-                                    address: store.unifiedAddress,
+                                    address: L10n.Receive.Ua.rotateInfo,
                                     iconFg: Design.Utility.Purple._800,
                                     iconBg: Design.Utility.Purple._100,
                                     bcgColor: Design.Utility.Purple._50.color(colorScheme),
@@ -177,11 +179,118 @@ public struct ReceiveView: View {
                 }
             }
             .navigationBarHidden(!store.path.isEmpty)
+            .zashiSheet(isPresented: $explainer) {
+                explainerContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
         }
         .padding(.horizontal, 4)
         .applyScreenBackground()
         .screenTitle(L10n.Tabs.receiveZec)
         .zashiBack()
+    }
+    
+    @ViewBuilder private func explainerContent() -> some View {
+        VStack(spacing: 0) {
+            if store.isExplainerForShielded {
+                shieldedAddressExplainerContent()
+            } else {
+                transparentAddressExplainerContent()
+            }
+        }
+    }
+    
+    @ViewBuilder private func shieldedAddressExplainerContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.Icons.shieldTickFilled.image
+                .zImage(size: 20, style: Design.Text.primary)
+                .padding(10)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._full)
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                }
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+
+            Text(L10n.Receive.Help.Shielded.title)
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            infoContent(text: L10n.Receive.Help.Shielded.desc1)
+                .padding(.bottom, 12)
+            
+            infoContent(text: L10n.Receive.Help.Shielded.desc2)
+                .padding(.bottom, 12)
+            
+            infoContent(text: L10n.Receive.Help.Shielded.desc3)
+                .padding(.bottom, 12)
+            
+            infoContent(text: L10n.Receive.Help.Shielded.desc4)
+                .padding(.bottom, 32)
+            
+            ZashiButton(L10n.General.ok.uppercased()) {
+                store.send(.infoTapped(true))
+                explainer = false
+            }
+            .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder private func transparentAddressExplainerContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.Icons.shieldOff.image
+                .zImage(size: 20, style: Design.Text.primary)
+                .padding(10)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._full)
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                }
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+            
+            Text(L10n.Receive.Help.Transparent.title)
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
+
+            infoContent(text: L10n.Receive.Help.Transparent.desc1)
+                .padding(.bottom, 12)
+
+            infoContent(text: L10n.Receive.Help.Transparent.desc2)
+                .padding(.bottom, 12)
+
+            infoContent(text: L10n.Receive.Help.Transparent.desc3)
+                .padding(.bottom, 12)
+
+            infoContent(text: L10n.Receive.Help.Transparent.desc4)
+                .padding(.bottom, 32)
+            
+            ZashiButton(L10n.General.ok.uppercased()) {
+                store.send(.infoTapped(false))
+                explainer = false
+            }
+            .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder private func infoContent(text: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Circle()
+                .frame(width: 4, height: 4)
+                .foregroundColor(Design.Text.tertiary.color(colorScheme))
+                .padding(.top, 8)
+            
+            if let attrText = try? AttributedString(
+                markdown: text,
+                including: \.zashiApp
+            ) {
+                ZashiText(withAttributedString: attrText, colorScheme: colorScheme)
+                    .zFont(size: 14, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
     
     @ViewBuilder private func addressBlock(
@@ -227,13 +336,31 @@ public struct ReceiveView: View {
                         .minimumScaleFactor(0.5)
                         .padding(.bottom, 4)
                     
-                    Text(address.zip316)
-                        .zFont(addressFont: true, size: 14, style: Design.Text.tertiary)
+                    Text(shield ? address : address.zip316)
+                        .zFont(addressFont: !shield, size: 14, style: Design.Text.tertiary)
                         .padding(.bottom, expanded ? 10 : 0)
                 }
                 .lineLimit(1)
                 
                 Spacer(minLength: 0)
+
+                Button {
+                    store.send(.infoTapped(shield))
+                    explainer = true
+                } label: {
+                    Asset.Assets.infoCircle.image
+                        .zImage(size: 16, style: Design.Btns.Ghost.fg)
+                        .padding(8)
+                        .background {
+                            if shield {
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .fill(Design.Utility.Purple._100.color(colorScheme))
+                            } else {
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .fill(Design.Utility.Gray._100.color(colorScheme))
+                            }
+                        }
+                }
             }
             .padding(.horizontal, 20)
             

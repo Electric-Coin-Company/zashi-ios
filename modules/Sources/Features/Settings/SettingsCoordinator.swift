@@ -20,6 +20,7 @@ import Scan
 import ServerSetup
 import SendFeedback
 import WhatsNew
+import TorSetup
 
 extension Settings {
     public func coordinatorReduce() -> Reduce<Settings.State, Settings.Action> {
@@ -95,11 +96,21 @@ extension Settings {
                     var currencyConversionSetupState = CurrencyConversionSetup.State.initial
                     currencyConversionSetupState.isSettingsView = true
                     state.path.append(.currencyConversionSetup(currencyConversionSetupState))
+                case .torSetup:
+                    var torSetupState = TorSetup.State.initial
+                    torSetupState.isSettingsView = true
+                    state.path.append(.torSetup(torSetupState))
                 case .resetZashi:
                     state.path.append(.resetZashi(DeleteWallet.State.initial))
                 }
                 return .none
                 
+                // MARK: - Currency Conversion
+            
+            case .path(.element(id: _, action: .currencyConversionSetup(.delayedDismisalRequested))):
+                let _ = state.path.popLast()
+                return .none
+
                 // MARK: - Integrations
 
             case .path(.element(id: _, action: .integrations(.keystoneTapped))):
@@ -145,7 +156,7 @@ extension Settings {
                 return .none
 
             case .integrationsTapped:
-                var integrationsState = Integrations.State.initial
+                let integrationsState = Integrations.State.initial
                 state.path.append(.integrations(integrationsState))
                 return .none
 

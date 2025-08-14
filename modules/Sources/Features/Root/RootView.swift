@@ -20,6 +20,7 @@ import RecoveryPhraseDisplay
 import CoordFlows
 import ServerSetup
 import Settings
+import TorSetup
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -200,6 +201,14 @@ private extension RootView {
                                     store.scope(
                                         state: \.currencyConversionSetupState,
                                         action: \.currencyConversionSetup)
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.torSetup)) {
+                            TorSetupView(
+                                store:
+                                    store.scope(
+                                        state: \.torSetupState,
+                                        action: \.torSetup)
                             )
                         }
                         .popover(isPresented: $store.signWithKeystoneCoordFlowBinding) {

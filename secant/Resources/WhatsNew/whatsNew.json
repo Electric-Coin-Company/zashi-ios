@@ -1,6 +1,29 @@
 {
     "releases": [
         {
+            "version": "2.1",
+            "date": "08-05-2025",
+            "timestamp": 1754387043,
+            "sections": [
+                {
+                    "title": "Zashi just expanded its Tor network integration, releasing yet another quiet game changer for the privacy-conscious Zcash users. With the latest Beta update, Zashi’s built-in Tor client can now be used to:",
+                    "bulletpoints": [
+                        "Submit ZEC transactions",
+                        "Fetch transaction data",
+                        "Connect to third-party APIs (e.g. NEAR, soon!)",
+                        "Fetch ZEC-USD exchange rates",
+                        "If Tor is available in your region, we strongly recommend enabling it in Advanced Settings for an extra layer of protection."
+                    ]
+                },
+                {
+                    "title": "Other Updates:",
+                    "bulletpoints": [
+                        "We added address explainers to the Receive screen."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.0.4",
             "date": "06-16-2025",
             "timestamp": 1750070962,

@@ -29,6 +29,7 @@ public struct WalletStorage {
 
         public static let zcashStoredWalletBackupAcknowledged = "zcashStoredWalletBackupAcknowledged"
         public static let zcashStoredShieldingAcknowledged = "zcashStoredShieldingAcknowledged"
+        public static let zcashStoredTorSetupFlag = "zcashStoredTorSetupFlag"
 
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
@@ -172,6 +173,7 @@ public struct WalletStorage {
         try? deleteData(forKey: "\(Constants.zcashStoredShieldingReminder)_keystone")
         try? deleteData(forKey: Constants.zcashStoredWalletBackupAcknowledged)
         try? deleteData(forKey: Constants.zcashStoredShieldingAcknowledged)
+        try? deleteData(forKey: Constants.zcashStoredTorSetupFlag)
     }
     
     public func importAddressBookEncryptionKeys(_ keys: AddressBookEncryptionKeys) throws {
@@ -346,7 +348,7 @@ public struct WalletStorage {
     }
     
     public func importShieldingAcknowledged(_ acknowledged: Bool) throws {
-        guard let data = try? encode(object: true) else {
+        guard let data = try? encode(object: acknowledged) else {
             throw KeychainError.encoding
         }
 
@@ -373,6 +375,36 @@ public struct WalletStorage {
         }
         
         return (try? decode(json: reqData, as: Bool.self)) ?? false
+    }
+
+    public func importTorSetupFlag(_ enabled: Bool) throws {
+        guard let data = try? encode(object: enabled) else {
+            throw KeychainError.encoding
+        }
+
+        do {
+            try setData(data, forKey: Constants.zcashStoredTorSetupFlag)
+        } catch KeychainError.duplicate {
+            try updateData(data, forKey: Constants.zcashStoredTorSetupFlag)
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportTorSetupFlag() -> Bool? {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredTorSetupFlag)
+        } catch {
+            return nil
+        }
+        
+        guard let reqData else {
+            return nil
+        }
+        
+        return try? decode(json: reqData, as: Bool.self)
     }
 
     // MARK: - Wallet Storage Codable & Query helpers

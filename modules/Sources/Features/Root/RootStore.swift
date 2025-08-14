@@ -41,6 +41,7 @@ import RecoveryPhraseDisplay
 import CoordFlows
 import ServerSetup
 import Settings
+import TorSetup
 
 @Reducer
 public struct Root {
@@ -67,6 +68,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case torSetup
             case transactionsCoordFlow
             case walletBackup
         }
@@ -81,6 +83,7 @@ public struct Root {
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var debugState: DebugState
         public var deeplinkWarningState: DeeplinkWarning.State = .initial
         public var destinationState: DestinationState
@@ -125,6 +128,7 @@ public struct Root {
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
+        public var torSetupState = TorSetup.State.initial
 
         public init(
             appInitializationState: InitializationState = .uninitialized,
@@ -212,6 +216,7 @@ public struct Root {
         case signWithKeystoneRequested
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
         case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
+        case torSetup(TorSetup.Action)
 
         // Transactions
         case observeTransactions
@@ -234,6 +239,12 @@ public struct Root {
         case reportShieldingFailure
         case shareFinished
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
+        
+        // Tor
+        case observeTorInit
+        case torInitFailed
+        case torDisableTapped
+        case torDontDisableTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -343,6 +354,10 @@ public struct Root {
             SignWithKeystoneCoordFlow()
         }
 
+        Scope(state: \.torSetupState, action: \.torSetup) {
+            TorSetup()
+        }
+
         initializationReduce()
 
         destinationReduce()
@@ -358,6 +373,8 @@ public struct Root {
         coordinatorReduce()
         
         shieldingProcessorReduce()
+        
+        torInitCheckReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -602,6 +619,21 @@ extension AlertState where Action == Root.Action {
             TextState(L10n.ShieldFunds.Error.title)
         } message: {
             TextState(L10n.ShieldFunds.Error.Gprc.message)
+        }
+    }
+    
+    public static func torInitFailedRequest() -> AlertState {
+        AlertState {
+            TextState(L10n.TorSetup.Alert.title)
+        } actions: {
+            ButtonState(action: .torDisableTapped) {
+                TextState(L10n.TorSetup.Alert.disable)
+            }
+            ButtonState(action: .torDontDisableTapped) {
+                TextState(L10n.TorSetup.Alert.dontDisable)
+            }
+        } message: {
+            TextState(L10n.TorSetup.Alert.msg)
         }
     }
 }

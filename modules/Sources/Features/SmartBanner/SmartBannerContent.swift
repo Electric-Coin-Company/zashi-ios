@@ -29,6 +29,7 @@ extension SmartBannerView {
             case .priority5: updatingBalanceContent()
             case .priority6: walletBackupContent()
             case .priority7: shieldingContent()
+            case .priority75: torSetupContent()
             case .priority8: currencyConversionContent()
             case .priority9: autoShieldingContent()
             default: EmptyView()
@@ -191,6 +192,32 @@ extension SmartBannerView {
         }
     }
 
+    @ViewBuilder func torSetupContent() -> some View {
+        HStack(spacing: 0) {
+            Asset.Assets.Icons.shieldZap.image
+                .zImage(size: 20, color: titleStyle())
+                .padding(.trailing, 12)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L10n.SmartBanner.Content.Tor.title)
+                    .zFont(.medium, size: 14, color: titleStyle())
+                
+                Text(L10n.SmartBanner.Content.Tor.info)
+                    .zFont(.medium, size: 12, color: infoStyle())
+            }
+            
+            Spacer()
+            
+            ZashiButton(
+                L10n.SmartBanner.Content.Tor.button,
+                type: .ghost,
+                infinityWidth: false
+            ) {
+                store.send(.torSetupTapped)
+            }
+        }
+    }
+    
     @ViewBuilder func currencyConversionContent() -> some View {
         HStack(spacing: 0) {
             Asset.Assets.Icons.coinsSwap.image

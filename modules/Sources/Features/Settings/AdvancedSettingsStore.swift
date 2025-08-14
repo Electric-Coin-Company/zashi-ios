@@ -17,6 +17,7 @@ public struct AdvancedSettings {
             case exportTaxFile
             case recoveryPhrase
             case resetZashi
+            case torSetup
         }
         
         public var isEnoughFreeSpaceMode = true
@@ -39,7 +40,7 @@ public struct AdvancedSettings {
             switch action {
             case .operationAccessCheck(let operation):
                 switch operation {
-                case .chooseServer, .currencyConversion:
+                case .chooseServer, .currencyConversion, .torSetup:
                     return .send(.operationAccessGranted(operation))
                 case .recoveryPhrase, .exportPrivateData, .exportTaxFile, .resetZashi:
                     return .run { send in

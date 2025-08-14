@@ -73,6 +73,7 @@ let package = Package(
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "TaxExporter", targets: ["TaxExporter"]),
+        .library(name: "TorSetup", targets: ["TorSetup"]),
         .library(name: "TransactionDetails", targets: ["TransactionDetails"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "TransactionsManager", targets: ["TransactionsManager"]),
@@ -98,7 +99,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.6"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.17"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.3.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -273,6 +274,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "UIComponents",
                 "UserPreferencesStorage",
+                "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Features/CurrencyConversionSetup"
@@ -687,6 +689,7 @@ let package = Package(
                 "Settings",
                 "ShieldingProcessor",
                 "SupportDataGenerator",
+                "TorSetup",
                 "TransactionDetails",
                 "TransactionsManager",
                 "UIComponents",
@@ -729,6 +732,8 @@ let package = Package(
             dependencies: [
                 "DatabaseFiles",
                 "Models",
+                "UserPreferencesStorage",
+                "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
@@ -843,6 +848,7 @@ let package = Package(
                 "SendFeedback",
                 "ServerSetup",
                 "SupportDataGenerator",
+                "TorSetup",
                 "UIComponents",
                 "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -912,6 +918,20 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/TaxExporter"
+        ),
+        .target(
+            name: "TorSetup",
+            dependencies: [
+                "Generated",
+                "Models",
+                "SDKSynchronizer",
+                "UIComponents",
+                "UserPreferencesStorage",
+                "WalletStorage",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/TorSetup"
         ),
         .target(
             name: "TransactionDetails",
@@ -1055,6 +1075,7 @@ let package = Package(
                 "UIComponents",
                 "UserPreferencesStorage",
                 "Utils",
+                "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")

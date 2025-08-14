@@ -270,8 +270,7 @@ extension TransactionState {
     public init(
         transaction: ZcashTransaction.Overview,
         memos: [Memo]? = nil,
-        hasTransparentOutputs: Bool = false,
-        latestBlockHeight: BlockHeight?
+        hasTransparentOutputs: Bool = false
     ) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
@@ -286,23 +285,10 @@ extension TransactionState {
         memoCount = transaction.memoCount
         totalSpent = transaction.totalSpent
         totalReceived = transaction.totalReceived
-
-        // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
-        // https://github.com/zcash/ZcashLightClientKit/issues/1313
-        // The only reason why `latestBlockHeight` is provided here is to determine pending
-        // state of the transaction. SDK knows the latestBlockHeight so ideally ZcashTransaction.Overview
-        // already knows and provides isPending as a bool value.
-        // Once SDK's #1313 is done, adopt the SDK and remove latestBlockHeight here.
-        var isPending = false
-        var isExpired = false
-
-        if let latestBlockHeight {
-            isPending = transaction.isPending(currentHeight: latestBlockHeight)
-            if let expiryHeight = transaction.expiryHeight, expiryHeight <= latestBlockHeight && minedHeight == nil {
-                isExpired = true
-            }
-        }
-
+        
+        let isPending = transaction.state == .pending
+        let isExpired = transaction.state == .expired
+        
         // failed check
         if isExpired {
             status = .failed

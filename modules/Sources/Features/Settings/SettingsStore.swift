@@ -20,6 +20,7 @@ import Scan
 import ServerSetup
 import SendFeedback
 import WhatsNew
+import TorSetup
 
 @Reducer
 public struct Settings {
@@ -40,6 +41,7 @@ public struct Settings {
         case resetZashi(DeleteWallet)
         case scan(Scan)
         case sendUsFeedback(SendFeedback)
+        case torSetup(TorSetup)
         case whatsNew(WhatsNew)
     }
     

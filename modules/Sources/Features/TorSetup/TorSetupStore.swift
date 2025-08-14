@@ -1,21 +1,20 @@
 //
-//  CurrencyConversionSetupStore.swift
+//  TorSetupStore.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 08-12-2024
+//  Created by Lukáš Korba on 2025-07-10.
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
 
-import Generated
-import ExchangeRate
-import UserPreferencesStorage
-import Models
-import WalletStorage
 import SDKSynchronizer
+import Generated
+import WalletStorage
+import Models
 
 @Reducer
-public struct CurrencyConversionSetup {
+public struct TorSetup {
     @ObservableState
     public struct State: Equatable {
         public enum SettingsOptions: CaseIterable {
@@ -31,11 +30,11 @@ public struct CurrencyConversionSetup {
 
             public func subtitle() -> String {
                 switch self {
-                case .optIn: return L10n.CurrencyConversion.learnMoreOptionEnableDesc
-                case .optOut: return L10n.CurrencyConversion.learnMoreOptionDisableDesc
+                case .optIn: return L10n.TorSetup.enableDesc
+                case .optOut: return L10n.TorSetup.disableDesc
                 }
             }
-            
+
             public func icon() -> ImageAsset {
                 switch self {
                 case .optIn: return Asset.Assets.check
@@ -45,36 +44,38 @@ public struct CurrencyConversionSetup {
         }
         
         public enum LearnMoreOptions: CaseIterable {
-            case ipAddress
-            case refresh
-            
+            case currencyConversion
+            case transactions
+            case integrations
+
             public func title() -> String {
                 switch self {
-                case .ipAddress: return L10n.CurrencyConversion.ipTitle
-                case .refresh: return L10n.CurrencyConversion.refresh
+                case .currencyConversion: return L10n.TorSetup.Option1.title
+                case .transactions: return L10n.TorSetup.Option2.title
+                case .integrations: return L10n.TorSetup.Option3.title
                 }
             }
 
             public func subtitle() -> String {
                 switch self {
-                case .ipAddress: return L10n.CurrencyConversion.ipDesc
-                case .refresh: return L10n.CurrencyConversion.refreshDesc
+                case .currencyConversion: return L10n.TorSetup.Option1.desc
+                case .transactions: return L10n.TorSetup.Option2.desc
+                case .integrations: return L10n.TorSetup.Option3.desc
                 }
             }
 
             public func icon() -> ImageAsset {
                 switch self {
-                case .ipAddress: return Asset.Assets.shieldTick
-                case .refresh: return Asset.Assets.refreshCCW
+                case .currencyConversion: return Asset.Assets.Icons.currencyDollar
+                case .transactions: return Asset.Assets.Icons.sent
+                case .integrations: return Asset.Assets.Icons.integrations
                 }
             }
         }
 
         public var activeSettingsOption: SettingsOptions?
-        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
-        public var isTorSheetPresented = false
 
         public var isSaveButtonDisabled: Bool {
             currentSettingsOption == activeSettingsOption
@@ -92,24 +93,18 @@ public struct CurrencyConversionSetup {
     }
     
     public enum Action: BindableAction, Equatable {
-        case binding(BindingAction<CurrencyConversionSetup.State>)
-        case delayedDismisalRequested
+        case binding(BindingAction<TorSetup.State>)
+        case disableTapped
         case enableTapped
-        case enableTorTapped
-        case laterTapped
         case onAppear
         case saveChangesTapped
         case settingsOptionChanged(State.SettingsOptions)
         case settingsOptionTapped(State.SettingsOptions)
-        case skipTapped
         case torInitFailed
         case torInitSucceeded
     }
 
-    @Dependency(\.exchangeRate) var exchangeRate
-    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
@@ -120,7 +115,7 @@ public struct CurrencyConversionSetup {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
+                if let torEnabled = walletStorage.exportTorSetupFlag(), torEnabled {
                     state.activeSettingsOption = .optIn
                     state.currentSettingsOption = .optIn
                 } else {
@@ -133,20 +128,16 @@ public struct CurrencyConversionSetup {
                 return .none
                 
             case .enableTapped:
-                try? userStoredPreferences.setExchangeRate(.init(manual: true, automatic: true))
+                try? walletStorage.importTorSetupFlag(true)
                 return .run { send in
                     do {
-                        try await sdkSynchronizer.exchangeRateEnabled(true)
-                        await send(.torInitSucceeded)
+                        try await sdkSynchronizer.torEnabled(true)
                     } catch {
                         await send(.torInitFailed)
                     }
                 }
 
-            case .settingsOptionChanged(let option):
-                if option == .optOut {
-                    state.$currencyConversion.withLock { $0 = nil }
-                }
+            case .settingsOptionChanged:
                 return .none
 
             case .settingsOptionTapped(let newOption):
@@ -154,53 +145,34 @@ public struct CurrencyConversionSetup {
                 return .none
                 
             case .saveChangesTapped:
-                try? userStoredPreferences.setExchangeRate(UserPreferencesStorage.ExchangeRate(manual: true, automatic: state.currentSettingsOption == .optIn))
+                let newFlag = state.currentSettingsOption == .optIn
+                try? walletStorage.importTorSetupFlag(newFlag)
                 state.activeSettingsOption = state.currentSettingsOption
-                let option = state.currentSettingsOption
-                let enabled = state.currentSettingsOption == .optIn
+                let currentSettingsOption = state.currentSettingsOption
                 return .run { send in
-                    await send(.settingsOptionChanged(option))
-                    
-                    do {
-                        try await sdkSynchronizer.exchangeRateEnabled(enabled)
-                        if enabled {
+                    await send(.settingsOptionChanged(currentSettingsOption))
+                    if newFlag {
+                        do {
+                            try await sdkSynchronizer.torEnabled(newFlag)
                             await send(.torInitSucceeded)
+                        } catch {
+                            await send(.torInitFailed)
                         }
-                    } catch {
-                        await send(.torInitFailed)
+                    } else {
+                        try? await sdkSynchronizer.torEnabled(newFlag)
                     }
                 }
 
-            case .skipTapped:
-                try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
-                return .none
-                
-            case .enableTorTapped:
-                state.isTorSheetPresented = false
-                try? walletStorage.importTorSetupFlag(true)
-                return .run { send in
-                    await send(.saveChangesTapped)
-                    do {
-                        //try await sdkSynchronizer.torEnabled(true)
-                        try? await mainQueue.sleep(for: .seconds(0.2))
-                        await send(.delayedDismisalRequested)
-                    } catch {
-                        await send(.torInitFailed)
-                    }
+            case .disableTapped:
+                try? walletStorage.importTorSetupFlag(false)
+                return .run { _ in
+                    try? await sdkSynchronizer.torEnabled(false)
                 }
-
-            case .delayedDismisalRequested:
-                return .none
                 
-            case .laterTapped:
-                state.isTorSheetPresented = false
+            case .torInitSucceeded:
                 return .none
                 
             case .torInitFailed:
-                return .none
-                
-            case .torInitSucceeded:
-                exchangeRate.refreshExchangeRateUSD()
                 return .none
             }
         }

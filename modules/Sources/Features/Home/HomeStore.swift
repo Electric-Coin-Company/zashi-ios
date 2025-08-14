@@ -115,6 +115,7 @@ public struct Home {
         case smartBanner(SmartBanner.Action)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
+        case torSetupTapped
         case updatePrivateUA(UnifiedAddress?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
@@ -175,7 +176,7 @@ public struct Home {
                 )
                 
             case .receiveScreenRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone)
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
@@ -309,6 +310,9 @@ public struct Home {
             case .currencyConversionSetupTapped:
                 return .none
 
+            case .torSetupTapped:
+                return .none
+
                 // Accounts
                 
             case .accountSwitchTapped:
@@ -339,6 +343,9 @@ public struct Home {
 
             case .smartBanner(.currencyConversionScreenRequested):
                 return .send(.currencyConversionSetupTapped)
+
+            case .smartBanner(.torSetupScreenRequested):
+                return .send(.torSetupTapped)
 
                 // More actions
                 

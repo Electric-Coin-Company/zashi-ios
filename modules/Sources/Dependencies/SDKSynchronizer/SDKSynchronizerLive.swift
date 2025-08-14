@@ -13,6 +13,8 @@ import DatabaseFiles
 import Models
 import ZcashSDKEnvironment
 import KeystoneSDK
+import WalletStorage
+import UserPreferencesStorage
 
 extension SDKSynchronizerClient: DependencyKey {
     public static let liveValue: SDKSynchronizerClient = Self.live()
@@ -20,8 +22,13 @@ extension SDKSynchronizerClient: DependencyKey {
     public static func live(
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
+        @Dependency(\.userStoredPreferences) var userStoredPreferences
+        @Dependency(\.walletStorage) var walletStorage
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
+        let isTorEnabled: Bool = walletStorage.exportTorSetupFlag() ?? false
+        let isRateEnabled: Bool = userStoredPreferences.exchangeRate()?.automatic ?? false
+        
         let network = zcashSDKEnvironment.network
         
         #if DEBUG
@@ -41,7 +48,9 @@ extension SDKSynchronizerClient: DependencyKey {
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
             outputParamsURL: databaseFiles.outputParamsURLFor(network),
             saplingParamsSourceURL: SaplingParamsSourceURL.default,
-            loggingPolicy: loggingPolicy
+            loggingPolicy: loggingPolicy,
+            isTorEnabled: isTorEnabled,
+            isExchangeRateEnabled: isRateEnabled
         )
         
         let synchronizer = SDKSynchronizer(initializer: initializer)
@@ -177,7 +186,6 @@ extension SDKSynchronizerClient: DependencyKey {
             evaluateBestOf: { endpoints, latencyThreshold, fetchThreshold, nBlocks, kServers, network in
                 await synchronizer.evaluateBestOf(
                     endpoints: endpoints,
-                    latencyThresholdMillis: latencyThreshold,
                     fetchThresholdSeconds: fetchThreshold,
                     nBlocksToFetch: nBlocks,
                     kServers: kServers,
@@ -276,25 +284,17 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             getCustomUnifiedAddress: { accountUUID, receivers in
                 try await synchronizer.getCustomUnifiedAddress(accountUUID: accountUUID, receivers: receivers)
+            },
+            torEnabled: { enabled in
+                try await synchronizer.tor(enabled: enabled)
+            },
+            exchangeRateEnabled: { enabled in
+                try await synchronizer.exchangeRateOverTor(enabled: enabled)
+            },
+            isTorSuccessfullyInitialized: {
+                await synchronizer.isTorSuccessfullyInitialized()
             }
         )
-    }
-}
-
-// TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
-// https://github.com/zcash/ZcashLightClientKit/issues/1313
-// Once #1313 is done, cleint will no longer need to call for a `latestHeight()`
-private extension SDKSynchronizerClient {
-    static func latestBlockHeight(synchronizer: SDKSynchronizer) async throws -> BlockHeight {
-        let latestBlockHeight: BlockHeight
-        
-        if synchronizer.latestState.latestBlockHeight > 0 {
-            latestBlockHeight = synchronizer.latestState.latestBlockHeight
-        } else {
-            latestBlockHeight = try await synchronizer.latestHeight()
-        }
-        
-        return latestBlockHeight
     }
 }
 
@@ -313,9 +313,7 @@ extension SDKSynchronizerClient {
         }
         
         var clearedTxs: [TransactionState] = []
-        
-        let latestBlockHeight = try? await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
-        
+
         for clearedTransaction in clearedTransactions {
             var hasTransparentOutputs = false
             let outputs = await synchronizer.getTransactionOutputs(for: clearedTransaction)
@@ -329,8 +327,7 @@ extension SDKSynchronizerClient {
             var transaction = TransactionState.init(
                 transaction: clearedTransaction,
                 memos: nil,
-                hasTransparentOutputs: hasTransparentOutputs,
-                latestBlockHeight: latestBlockHeight
+                hasTransparentOutputs: hasTransparentOutputs
             )
 
             let recipients = await synchronizer.getRecipients(for: clearedTransaction)

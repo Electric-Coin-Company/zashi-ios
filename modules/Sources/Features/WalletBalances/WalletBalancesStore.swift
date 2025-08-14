@@ -15,6 +15,7 @@ import Utils
 import ZcashLightClientKit
 import ZcashSDKEnvironment
 import UserPreferencesStorage
+import WalletStorage
 
 @Reducer
 public struct WalletBalances {
@@ -95,6 +96,7 @@ public struct WalletBalances {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }

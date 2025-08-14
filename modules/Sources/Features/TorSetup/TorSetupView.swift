@@ -2,7 +2,7 @@
 //  CurrencyConversionSetupView.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 08-12-2024
+//  Created by Lukáš Korba on 2025-07-10.
 //
 
 import SwiftUI
@@ -10,11 +10,11 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 
-public struct CurrencyConversionSetupView: View {
+public struct TorSetupView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Perception.Bindable var store: StoreOf<CurrencyConversionSetup>
+    @Perception.Bindable var store: StoreOf<TorSetup>
     
-    public init(store: StoreOf<CurrencyConversionSetup>) {
+    public init(store: StoreOf<TorSetup>) {
         self.store = store
     }
 
@@ -41,65 +41,18 @@ public struct CurrencyConversionSetupView: View {
             .onAppear { store.send(.onAppear) }
             .navigationBarBackButtonHidden(!store.isSettingsView)
             .zashiBackV2()
-            .zashiSheet(isPresented: $store.isTorSheetPresented) {
-                torSheetContent()
-                    .screenHorizontalPadding()
-                    .applyScreenBackground()
-            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
     }
     
-    @ViewBuilder private func torSheetContent() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            RoundedRectangle(cornerRadius: Design.Radius._full)
-                .fill(Design.Text.primary.color(colorScheme))
-                .frame(width: 40, height: 40)
-                .overlay {
-                    Asset.Assets.Partners.torLogo.image
-                        .zImage(width: 22, height: 15, style: Design.Text.opposite)
-                }
-                .padding(.top, 32)
-                .padding(.bottom, 12)
-
-            Text(L10n.TorSetup.CcSheet.title)
-                .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                .padding(.bottom, 12)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(L10n.TorSetup.CcSheet.desc1)
-                .zFont(size: 16, style: Design.Text.tertiary)
-                .padding(.bottom, 12)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(L10n.TorSetup.CcSheet.desc2)
-                .zFont(size: 16, style: Design.Text.tertiary)
-                .padding(.bottom, 32)
-                .fixedSize(horizontal: false, vertical: true)
-
-            ZashiButton(
-                L10n.TorSetup.CcSheet.later,
-                type: .ghost
-            ) {
-                store.send(.laterTapped)
-            }
-            .padding(.bottom, 12)
-
-            ZashiButton(L10n.TorSetup.CcSheet.enable) {
-                store.send(.enableTorTapped)
-            }
-            .padding(.bottom, 24)
-        }
-    }
-    
     private func settingsLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(L10n.CurrencyConversion.settingsDesc, desc2: L10n.CurrencyConversion.settingsDesc2)
+            header(desc1: L10n.TorSetup.Settings.desc1, desc2: L10n.TorSetup.Settings.desc2)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 20)
 
-            ForEach(CurrencyConversionSetup.State.SettingsOptions.allCases, id: \.self) { option in
+            ForEach(TorSetup.State.SettingsOptions.allCases, id: \.self) { option in
                 Button {
                     store.send(.settingsOptionTapped(option))
                 } label: {
@@ -144,9 +97,9 @@ public struct CurrencyConversionSetupView: View {
     
     private func learnMoreLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(L10n.CurrencyConversion.learnMoreDesc)
+            header(desc1: L10n.TorSetup.Learn.desc, desc2: "")
 
-            ForEach(CurrencyConversionSetup.State.LearnMoreOptions.allCases, id: \.self) { option in
+            ForEach(TorSetup.State.LearnMoreOptions.allCases, id: \.self) { option in
                 HStack(alignment: .top, spacing: 0) {
                     optionIcon(option.icon().image)
                     optionVStack(option.title(), subtitle: option.subtitle())
@@ -159,82 +112,53 @@ public struct CurrencyConversionSetupView: View {
     }
  
     private func settingsFooter() -> some View {
-        primaryButton(L10n.CurrencyConversion.saveBtn, disabled: store.isSaveButtonDisabled) {
+        ZashiButton(L10n.CurrencyConversion.saveBtn) {
             store.send(.saveChangesTapped)
         }
+        .disabled(store.isSaveButtonDisabled)
+        .screenHorizontalPadding()
         .padding(.bottom, 24)
     }
     
     private func learnMoreFooter() -> some View {
         VStack {
-            secondaryButton(L10n.CurrencyConversion.skipBtn) {
-                store.send(.skipTapped)
+            ZashiButton(
+                L10n.TorSetup.Learn.btnOut,
+                type: .ghost
+            ) {
+                store.send(.disableTapped)
             }
             
-            primaryButton(L10n.CurrencyConversion.enable) {
+            ZashiButton(L10n.TorSetup.Learn.btnIn) {
                 store.send(.enableTapped)
             }
+            .padding(.bottom, 24)
         }
-        .padding(.bottom, 24)
+        .screenHorizontalPadding()
     }
 }
 
 // MARK: - UI components
 
-extension CurrencyConversionSetupView {
-    private func primaryButton(
-        _ title: String,
-        disabled: Bool = false,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button {
-            action()
-        } label: {
-            Text(title)
-                .zFont(.semiBold, size: 16,
-                       style: disabled
-                       ? Design.Btns.Primary.fgDisabled
-                       : Design.Btns.Primary.fg
-                )
-                .frame(height: 24)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
-                        .fill(
-                            disabled
-                            ? Design.Btns.Primary.bgDisabled.color(colorScheme)
-                            : Design.Btns.Primary.bg.color(colorScheme)
-                        )
-                }
-        }
-        .disabled(disabled)
-        .screenHorizontalPadding()
-    }
-    
-    private func secondaryButton(_ title: String, action: @escaping () -> Void) -> some View {
-        Button {
-            action()
-        } label: {
-            Text(title)
-                .zFont(.semiBold, size: 16, style: Design.Btns.Ghost.fg)
-                .frame(height: 24)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-        }
-        .screenHorizontalPadding()
-    }
-
+extension TorSetupView {
     private func icons() -> some View {
-        Asset.Assets.rateIcons.image
-            .resizable()
-            .frame(width: 195, height: 80)
-            .offset(x: -8, y: 0)
+        RoundedRectangle(cornerRadius: Design.Radius._full)
+            .fill(Design.Text.primary.color(colorScheme))
+            .frame(width: 64, height: 64)
+            .overlay {
+                Asset.Assets.Partners.torLogo.image
+                    .zImage(width: 36, height: 24, style: Design.Text.opposite)
+            }
+            .padding(.top, 24)
     }
     
     private func title() -> some View {
-        Text(L10n.CurrencyConversion.title)
-            .zFont(.semiBold, size: 24, style: Design.Text.primary)
+        Text(
+            store.isSettingsView
+            ? L10n.Settings.private
+            : L10n.TorSetup.title
+        )
+        .zFont(.semiBold, size: 24, style: Design.Text.primary)
     }
     
     private func note() -> some View {
@@ -273,7 +197,7 @@ extension CurrencyConversionSetupView {
             .padding(.trailing, 16)
     }
     
-    private func header(_ desc: String, desc2: String? = nil) -> some View {
+    private func header(desc1: String, desc2: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 icons()
@@ -285,14 +209,14 @@ extension CurrencyConversionSetupView {
             title()
                 .padding(.bottom, 8)
             
-            Text(desc)
+            Text(desc1)
                 .zFont(size: 14, style: Design.Text.tertiary)
-                .padding(.bottom, desc2 == nil ? 4 : 16)
+                .padding(.bottom, store.isSettingsView ? 16 : 12)
 
-            if let desc2 {
+            if store.isSettingsView {
                 Text(desc2)
                     .zFont(size: 14, style: Design.Text.tertiary)
-                    .padding(.bottom, 4)
+                    .padding(.bottom, 12)
             }
         }
     }
@@ -302,22 +226,22 @@ extension CurrencyConversionSetupView {
 
 #Preview {
     NavigationView {
-        CurrencyConversionSetupView(store: CurrencyConversionSetup.initial)
+        TorSetupView(store: TorSetup.initial)
     }
 }
 
 // MARK: - Store
 
-extension CurrencyConversionSetup {
-    public static var initial = StoreOf<CurrencyConversionSetup>(
+extension TorSetup {
+    public static var initial = StoreOf<TorSetup>(
         initialState: .init(isSettingsView: false)
     ) {
-        CurrencyConversionSetup()
+        TorSetup()
     }
 }
 
 // MARK: - Placeholders
 
-extension CurrencyConversionSetup.State {
-    public static let initial = CurrencyConversionSetup.State()
+extension TorSetup.State {
+    public static let initial = TorSetup.State()
 }
