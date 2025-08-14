@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.1 build 1 (2025-08-07)
+
 ### Added
 - Connection over Tor in the Advanced settings.
 
