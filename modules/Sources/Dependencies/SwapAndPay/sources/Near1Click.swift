@@ -13,643 +13,354 @@ import WalletStorage
 
 struct Near1Click {
     enum Constants {
+        // urls
+        static let submitUrl = "https://1click.chaindefuser.com/v0/deposit/submit"
+        static let tokensUrl = "https://1click.chaindefuser.com/v0/tokens"
+        static let quoteUrl = "https://1click.chaindefuser.com/v0/quote"
+        static let statusUrl = "https://1click.chaindefuser.com/v0/status?depositAddress="
+        
+        // provider
         static let near = "near"
+        
+        // keys
+        static let blockchain = "blockchain"
+        static let symbol = "symbol"
+        static let assetId = "assetId"
+        static let price = "price"
+        static let decimals = "decimals"
+        static let message = "message"
+        static let quote = "quote"
+        static let depositAddress = "depositAddress"
+        static let amountIn = "amountIn"
+        static let amountInUsd = "amountInUsd"
+        static let minAmountIn = "minAmountIn"
+        static let amountOut = "amountOut"
+        static let amountOutUsd = "amountOutUsd"
+        static let timeEstimate = "timeEstimate"
+        static let status = "status"
+        static let quoteResponse = "quoteResponse"
+        static let quoteRequest = "quoteRequest"
+        static let swapType = "swapType"
+        static let destinationAsset = "destinationAsset"
+        static let swapDetails = "swapDetails"
+        static let slippage = "slippage"
+        static let slippageTolerance = "slippageTolerance"
+        static let refundedAmountFormatted = "refundedAmountFormatted"
+        static let amountInFormatted = "amountInFormatted"
+        static let amountOutFormatted = "amountOutFormatted"
+        static let recipient = "recipient"
+        
+        // params
+        static let exactInput = "EXACT_INPUT"
+        static let exactOutput = "EXACT_OUTPUT"
+        static let originChain = "ORIGIN_CHAIN"
+        static let destinationChain = "DESTINATION_CHAIN"
+        static let pendingDeposit = "PENDING_DEPOSIT"
+        static let refunded = "REFUNDED"
+        static let success = "SUCCESS"
     }
     
     let submitDepositTxId: (String, String) async throws -> Void
     let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
     let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
     let status: (String) async throws -> SwapDetails
-}
-
-extension Near1Click {
-    public static let liveValue: Near1Click = Self.live()
     
-    public static func live() -> Self {
+    static func getCall(urlString: String) async throws -> (Data, URLResponse) {
+        @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
+        
+        guard let url = URL(string: Constants.tokensUrl) else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        return swapAPIAccess == .direct
+        ? try await URLSession.shared.data(for: request)
+        : try await sdkSynchronizer.httpRequestOverTor(request)
+    }
+    
+    static func postCall(urlString: String, jsonData: Data) async throws -> (Data, URLResponse) {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
 
-        return Near1Click(
-            //    public static let liveValue = Self(
-            submitDepositTxId: { txId, depositAddress in
-                guard let url = URL(string: "https://1click.chaindefuser.com/v0/deposit/submit") else {
-                    throw URLError(.badURL)
-                }
-                
-                let requestData = SwapSubmitHash(
-                    txHash: txId,
-                    depositAddress: depositAddress
-                )
-                
-                guard let jsonData = try? JSONEncoder().encode(requestData) else {
-                    fatalError("Failed to encode JSON")
-                }
-                
-                var request = URLRequest(url: url)
-                request.httpMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = jsonData
-                
-                let (data, response) = swapAPIAccess == .direct
-                ? try await URLSession.shared.data(for: request)
-                : try await sdkSynchronizer.httpRequestOverTor(request)
-
-                guard let _ = response as? HTTPURLResponse else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: Invalid response")
-                }
-                
-                guard let _ = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    throw SwapAndPayClient.EndpointError.message("Submit deposit id: Cannot parse response")
-                }
-            },
-            swapAssets: {
-                guard let url = URL(string: "https://1click.chaindefuser.com/v0/tokens") else {
-                    throw URLError(.badURL)
-                }
-                
-                var request = URLRequest(url: url)
-                request.httpMethod = "GET"
-                
-                let (data, _) = swapAPIAccess == .direct
-                ? try await URLSession.shared.data(for: request)
-                : try await sdkSynchronizer.httpRequestOverTor(request)
-
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
-                    throw URLError(.cannotParseResponse)
-                }
-                
-                let formatter = NumberFormatter()
-                formatter.locale = Locale(identifier: "en_US")
-                formatter.numberStyle = .decimal
-                
-                let chainAssets = jsonObject.compactMap { dict -> SwapAsset? in
-                    guard let chain = dict["blockchain"] as? String else {
-                        return nil
-                    }
+        guard let url = URL(string: Constants.tokensUrl) else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        return swapAPIAccess == .direct
+        ? try await URLSession.shared.data(for: request)
+        : try await sdkSynchronizer.httpRequestOverTor(request)
+    }
+    
+    static func amountMessageResolution(exactInput: Bool, toAsset: SwapAsset, jsonObject: [String: Any]) throws {
+        // evaluate error
+        if let errorMsg = jsonObject[Constants.message] as? String {
+            var errorMsgConverted = errorMsg
+            
+            // insufficient amount transformations
+            if errorMsg.contains("Amount is too low for bridge, try at least") {
+                if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last {
+                    let valueDecimal = NSDecimalNumber(string: String(value)).decimalValue
                     
-                    guard let symbol = dict["symbol"] as? String else {
-                        return nil
-                    }
+                    let formatter = NumberFormatter()
+                    formatter.numberStyle = .decimal
+                    formatter.minimumFractionDigits = 2
+                    formatter.maximumFractionDigits = 8
+                    formatter.usesGroupingSeparator = false
+                    formatter.locale = Locale.current
                     
-                    guard let assetId = dict["assetId"] as? String else {
-                        return nil
-                    }
-                    
-                    guard let usdPrice = dict["price"] as? Double else {
-                        return nil
-                    }
-                    
-                    guard let decimals = dict["decimals"] as? Int else {
-                        return nil
-                    }
-                    
-                    return SwapAsset(
-                        provider: Near1Click.Constants.near,
-                        chain: chain,
-                        token: symbol,
-                        assetId: assetId,
-                        usdPrice: Decimal(usdPrice),
-                        decimals: decimals
-                    )
-                }
-                
-                return IdentifiedArrayOf(uniqueElements: chainAssets)
-            },
-            quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
-                guard let url = URL(string: "https://1click.chaindefuser.com/v0/quote") else {
-                    throw URLError(.badURL)
-                }
-                
-                // Deadline in ISO 8601 UTC format
-                let now = Date()
-                let tenMinutesLater = now.addingTimeInterval(10 * 60)
-                let isoFormatter = ISO8601DateFormatter()
-                isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
-                isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-                
-                let deadline = isoFormatter.string(from: tenMinutesLater)
-                
-                let requestData = SwapQuoteRequest(
-                    dry: dry,
-                    swapType: exactInput ? "EXACT_INPUT" : "EXACT_OUTPUT",
-                    slippageTolerance: slippageTolerance,
-                    originAsset: zecAsset.assetId,
-                    depositType: "ORIGIN_CHAIN",
-                    destinationAsset: toAsset.assetId,
-                    amount: amount,
-                    refundTo: refundTo,
-                    refundType: "ORIGIN_CHAIN",
-                    recipient: destination,
-                    recipientType: "DESTINATION_CHAIN",
-                    deadline: deadline,
-                    quoteWaitingTimeMs: 3000
-                )
-                
-                guard let jsonData = try? JSONEncoder().encode(requestData) else {
-                    fatalError("Failed to encode JSON")
-                }
-                
-                var request = URLRequest(url: url)
-                request.httpMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = jsonData
-
-                let (data, response) = swapAPIAccess == .direct
-                ? try await URLSession.shared.data(for: request)
-                : try await sdkSynchronizer.httpRequestOverTor(request)
-
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw SwapAndPayClient.EndpointError.message("Quote: Invalid response")
-                }
-                
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
-                }
-                
-                if httpResponse.statusCode >= 400 {
-                    // evaluate error
-                    if let errorMsg = jsonObject["message"] as? String {
-                        var errorMsgConverted = errorMsg
+                    // ZEC asset
+                    if exactInput {
+                        let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
                         
-                        // insufficient amount transformations
-                        if errorMsg.contains("Amount is too low for bridge, try at least") {
-                            if let value = errorMsg.split(separator: "Amount is too low for bridge, try at least ").last {
-                                let valueDecimal = NSDecimalNumber(string: String(value)).decimalValue
-                                
-                                let formatter = NumberFormatter()
-                                formatter.numberStyle = .decimal
-                                formatter.minimumFractionDigits = 2
-                                formatter.maximumFractionDigits = 8
-                                formatter.usesGroupingSeparator = false
-                                formatter.locale = Locale.current
-                                
-                                // ZEC asset
-                                if exactInput {
-                                    let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
-                                    
-                                    let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
-                                    errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
-                                } else {
-                                    // selected Asset
-                                    let tokenAmount = (valueDecimal / Decimal(pow(10.0, Double(toAsset.decimals)))).simplified
-                                    
-                                    let localeValue = formatter.string(from: NSDecimalNumber(decimal: tokenAmount)) ?? "\(tokenAmount)"
-                                    errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
-                                }
-                            }
-                        }
-                        
-                        throw SwapAndPayClient.EndpointError.message(errorMsgConverted)
+                        let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
+                        errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) ZEC."
                     } else {
-                        throw SwapAndPayClient.EndpointError.message("Unknown error")
+                        // selected Asset
+                        let tokenAmount = (valueDecimal / Decimal(pow(10.0, Double(toAsset.decimals)))).simplified
+                        
+                        let localeValue = formatter.string(from: NSDecimalNumber(decimal: tokenAmount)) ?? "\(tokenAmount)"
+                        errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
                     }
                 }
-                
-                guard let quote = jsonObject["quote"] as? [String: Any],
-                      let depositAddress = quote["depositAddress"] as? String,
-                      let amountInString = quote["amountIn"] as? String,
-                      let amountInUsdString = quote["amountInUsd"] as? String,
-                      let minAmountInString = quote["minAmountIn"] as? String,
-                      let amountOutString = quote["amountOut"] as? String,
-                      let amountOutUsdString = quote["amountOutUsd"] as? String,
-                      let timeEstimate = quote["timeEstimate"] as? Int else {
-                    throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
-                }
-                
-                let amountIn = NSDecimalNumber(string: amountInString).decimalValue
-                let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
-                let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
-                
-                return SwapQuote(
-                    depositAddress: depositAddress,
-                    amountIn: amountIn,
-                    amountInUsd: amountInUsdString,
-                    minAmountIn: minAmountIn,
-                    amountOut: amountOut / Decimal(pow(10.0, Double(toAsset.decimals))),
-                    amountOutUsd: amountOutUsdString,
-                    timeEstimate: TimeInterval(timeEstimate)
-                )
-            },
-            status: { depositAddress in
-                guard let url = URL(string: "https://1click.chaindefuser.com/v0/status?depositAddress=\(depositAddress)") else {
-                    throw URLError(.badURL)
-                }
-                
-                var request = URLRequest(url: url)
-                request.httpMethod = "GET"
-                
-                let (data, response) = swapAPIAccess == .direct
-                ? try await URLSession.shared.data(for: request)
-                : try await sdkSynchronizer.httpRequestOverTor(request)
-
-                guard let _ = response as? HTTPURLResponse else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Invalid response")
-                }
-                
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")
-                }
-                
-                guard let statusStr = jsonObject["status"] as? String else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
-                }
-
-                let status: SwapDetails.Status = switch statusStr {
-                case "PENDING_DEPOSIT": .pending
-                case "REFUNDED": .refunded
-                case "SUCCESS": .success
-                default: .pending
-                }
-
-                guard let quoteResponseDict = jsonObject["quoteResponse"] as? [String: Any],
-                      let quoteRequestDict = quoteResponseDict["quoteRequest"] as? [String: Any] else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `quoteRequest` parameter.")
-                }
-                
-                guard let swapType = quoteRequestDict["swapType"] as? String else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
-                }
-                
-                guard let destinationAsset = quoteRequestDict["destinationAsset"] as? String else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
-                }
-                
-                guard let swapDetailsDict = jsonObject["swapDetails"] as? [String: Any] else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapDetails` parameter.")
-                }
-                
-                var slippage: Decimal?
-                if let slippageInt = swapDetailsDict["slippage"] as? Int {
-                    slippage = Decimal(slippageInt) * 0.01
-                } else if status != .success {
-                    if let slippageInt = quoteRequestDict["slippageTolerance"] as? Int {
-                        slippage = Decimal(slippageInt) * 0.01
-                    }
-                }
-
-                var refundedAmountFormattedDecimal: Decimal?
-                if let refundedAmountFormatted = swapDetailsDict["refundedAmountFormatted"] as? String, status == .refunded {
-                    refundedAmountFormattedDecimal = refundedAmountFormatted.usDecimal
-                }
-
-                var amountInFormattedDecimal: Decimal?
-                if let amountInFormatted = swapDetailsDict["amountInFormatted"] as? String {
-                    amountInFormattedDecimal = amountInFormatted.usDecimal
-                }
-                
-                var amountInUsd = swapDetailsDict["amountInUsd"] as? String
-                
-                var amountOutFormattedDecimal: Decimal?
-                if let amountOutFormatted = swapDetailsDict["amountOutFormatted"] as? String {
-                    amountOutFormattedDecimal = amountOutFormatted.usDecimal
-                }
-                
-                var amountOutUsd = swapDetailsDict["amountOutUsd"] as? String
-                
-                var swapRecipient: String?
-                if let recipient = quoteRequestDict["recipient"] as? String {
-                    swapRecipient = recipient
-                }
-                
-                if status == .pending || status == .refunded {
-                    if let quoteDict = quoteResponseDict["quote"] as? [String: Any] {
-                        if let amountInFormatted = quoteDict["amountInFormatted"] as? String {
-                            amountInFormattedDecimal = amountInFormatted.usDecimal
-                        }
-
-                        if let amountOutFormatted = quoteDict["amountOutFormatted"] as? String {
-                            amountOutFormattedDecimal = amountOutFormatted.usDecimal
-                        }
-
-                        amountInUsd = quoteDict["amountInUsd"] as? String
-                        amountOutUsd = quoteDict["amountOutUsd"] as? String
-                    }
-                }
-                
-                return SwapDetails(
-                    amountInFormatted: amountInFormattedDecimal,
-                    amountInUsd: amountInUsd,
-                    amountOutFormatted: amountOutFormattedDecimal,
-                    amountOutUsd: amountOutUsd,
-                    destinationAsset: destinationAsset,
-                    isSwap: swapType == "EXACT_INPUT",
-                    slippage: slippage,
-                    status: status,
-                    refundedAmountFormatted: refundedAmountFormattedDecimal,
-                    swapRecipient: swapRecipient
-                )
             }
-        )
+            
+            throw SwapAndPayClient.EndpointError.message(errorMsgConverted)
+        } else {
+            throw SwapAndPayClient.EndpointError.message("Unknown error")
+        }
     }
 }
 
-/*
- 
- 
- {
-   "status": "REFUNDED",
-   "updatedAt": "2025-06-20T10:57:41.000Z",
-   "swapDetails": {
-     "intentHashes": [
-       "2vkMVKd5BKmChUwZSL772uvBB2dqjYMHem1SDxbk8qqS"
-     ],
-     "nearTxHashes": [
-       "6BkmfLGnNzS3NkQi5LQoSWUSJw7ZdVkWcBJCVXH9XBo4",
-       "Dn3kRwf33rawayWwQ3ZCwo8r6Zrm83tp7e6KqwhoB3ms"
-     ],
-     "amountIn": null,
-     "amountInFormatted": null,
-     "amountInUsd": null,
-     "amountOut": null,
-     "amountOutFormatted": null,
-     "amountOutUsd": null,
-     "slippage": null,
-     "refundedAmount": "53000",
-     "refundedAmountFormatted": "0.00053",
-     "refundedAmountUsd": "0.0222",
-     "originChainTxHashes": [
-       {
-         "hash": "0839045295a9ea2967e673773626ef9ff3ee97ffa2ce4411f2d988930dfc297b",
-         "explorerUrl": ""
-       }
-     ],
-     "destinationChainTxHashes": []
-   },
-   "quoteResponse": {
-     "timestamp": "2025-06-20T10:45:25.435Z",
-     "signature": "ed25519:2bVVxD95TSyQrNQK2fKhjaknafHab9GEmyH7u83fGSFNHzb3aFwHLjPrg6HEgRa1rfrMsBzpD1NkEmMePEBYLnUf",
-     "quoteRequest": {
-       "dry": false,
-       "swapType": "EXACT_INPUT",
-       "slippageTolerance": 1,
-       "originAsset": "nep141:zec.omft.near",
-       "depositType": "ORIGIN_CHAIN",
-       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
-       "amount": "100000",
-       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
-       "refundType": "ORIGIN_CHAIN",
-       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
-       "recipientType": "DESTINATION_CHAIN",
-       "deadline": "2025-06-20T10:55:25.000Z",
-       "appFees": []
-     },
-     "quote": {
-       "amountIn": "100000",
-       "amountInFormatted": "0.001",
-       "amountInUsd": "0.0419",
-       "minAmountIn": "100000",
-       "amountOut": "41977",
-       "amountOutFormatted": "0.041977",
-       "amountOutUsd": "0.0420",
-       "minAmountOut": "41973",
-       "timeWhenInactive": "2025-06-21T10:45:28.809Z",
-       "depositAddress": "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22",
-       "deadline": "2025-06-21T10:45:28.809Z",
-       "timeEstimate": 105
-     }
-   }
- }
- 
- {
-   "status": "PENDING_DEPOSIT",
-   "updatedAt": "2025-06-22T10:31:58.821Z",
-   "swapDetails": {
-     "intentHashes": [],
-     "nearTxHashes": [],
-     "amountIn": null,
-     "amountInFormatted": null,
-     "amountInUsd": null,
-     "amountOut": null,
-     "amountOutFormatted": null,
-     "amountOutUsd": null,
-     "slippage": null,
-     "refundedAmount": "0",
-     "refundedAmountFormatted": "0",
-     "refundedAmountUsd": "0",
-     "originChainTxHashes": [],
-     "destinationChainTxHashes": []
-   },
-   "quoteResponse": {
-     "timestamp": "2025-06-22T10:31:52.430Z",
-     "signature": "ed25519:3ueLEvcRsGfwdihGc8BVCywJCVcGDrwi3WbZNPq7ktLUtC4n7VLjZAUtcNyveFcgNri3g8HS2KBRCUzcerYATpaq",
-     "quoteRequest": {
-       "dry": false,
-       "swapType": "EXACT_INPUT",
-       "slippageTolerance": 100,
-       "originAsset": "nep141:zec.omft.near",
-       "depositType": "ORIGIN_CHAIN",
-       "destinationAsset": "nep141:aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near",
-       "amount": "100000",
-       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
-       "refundType": "ORIGIN_CHAIN",
-       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
-       "recipientType": "DESTINATION_CHAIN",
-       "deadline": "2025-06-22T10:41:52.000Z",
-       "appFees": []
-     },
-     "quote": {
-       "amountIn": "100000",
-       "amountInFormatted": "0.001",
-       "amountInUsd": "0.0385",
-       "minAmountIn": "100000",
-       "amountOut": "523180024550103497",
-       "amountOutFormatted": "0.523180024550103497",
-       "amountOutUsd": "0.0362",
-       "minAmountOut": "517948224304602462",
-       "timeWhenInactive": "2025-06-23T10:31:58.816Z",
-       "depositAddress": "t1evCZ4Zc3h1fueaZTbgwZkXcssajcWUKCV",
-       "deadline": "2025-06-23T10:31:58.816Z",
-       "timeEstimate": 105
-     }
-   }
- }
- 
- */
+extension Near1Click {
+    public static let liveValue = Self(
+        submitDepositTxId: { txId, depositAddress in
+            let requestData = SwapSubmitHash(
+                txHash: txId,
+                depositAddress: depositAddress
+            )
+            
+            guard let jsonData = try? JSONEncoder().encode(requestData) else {
+                fatalError("Failed to encode JSON")
+            }
+            
+            let (data, response) = try await Near1Click.postCall(urlString: Constants.submitUrl, jsonData: jsonData)
+            
+            guard let _ = response as? HTTPURLResponse else {
+                throw SwapAndPayClient.EndpointError.message("Submit deposit id: Invalid response")
+            }
+            
+            guard let _ = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                throw SwapAndPayClient.EndpointError.message("Submit deposit id: Cannot parse response")
+            }
+        },
+        swapAssets: {
+            let (data, _) = try await Near1Click.getCall(urlString: Constants.tokensUrl)
+            
+            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
+                throw URLError(.cannotParseResponse)
+            }
+            
+            let formatter = NumberFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.numberStyle = .decimal
+            
+            let chainAssets = jsonObject.compactMap { dict -> SwapAsset? in
+                guard let chain = dict[Constants.blockchain] as? String,
+                      let symbol = dict[Constants.symbol] as? String,
+                      let assetId = dict[Constants.assetId] as? String,
+                      let usdPrice = dict[Constants.price] as? Double,
+                      let decimals = dict[Constants.decimals] as? Int else {
+                    return nil
+                }
 
-
-
-/*
- 
- {
-   "status": "SUCCESS",
-   "updatedAt": "2025-06-20T08:04:23.000Z",
-   "swapDetails": {
-     "intentHashes": [
-       "3T2ZsfkmCyms3r18r6MgxZjZbmcuKuN8KrX2DBrxVjm2"
-     ],
-     "nearTxHashes": [
-       "G8eJHbMt3bS3Mey1oZs8VZHcm5EARyTWuKAQ12VwKofq",
-       "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C"
-     ],
-     "amountIn": "2388503",
-     "amountInFormatted": "0.02388503",
-     "amountInUsd": "0.9993",
-     "amountOut": "1000000",
-     "amountOutFormatted": "1.0",
-     "amountOutUsd": "0.9999",
-     "slippage": 0,
-     "refundedAmount": "0",
-     "refundedAmountFormatted": "0",
-     "refundedAmountUsd": "0",
-     "originChainTxHashes": [],
-     "destinationChainTxHashes": [
-       {
-         "hash": "9oS2NbV1aRyRwQ5CZWN4JpyqiipoWLu1QpL7Vo2kRp2C",
-         "explorerUrl": ""
-       }
-     ]
-   },
-   "quoteResponse": {
-     "timestamp": "2025-06-20T08:00:55.511Z",
-     "signature": "ed25519:K6syLxwbFx68SYb9dTYRor5YXyagpU7Hn9MKm6XEx3RRz2G2GcVtdZkrYNiVjQmz3dLxGGy3Czx1UP9jUpz1Kpk",
-     "quoteRequest": {
-       "dry": false,
-       "swapType": "EXACT_OUTPUT",
-       "slippageTolerance": 200,
-       "originAsset": "nep141:zec.omft.near",
-       "depositType": "ORIGIN_CHAIN",
-       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
-       "amount": "1000000",
-       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
-       "refundType": "ORIGIN_CHAIN",
-       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
-       "recipientType": "DESTINATION_CHAIN",
-       "deadline": "2025-06-20T08:10:55.000Z",
-       "appFees": []
-     },
-     "quote": {
-       "amountIn": "2438412",
-       "amountInFormatted": "0.02438412",
-       "amountInUsd": "1.0216",
-       "minAmountIn": "2389644",
-       "amountOut": "1000000",
-       "amountOutFormatted": "1.0",
-       "amountOutUsd": "0.9999",
-       "minAmountOut": "1000000",
-       "timeWhenInactive": "2025-06-21T08:00:59.109Z",
-       "depositAddress": "t1SLqm2JGH8ectbEpvN1x1GPVDjwJpNLepo",
-       "deadline": "2025-06-21T08:00:59.109Z",
-       "timeEstimate": 105
-     }
-   }
- }
- 
- {
-   "status": "REFUNDED",
-   "updatedAt": "2025-06-20T10:57:41.000Z",
-   "swapDetails": {
-     "intentHashes": [
-       "2vkMVKd5BKmChUwZSL772uvBB2dqjYMHem1SDxbk8qqS"
-     ],
-     "nearTxHashes": [
-       "6BkmfLGnNzS3NkQi5LQoSWUSJw7ZdVkWcBJCVXH9XBo4",
-       "Dn3kRwf33rawayWwQ3ZCwo8r6Zrm83tp7e6KqwhoB3ms"
-     ],
-     "amountIn": null,
-     "amountInFormatted": null,
-     "amountInUsd": null,
-     "amountOut": null,
-     "amountOutFormatted": null,
-     "amountOutUsd": null,
-     "slippage": null,
-     "refundedAmount": "53000",
-     "refundedAmountFormatted": "0.00053",
-     "refundedAmountUsd": "0.0222",
-     "originChainTxHashes": [
-       {
-         "hash": "0839045295a9ea2967e673773626ef9ff3ee97ffa2ce4411f2d988930dfc297b",
-         "explorerUrl": ""
-       }
-     ],
-     "destinationChainTxHashes": []
-   },
-   "quoteResponse": {
-     "timestamp": "2025-06-20T10:45:25.435Z",
-     "signature": "ed25519:2bVVxD95TSyQrNQK2fKhjaknafHab9GEmyH7u83fGSFNHzb3aFwHLjPrg6HEgRa1rfrMsBzpD1NkEmMePEBYLnUf",
-     "quoteRequest": {
-       "dry": false,
-       "swapType": "EXACT_INPUT",
-       "slippageTolerance": 1,
-       "originAsset": "nep141:zec.omft.near",
-       "depositType": "ORIGIN_CHAIN",
-       "destinationAsset": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
-       "amount": "100000",
-       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
-       "refundType": "ORIGIN_CHAIN",
-       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
-       "recipientType": "DESTINATION_CHAIN",
-       "deadline": "2025-06-20T10:55:25.000Z",
-       "appFees": []
-     },
-     "quote": {
-       "amountIn": "100000",
-       "amountInFormatted": "0.001",
-       "amountInUsd": "0.0419",
-       "minAmountIn": "100000",
-       "amountOut": "41977",
-       "amountOutFormatted": "0.041977",
-       "amountOutUsd": "0.0420",
-       "minAmountOut": "41973",
-       "timeWhenInactive": "2025-06-21T10:45:28.809Z",
-       "depositAddress": "t1ZVjVfpcCm7mqNqYQ3VAs8NreDWQt2AB22",
-       "deadline": "2025-06-21T10:45:28.809Z",
-       "timeEstimate": 105
-     }
-   }
- }
- 
- {
-   "status": "PENDING_DEPOSIT",
-   "updatedAt": "2025-06-22T10:31:58.821Z",
-   "swapDetails": {
-     "intentHashes": [],
-     "nearTxHashes": [],
-     "amountIn": null,
-     "amountInFormatted": null,
-     "amountInUsd": null,
-     "amountOut": null,
-     "amountOutFormatted": null,
-     "amountOutUsd": null,
-     "slippage": null,
-     "refundedAmount": "0",
-     "refundedAmountFormatted": "0",
-     "refundedAmountUsd": "0",
-     "originChainTxHashes": [],
-     "destinationChainTxHashes": []
-   },
-   "quoteResponse": {
-     "timestamp": "2025-06-22T10:31:52.430Z",
-     "signature": "ed25519:3ueLEvcRsGfwdihGc8BVCywJCVcGDrwi3WbZNPq7ktLUtC4n7VLjZAUtcNyveFcgNri3g8HS2KBRCUzcerYATpaq",
-     "quoteRequest": {
-       "dry": false,
-       "swapType": "EXACT_INPUT",
-       "slippageTolerance": 100,
-       "originAsset": "nep141:zec.omft.near",
-       "depositType": "ORIGIN_CHAIN",
-       "destinationAsset": "nep141:aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near",
-       "amount": "100000",
-       "refundTo": "t1LPZcKWXfAQeB4pNCUbRFzHi96R1KNpdo8",
-       "refundType": "ORIGIN_CHAIN",
-       "recipient": "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633",
-       "recipientType": "DESTINATION_CHAIN",
-       "deadline": "2025-06-22T10:41:52.000Z",
-       "appFees": []
-     },
-     "quote": {
-       "amountIn": "100000",
-       "amountInFormatted": "0.001",
-       "amountInUsd": "0.0385",
-       "minAmountIn": "100000",
-       "amountOut": "523180024550103497",
-       "amountOutFormatted": "0.523180024550103497",
-       "amountOutUsd": "0.0362",
-       "minAmountOut": "517948224304602462",
-       "timeWhenInactive": "2025-06-23T10:31:58.816Z",
-       "depositAddress": "t1evCZ4Zc3h1fueaZTbgwZkXcssajcWUKCV",
-       "deadline": "2025-06-23T10:31:58.816Z",
-       "timeEstimate": 105
-     }
-   }
- }
- 
- */
+                return SwapAsset(
+                    provider: Near1Click.Constants.near,
+                    chain: chain,
+                    token: symbol,
+                    assetId: assetId,
+                    usdPrice: Decimal(usdPrice),
+                    decimals: decimals
+                )
+            }
+            
+            return IdentifiedArrayOf(uniqueElements: chainAssets)
+        },
+        quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
+            // Deadline in ISO 8601 UTC format
+            let now = Date()
+            let tenMinutesLater = now.addingTimeInterval(10 * 60)
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
+            isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+            
+            let deadline = isoFormatter.string(from: tenMinutesLater)
+            
+            let requestData = SwapQuoteRequest(
+                dry: dry,
+                swapType: exactInput ? Constants.exactInput : Constants.exactOutput,
+                slippageTolerance: slippageTolerance,
+                originAsset: zecAsset.assetId,
+                depositType: Constants.originChain,
+                destinationAsset: toAsset.assetId,
+                amount: amount,
+                refundTo: refundTo,
+                refundType: Constants.originChain,
+                recipient: destination,
+                recipientType: Constants.destinationChain,
+                deadline: deadline,
+                quoteWaitingTimeMs: 3000
+            )
+            
+            guard let jsonData = try? JSONEncoder().encode(requestData) else {
+                fatalError("Failed to encode JSON")
+            }
+            
+            let (data, response) = try await Near1Click.postCall(urlString: Constants.quoteUrl, jsonData: jsonData)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw SwapAndPayClient.EndpointError.message("Quote: Invalid response")
+            }
+            
+            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                throw SwapAndPayClient.EndpointError.message("Quote: Cannot parse response")
+            }
+            
+            if httpResponse.statusCode >= 400 {
+                try amountMessageResolution(exactInput: exactInput, toAsset: toAsset, jsonObject: jsonObject)
+            }
+            
+            guard let quote = jsonObject[Constants.quote] as? [String: Any],
+                  let depositAddress = quote[Constants.depositAddress] as? String,
+                  let amountInString = quote[Constants.amountIn] as? String,
+                  let amountInUsdString = quote[Constants.amountInUsd] as? String,
+                  let minAmountInString = quote[Constants.minAmountIn] as? String,
+                  let amountOutString = quote[Constants.amountOut] as? String,
+                  let amountOutUsdString = quote[Constants.amountOutUsd] as? String,
+                  let timeEstimate = quote[Constants.timeEstimate] as? Int else {
+                throw SwapAndPayClient.EndpointError.message("Parse of the quote failed.")
+            }
+            
+            let amountIn = NSDecimalNumber(string: amountInString).decimalValue
+            let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
+            let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
+            
+            return SwapQuote(
+                depositAddress: depositAddress,
+                amountIn: amountIn,
+                amountInUsd: amountInUsdString,
+                minAmountIn: minAmountIn,
+                amountOut: amountOut / Decimal(pow(10.0, Double(toAsset.decimals))),
+                amountOutUsd: amountOutUsdString,
+                timeEstimate: TimeInterval(timeEstimate)
+            )
+        },
+        status: { depositAddress in
+            let (data, response) = try await Near1Click.getCall(urlString: "\(Constants.statusUrl)\(depositAddress)")
+            
+            guard let _ = response as? HTTPURLResponse else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Invalid response")
+            }
+            
+            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")
+            }
+            
+            guard let statusStr = jsonObject[Constants.status] as? String else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
+            }
+            
+            let status: SwapDetails.Status = switch statusStr {
+            case Constants.pendingDeposit: .pending
+            case Constants.refunded: .refunded
+            case Constants.success: .success
+            default: .pending
+            }
+            
+            guard let quoteResponseDict = jsonObject[Constants.quoteResponse] as? [String: Any],
+                  let quoteRequestDict = quoteResponseDict[Constants.quoteRequest] as? [String: Any] else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `quoteRequest` parameter.")
+            }
+            
+            guard let swapType = quoteRequestDict[Constants.swapType] as? String else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
+            }
+            
+            guard let destinationAsset = quoteRequestDict[Constants.destinationAsset] as? String else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
+            }
+            
+            guard let swapDetailsDict = jsonObject[Constants.swapDetails] as? [String: Any] else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapDetails` parameter.")
+            }
+            
+            var slippage: Decimal?
+            if let slippageInt = swapDetailsDict[Constants.slippage] as? Int {
+                slippage = Decimal(slippageInt) * 0.01
+            } else if status != .success {
+                if let slippageInt = quoteRequestDict[Constants.slippageTolerance] as? Int {
+                    slippage = Decimal(slippageInt) * 0.01
+                }
+            }
+            
+            var refundedAmountFormattedDecimal: Decimal?
+            if let refundedAmountFormatted = swapDetailsDict[Constants.refundedAmountFormatted] as? String, status == .refunded {
+                refundedAmountFormattedDecimal = refundedAmountFormatted.usDecimal
+            }
+            
+            var amountInFormattedDecimal: Decimal?
+            if let amountInFormatted = swapDetailsDict[Constants.amountInFormatted] as? String {
+                amountInFormattedDecimal = amountInFormatted.usDecimal
+            }
+            
+            var amountInUsd = swapDetailsDict[Constants.amountInUsd] as? String
+            
+            var amountOutFormattedDecimal: Decimal?
+            if let amountOutFormatted = swapDetailsDict[Constants.amountOutFormatted] as? String {
+                amountOutFormattedDecimal = amountOutFormatted.usDecimal
+            }
+            
+            var amountOutUsd = swapDetailsDict[Constants.amountOutUsd] as? String
+            
+            var swapRecipient: String?
+            if let recipient = quoteRequestDict[Constants.recipient] as? String {
+                swapRecipient = recipient
+            }
+            
+            if status == .pending || status == .refunded {
+                if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
+                    if let amountInFormatted = quoteDict[Constants.amountInFormatted] as? String {
+                        amountInFormattedDecimal = amountInFormatted.usDecimal
+                    }
+                    
+                    if let amountOutFormatted = quoteDict[Constants.amountOutFormatted] as? String {
+                        amountOutFormattedDecimal = amountOutFormatted.usDecimal
+                    }
+                    
+                    amountInUsd = quoteDict[Constants.amountInUsd] as? String
+                    amountOutUsd = quoteDict[Constants.amountOutUsd] as? String
+                }
+            }
+            
+            return SwapDetails(
+                amountInFormatted: amountInFormattedDecimal,
+                amountInUsd: amountInUsd,
+                amountOutFormatted: amountOutFormattedDecimal,
+                amountOutUsd: amountOutUsd,
+                destinationAsset: destinationAsset,
+                isSwap: swapType == Constants.exactInput,
+                slippage: slippage,
+                status: status,
+                refundedAmountFormatted: refundedAmountFormattedDecimal,
+                swapRecipient: swapRecipient
+            )
+        }
+    )
+}

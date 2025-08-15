@@ -1051,7 +1051,7 @@ extension SwapAndPay.State {
 
         let feeIdUsd = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
 
-        return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted()
+        return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted(.number.locale(Locale(identifier: "en_US")))
     }
 }
 
