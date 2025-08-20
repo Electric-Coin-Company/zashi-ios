@@ -84,7 +84,7 @@ public struct SwapAndPayCoordFlowView: View {
                         }
                 )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
-                    moreContent()
+                    helpContent()
                         .screenHorizontalPadding()
                         .applyScreenBackground()
                 }
@@ -113,7 +113,7 @@ public struct SwapAndPayCoordFlowView: View {
         }
     }
 
-    @ViewBuilder func moreContent() -> some View {
+    @ViewBuilder func helpContent() -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.4, *) {
                 helpSheetContent()
@@ -131,22 +131,36 @@ public struct SwapAndPayCoordFlowView: View {
     }
     
     @ViewBuilder private func helpSheetContent() -> some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.Icons.arrowDown.image
+                .zImage(size: 20, style: Design.Text.primary)
+                .padding(10)
+                .background {
+                    Circle()
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                }
+                .padding(.top, 24)
+
             HStack(spacing: 10) {
-                Text(L10n.SwapAndPay.title)
-                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                Text(
+                    store.isSwapExperience
+                    ? L10n.SwapAndPay.Help.swapWith
+                    : L10n.SwapAndPay.Help.payWith
+                )
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 
                 Asset.Assets.Partners.nearLogo.image
                     .zImage(width: 98, height: 24, style: Design.Text.primary)
             }
-            .padding(.top, 12)
-            .padding(.vertical, 24)
+            .padding(.vertical, 12)
 
-            infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc)
-                .padding(.bottom, 20)
-            
-            infoContent(index: 1, text: L10n.SwapAndPay.Help.payDesc1, desc2: L10n.SwapAndPay.Help.payDesc2)
-                .padding(.bottom, 32)
+            if store.isSwapExperience {
+                infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc, desc2: L10n.SwapAndPay.Help.swapDesc2)
+                    .padding(.bottom, 32)
+            } else {
+                infoContent(index: 1, text: L10n.SwapAndPay.Help.payDesc1, desc2: L10n.SwapAndPay.Help.payDesc2)
+                    .padding(.bottom, 32)
+            }
             
             ZashiButton(L10n.General.ok.uppercased()) {
                 store.send(.helpSheetRequested)
@@ -156,33 +170,26 @@ public struct SwapAndPayCoordFlowView: View {
     }
     
     @ViewBuilder private func infoContent(index: Int, text: String, desc2: String? = nil) -> some View {
-        HStack(alignment: .top, spacing: 16) {
-            if index == 0 {
-                Asset.Assets.Icons.arrowDown.image
-                    .zImage(size: 20, style: Design.Text.primary)
-                    .padding(10)
-                    .background {
-                        Circle()
-                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                    }
-            } else {
-                Asset.Assets.Icons.coinsSwap.image
-                    .zImage(size: 20, style: Design.Text.primary)
-                    .padding(10)
-                    .background {
-                        Circle()
-                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                    }
-            }
+//        HStack(alignment: .top, spacing: 16) {
+//            if index == 0 {
+//                Asset.Assets.Icons.arrowDown.image
+//                    .zImage(size: 20, style: Design.Text.primary)
+//                    .padding(10)
+//                    .background {
+//                        Circle()
+//                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+//                    }
+//            } else {
+//                Asset.Assets.Icons.coinsSwap.image
+//                    .zImage(size: 20, style: Design.Text.primary)
+//                    .padding(10)
+//                    .background {
+//                        Circle()
+//                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+//                    }
+//            }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(
-                    index == 0
-                    ? L10n.SwapAndPay.Help.swapWithNear
-                    : L10n.SwapAndPay.Help.payWithNear
-                )
-                .zFont(.semiBold, size: 14, style: Design.Text.primary)
-
                 Text(text)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -197,8 +204,8 @@ public struct SwapAndPayCoordFlowView: View {
                 }
             }
             
-            Spacer()
-        }
+//            Spacer()
+//        }
     }
 }
 

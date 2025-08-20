@@ -137,30 +137,66 @@ public struct TransactionDetailsView: View {
 
                 Spacer()
                 
-                HStack(spacing: 12) {
-                    ZashiButton(
-                        store.annotation.isEmpty
-                        ? L10n.Annotation.addArticle
-                        : L10n.Annotation.edit,
-                        type: .tertiary
-                    ) {
-                        store.send(.noteButtonTapped)
-                    }
-
-                    if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction && !store.isSwap {
-                        if store.alias == nil {
-                            ZashiButton(L10n.TransactionHistory.saveAddress) {
-                                store.send(.saveAddressTapped)
+                
+                if let retryFailure = store.swapAssetFailedWithRetry {
+                    VStack(alignment: .center, spacing: 0) {
+                        Asset.Assets.infoOutline.image
+                            .zImage(size: 16, style: Design.Text.error)
+                            .padding(.bottom, 8)
+                            .padding(.top, 32)
+                        
+                        Text(retryFailure
+                             ? L10n.SwapAndPay.Failure.retryTitle
+                             : L10n.SwapAndPay.Failure.laterTitle
+                        )
+                        .zFont(.medium, size: 14, style: Design.Text.error)
+                        .padding(.bottom, 8)
+                        
+                        Text(retryFailure
+                             ? L10n.SwapAndPay.Failure.retryDesc
+                             : L10n.SwapAndPay.Failure.laterDesc
+                        )
+                        .zFont(size: 14, style: Design.Text.error)
+                        .padding(.bottom, 24)
+                        
+                        if retryFailure {
+                            ZashiButton(
+                                L10n.SwapAndPay.Failure.tryAgain,
+                                type: .destructive1
+                            ) {
+                                store.send(.trySwapsAssetsAgainTapped)
                             }
-                        } else {
-                            ZashiButton(L10n.TransactionHistory.sendAgain) {
-                                store.send(.sendAgainTapped)
+                            .padding(.bottom, 24)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .screenHorizontalPadding()
+                } else {
+                    HStack(spacing: 12) {
+                        ZashiButton(
+                            store.annotation.isEmpty
+                            ? L10n.Annotation.addArticle
+                            : L10n.Annotation.edit,
+                            type: .tertiary
+                        ) {
+                            store.send(.noteButtonTapped)
+                        }
+                        
+                        if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction && !store.isSwap {
+                            if store.alias == nil {
+                                ZashiButton(L10n.TransactionHistory.saveAddress) {
+                                    store.send(.saveAddressTapped)
+                                }
+                            } else {
+                                ZashiButton(L10n.TransactionHistory.sendAgain) {
+                                    store.send(.sendAgainTapped)
+                                }
                             }
                         }
                     }
+                    .padding(.bottom, 24)
+                    .screenHorizontalPadding()
                 }
-                .padding(.bottom, 24)
-                .screenHorizontalPadding()
             }
             .zashiBack(hidden: store.isCloseButtonRequired) {
                 store.send(.closeDetailTapped)
@@ -464,9 +500,7 @@ extension TransactionDetailsView {
                     }
 
                     detailView(
-                        title: store.transaction.listDateYearString == nil
-                        ? L10n.TransactionHistory.status
-                        : L10n.TransactionHistory.completed,
+                        title: L10n.TransactionHistory.timestamp,
                         value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )

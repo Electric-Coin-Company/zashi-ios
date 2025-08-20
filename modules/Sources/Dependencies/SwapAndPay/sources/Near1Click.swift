@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import SDKSynchronizer
 import WalletStorage
+import Utils
 
 struct Near1Click {
     enum Constants {
@@ -69,23 +70,37 @@ struct Near1Click {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         
-        guard let url = URL(string: Constants.tokensUrl) else {
+        guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
-        return swapAPIAccess == .direct
-        ? try await URLSession.shared.data(for: request)
-        : try await sdkSynchronizer.httpRequestOverTor(request)
+
+        do {
+            let (data, response) = swapAPIAccess == .direct
+            ? try await URLSession.shared.data(for: request)
+            : try await sdkSynchronizer.httpRequestOverTor(request)
+            
+            guard let http = response as? HTTPURLResponse,
+                  (200..<300).contains(http.statusCode) else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+                throw NetworkError.httpStatus(code: code)
+            }
+            
+            return (data, response)
+        } catch let urlError as URLError {
+            throw NetworkError.transport(urlError)
+        } catch {
+            throw NetworkError.unknown(error)
+        }
     }
     
     static func postCall(urlString: String, jsonData: Data) async throws -> (Data, URLResponse) {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
 
-        guard let url = URL(string: Constants.tokensUrl) else {
+        guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         
@@ -93,7 +108,7 @@ struct Near1Click {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
-        
+
         return swapAPIAccess == .direct
         ? try await URLSession.shared.data(for: request)
         : try await sdkSynchronizer.httpRequestOverTor(request)
@@ -216,7 +231,13 @@ extension Near1Click {
                 recipient: destination,
                 recipientType: Constants.destinationChain,
                 deadline: deadline,
-                quoteWaitingTimeMs: 3000
+                quoteWaitingTimeMs: 3000,
+                appFees: [
+                    AppFee(
+                        recipient: SwapAndPayClient.Constants.affiliateFeeDepositAddress,
+                        fee: SwapAndPayClient.Constants.zashiFeeBps
+                    )
+                ]
             )
             
             guard let jsonData = try? JSONEncoder().encode(requestData) else {
@@ -264,11 +285,7 @@ extension Near1Click {
         },
         status: { depositAddress in
             let (data, response) = try await Near1Click.getCall(urlString: "\(Constants.statusUrl)\(depositAddress)")
-            
-            guard let _ = response as? HTTPURLResponse else {
-                throw SwapAndPayClient.EndpointError.message("Check status: Invalid response")
-            }
-            
+
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")
             }

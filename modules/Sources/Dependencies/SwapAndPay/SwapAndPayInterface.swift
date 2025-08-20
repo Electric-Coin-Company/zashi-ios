@@ -21,6 +21,13 @@ public struct  SwapAndPayClient {
         case message(String)
     }
     
+    public enum Constants {
+        /// Affiliate fee in basis points
+        static public let zashiFeeBps = 50
+        ///
+        static let affiliateFeeDepositAddress = "barticek.near"
+    }
+    
     public let submitDepositTxId: (String, String) async throws -> Void
     public let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
     public let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote

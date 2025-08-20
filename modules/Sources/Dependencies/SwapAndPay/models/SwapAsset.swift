@@ -15,16 +15,20 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
     public var id: String {
         "\(provider).\(chain).\(token)".lowercased()
     }
-    
+
     public var chainName: String {
         switch chain.lowercased() {
         case "arb": return "Arbitrum"
         case "btc": return "Bitcoin"
-        case "ada": return "Cardano"
         case "eth": return "Ethereum"
         case "xrp": return "Ripple"
         case "sol": return "Solana"
         case "zec": return "Zcash"
+        case "avax": return "Avalanche"
+        case "bsc": return "Binance Smart Chain"
+        case "op": return "Optimism"
+        case "pol": return "Polygon"
+        case "ada": return "Cardano"
         default: return chain.capitalized
         }
     }
@@ -38,6 +42,11 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         case "tron": return "Tron"
         case "xrp": return "Ripple"
         case "zec": return "Zcash"
+        case "avax": return "Avalanche"
+        case "bsc": return "Binance Smart Chain"
+        case "op": return "Optimism"
+        case "pol": return "Polygon"
+        case "ada": return "Cardano"
         default: return token
         }
     }

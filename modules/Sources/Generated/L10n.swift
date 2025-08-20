@@ -1072,11 +1072,17 @@ public enum L10n {
     }
   }
   public enum SendSelect {
-    /// Swap or Pay with NEAR
-    public static let swapAndPay = L10n.tr("Localizable", "sendSelect.swapAndPay", fallback: "Swap or Pay with NEAR")
-    public enum SwapAndPay {
-      /// Send payments or swap for any coin or token supported by NEAR.
-      public static let desc = L10n.tr("Localizable", "sendSelect.swapAndPay.desc", fallback: "Send payments or swap for any coin or token supported by NEAR.")
+    /// Cross-chain payments with NEAR
+    public static let payWithNear = L10n.tr("Localizable", "sendSelect.payWithNear", fallback: "Cross-chain payments with NEAR")
+    /// Swap ZEC with NEAR Intents
+    public static let swapWithNear = L10n.tr("Localizable", "sendSelect.swapWithNear", fallback: "Swap ZEC with NEAR Intents")
+    public enum PayWithNear {
+      /// Send any coin or token supported by NEAR.
+      public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Send any coin or token supported by NEAR.")
+    }
+    public enum SwapWithNear {
+      /// Swap shielded ZEC to any supported cryptocurrency.
+      public static let desc = L10n.tr("Localizable", "sendSelect.swapWithNear.desc", fallback: "Swap shielded ZEC to any supported cryptocurrency.")
     }
     public enum Zashi {
       /// Pay in ZEC
@@ -1482,8 +1488,6 @@ public enum L10n {
     public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay now")
     /// Pay to
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
-    /// Swap fee
-    public static let providerFee = L10n.tr("Localizable", "swapAndPay.providerFee", fallback: "Swap fee")
     /// Quote Unavailable
     public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
     /// Rate
@@ -1494,10 +1498,10 @@ public enum L10n {
     public static let recipientGets = L10n.tr("Localizable", "swapAndPay.recipientGets", fallback: "Recipient gets")
     /// Refunded amount
     public static let refundedAmount = L10n.tr("Localizable", "swapAndPay.refundedAmount", fallback: "Refunded amount")
-    /// Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.
-    public static let refundInfo = L10n.tr("Localizable", "swapAndPay.refundInfo", fallback: "Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.")
-    /// Payment Refunded
-    public static let refundTitle = L10n.tr("Localizable", "swapAndPay.refundTitle", fallback: "Payment Refunded")
+    /// Your deposit transaction was sent but the swap was unsuccessful. The transaction amount has been refunded, minus transaction fees.
+    public static let refundInfo = L10n.tr("Localizable", "swapAndPay.refundInfo", fallback: "Your deposit transaction was sent but the swap was unsuccessful. The transaction amount has been refunded, minus transaction fees.")
+    /// Transaction Refunded
+    public static let refundTitle = L10n.tr("Localizable", "swapAndPay.refundTitle", fallback: "Transaction Refunded")
     /// Search by name or ticker...
     public static let search = L10n.tr("Localizable", "swapAndPay.search", fallback: "Search by name or ticker...")
     /// Select...
@@ -1510,8 +1514,8 @@ public enum L10n {
     public static let slippage = L10n.tr("Localizable", "swapAndPay.slippage", fallback: "Slippage")
     /// This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.
     public static let slippageDesc = L10n.tr("Localizable", "swapAndPay.slippageDesc", fallback: "This setting determines the maximum allowable difference between the expected price of a swap and the actual price you pay, which is outside of Zashi's control.")
-    /// You will pay up to 
-    public static let slippageSet1 = L10n.tr("Localizable", "swapAndPay.slippageSet1", fallback: "You will pay up to ")
+    /// You may receive up to 
+    public static let slippageSet1 = L10n.tr("Localizable", "swapAndPay.slippageSet1", fallback: "You may receive up to ")
     /// %@% (%@)
     public static func slippageSet2a(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.slippageSet2a", String(describing: p1), String(describing: p2), fallback: "%@% (%@)")
@@ -1520,8 +1524,8 @@ public enum L10n {
     public static func slippageSet2b(_ p1: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.slippageSet2b", String(describing: p1), fallback: "%@%")
     }
-    ///  slippage fee, in addition to transaction fees.
-    public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: " slippage fee, in addition to transaction fees.")
+    ///  less than quoted.
+    public static let slippageSet3 = L10n.tr("Localizable", "swapAndPay.slippageSet3", fallback: " less than quoted.")
     /// Slippage tolerance
     public static let slippageTolerance = L10n.tr("Localizable", "swapAndPay.slippageTolerance", fallback: "Slippage tolerance")
     /// Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.
@@ -1544,8 +1548,8 @@ public enum L10n {
     }
     /// Swap to
     public static let swapTo = L10n.tr("Localizable", "swapAndPay.swapTo", fallback: "Swap to")
-    /// Swap or Pay with
-    public static let title = L10n.tr("Localizable", "swapAndPay.title", fallback: "Swap or Pay with")
+    /// Swap or  Pay with
+    public static let title = L10n.tr("Localizable", "swapAndPay.title", fallback: "Swap or  Pay with")
     /// To
     public static let to = L10n.tr("Localizable", "swapAndPay.to", fallback: "To")
     /// Total Amount
@@ -1554,11 +1558,29 @@ public enum L10n {
     public static let totalFees = L10n.tr("Localizable", "swapAndPay.totalFees", fallback: "Total fees")
     /// You pay
     public static let youPay = L10n.tr("Localizable", "swapAndPay.youPay", fallback: "You pay")
+    /// Zashi fee
+    public static let zashiFee = L10n.tr("Localizable", "swapAndPay.zashiFee", fallback: "Zashi fee")
     public enum EmptyAssets {
       /// We tried but couldn’t find anything.
       public static let subtitle = L10n.tr("Localizable", "swapAndPay.emptyAssets.subtitle", fallback: "We tried but couldn’t find anything.")
       /// No results
       public static let title = L10n.tr("Localizable", "swapAndPay.emptyAssets.title", fallback: "No results")
+    }
+    public enum Failure {
+      /// Please try again later.
+      public static let laterDesc = L10n.tr("Localizable", "swapAndPay.failure.laterDesc", fallback: "Please try again later.")
+      /// The service is unavailable
+      public static let laterTitle = L10n.tr("Localizable", "swapAndPay.failure.laterTitle", fallback: "The service is unavailable")
+      /// Please check your connection and try again.
+      public static let retryDesc = L10n.tr("Localizable", "swapAndPay.failure.retryDesc", fallback: "Please check your connection and try again.")
+      /// Unexpected error
+      public static let retryTitle = L10n.tr("Localizable", "swapAndPay.failure.retryTitle", fallback: "Unexpected error")
+      /// Try again
+      public static let tryAgain = L10n.tr("Localizable", "swapAndPay.failure.tryAgain", fallback: "Try again")
+      /// Something went wrong
+      public static let wrong = L10n.tr("Localizable", "swapAndPay.failure.wrong", fallback: "Something went wrong")
+      /// We couldn’t load the assets. Please check your connection and try again.
+      public static let wrongDesc = L10n.tr("Localizable", "swapAndPay.failure.wrongDesc", fallback: "We couldn’t load the assets. Please check your connection and try again.")
     }
     public enum ForcedOptIn {
       /// I understand that Zashi makes API requests to the NEAR API every time I interact with a Swap/Pay transaction.
@@ -1575,8 +1597,10 @@ public enum L10n {
       public static let payWith = L10n.tr("Localizable", "swapAndPay.help.payWith", fallback: "Pay with")
       /// Pay with NEAR
       public static let payWithNear = L10n.tr("Localizable", "swapAndPay.help.payWithNear", fallback: "Pay with NEAR")
-      /// Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.
-      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.")
+      /// Swap from shielded ZEC to any NEAR-supported coin or token.
+      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap from shielded ZEC to any NEAR-supported coin or token.")
+      /// Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.
+      public static let swapDesc2 = L10n.tr("Localizable", "swapAndPay.help.swapDesc2", fallback: "Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.")
       /// Swap with
       public static let swapWith = L10n.tr("Localizable", "swapAndPay.help.swapWith", fallback: "Swap with")
       /// Swap with NEAR
@@ -1792,6 +1816,8 @@ public enum L10n {
     public static func threeDots(_ p1: Any) -> String {
       return L10n.tr("Localizable", "transactionHistory.threeDots", String(describing: p1), fallback: "%@...")
     }
+    /// Timestamp
+    public static let timestamp = L10n.tr("Localizable", "transactionHistory.timestamp", fallback: "Timestamp")
     /// Transactions
     public static let title = L10n.tr("Localizable", "transactionHistory.title", fallback: "Transactions")
     /// View less

@@ -287,7 +287,7 @@ extension TransactionState {
         totalSpent = transaction.totalSpent
         totalReceived = transaction.totalReceived
         
-        let isPending = transaction.state == .pending
+        let isPending = isSentTransaction ? minedHeight == nil : transaction.state == .pending
         let isExpired = transaction.state == .expired
         
         // failed check

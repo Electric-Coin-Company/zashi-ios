@@ -56,6 +56,7 @@ public struct TransactionDetails {
         public var annotationToInput = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        public var swapAssetFailedWithRetry: Bool? = nil
         public var swapDetails: SwapDetails?
         public var umSwapId: UMSwapId?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
@@ -111,11 +112,13 @@ public struct TransactionDetails {
         case saveNoteTapped
         case sendAgainTapped
         case showHideButtonTapped
+        case swapAssetsFailedWithRetry(Bool)
         case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
         case swapDetailsLoaded(SwapDetails?)
         case swapRecipientTapped
         case transactionIdTapped
         case transactionsUpdated
+        case trySwapsAssetsAgainTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -169,6 +172,13 @@ public struct TransactionDetails {
                     .cancel(id: state.SwapDetailsCancelId)
                 )
                 
+            case .swapAssetsFailedWithRetry(let retry):
+                state.swapAssetFailedWithRetry = retry
+                return .none
+                
+            case .trySwapsAssetsAgainTapped:
+                return .send(.checkSwapAssets)
+
             case .observeTransactionChange:
                 if state.transaction.isPending {
                     return .merge(
@@ -189,13 +199,16 @@ public struct TransactionDetails {
                     return .send(.checkSwapStatus)
                 }
                 return .run { send in
-                    let swapAssets = try? await swapAndPay.swapAssets()
-                    if let swapAssets {
+                    do {
+                        let swapAssets = try await swapAndPay.swapAssets()
                         await send(.swapAssetsLoaded(swapAssets))
-                    }
+                    } catch let error as NetworkError {
+                        await send(.swapAssetsFailedWithRetry(error.allowsRetry))
+                    } catch { }
                 }
                 
             case .swapAssetsLoaded(let swapAssets):
+                state.swapAssetFailedWithRetry = nil
                 // exclude all tokens with price == 0
                 // exclude zec token
                 let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }

@@ -72,6 +72,56 @@ extension SwapAndPayForm {
         }
     }
     
+    @ViewBuilder func assetsFailureComposition(_ colorScheme: ColorScheme) -> some View {
+        WithPerceptionTracking {
+            ZStack {
+                VStack(spacing: 0) {
+                    ForEach(0..<5) { _ in
+                        NoTransactionPlaceholder()
+                    }
+                    
+                    Spacer()
+                }
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .clear, location: 0.0),
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.3)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                
+                VStack(alignment: .center, spacing: 0) {
+                    Asset.Assets.Illustrations.cone.image
+                        .zImage(size: 164, style: Design.Text.primary)
+                        .padding(.bottom, 20)
+                    
+                    Text(L10n.SwapAndPay.Failure.wrong)
+                        .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+                    
+                    Text(L10n.SwapAndPay.Failure.wrongDesc)
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .padding(.bottom, 20)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    if let retryFailure = store.swapAssetFailedWithRetry, retryFailure {
+                        ZashiButton(
+                            L10n.SwapAndPay.Failure.tryAgain,
+                            type: .tertiary,
+                            infinityWidth: false
+                        ) {
+                            store.send(.trySwapsAssetsAgainTapped)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     @ViewBuilder func assetContent(_ colorScheme: ColorScheme) -> some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
@@ -110,7 +160,9 @@ extension SwapAndPayForm {
                 .padding(.bottom, 32)
                 .padding(.horizontal, 20)
                 
-                if store.swapAssetsToPresent.isEmpty && !store.searchTerm.isEmpty {
+                if let retryFailure = store.swapAssetFailedWithRetry {
+                    assetsFailureComposition(colorScheme)
+                } else if store.swapAssetsToPresent.isEmpty && !store.searchTerm.isEmpty {
                     assetsEmptyComposition(colorScheme)
                 } else if store.swapAssetsToPresent.isEmpty && store.searchTerm.isEmpty {
                     assetsLoadingComposition(colorScheme)
@@ -465,26 +517,14 @@ extension SwapAndPayForm {
                 )
                 .padding(.bottom, 12)
 
-                quoteLineContent(L10n.SwapAndPay.fee, "\(store.feeStr) \(tokenName)")
+                quoteLineContent(L10n.SwapAndPay.totalFees, "\(store.totalFeesStr) \(tokenName)")
                 HStack(spacing: 0) {
                     Spacer()
 
-                    Text(store.feeUsdStr)
+                    Text(store.totalFeesUsdStr)
                         .zFont(.medium, size: 12, style: Design.Text.tertiary)
                 }
 
-                quoteLineContent(
-                    L10n.SwapAndPay.providerFee,
-                    "\(store.swapProviderFeeZECStr) \(tokenName)"
-                )
-                .padding(.top, 12)
-                HStack(spacing: 0) {
-                    Spacer()
-                    
-                    Text(store.swapProviderFeeUsdStr)
-                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
-                }
-                
                 if !store.isSwapExperienceEnabled {
                     quoteLineContent(
                         L10n.SwapAndPay.maxSlippage(store.currentSlippageString),

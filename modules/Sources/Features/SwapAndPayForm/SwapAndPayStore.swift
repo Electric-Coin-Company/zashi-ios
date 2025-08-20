@@ -62,6 +62,7 @@ public struct SwapAndPay {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        public var swapAssetFailedWithRetry: Bool? = nil
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
         public var walletBalancesState: WalletBalances.State
@@ -153,9 +154,11 @@ public struct SwapAndPay {
         case slippageChipTapped(Int)
         case slippageSetConfirmTapped
         case slippageTapped
+        case swapAssetsFailedWithRetry(Bool)
         case swapAssetsLoaded(IdentifiedArrayOf<SwapAsset>)
         case swapQuoteLoaded(SwapQuote)
         case switchInputTapped
+        case trySwapsAssetsAgainTapped
         case updateAssetsAccordingToSearchTerm
         case walletBalances(WalletBalances.Action)
         
@@ -229,6 +232,9 @@ public struct SwapAndPay {
                     .cancel(id: state.ABCancelId)
                 )
                 
+            case .trySwapsAssetsAgainTapped:
+                return .send(.refreshSwapAssets)
+
             case .backButtonTapped(let isSwapInFlight):
                 if !isSwapInFlight {
                     return .send(.customBackRequired)
@@ -262,14 +268,20 @@ public struct SwapAndPay {
 
             case .refreshSwapAssets:
                 return .run { send in
-                    let swapAssets = try? await swapAndPay.swapAssets()
-                    if let swapAssets {
+                    do {
+                        let swapAssets = try await swapAndPay.swapAssets()
                         await send(.swapAssetsLoaded(swapAssets))
-                    }
+                    } catch let error as NetworkError {
+                        await send(.swapAssetsFailedWithRetry(error.allowsRetry))
+                    } catch { }
                     try? await mainQueue.sleep(for: .seconds(30))
                     await send(.refreshSwapAssets)
                 }
                 .cancellable(id: state.SwapAssetsCancelId, cancelInFlight: true)
+                
+            case .swapAssetsFailedWithRetry(let retry):
+                state.swapAssetFailedWithRetry = retry
+                return .none
 
             case .enableSwapExperience:
                 state.isSwapExperienceEnabled.toggle()
@@ -436,7 +448,8 @@ public struct SwapAndPay {
                 let exactInput = state.isSwapExperienceEnabled
                 let slippageTolerance = NSDecimalNumber(decimal: (state.slippage * 100.0)).intValue
                 let destination = state.address
-                let zecAmountInt = NSDecimalNumber(decimal: (zecAmountDecimal * Decimal(Zatoshi.Constants.oneZecInZatoshi))).int64Value
+                let zecAmountInt = NSDecimalNumber(decimal: zecAmountDecimal)
+                    .multiplying(by: NSDecimalNumber(value: Zatoshi.Constants.oneZecInZatoshi)).int64Value
                 var amountString = String(zecAmountInt)
                 if !state.isSwapExperienceEnabled {
                     let tokenAmountInt = NSDecimalNumber(decimal: (tokenAmountDecimal * Decimal(pow(10.0, Double(toAsset.decimals))))).int64Value
@@ -458,8 +471,10 @@ public struct SwapAndPay {
                         await send(.swapQuoteLoaded(swapQuote))
                     } catch SwapAndPayClient.EndpointError.message(let errorMsg) {
                         await send(.quoteUnavailable(errorMsg))
+                    } catch let error as NetworkError {
+                        await send(.quoteUnavailable("Error: \(error.message)"))
                     } catch {
-                        await send(.quoteUnavailable("Unknown error"))
+                        await send(.quoteUnavailable("Error: \(error.localizedDescription)"))
                     }
                 }
 
@@ -532,6 +547,7 @@ public struct SwapAndPay {
                 return .none
                 
             case .swapAssetsLoaded(let swapAssets):
+                state.swapAssetFailedWithRetry = nil
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil && state.selectedContact == nil {
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "btc" && $0.chain.lowercased() == "btc" })
@@ -908,16 +924,20 @@ extension SwapAndPay.State {
         return totalAmountUsd.formatted(.currency(code: CurrencyISO4217.usd.code))
     }
     
-    public var swapProviderFeeZECStr: String {
+    public var zashiFeeStr: String {
         guard let quote else {
             return "0"
         }
         
-        guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
-            return "0"
-        }
+        let zashiFeeCoeff = (Decimal(SwapAndPayClient.Constants.zashiFeeBps) / Decimal(10_000))
+        let zashiFee = quote.amountIn * zashiFeeCoeff
+        let zatoshi = Zatoshi(Int64(truncating: NSDecimalNumber(decimal: zashiFee)))
 
-        guard let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
+        return zatoshi.decimalString()
+    }
+    
+    public var zashiFeeUsdStr: String {
+        guard let quote else {
             return "0"
         }
         
@@ -925,37 +945,16 @@ extension SwapAndPay.State {
             return "0"
         }
 
-        let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
-        let feeDecimal = (amountInUsdDecimal - amountOutUsdDecimal) - (amountInUsdDecimal * slippage * 0.01 * swapCoeff)
-        let zatoshiDecimal = NSDecimalNumber(decimal: (feeDecimal / zecAsset.usdPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi))
-        let zatoshi = Zatoshi(Int64(zatoshiDecimal.doubleValue))
+        let zashiFeeCoeff = (Decimal(SwapAndPayClient.Constants.zashiFeeBps) / Decimal(10_000))
+        let zashiFee = ((quote.amountIn * zashiFeeCoeff) / Decimal(100_000_000)) * zecAsset.usdPrice
 
-        return zatoshi.decimalString()
-    }
-    
-    public var swapProviderFeeUsdStr: String {
-        guard let quote else {
-            return "0"
-        }
-        
-        guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
-            return "0"
-        }
-
-        guard let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
-            return "0"
-        }
-        
-        let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
-        let fee = (amountInUsdDecimal - amountOutUsdDecimal) - (amountInUsdDecimal * slippage * 0.01 * swapCoeff)
-        
-        if fee < 0.01 {
+        if zashiFee < 0.01 {
             let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
                 .precision(.fractionLength(4))
             
-            return NSDecimalNumber(decimal: fee).doubleValue.formatted(formatter)
+            return NSDecimalNumber(decimal: zashiFee).doubleValue.formatted(formatter)
         } else {
-            return fee.formatted(.currency(code: CurrencyISO4217.usd.code))
+            return zashiFee.formatted(.currency(code: CurrencyISO4217.usd.code))
         }
     }
     
@@ -1024,26 +1023,20 @@ extension SwapAndPay.State {
     }
     
     public var totalFees: Int64 {
-        guard let proposal,
-              let quote,
-              let zecAsset,
-              let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal,
-              let amountOutUsdDecimal = quote.amountOutUsd.localeUsdDecimal else {
+        guard let proposal, let quote else {
             return 0
         }
 
         // transaction fee
         let transactionFee =  proposal.totalFeeRequired().amount
         
-        // swap fee
-        let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
-        let feeDecimal = (amountInUsdDecimal - amountOutUsdDecimal) - (amountInUsdDecimal * slippage * 0.01 * swapCoeff)
-        let zatoshiDecimal = NSDecimalNumber(decimal: (feeDecimal / zecAsset.usdPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi))
-        let swapFee = Int64(zatoshiDecimal.doubleValue)
+        // zashi fee
+        let zashiFee = quote.amountIn * 0.005
+        let zatoshiZashiFee = Int64(truncating: NSDecimalNumber(decimal: zashiFee))
 
-        return transactionFee + swapFee
+        return transactionFee + zatoshiZashiFee
     }
-    
+
     public var totalUSDFees: String {
         guard let zecAsset else {
             return "0.0"
@@ -1052,6 +1045,27 @@ extension SwapAndPay.State {
         let feeIdUsd = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
 
         return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted(.number.locale(Locale(identifier: "en_US")))
+    }
+    
+    public var totalFeesStr: String {
+        Zatoshi(totalFees).decimalString()
+    }
+
+    public var totalFeesUsdStr: String {
+        guard let zecAsset else {
+            return "0"
+        }
+
+        let totalFee = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
+        
+        if totalFee < 0.01 {
+            let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
+                .precision(.fractionLength(4))
+            
+            return NSDecimalNumber(decimal: totalFee).doubleValue.formatted(formatter)
+        } else {
+            return totalFee.formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
     }
 }
 

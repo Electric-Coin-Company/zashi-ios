@@ -110,8 +110,17 @@ extension Root {
                 state.path = .addKeystoneHWWalletCoordFlow
                 return .none
                 
-            case .home(.swapAndPayTapped):
+            case .home(.swapWithNearTapped):
                 state.swapAndPayCoordFlowState = .initial
+                state.swapAndPayCoordFlowState.isSwapExperience = true
+                state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = true
+                state.path = .swapAndPayCoordFlow
+                return .none
+
+            case .home(.payWithNearTapped):
+                state.swapAndPayCoordFlowState = .initial
+                state.swapAndPayCoordFlowState.isSwapExperience = false
+                state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = false
                 state.path = .swapAndPayCoordFlow
                 return .none
 

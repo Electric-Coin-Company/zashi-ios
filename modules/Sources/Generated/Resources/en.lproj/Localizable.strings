@@ -729,11 +729,13 @@
 "receive.ua.rotateInfo" = "Rotates every time you use it";
 
 // MARK: - Swap and Pay
-"swapAndPay.title" = "Swap or Pay with";
+"swapAndPay.title" = "Swap or  Pay with";
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
-"sendSelect.swapAndPay" = "Swap or Pay with NEAR";
-"sendSelect.swapAndPay.desc" = "Send payments or swap for any coin or token supported by NEAR.";
+"sendSelect.swapWithNear" = "Swap ZEC with NEAR Intents";
+"sendSelect.swapWithNear.desc" = "Swap shielded ZEC to any supported cryptocurrency.";
+"sendSelect.payWithNear" = "Cross-chain payments with NEAR";
+"sendSelect.payWithNear.desc" = "Send any coin or token supported by NEAR.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -758,10 +760,10 @@
 "swapAndPay.refundedAmount" = "Refunded amount";
 "swapAndPay.totalAmount" = "Total Amount";
 "swapAndPay.search" = "Search by name or ticker...";
-"swapAndPay.slippageSet1" = "You will pay up to ";
+"swapAndPay.slippageSet1" = "You may receive up to ";
 "swapAndPay.slippageSet2a" = "%@% (%@)";
 "swapAndPay.slippageSet2b" = "%@%";
-"swapAndPay.slippageSet3" = " slippage fee, in addition to transaction fees.";
+"swapAndPay.slippageSet3" = " less than quoted.";
 "swapAndPay.maxAllowedSlippage1" = "Please enter maximum slippage of";
 "swapAndPay.maxAllowedSlippage2" = " %@.";
 "swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
@@ -778,7 +780,8 @@
 "swapAndPay.help.payWith" = "Pay with";
 "swapAndPay.help.swapWithNear" = "Swap with NEAR";
 "swapAndPay.help.payWithNear" = "Pay with NEAR";
-"swapAndPay.help.swapDesc" = "Swap from shielded ZEC to any NEAR-supported coin or token. Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.";
+"swapAndPay.help.swapDesc" = "Swap from shielded ZEC to any NEAR-supported coin or token.";
+"swapAndPay.help.swapDesc2" = "Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.";
 "swapAndPay.help.payDesc1" = "Make cross-chain payments in any NEAR-supported coin or token.";
 "swapAndPay.help.payDesc2" = "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.";
 "swapAndPay.quote.zashi" = "Zashi";
@@ -793,7 +796,7 @@
 "swapAndPay.status.pending" = "Pending";
 "swapAndPay.status.success" = "Completed";
 "swapAndPay.status.refunded" = "Refunded";
-"swapAndPay.providerFee" = "Swap fee";
+"swapAndPay.zashiFee" = "Zashi fee";
 "swapAndPay.emptyAssets.title" = "No results";
 "swapAndPay.emptyAssets.subtitle" = "We tried but couldn’t find anything.";
 "swapAndPay.swapQuoteSlippageWarn" = "You could receive up to %@ less based on the %@ slippage you set.";
@@ -811,8 +814,8 @@
 "swapAndPay.optIn.warn" = "Note for the super privacy-conscious: Transactions executed via the NEAR API are transparent which means all transaction information is public.";
 "swapAndPay.forcedOptIn.optionOne" = "I understand that Zashi makes API requests to the NEAR API every time I interact with a Swap/Pay transaction.";
 "swapAndPay.forcedOptIn.optionTwo" = "I understand that by not enabling Tor, my IP address will be leaked by the NEAR API.";
-"swapAndPay.refundTitle" = "Payment Refunded";
-"swapAndPay.refundInfo" = "Your cross-chain payment was sent but the swap was unsuccessful. The payment amount has been refunded, minus transaction fees.";
+"swapAndPay.refundTitle" = "Transaction Refunded";
+"swapAndPay.refundInfo" = "Your deposit transaction was sent but the swap was unsuccessful. The transaction amount has been refunded, minus transaction fees.";
 "swapAndPay.recipient" = "Recipient";
 "swapAndPay.addressBookSelectChain" = "Select Chain";
 "swapAndPay.addressBookSelect" = "Select...";
@@ -820,6 +823,15 @@
 "swapAndPay.addressBookZcash" = "Zcash address is not allowed";
 "swapAndPay.totalFees" = "Total fees";
 
+"swapAndPay.failure.retryTitle" = "Unexpected error";
+"swapAndPay.failure.retryDesc" = "Please check your connection and try again.";
+"swapAndPay.failure.laterTitle" = "The service is unavailable";
+"swapAndPay.failure.laterDesc" = "Please try again later.";
+"swapAndPay.failure.tryAgain" = "Try again";
+"swapAndPay.failure.wrong" = "Something went wrong";
+"swapAndPay.failure.wrongDesc" = "We couldn’t load the assets. Please check your connection and try again.";
+
 "general.more" = "More";
 "general.less" = "Less";
 "filter.swap" = "Swap";
+"transactionHistory.timestamp" = "Timestamp";

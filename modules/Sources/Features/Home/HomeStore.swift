@@ -101,6 +101,7 @@ public struct Home {
         case moreTapped
         case onAppear
         case onDisappear
+        case payWithNearTapped
         case presentKeystoneWeb
         case rateTooltipTapped
         case receiveScreenRequested
@@ -114,7 +115,7 @@ public struct Home {
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
         case smartBanner(SmartBanner.Action)
-        case swapAndPayTapped
+        case swapWithNearTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case torSetupTapped
@@ -199,7 +200,11 @@ public struct Home {
             case .sendTapped:
                 return .none
 
-            case .swapAndPayTapped:
+            case .swapWithNearTapped:
+                state.moreRequest = false
+                return .none
+
+            case .payWithNearTapped:
                 state.moreRequest = false
                 return .none
 

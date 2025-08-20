@@ -11,28 +11,28 @@ import Generated
 import UIComponents
 
 extension HomeView {
-    @ViewBuilder func sendSelectContent() -> some View {
-        VStack(spacing: 8) {
-            optionView(
-                icon: Asset.Assets.Brandmarks.brandmarkMax.image,
-                title: L10n.SendSelect.Zashi.send,
-                subtitle: L10n.SendSelect.Zashi.Send.desc
-            ) {
-                store.send(.sendTapped)
-            }
-            .padding(.top, 32)
-            
-            optionView(
-                icon: Asset.Assets.Partners.swapAndPay.image,
-                iconOriginalColors: true,
-                title: L10n.SendSelect.swapAndPay,
-                subtitle: L10n.SendSelect.SwapAndPay.desc
-            ) {
-                store.send(.swapAndPayTapped)
-            }
-        }
-        .padding(.bottom, 56)
-    }
+//    @ViewBuilder func sendSelectContent() -> some View {
+//        VStack(spacing: 8) {
+//            optionView(
+//                icon: Asset.Assets.Brandmarks.brandmarkMax.image,
+//                title: L10n.SendSelect.Zashi.send,
+//                subtitle: L10n.SendSelect.Zashi.Send.desc
+//            ) {
+//                store.send(.sendTapped)
+//            }
+//            .padding(.top, 32)
+//            
+//            optionView(
+//                icon: Asset.Assets.Partners.swapAndPay.image,
+//                iconOriginalColors: true,
+//                title: L10n.SendSelect.swapWithNear,
+//                subtitle: L10n.SendSelect.SwapWithNear.desc
+//            ) {
+//                store.send(.swapWithNearTapped)
+//            }
+//        }
+//        .padding(.bottom, 56)
+//    }
     
     @ViewBuilder func optionView(
         icon: Image,

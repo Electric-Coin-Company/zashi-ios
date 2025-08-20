@@ -33,25 +33,32 @@ extension HomeView {
             if stickToBottom {
                 Spacer()
             }
-            
-            Text(L10n.More.options)
-                .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                .padding(.top, 32)
-                .padding(.bottom, 24)
-                .padding(.horizontal, 20)
-            
+
             ActionRow(
                 icon: walletStatus == .restoring
                 ? Asset.Assets.Partners.payWithNearDisabled.image
                 : Asset.Assets.Partners.payWithNear.image,
-                title: L10n.SendSelect.swapAndPay,
-                desc: L10n.SendSelect.SwapAndPay.desc,
-                customIcon: true,
-                divider: store.featureFlags.flexa
+                title: L10n.SendSelect.swapWithNear,
+                desc: L10n.SendSelect.SwapWithNear.desc,
+                customIcon: store.featureFlags.flexa
             ) {
-                store.send(.swapAndPayTapped)
+                store.send(.swapWithNearTapped)
             }
             .disabled(walletStatus == .restoring)
+            .padding(.top, 32)
+
+//            ActionRow(
+//                icon: walletStatus == .restoring
+//                ? Asset.Assets.Partners.payWithNearDisabled.image
+//                : Asset.Assets.Partners.payWithNear.image,
+//                title: L10n.SendSelect.payWithNear,
+//                desc: L10n.SendSelect.PayWithNear.desc,
+//                customIcon: true,
+//                divider: store.featureFlags.flexa
+//            ) {
+//                store.send(.payWithNearTapped)
+//            }
+//            .disabled(walletStatus == .restoring)
 
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(

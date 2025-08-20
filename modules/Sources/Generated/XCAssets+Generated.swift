@@ -32,6 +32,7 @@ public enum Asset {
     public static let fly = ImageAsset(name: "Fly")
     public static let flyReceived = ImageAsset(name: "FlyReceived")
     public enum Illustrations {
+      public static let cone = ImageAsset(name: "cone")
       public static let connect = ImageAsset(name: "connect")
       public static let emptyState = ImageAsset(name: "emptyState")
       public static let failure1 = ImageAsset(name: "failure1")

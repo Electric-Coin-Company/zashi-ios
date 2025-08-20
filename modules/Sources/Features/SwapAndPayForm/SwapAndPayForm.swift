@@ -86,21 +86,54 @@ public struct SwapAndPayForm: View {
                     
                     Spacer()
                     
-                    if store.isQuoteRequestInFlight {
-                        ZashiButton(
-                            L10n.SwapAndPay.getQuote,
-                            accessoryView: ProgressView()
-                        ) { }
-                        .disabled(true)
-                        .padding(.top, keyboardVisible ? 40 : 0)
-                        .padding(.bottom, 56)
-                    } else {
-                        ZashiButton(L10n.SwapAndPay.getQuote) {
-                            store.send(.getQuoteTapped)
+                    if let retryFailure = store.swapAssetFailedWithRetry {
+                        VStack(spacing: 0) {
+                            Asset.Assets.infoOutline.image
+                                .zImage(size: 16, style: Design.Text.error)
+                                .padding(.bottom, 8)
+                                .padding(.top, 32)
+                            
+                            Text(retryFailure
+                                 ? L10n.SwapAndPay.Failure.retryTitle
+                                 : L10n.SwapAndPay.Failure.laterTitle
+                            )
+                            .zFont(.medium, size: 14, style: Design.Text.error)
+                            .padding(.bottom, 8)
+                            
+                            Text(retryFailure
+                                 ? L10n.SwapAndPay.Failure.retryDesc
+                                 : L10n.SwapAndPay.Failure.laterDesc
+                            )
+                            .zFont(size: 14, style: Design.Text.error)
+                            .padding(.bottom, retryFailure ? 32 : 56)
+                            
+                            if retryFailure {
+                                ZashiButton(
+                                    L10n.SwapAndPay.Failure.tryAgain,
+                                    type: .destructive1
+                                ) {
+                                    store.send(.trySwapsAssetsAgainTapped)
+                                }
+                                .padding(.bottom, 56)
+                            }
                         }
-                        .padding(.top, keyboardVisible ? 40 : 0)
-                        .padding(.bottom, 56)
-                        .disabled(!store.isValidForm)
+                    } else {
+                        if store.isQuoteRequestInFlight {
+                            ZashiButton(
+                                L10n.SwapAndPay.getQuote,
+                                accessoryView: ProgressView()
+                            ) { }
+                            .disabled(true)
+                            .padding(.top, keyboardVisible ? 40 : 0)
+                            .padding(.bottom, 56)
+                        } else {
+                            ZashiButton(L10n.SwapAndPay.getQuote) {
+                                store.send(.getQuoteTapped)
+                            }
+                            .padding(.top, keyboardVisible ? 40 : 0)
+                            .padding(.bottom, 56)
+                            .disabled(!store.isValidForm)
+                        }
                     }
                 }
                 .ignoresSafeArea()
@@ -512,23 +545,13 @@ public struct SwapAndPayForm: View {
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)
             
-            Button {
-                store.send(.enableSwapExperience)
-            } label: {
-                Asset.Assets.Icons.switchHorizontal.image
-                    .zImage(size: 20, style: Design.Btns.Secondary.fg)
-                    .padding(8)
-                    .rotationEffect(.degrees(90))
-                    .background {
-                        RoundedRectangle(cornerRadius: Design.Radius._md)
-                            .fill(Design.Btns.Secondary.bg.color(colorScheme))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: Design.Radius._md)
-                                    .inset(by: 0.5)
-                                    .stroke(Design.Btns.Secondary.border.color(colorScheme), lineWidth: 1)
-                            )
-                    }
-            }
+            Asset.Assets.Icons.arrowDown.image
+                .zImage(size: 20, style: Design.Btns.Secondary.fg)
+                .padding(8)
+                .background {
+                    RoundedRectangle(cornerRadius: Design.Radius._md)
+                        .fill(Design.Btns.Secondary.bg.color(colorScheme))
+                }
             
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)
