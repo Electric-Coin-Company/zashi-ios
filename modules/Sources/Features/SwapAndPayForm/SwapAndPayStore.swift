@@ -27,9 +27,9 @@ public struct SwapAndPay {
         public var SwapAssetsCancelId = UUID()
         public var ABCancelId = UUID()
 
-        public var address = ""// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-        public var amountText = ""// "0,0004"// "0,0006"
+        public var amountText = "0,0007"// "0,0004"// "0,0006"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
@@ -52,12 +52,13 @@ public struct SwapAndPay {
         public var selectedOperationChip = 0
         public var proposal: Proposal?
         public var quote: SwapQuote?
+        public var quoteRequestedTime: TimeInterval = 0
         public var quoteUnavailableErrorMsg = ""
         public var searchTerm = ""
         public var selectedAsset: SwapAsset?
         public var sheetHeight: CGFloat = 0.0
-        public var slippage: Decimal = 0.5
-        public var slippageInSheet: Decimal = 0.5
+        public var slippage: Decimal = 1.0
+        public var slippageInSheet: Decimal = 1.0
         public var selectedSlippageChip = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
@@ -103,12 +104,8 @@ public struct SwapAndPay {
             slippageInSheet >= 40.0
         }
 
-        public var spendableAmount: Decimal {
-            guard let zecAsset else {
-                return walletBalancesState.shieldedBalance.decimalValue.decimalValue
-            }
-
-            return walletBalancesState.shieldedBalance.decimalValue.decimalValue * zecAsset.usdPrice
+        public var spendability: Spendability {
+            walletBalancesState.spendability
         }
         
         public var amount: Decimal {
@@ -161,6 +158,7 @@ public struct SwapAndPay {
         case trySwapsAssetsAgainTapped
         case updateAssetsAccordingToSearchTerm
         case walletBalances(WalletBalances.Action)
+        case willEnterForeground
         
         // Opt-in
         case confirmForcedOptInTapped
@@ -231,6 +229,13 @@ public struct SwapAndPay {
                     .cancel(id: state.SwapAssetsCancelId),
                     .cancel(id: state.ABCancelId)
                 )
+                
+            case .willEnterForeground:
+                let diff = Date().timeIntervalSince1970 - state.quoteRequestedTime
+                if diff > 180 {
+                    state.isQuotePresented = false
+                }
+                return .none
                 
             case .trySwapsAssetsAgainTapped:
                 return .send(.refreshSwapAssets)
@@ -456,6 +461,7 @@ public struct SwapAndPay {
                     amountString = String(tokenAmountInt)
                 }
                 state.isQuoteRequestInFlight = true
+                state.quoteRequestedTime = Date().timeIntervalSince1970
                 return .run { [amountString] send in
                     do {
                         let swapQuote = try await swapAndPay.quote(
@@ -551,7 +557,14 @@ public struct SwapAndPay {
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil && state.selectedContact == nil {
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "btc" && $0.chain.lowercased() == "btc" })
-                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" })
+                    
+                    if let lastUsedAssetId = userMetadataProvider.lastUsedAssetHistory().first {
+                        state.selectedAsset = swapAssets.first { $0.id == lastUsedAssetId }
+                    }
+
+                    if state.selectedAsset == nil {
+                        state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" }
+                    }
 //                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
 
@@ -788,12 +801,22 @@ extension SwapAndPay.State {
         }
     }
     
+    public var isZeroSpendable: Bool {
+        walletBalancesState.shieldedBalance.decimalValue == 0
+    }
+    
     public var maxLabel: String {
-        guard let zecAsset else {
-            return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+        let amountInUsd: Decimal
+        
+        if isInputInUsd {
+            guard let zecAsset else {
+                return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+            }
+            
+            amountInUsd = walletBalancesState.shieldedBalance.decimalValue.roundedZec.decimalValue * zecAsset.usdPrice
+        } else {
+            amountInUsd = 0
         }
-
-        let amountInUsd = walletBalancesState.shieldedBalance.decimalValue.roundedZec.decimalValue * zecAsset.usdPrice
 
         switch (isSwapExperienceEnabled, isInputInUsd) {
         case (true, false):

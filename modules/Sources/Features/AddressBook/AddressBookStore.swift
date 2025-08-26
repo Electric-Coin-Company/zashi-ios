@@ -95,6 +95,8 @@ public struct AddressBook {
             ? nil
             : (!isValidZcashAddress && selectedChain != nil)
             ? nil
+            : context == .settings
+            ? nil
             : L10n.AddressBook.Error.invalidAddress
         }
 

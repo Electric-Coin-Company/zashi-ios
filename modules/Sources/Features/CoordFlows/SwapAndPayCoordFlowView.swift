@@ -132,7 +132,7 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.Icons.arrowDown.image
+            Asset.Assets.Icons.swap.image
                 .zImage(size: 20, style: Design.Text.primary)
                 .padding(10)
                 .background {
@@ -170,42 +170,20 @@ public struct SwapAndPayCoordFlowView: View {
     }
     
     @ViewBuilder private func infoContent(index: Int, text: String, desc2: String? = nil) -> some View {
-//        HStack(alignment: .top, spacing: 16) {
-//            if index == 0 {
-//                Asset.Assets.Icons.arrowDown.image
-//                    .zImage(size: 20, style: Design.Text.primary)
-//                    .padding(10)
-//                    .background {
-//                        Circle()
-//                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-//                    }
-//            } else {
-//                Asset.Assets.Icons.coinsSwap.image
-//                    .zImage(size: 20, style: Design.Text.primary)
-//                    .padding(10)
-//                    .background {
-//                        Circle()
-//                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-//                    }
-//            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(text)
-                    .zFont(size: 14, style: Design.Text.tertiary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .lineSpacing(1.5)
-                
-                if let desc2 {
-                    Text(desc2)
-                        .zFont(size: 14, style: Design.Text.tertiary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineSpacing(1.5)
-                        .padding(.top, 16)
-                }
-            }
+        VStack(alignment: .leading, spacing: 6) {
+            Text(text)
+                .zFont(size: 16, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .lineSpacing(2)
             
-//            Spacer()
-//        }
+            if let desc2 {
+                Text(desc2)
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(2)
+                    .padding(.top, 16)
+            }
+        }
     }
 }
 

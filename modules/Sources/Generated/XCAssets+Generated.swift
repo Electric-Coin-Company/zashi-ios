@@ -144,6 +144,7 @@ public enum Asset {
       public static let shieldZap = ImageAsset(name: "shieldZap")
       public static let shoppingBag = ImageAsset(name: "shoppingBag")
       public static let slippage = ImageAsset(name: "slippage")
+      public static let swap = ImageAsset(name: "swap")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")

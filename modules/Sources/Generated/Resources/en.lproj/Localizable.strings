@@ -769,7 +769,7 @@
 "swapAndPay.slippageWarn" = "Any unused portion of the slippage fee will be refunded if the swap executes with lower slippage than expected.";
 "swapAndPay.customSlippage" = "Enter custom slippage";
 "swapAndPay.from" = "From";
-"swapAndPay.max" = "Max: %@";
+"swapAndPay.max" = "Spendable: %@";
 "swapAndPay.to" = "To";
 "swapAndPay.swap" = "Swap";
 "swapAndPay.pay" = "Pay";
@@ -833,5 +833,5 @@
 
 "general.more" = "More";
 "general.less" = "Less";
-"filter.swap" = "Swap";
+"filter.swap" = "Swaps";
 "transactionHistory.timestamp" = "Timestamp";

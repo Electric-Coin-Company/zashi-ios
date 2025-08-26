@@ -57,7 +57,7 @@ extension Settings {
                 
             case .path(.element(id: _, action: .addressBook(.scanButtonTapped))):
                 var scanState = Scan.State.initial
-                scanState.checkers = [.zcashAddressScanChecker]
+                scanState.checkers = [.zcashAddressScanChecker, .swapStringScanChecker]
                 state.path.append(.scan(scanState))
                 return .none
 
@@ -136,7 +136,21 @@ extension Settings {
                     }
                 }
                 return .none
-                
+
+            case .path(.element(id: _, action: .scan(.foundString(let address)))):
+                for element in state.path {
+                    if element.is(\.addressBook) {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = address
+                        addressBookState.isNameFocused = true
+                        addressBookState.context = .settings
+                        state.path.append(.addressBookContact(addressBookState))
+                        audioServices.systemSoundVibrate()
+                        return .none
+                    }
+                }
+                return .none
+
             case .path(.element(id: _, action: .scan(.cancelTapped))):
                 let _ = state.path.popLast()
                 return .none

@@ -24,8 +24,8 @@ public struct  SwapAndPayClient {
     public enum Constants {
         /// Affiliate fee in basis points
         static public let zashiFeeBps = 50
-        ///
-        static let affiliateFeeDepositAddress = "barticek.near"
+        /// Address for the affiliate fees
+        static let affiliateFeeDepositAddress = "electriccoinco.near"
     }
     
     public let submitDepositTxId: (String, String) async throws -> Void

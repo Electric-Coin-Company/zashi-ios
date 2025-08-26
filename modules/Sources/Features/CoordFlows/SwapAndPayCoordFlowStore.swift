@@ -58,7 +58,6 @@ public struct SwapAndPayCoordFlow {
         public var isHelpSheetPresented = false
         public var isSwapExperience = true
         public var path = StackState<Path.State>()
-        public var provider = "near"
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectedOperationChip = 0
@@ -130,8 +129,7 @@ public struct SwapAndPayCoordFlow {
 
             case .updateTxIdToExpand(let txId):
                 state.txIdToExpand = txId
-                if let txId {
-                    let provider = state.provider
+                if let txId, let provider = state.swapAndPayState.selectedAsset?.id {
                     let totalFees = state.swapAndPayState.totalFees
                     let totalUSDFees = state.swapAndPayState.totalUSDFees
                     userMetadataProvider.markTransactionAsSwapFor(txId, provider, totalFees, totalUSDFees)

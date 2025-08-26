@@ -289,8 +289,8 @@ public enum L10n {
     public static let search = L10n.tr("Localizable", "filter.search", fallback: "Search")
     /// Sent
     public static let sent = L10n.tr("Localizable", "filter.sent", fallback: "Sent")
-    /// Swap
-    public static let swap = L10n.tr("Localizable", "filter.swap", fallback: "Swap")
+    /// Swaps
+    public static let swap = L10n.tr("Localizable", "filter.swap", fallback: "Swaps")
     /// Filter
     public static let title = L10n.tr("Localizable", "filter.title", fallback: "Filter")
     /// Today
@@ -1460,9 +1460,9 @@ public enum L10n {
     public static let from = L10n.tr("Localizable", "swapAndPay.from", fallback: "From")
     /// Get a quote
     public static let getQuote = L10n.tr("Localizable", "swapAndPay.getQuote", fallback: "Get a quote")
-    /// Max: %@
+    /// Spendable: %@
     public static func max(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "swapAndPay.max", String(describing: p1), fallback: "Max: %@")
+      return L10n.tr("Localizable", "swapAndPay.max", String(describing: p1), fallback: "Spendable: %@")
     }
     /// Please enter maximum slippage of
     public static let maxAllowedSlippage1 = L10n.tr("Localizable", "swapAndPay.maxAllowedSlippage1", fallback: "Please enter maximum slippage of")

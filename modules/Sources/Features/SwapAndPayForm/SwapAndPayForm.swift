@@ -148,6 +148,9 @@ public struct SwapAndPayForm: View {
             .zashiBack {
                 store.send(.internalBackButtonTapped)
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                store.send(.willEnterForeground)
+            }
             .navigationBarItems(
                 trailing:
                     Button {
@@ -286,7 +289,12 @@ public struct SwapAndPayForm: View {
                     
                     Spacer()
                     
-                    Text(L10n.SwapAndPay.max(store.maxLabel))
+                    HStack(spacing: 0) {
+                        Text(
+                            store.spendability == .nothing
+                            ? L10n.SwapAndPay.max("")
+                            : L10n.SwapAndPay.max(store.maxLabel)
+                        )
                         .zFont(
                             .medium,
                             size: 14,
@@ -294,6 +302,13 @@ public struct SwapAndPayForm: View {
                             ? Design.Text.error
                             : Design.Text.tertiary
                         )
+                        
+                        if store.spendability == .nothing {
+                            ProgressView()
+                                .scaleEffect(0.7)
+                                .frame(width: 11, height: 14)
+                        }
+                    }
                 }
                 
                 HStack(spacing: 0) {
@@ -546,7 +561,7 @@ public struct SwapAndPayForm: View {
                 .frame(height: 1)
             
             Asset.Assets.Icons.arrowDown.image
-                .zImage(size: 20, style: Design.Btns.Secondary.fg)
+                .zImage(size: 20, style: Design.Text.disabled)
                 .padding(8)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._md)

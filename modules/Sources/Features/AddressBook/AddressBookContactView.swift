@@ -26,13 +26,6 @@ public struct AddressBookContactView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                // FIXME: remove for production
-                if store.context == .unknown {
-                    Text("UNKNOWN CONTEXT")
-                        .bold()
-                        .foregroundColor(.red)
-                }
-
                 ZashiTextField(
                     addressFont: true,
                     text: $store.address,

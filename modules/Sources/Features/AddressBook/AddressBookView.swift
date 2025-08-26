@@ -34,13 +34,6 @@ public struct AddressBookView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
-                // FIXME: remove for production
-                if store.context == .unknown {
-                    Text("UNKNOWN CONTEXT")
-                        .bold()
-                        .foregroundColor(.red)
-                }
-                
                 if store.isInSelectMode && store.walletAccounts.count > 1 {
                     contactsList()
                 } else {

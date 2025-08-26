@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "near2black.png",
+      "filename" : "near2.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "near2 1.png",
+      "filename" : "near2black 1.png",
       "idiom" : "universal"
     }
   ],
