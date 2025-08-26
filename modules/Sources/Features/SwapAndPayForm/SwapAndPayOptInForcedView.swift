@@ -16,7 +16,7 @@ public struct SwapAndPayOptInForcedView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     @Perception.Bindable var store: StoreOf<SwapAndPay>
-
+    
     public init(store: StoreOf<SwapAndPay>) {
         self.store = store
     }
@@ -35,7 +35,7 @@ public struct SwapAndPayOptInForcedView: View {
                     Asset.Assets.infoCircle.image
                         .zImage(size: 20, style: Design.Text.primary)
                         .padding(.trailing, 12)
-
+                    
                     Text(L10n.SwapAndPay.OptIn.warn)
                         .zFont(size: 12, style: Design.Text.tertiary)
                 }
@@ -48,7 +48,7 @@ public struct SwapAndPayOptInForcedView: View {
                     store.send(.goBackForcedOptInTapped)
                 }
                 .padding(.bottom, 12)
-
+                
                 ZashiButton(L10n.General.confirm) {
                     store.send(.confirmForcedOptInTapped)
                 }
@@ -68,22 +68,22 @@ public struct SwapAndPayOptInForcedView: View {
             HStack(spacing: 0) {
                 Asset.Assets.Brandmarks.brandmarkMax.image
                     .zImage(size: 64, style: Design.Surfaces.brandPrimary)
-
+                
                 ZStack {
                     Asset.Assets.Tickers.nearChain.image
                         .zImage(size: 70, color: Design.screenBackground.color(colorScheme))
                         .offset(x: -10)
-
+                    
                     Asset.Assets.Tickers.nearChain.image
                         .resizable()
                         .frame(width: 64, height: 64)
                         .offset(x: -10)
                 }
-
+                
                 Spacer()
             }
             .padding(.vertical, 24)
-
+            
             HStack(spacing: 6) {
                 Text(L10n.SwapAndPay.OptIn.title)
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
@@ -104,18 +104,18 @@ public struct SwapAndPayOptInForcedView: View {
         VStack(alignment: .leading, spacing: 0) {
             header()
                 .padding(.bottom, 24)
-
+            
             Button {
                 store.send(.optionOneTapped)
             } label: {
                 HStack(alignment: .top, spacing: 0) {
                     ZashiToggle(isOn: $store.optionOneChecked)
                         .padding(.trailing, 8)
-
+                    
                     Text(L10n.SwapAndPay.ForcedOptIn.optionOne)
                         .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         .multilineTextAlignment(.leading)
-
+                    
                     Spacer()
                 }
                 .frame(minHeight: 40)
@@ -127,18 +127,18 @@ public struct SwapAndPayOptInForcedView: View {
                 }
             }
             .padding(.bottom, 12)
-
+            
             Button {
                 store.send(.optionTwoTapped)
             } label: {
                 HStack(alignment: .top, spacing: 0) {
                     ZashiToggle(isOn: $store.optionTwoChecked)
                         .padding(.trailing, 8)
-
+                    
                     Text(L10n.SwapAndPay.ForcedOptIn.optionTwo)
                         .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         .multilineTextAlignment(.leading)
-
+                    
                     Spacer()
                 }
                 .frame(minHeight: 40)
@@ -151,4 +151,5 @@ public struct SwapAndPayOptInForcedView: View {
             }
             .padding(.bottom, 12)
         }
-    }}
+    }
+}

@@ -27,9 +27,9 @@ public struct SwapAndPay {
         public var SwapAssetsCancelId = UUID()
         public var ABCancelId = UUID()
 
-        public var address = ""// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        public var address = ""
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-        public var amountText = ""// "0,0004"// "0,0006"
+        public var amountText = ""
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
@@ -556,8 +556,6 @@ public struct SwapAndPay {
                 state.swapAssetFailedWithRetry = nil
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil && state.selectedContact == nil {
-//                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "btc" && $0.chain.lowercased() == "btc" })
-                    
                     if let lastUsedAssetId = userMetadataProvider.lastUsedAssetHistory().first {
                         state.selectedAsset = swapAssets.first { $0.id == lastUsedAssetId }
                     }
@@ -565,7 +563,6 @@ public struct SwapAndPay {
                     if state.selectedAsset == nil {
                         state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" }
                     }
-//                    state.selectedAsset = swapAssets.first(where: { $0.token.lowercased() == "aurora" && $0.chain.lowercased() == "near" })
                 }
 
                 // exclude all tokens with price == 0
