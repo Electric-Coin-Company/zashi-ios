@@ -129,11 +129,6 @@ public struct SwapAndPayCoordFlow {
 
             case .updateTxIdToExpand(let txId):
                 state.txIdToExpand = txId
-//                if let txId, let provider = state.swapAndPayState.selectedAsset?.id {
-//                    let totalFees = state.swapAndPayState.totalFees
-//                    let totalUSDFees = state.swapAndPayState.totalUSDFees
-//                    userMetadataProvider.markTransactionAsSwapFor(txId, provider, totalFees, totalUSDFees)
-//                }
                 return .none
                 
             default: return .none

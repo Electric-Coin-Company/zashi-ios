@@ -82,6 +82,9 @@ extension SwapAndPayCoordFlow {
                             let totalFees = state.swapAndPayState.totalFees
                             let totalUSDFees = state.swapAndPayState.totalUSDFees
                             userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
+                            if let account = state.selectedWalletAccount?.account {
+                                try? userMetadataProvider.store(account)
+                            }
                         }
 
                         state.path.append(.sending(sendConfirmationState))
@@ -260,6 +263,9 @@ extension SwapAndPayCoordFlow {
                     let totalFees = state.swapAndPayState.totalFees
                     let totalUSDFees = state.swapAndPayState.totalUSDFees
                     userMetadataProvider.markTransactionAsSwapFor(sendConfirmationState.address, provider, totalFees, totalUSDFees)
+                    if let account = state.selectedWalletAccount?.account {
+                        try? userMetadataProvider.store(account)
+                    }
                 }
 
                 // make the transaction
