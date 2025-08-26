@@ -77,6 +77,13 @@ extension SwapAndPayCoordFlow {
             case .path(.element(id: _, action: .scan(.foundPCZT(let pcztWithSigs)))):
                 for (id, element) in zip(state.path.ids, state.path) {
                     if case .confirmWithKeystone(let sendConfirmationState) = element {
+                        let depositAddress = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
+                        if let provider = state.swapAndPayState.selectedAsset?.id {
+                            let totalFees = state.swapAndPayState.totalFees
+                            let totalUSDFees = state.swapAndPayState.totalUSDFees
+                            userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
+                        }
+
                         state.path.append(.sending(sendConfirmationState))
                         return .send(.path(.element(id: id, action: .confirmWithKeystone(.foundPCZT(pcztWithSigs)))))
                     }
@@ -248,6 +255,12 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.type = .swap
                 state.path.append(.sending(sendConfirmationState))
+
+                if let provider = state.swapAndPayState.selectedAsset?.id {
+                    let totalFees = state.swapAndPayState.totalFees
+                    let totalUSDFees = state.swapAndPayState.totalUSDFees
+                    userMetadataProvider.markTransactionAsSwapFor(sendConfirmationState.address, provider, totalFees, totalUSDFees)
+                }
 
                 // make the transaction
                 return .run { [depositAddress = state.swapAndPayState.address] send in

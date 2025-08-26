@@ -23,9 +23,9 @@ extension UserMetadataProviderClient: DependencyKey {
             deleteAnnotationFor: { ums.deleteAnnotationFor(txId: $0) },
             isRead: { ums.isRead(txId: $0, txTimestamp: $1) },
             readTx: { ums.readTx(txId: $0) },
-            isSwapTransaction: { ums.isSwapTransaction(txId: $0) },
-            swapDetailsForTransaction: { ums.swapDetailsForTransaction(txId: $0) },
-            markTransactionAsSwapFor: { ums.markTransactionAsSwapFor(txId: $0, provider: $1, totalFees: $2, totalUSDFees: $3) },
+            isSwapTransaction: { ums.isSwapTransaction(depositAddress: $0) },
+            swapDetailsForTransaction: { ums.swapDetailsForTransaction(depositAddress: $0) },
+            markTransactionAsSwapFor: { ums.markTransactionAsSwapFor(depositAddress: $0, provider: $1, totalFees: $2, totalUSDFees: $3) },
             lastUsedAssetHistory: { ums.lastUsedAssetHistory },
             addLastUsedSwapAsset: { ums.addLastUsedSwap(asset: $0) }
         )

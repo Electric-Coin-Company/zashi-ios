@@ -95,14 +95,14 @@ public struct UMSwaps: Codable {
 
 public struct UMSwapId: Codable, Equatable {
     public enum CodingKeys: CodingKey {
-        case txId
+        case depositAddress
         case provider
         case totalFees
         case totalUSDFees
         case lastUpdated
     }
     
-    let txId: String
+    let depositAddress: String
     let provider: String
     public let totalFees: Int64
     let totalUSDFees: String

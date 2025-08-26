@@ -27,9 +27,9 @@ public struct SwapAndPay {
         public var SwapAssetsCancelId = UUID()
         public var ABCancelId = UUID()
 
-        public var address = "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
+        public var address = ""// "bc1qjqn3e3vzcfjc0ww2aw42ylpyn7tg58ynl9pagm"// "0526d09ea436f7460791f255789884ad86ae2397ca6c4dc24d0b748e26df1633"
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-        public var amountText = "0,0007"// "0,0004"// "0,0006"
+        public var amountText = ""// "0,0004"// "0,0006"
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial

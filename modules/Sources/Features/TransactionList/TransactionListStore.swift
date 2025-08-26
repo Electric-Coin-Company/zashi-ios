@@ -87,6 +87,6 @@ public extension TransactionList {
     static func isSwap(_ transaction: TransactionState) -> Bool {
         @Dependency(\.userMetadataProvider) var userMetadataProvider
 
-        return userMetadataProvider.isSwapTransaction(transaction.id)
+        return userMetadataProvider.isSwapTransaction(transaction.zAddress ?? "")
     }
 }

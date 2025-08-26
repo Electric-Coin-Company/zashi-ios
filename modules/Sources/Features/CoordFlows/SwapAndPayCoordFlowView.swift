@@ -132,7 +132,7 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.Icons.swap.image
+            Asset.Assets.Icons.swapArrows.image
                 .zImage(size: 20, style: Design.Text.primary)
                 .padding(10)
                 .background {

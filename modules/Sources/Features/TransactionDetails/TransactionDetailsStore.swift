@@ -136,8 +136,8 @@ public struct TransactionDetails {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.id)
-                state.umSwapId = userMetadataProvider.swapDetailsForTransaction(state.transaction.id)
+                state.isSwap = userMetadataProvider.isSwapTransaction(state.transaction.zAddress ?? "")
+                state.umSwapId = userMetadataProvider.swapDetailsForTransaction(state.transaction.zAddress ?? "")
                 state.hasInteractedWithBookmark = false
                 state.areDetailsExpanded = state.transaction.isShieldingTransaction
                 state.messageStates = []

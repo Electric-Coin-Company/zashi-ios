@@ -192,7 +192,7 @@ public class UserMetadataStorage {
         }
 
         umData.accountMetadata.swaps.swapIds.forEach { swapId in
-            swapIds[swapId.txId] = swapId
+            swapIds[swapId.depositAddress] = swapId
         }
         
         lastUsedAssetHistory = umData.accountMetadata.swaps.lastUsedAssetHistory
@@ -284,26 +284,26 @@ public class UserMetadataStorage {
     
     // MARK: - Swap Id
     
-    public func isSwapTransaction(txId: String) -> Bool {
-        guard let swapTxId = swapIds[txId]?.txId else {
+    public func isSwapTransaction(depositAddress: String) -> Bool {
+        guard let swapDepositAddress = swapIds[depositAddress]?.depositAddress else {
             return false
         }
         
-        return swapTxId == txId
+        return swapDepositAddress == depositAddress
     }
     
-    public func swapDetailsForTransaction(txId: String) -> UMSwapId? {
-        swapIds[txId]
+    public func swapDetailsForTransaction(depositAddress: String) -> UMSwapId? {
+        swapIds[depositAddress]
     }
     
     public func markTransactionAsSwapFor(
-        txId: String,
+        depositAddress: String,
         provider: String,
         totalFees: Int64,
         totalUSDFees: String
     ) {
-        swapIds[txId] = UMSwapId(
-            txId: txId,
+        swapIds[depositAddress] = UMSwapId(
+            depositAddress: depositAddress,
             provider: provider,
             totalFees: totalFees,
             totalUSDFees: totalUSDFees,
