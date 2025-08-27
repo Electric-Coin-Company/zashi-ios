@@ -15,7 +15,7 @@ import Utils
 
 public struct UserMetadata: Codable {
     public enum Constants {
-        public static let version = 1
+        public static let version = 2
     }
     
     public enum CodingKeys: CodingKey {
@@ -40,11 +40,13 @@ public struct UMAccount: Codable {
         case bookmarked
         case annotations
         case read
+        case swaps
     }
     
     let bookmarked: [UMBookmark]
     let annotations: [UMAnnotation]
     let read: [String]
+    let swaps: UMSwaps
 }
 
 public struct UMBookmark: Codable {
@@ -68,6 +70,42 @@ public struct UMAnnotation: Codable {
     
     let txId: String
     let content: String?
+    let lastUpdated: Int64
+}
+
+public struct UMSwaps: Codable {
+    public enum CodingKeys: CodingKey {
+        case lastUsedAssetHistory
+        case swapIds
+        case lastUpdated
+    }
+
+    /// Collection of all swaps that happened in the wallet
+    let swapIds: [UMSwapId]
+    /// Collection of 10 last SwapAssets
+    let lastUsedAssetHistory: [String]
+    let lastUpdated: Int64
+    
+    init(swapIds: [UMSwapId], lastUsedAssetHistory: [String], lastUpdated: Int64) {
+        self.swapIds = swapIds
+        self.lastUsedAssetHistory = lastUsedAssetHistory
+        self.lastUpdated = lastUpdated
+    }
+}
+
+public struct UMSwapId: Codable, Equatable {
+    public enum CodingKeys: CodingKey {
+        case depositAddress
+        case provider
+        case totalFees
+        case totalUSDFees
+        case lastUpdated
+    }
+    
+    let depositAddress: String
+    let provider: String
+    public let totalFees: Int64
+    let totalUSDFees: String
     let lastUpdated: Int64
 }
 
@@ -120,7 +158,9 @@ public extension UserMetadata {
     ///     [Unencrypted data]    `encryption version`
     ///     [Unencrypted data]    `salt`
     ///     [Unencrypted data]    `metadata version`
-    static func userMetadataFrom(encryptedData: Data, account: Account) throws -> UserMetadata? {
+    ///
+    /// - returns: `UserMetadata` if successful and a flag whether migration happened or not
+    static func userMetadataFrom(encryptedData: Data, account: Account) throws -> (UserMetadata?, Bool) {
         @Dependency(\.walletStorage) var walletStorage
         
         guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account),
@@ -135,7 +175,7 @@ public extension UserMetadata {
         offset += UserMetadataStorage.Constants.int64Size
         
         guard let encryptionVersion = UserMetadata.bytesToInt(Array(encryptionVersionBytes)) else {
-            return nil
+            return (nil, false)
         }
         
         guard encryptionVersion == UserMetadataEncryptionKeys.Constants.version else {
@@ -158,11 +198,18 @@ public extension UserMetadata {
                 offset += UserMetadataStorage.Constants.int64Size
                 
                 guard let metadataVersion = UserMetadata.bytesToInt(Array(metadataVersionBytes)) else {
-                    return nil
+                    return (nil, false)
                 }
                 
                 guard metadataVersion == UserMetadata.Constants.version else {
-                    throw UserMetadataStorage.UMError.metadataVersionNotSupported
+                    // Attempt to migrate
+                    switch metadataVersion {
+                    case 1:
+                        let latestUserMetadata = try UserMetadata.userMetadataV1From(encryptedSubData: encryptedSubData, subKey: subKey)
+                        return (latestUserMetadata, true)
+                    default:
+                        throw UserMetadataStorage.UMError.metadataVersionNotSupported
+                    }
                 }
                 
                 // Unseal the encrypted user metadata.
@@ -170,13 +217,14 @@ public extension UserMetadata {
                 let data = try ChaChaPoly.open(sealed, using: subKey)
                 
                 // deserialize the json's data
-                return try JSONDecoder().decode(UserMetadata.self, from: data)
+                let latestUserMetadata = try JSONDecoder().decode(UserMetadata.self, from: data)
+                return (latestUserMetadata, false)
             } catch {
                 // this key failed to decrypt, try another one
             }
         }
 
-        return nil
+        return (nil, false)
     }
 
     static func subdata(of data: Data, in range: Range<Data.Index>) throws -> Data {

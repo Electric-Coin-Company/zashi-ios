@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Swap ZEC with Near Intents.
+
 ## 2.1 build 1 (2025-08-07)
 
 ### Added

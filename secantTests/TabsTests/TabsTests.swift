@@ -191,7 +191,9 @@ class TabsTests: XCTestCase {
             state.balanceBreakdownState.isShieldingFunds = false
         }
 
-        let accountsBalances = [AccountUUID(id: Array<UInt8>(repeating: 0, count: 16)): AccountBalance(saplingBalance: .zero, orchardBalance: .zero, unshielded: .zero)]
+        let accountsBalances = [
+            AccountUUID(id: [UInt8](repeating: 0, count: 16)): AccountBalance(saplingBalance: .zero, orchardBalance: .zero, unshielded: .zero)
+        ]
         await store.receive(.balanceBreakdown(.walletBalances(.balanceUpdated(accountsBalances.first?.value))))
 
         await store.receive(.balanceBreakdown(.updateBalances(accountsBalances)))

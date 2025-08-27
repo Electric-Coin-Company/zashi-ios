@@ -41,6 +41,16 @@ public struct SendConfirmation {
             case resubmission
             case success
         }
+        
+        /// Type of transaction, main purpose is to distinguish copies based on a type.
+        public enum TransactionType: Equatable {
+            /// 3rd party swap transaction - pay path
+            case pay
+            /// Regular Zcash Transaction
+            case regular
+            /// 3rd party swap transaction - pay path
+            case swap
+        }
 
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
@@ -79,6 +89,7 @@ public struct SendConfirmation {
         public var scanFailedPreScanBinding = false
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         public var supportData: SupportData?
+        public var type: TransactionType = .regular
         public var txIdToExpand: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
@@ -179,6 +190,9 @@ public struct SendConfirmation {
         case resetPCZTs
         case resolvePCZT
         case sharePCZT
+        
+        // Swap
+        case checkStatusTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -406,6 +420,9 @@ public struct SendConfirmation {
                 state.sendingScreenOnAppearTimestamp = Date().timeIntervalSince1970
                 return .none
                 
+            case .checkStatusTapped:
+                return .none
+                
                 // MARK: - Keystone
                 
             case .getSignatureTapped:
@@ -591,6 +608,36 @@ public struct SendConfirmation {
                 return .none
             }
         }
+    }
+}
+
+extension SendConfirmation.State {
+    public var sendingInfo: String {
+        isShielding
+        ? L10n.Send.shieldingInfo
+        : type == .regular
+        ? L10n.Send.sendingInfo
+        : L10n.SwapAndPay.sendingInfo
+    }
+    
+    public var successInfo: String {
+        isShielding
+        ? L10n.Send.successShieldingInfo
+        : type == .regular
+        ? L10n.Send.successInfo
+        : type == .swap
+        ? L10n.SwapAndPay.successSwapInfo
+        : L10n.SwapAndPay.successPayInfo
+    }
+
+    public var failureInfo: String {
+        isShielding
+        ? L10n.Send.failureShieldingInfo
+        : type == .regular
+        ? L10n.Send.failureInfo
+        : type == .swap
+        ? L10n.SwapAndPay.failureSwapInfo
+        : L10n.SwapAndPay.failurePayInfo
     }
 }
 

@@ -79,6 +79,9 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
                                            ? Design.Text.primary
                                            : Design.Text.disabled
                                     )
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .minimumScaleFactor(0.6)
+                                    .lineLimit(1)
 
                                 accessoryView
                                     .padding(.leading, 8)
@@ -92,6 +95,9 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
                                     ? Design.Text.primary
                                     : Design.Text.disabled
                                 )
+                                .fixedSize(horizontal: false, vertical: true)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
                         }
                         
                         if let desc {

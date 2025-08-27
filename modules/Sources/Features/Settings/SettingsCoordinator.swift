@@ -37,12 +37,6 @@ extension Settings {
                 return .none
 
             case .path(.element(id: _, action: .accountHWWalletSelection(.forgetThisDeviceTapped))):
-                for (id, element) in zip(state.path.ids, state.path) {
-                    if element.is(\.integrations) {
-                        state.path.pop(to: id)
-                        break
-                    }
-                }
                 return .none
 
                 // MARK: - Address Book
@@ -51,16 +45,19 @@ extension Settings {
                 var addressBookContactState = AddressBook.State.initial
                 addressBookContactState.editId = address
                 addressBookContactState.isNameFocused = true
+                addressBookContactState.context = .settings
                 state.path.append(.addressBookContact(addressBookContactState))
                 return .none
 
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
-                state.path.append(.addressBookContact(AddressBook.State.initial))
+                var addressBookState = AddressBook.State.initial
+                addressBookState.context = .settings
+                state.path.append(.addressBookContact(addressBookState))
                 return .none
                 
             case .path(.element(id: _, action: .addressBook(.scanButtonTapped))):
                 var scanState = Scan.State.initial
-                scanState.checkers = [.zcashAddressScanChecker]
+                scanState.checkers = [.zcashAddressScanChecker, .swapStringScanChecker]
                 state.path.append(.scan(scanState))
                 return .none
 
@@ -111,12 +108,6 @@ extension Settings {
                 let _ = state.path.popLast()
                 return .none
 
-                // MARK: - Integrations
-
-            case .path(.element(id: _, action: .integrations(.keystoneTapped))):
-                state.path.append(.addKeystoneHWWallet(AddKeystoneHWWallet.State.initial))
-                return .none
-
                 // MARK: - Scan
                 
             case .path(.element(id: _, action: .scan(.foundAccounts(let account)))):
@@ -138,13 +129,28 @@ extension Settings {
                         addressBookState.address = address.data
                         addressBookState.isValidZcashAddress = true
                         addressBookState.isNameFocused = true
+                        addressBookState.context = .settings
                         state.path.append(.addressBookContact(addressBookState))
                         audioServices.systemSoundVibrate()
                         return .none
                     }
                 }
                 return .none
-                
+
+            case .path(.element(id: _, action: .scan(.foundString(let address)))):
+                for element in state.path {
+                    if element.is(\.addressBook) {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = address
+                        addressBookState.isNameFocused = true
+                        addressBookState.context = .settings
+                        state.path.append(.addressBookContact(addressBookState))
+                        audioServices.systemSoundVibrate()
+                        return .none
+                    }
+                }
+                return .none
+
             case .path(.element(id: _, action: .scan(.cancelTapped))):
                 let _ = state.path.popLast()
                 return .none
@@ -152,12 +158,9 @@ extension Settings {
                 // MARK: - Settings
 
             case .addressBookTapped:
-                state.path.append(.addressBook(AddressBook.State.initial))
-                return .none
-
-            case .integrationsTapped:
-                let integrationsState = Integrations.State.initial
-                state.path.append(.integrations(integrationsState))
+                var addressBookState = AddressBook.State.initial
+                addressBookState.context = .settings
+                state.path.append(.addressBook(addressBookState))
                 return .none
 
             case .advancedSettingsTapped:

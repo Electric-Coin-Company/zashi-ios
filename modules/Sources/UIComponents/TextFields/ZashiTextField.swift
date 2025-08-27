@@ -9,7 +9,7 @@ import SwiftUI
 
 import Generated
 
-public struct ZashiTextField<PrefixContent, AccessoryContent>: View where PrefixContent: View, AccessoryContent: View {
+public struct ZashiTextField<PrefixContent, InputReplacementContent, AccessoryContent>: View where PrefixContent: View, InputReplacementContent: View, AccessoryContent: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let addressFont: Bool
@@ -20,6 +20,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
     let eraseAction: (() -> Void)?
     
     @ViewBuilder let accessoryView: AccessoryContent?
+    @ViewBuilder let inputReplacementView: InputReplacementContent?
     @ViewBuilder let prefixView: PrefixContent?
 
     public init(
@@ -30,6 +31,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
         error: String? = nil,
         eraseAction: (() -> Void)? = nil,
         accessoryView: AccessoryContent? = EmptyView(),
+        inputReplacementView: InputReplacementContent? = EmptyView(),
         prefixView: PrefixContent? = EmptyView()
     ) {
         self.addressFont = addressFont
@@ -39,6 +41,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
         self.error = error
         self.eraseAction = eraseAction
         self.accessoryView = accessoryView
+        self.inputReplacementView = inputReplacementView
         self.prefixView = prefixView
     }
     
@@ -59,25 +62,29 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                         .padding(.trailing, 8)
                 }
 
-                TextField(
-                    "",
-                    text: text,
-                    prompt:
-                        Text(placeholder)
+                if let inputReplacementView, !(inputReplacementView is EmptyView) {
+                    inputReplacementView
+                } else {
+                    TextField(
+                        "",
+                        text: text,
+                        prompt:
+                            Text(placeholder)
                             .font(.custom(FontFamily.Inter.regular.name, size: 16))
                             .foregroundColor(Design.Inputs.Default.text.color(colorScheme))
-                )
-                .autocapitalization(.none)
-                .autocorrectionDisabled()
-                .font(.custom(
-                    addressFont
-                    ? FontFamily.RobotoMono.regular.name
-                    : FontFamily.Inter.regular.name,
-                    size: 14)
-                )
-                .lineLimit(1)
-                .truncationMode(.middle)
-                .accentColor(Asset.Colors.primary.color)
+                    )
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+                    .font(.custom(
+                        addressFont
+                        ? FontFamily.RobotoMono.regular.name
+                        : FontFamily.Inter.regular.name,
+                        size: 14)
+                    )
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .accentColor(Asset.Colors.primary.color)
+                }
                 
                 Spacer()
                 
@@ -95,7 +102,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                     }
                 }
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, (inputReplacementView is EmptyView || inputReplacementView == nil) ? 12 : 8)
             .padding(.horizontal, 12)
             .background(
                 RoundedRectangle(cornerRadius: Design.Radius._lg)

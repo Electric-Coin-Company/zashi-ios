@@ -59,6 +59,7 @@ public struct TransactionListView: View {
                         TransactionRowView(
                             transaction: transaction,
                             isUnread: TransactionList.isUnread(transaction),
+                            isSwap: TransactionList.isSwap(transaction),
                             divider: store.latestTransactionId != transaction.id
                         )
                     }

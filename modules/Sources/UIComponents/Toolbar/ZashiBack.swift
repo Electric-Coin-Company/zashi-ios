@@ -33,7 +33,7 @@ struct ZashiBackModifier: ViewModifier {
                             }
                         } label: {
                             HStack {
-                                Asset.Assets.arrowLeftLong.image
+                                Asset.Assets.Icons.arrowNarrowLeft.image
                                     .zImage(size: 24, 
                                             color: invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color
                                     )

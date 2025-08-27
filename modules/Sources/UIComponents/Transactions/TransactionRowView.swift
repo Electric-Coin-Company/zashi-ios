@@ -17,17 +17,20 @@ public struct TransactionRowView: View {
     let divider: Bool
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     let isUnread: Bool
+    let isSwap: Bool
     let tokenName: String
 
     public init(
         transaction: TransactionState,
         tokenName: String = "ZEC",
         isUnread: Bool = false,
+        isSwap: Bool = false,
         divider: Bool = false
     ) {
         self.transaction = transaction
         self.tokenName = tokenName
         self.isUnread = isUnread
+        self.isSwap = isSwap
         self.divider = divider
     }
     
@@ -65,6 +68,18 @@ public struct TransactionRowView: View {
                                         .frame(width: 14, height: 14)
                                 }
                                 .offset(x: 9, y: 11)
+                        }
+                        
+                        if isSwap {
+                            Asset.Assets.Tickers.nearChain.image
+                                .zImage(size: 20, color: Design.screenBackground.color(colorScheme))
+                                .offset(x: 9, y: 12)
+                                .overlay {
+                                    Asset.Assets.Tickers.nearChain.image
+                                        .resizable()
+                                        .frame(width: 18, height: 18)
+                                        .offset(x: 9, y: 12)
+                                }
                         }
                     }
 

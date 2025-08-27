@@ -94,8 +94,9 @@ public struct TransactionState: Equatable, Identifiable {
     public var title: String {
         switch status {
         case .failed:
-            // TODO: failed shileded is not covered!
-            return isSentTransaction
+            return isShieldingTransaction
+            ? L10n.Transaction.failedShieldedFunds
+            : isSentTransaction
             ? L10n.Transaction.failedSend
             : L10n.Transaction.failedReceive
         case .paid:
@@ -286,7 +287,7 @@ extension TransactionState {
         totalSpent = transaction.totalSpent
         totalReceived = transaction.totalReceived
         
-        let isPending = transaction.state == .pending
+        let isPending = isSentTransaction ? minedHeight == nil : transaction.state == .pending
         let isExpired = transaction.state == .expired
         
         // failed check

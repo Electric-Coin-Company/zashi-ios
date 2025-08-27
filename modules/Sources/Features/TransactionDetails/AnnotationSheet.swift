@@ -43,7 +43,7 @@ extension TransactionDetailsView {
             .padding(.bottom, 16)
             
             VStack(alignment: .leading, spacing: 6) {
-                TextEditor(text: $store.annotation)
+                TextEditor(text: $store.annotationToInput)
                     .focused($isAnnotationFocused)
                     .font(.custom(FontFamily.Inter.medium.name, size: 16))
                     .frame(height: 122)
@@ -53,7 +53,7 @@ extension TransactionDetailsView {
                     .colorBackground(Design.Inputs.Default.bg.color(colorScheme))
                     .cornerRadius(10)
                     .overlay {
-                        if store.annotation.isEmpty {
+                        if store.annotationToInput.isEmpty {
                             HStack {
                                 VStack {
                                     Text(L10n.Annotation.placeholder)
@@ -73,7 +73,7 @@ extension TransactionDetailsView {
                         }
                     }
 
-                Text(L10n.Annotation.chars(store.annotation.count, TransactionDetails.State.Constants.annotationMaxLength))
+                Text(L10n.Annotation.chars(store.annotationToInput.count, TransactionDetails.State.Constants.annotationMaxLength))
                     .zFont(size: 14, style: Design.Inputs.Default.hint)
             }
             .padding(.bottom, 32)
@@ -97,7 +97,7 @@ extension TransactionDetailsView {
                 ZashiButton(L10n.Annotation.add) {
                     store.send(.addNoteTapped)
                 }
-                .disabled(store.annotation.isEmpty)
+                .disabled(store.annotationToInput.isEmpty)
                 .padding(.bottom, 24)
             }
         }

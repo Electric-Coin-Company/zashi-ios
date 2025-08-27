@@ -14,6 +14,7 @@ import PartnerKeys
 import UserPreferencesStorage
 import Utils
 import SmartBanner
+import SwapAndPay
 
 @Reducer
 public struct Home {
@@ -100,6 +101,7 @@ public struct Home {
         case moreTapped
         case onAppear
         case onDisappear
+        case payWithNearTapped
         case presentKeystoneWeb
         case rateTooltipTapped
         case receiveScreenRequested
@@ -113,6 +115,7 @@ public struct Home {
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
         case smartBanner(SmartBanner.Action)
+        case swapWithNearTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case torSetupTapped
@@ -130,6 +133,7 @@ public struct Home {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.reviewRequest) var reviewRequest
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -174,9 +178,9 @@ public struct Home {
                     .cancel(id: CancelStateId),
                     .cancel(id: CancelEventId)
                 )
-                
+
             case .receiveScreenRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone)
+                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
@@ -185,14 +189,25 @@ public struct Home {
                     }
                 }
                 return .send(.receiveTapped)
-                
+
             case .updatePrivateUA(let privateUA):
                 state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
                 return .none
 
-            case .receiveTapped, .sendTapped:
+            case .receiveTapped:
                 return .none
-                
+
+            case .sendTapped:
+                return .none
+
+            case .swapWithNearTapped:
+                state.moreRequest = false
+                return .none
+
+            case .payWithNearTapped:
+                state.moreRequest = false
+                return .none
+
             case .scanTapped:
                 return .none
 
@@ -217,7 +232,7 @@ public struct Home {
                 return .none
 
             case .getSomeZecRequested:
-                let isKeystone = (state.selectedWalletAccount?.vendor == .keystone) ?? false
+                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
                 if let uuid = state.selectedWalletAccount?.id {
                     return .run { send in
                         let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])

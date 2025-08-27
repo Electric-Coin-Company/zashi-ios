@@ -37,6 +37,7 @@ public struct TransactionsManager {
         case notes
         case received
         case sent
+        case swap
         case unread
     }
 
@@ -63,6 +64,7 @@ public struct TransactionsManager {
         public var isNotesFilterActive: Bool { selectedFilters.contains(.notes) }
         public var isReceivedFilterActive: Bool { selectedFilters.contains(.received) }
         public var isSentFilterActive: Bool { selectedFilters.contains(.sent) }
+        public var isSwapFilterActive: Bool { selectedFilters.contains(.swap) }
         public var isUnreadFilterActive: Bool { selectedFilters.contains(.unread) }
 
         public init() { }
@@ -372,6 +374,8 @@ extension TransactionsManager.Filter {
             return !transaction.isSentTransaction
         case .sent:
             return transaction.isSentTransaction
+        case .swap:
+            return userMetadataProvider.isSwapTransaction(transaction.zAddress ?? "")
         case .unread:
             return true
         }
@@ -395,5 +399,16 @@ public extension TransactionsManager {
         @Dependency(\.userMetadataProvider) var userMetadataProvider
 
         return !userMetadataProvider.isRead(transaction.id, transaction.timestamp)
+    }
+    
+    static func isSwap(_ transaction: TransactionState) -> Bool {
+        @Dependency(\.userMetadataProvider) var userMetadataProvider
+
+        // TODO: remove this refunded hardcoded one
+        if transaction.id == "00b61343a47ccf5015fd075054a2500da06380c05513cd776bc74f3545f68cdf" {
+            return true
+        }
+
+        return userMetadataProvider.isSwapTransaction(transaction.zAddress ?? "")
     }
 }

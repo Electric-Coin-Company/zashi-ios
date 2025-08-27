@@ -31,6 +31,29 @@ public extension String {
             return self.zip316
         }
     }
+
+    var localeUsdDecimal: Decimal? {
+        let usFormatter = NumberFormatter()
+        usFormatter.locale = Locale(identifier: "en_US")
+        usFormatter.numberStyle = .decimal
+
+        guard let number = usFormatter.number(from: self) else {
+            return nil
+        }
+
+        return Decimal(number.doubleValue)
+    }
+
+    var localeUsd: String? {
+        self.localeUsdDecimal?.formatted(.currency(code: "USD"))
+    }
+    
+    var usDecimal: Decimal? {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.numberStyle = .decimal
+        return formatter.number(from: self)?.decimalValue
+    }
 }
 
 extension String: @retroactive Error {}

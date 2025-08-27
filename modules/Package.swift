@@ -71,6 +71,8 @@ let package = Package(
         .library(name: "ShieldingProcessor", targets: ["ShieldingProcessor"]),
         .library(name: "SmartBanner", targets: ["SmartBanner"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
+        .library(name: "SwapAndPay", targets: ["SwapAndPay"]),
+        .library(name: "SwapAndPayForm", targets: ["SwapAndPayForm"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "TaxExporter", targets: ["TaxExporter"]),
         .library(name: "TorSetup", targets: ["TorSetup"]),
@@ -95,11 +97,11 @@ let package = Package(
         .library(name: "ZecKeyboard", targets: ["ZecKeyboard"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.18.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.22.0"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.6"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.3.0"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.3.1"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -138,10 +140,12 @@ let package = Package(
             dependencies: [
                 "AddressBookClient",
                 "AudioServices",
+                "BalanceBreakdown",
                 "DerivationTool",
                 "Generated",
                 "Models",
                 "Scan",
+                "SwapAndPay",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -252,9 +256,12 @@ let package = Package(
                 "SDKSynchronizer",
                 "SendConfirmation",
                 "SendForm",
+                "SwapAndPay",
+                "SwapAndPayForm",
                 "TransactionDetails",
                 "TransactionsManager",
                 "UIComponents",
+                "UserMetadataProvider",
                 "Utils",
                 "WalletBirthday",
                 "WalletStorage",
@@ -419,6 +426,7 @@ let package = Package(
                 "Settings",
                 "ShieldingProcessor",
                 "SmartBanner",
+                "SwapAndPay",
                 "TransactionList",
                 "UIComponents",
                 "UserPreferencesStorage",
@@ -903,6 +911,40 @@ let package = Package(
             path: "Sources/Dependencies/SupportDataGenerator"
         ),
         .target(
+            name: "SwapAndPay",
+            dependencies: [
+                "Models",
+                "SDKSynchronizer",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/SwapAndPay"
+        ),
+        .target(
+            name: "SwapAndPayForm",
+            dependencies: [
+                "AddressBookClient",
+                "AudioServices",
+                "BalanceBreakdown",
+                "BalanceFormatter",
+                "DerivationTool",
+                "Generated",
+                "Models",
+                "Scan",
+                "SDKSynchronizer",
+                "SwapAndPay",
+                "UIComponents",
+                "UserMetadataProvider",
+                "UserPreferencesStorage",
+                "Utils",
+                "WalletBalances",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/SwapAndPayForm"
+        ),
+        .target(
             name: "ReadTransactionsStorage",
             dependencies: [
                 "Utils",
@@ -942,6 +984,7 @@ let package = Package(
                 "Models",
                 "Pasteboard",
                 "SDKSynchronizer",
+                "SwapAndPay",
                 "ReadTransactionsStorage",
                 "UIComponents",
                 "UserMetadataProvider",

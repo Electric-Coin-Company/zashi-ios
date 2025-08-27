@@ -38,6 +38,12 @@ public class UserMetadataStorage {
     // Read
     var read: [String: String] = [:]
 
+    // Swap Ids
+    var swapIds: [String: UMSwapId] = [:]
+    
+    // Last User SwapAssets
+    var lastUsedAssetHistory: [String] = []
+
     public init() { }
     
     // MARK: - General
@@ -137,7 +143,13 @@ public class UserMetadataStorage {
         }
 
         if let encryptedUMData = try? Data(contentsOf: encryptedFileURL) {
-            return try UserMetadata.userMetadataFrom(encryptedData: encryptedUMData, account: account)
+            let loadResult = try UserMetadata.userMetadataFrom(encryptedData: encryptedUMData, account: account)
+            // store needed
+            if let localData = loadResult.0, loadResult.1 {
+                fillMemoryWith(localData)
+                try? store(account: account)
+            }
+            return loadResult.0
         }
         
         return nil
@@ -160,7 +172,7 @@ public class UserMetadataStorage {
         }
 
         if let encryptedUMData = try? remoteStorage.loadDataFromFile(filenameForEncryptedFile),
-            let umData = try? UserMetadata.userMetadataFrom(encryptedData: encryptedUMData, account: account) {
+            let loadResult = try? UserMetadata.userMetadataFrom(encryptedData: encryptedUMData, account: account), let umData = loadResult.0 {
             fillMemoryWith(umData)
             try? store(account: account)
         }
@@ -178,17 +190,29 @@ public class UserMetadataStorage {
         umData.accountMetadata.annotations.forEach { annotation in
             annotations[annotation.txId] = annotation
         }
+
+        umData.accountMetadata.swaps.swapIds.forEach { swapId in
+            swapIds[swapId.depositAddress] = swapId
+        }
+        
+        lastUsedAssetHistory = umData.accountMetadata.swaps.lastUsedAssetHistory
     }
 
     public func userMetadataFromMemory() -> UserMetadata {
         let umBookmarked = bookmarked.map { $0.value }
         let umAnnotations = annotations.map { $0.value }
         let umRead = read.map { $0.value }
+        let umSwapIds = swapIds.map { $0.value }
 
         let umAccount = UMAccount(
             bookmarked: umBookmarked,
             annotations: umAnnotations,
-            read: umRead
+            read: umRead,
+            swaps: UMSwaps(
+                swapIds: umSwapIds,
+                lastUsedAssetHistory: lastUsedAssetHistory,
+                lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
+            )
         )
         
         return UserMetadata(
@@ -256,5 +280,44 @@ public class UserMetadataStorage {
     
     public func readTx(txId: String) {
         read[txId] = txId
+    }
+    
+    // MARK: - Swap Id
+    
+    public func isSwapTransaction(depositAddress: String) -> Bool {
+        guard let swapDepositAddress = swapIds[depositAddress]?.depositAddress else {
+            return false
+        }
+        
+        return swapDepositAddress == depositAddress
+    }
+    
+    public func swapDetailsForTransaction(depositAddress: String) -> UMSwapId? {
+        swapIds[depositAddress]
+    }
+    
+    public func markTransactionAsSwapFor(
+        depositAddress: String,
+        provider: String,
+        totalFees: Int64,
+        totalUSDFees: String
+    ) {
+        swapIds[depositAddress] = UMSwapId(
+            depositAddress: depositAddress,
+            provider: provider,
+            totalFees: totalFees,
+            totalUSDFees: totalUSDFees,
+            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+    }
+    
+    // Last Used Asset History
+    public func addLastUsedSwap(asset: String) {
+        lastUsedAssetHistory.removeAll { $0 == asset }
+        lastUsedAssetHistory.insert(asset, at: 0)
+        
+        if lastUsedAssetHistory.count > 10 {
+            lastUsedAssetHistory = Array(lastUsedAssetHistory.prefix(10))
+        }
     }
 }

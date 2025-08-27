@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "refreshSingleCCW.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

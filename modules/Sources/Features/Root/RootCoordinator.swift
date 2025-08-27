@@ -110,6 +110,20 @@ extension Root {
                 state.path = .addKeystoneHWWalletCoordFlow
                 return .none
                 
+            case .home(.swapWithNearTapped):
+                state.swapAndPayCoordFlowState = .initial
+                state.swapAndPayCoordFlowState.isSwapExperience = true
+                state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = true
+                state.path = .swapAndPayCoordFlow
+                return .none
+
+            case .home(.payWithNearTapped):
+                state.swapAndPayCoordFlowState = .initial
+                state.swapAndPayCoordFlowState.isSwapExperience = false
+                state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = false
+                state.path = .swapAndPayCoordFlow
+                return .none
+
             case .home(.transactionList(.transactionTapped(let txId))):
                 state.transactionsCoordFlowState = .initial
                 state.transactionsCoordFlowState.transactionToOpen = txId
@@ -139,15 +153,11 @@ extension Root {
                 state.path = .walletBackup
                 return .none
 
-                // MARK: - Integrations
-
-            case .settings(.path(.element(id: _, action: .integrations(.flexaTapped)))):
-                return .send(.flexaOpenRequest)
-                
                 // MARK: - Keystone
 
             case .sendCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))),
-                    .signWithKeystoneCoordFlow(.sendConfirmation(.rejectTapped)):
+                    .signWithKeystoneCoordFlow(.sendConfirmation(.rejectTapped)),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .confirmWithKeystone(.rejectTapped)))):
                 state.path = nil
                 return .none
 
@@ -257,6 +267,34 @@ extension Root {
             case .torSetup(.disableTapped), .torSetup(.enableTapped):
                 state.path = nil
                 return .send(.home(.smartBanner(.closeAndCleanupBanner)))
+
+                // MARK: - Swap and Pay Coord Flow
+
+            case .swapAndPayCoordFlow(.customBackRequired):
+                state.path = nil
+                return .none
+
+            case .swapAndPayCoordFlow(.swapAndPay(.customBackRequired)):
+                state.path = nil
+                return .none
+
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .swapAndPayOptInForced(.customBackRequired)))):
+                state.path = nil
+                return .none
+
+            case .swapAndPayCoordFlow(.swapAndPay(.cancelPaymentTapped)):
+                state.path = nil
+                return .none
+                
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
+                state.path = nil
+                return .none
+
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
+                state.path = nil
+                return .none
 
                 // MARK: - Transactions Coord Flow
                 

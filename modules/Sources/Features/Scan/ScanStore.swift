@@ -82,6 +82,7 @@ public struct Scan {
         case onAppear
         case onDisappear
         case foundAddress(RedactableString)
+        case foundString(String)
         case foundRequestZec(ParserResult)
         case foundAccounts(ZcashAccounts)
         case foundPCZT(Data)
@@ -144,6 +145,10 @@ public struct Scan {
             case .foundPCZT:
                 state.isAnythingFound = true
                 state.progress = nil
+                return .none
+                
+            case .foundString:
+                state.isAnythingFound = true
                 return .none
 
             case .cancelTapped:

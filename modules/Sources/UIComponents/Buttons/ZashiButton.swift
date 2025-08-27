@@ -27,6 +27,9 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
     let title: String
     let type: `Type`
     let infinityWidth: Bool
+    let fontSize: CGFloat
+    let horizontalPadding: CGFloat
+    let verticalPadding: CGFloat
     @ViewBuilder let prefixView: PrefixContent?
     @ViewBuilder let accessoryView: AccessoryContent?
     let action: () -> Void
@@ -35,6 +38,9 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
         _ title: String,
         type: `Type` = .primary,
         infinityWidth: Bool = true,
+        fontSize: CGFloat = 16,
+        horizontalPadding: CGFloat = 18,
+        verticalPadding: CGFloat = 12,
         prefixView: PrefixContent? = EmptyView(),
         accessoryView: AccessoryContent? = EmptyView(),
         action: @escaping () -> Void
@@ -42,6 +48,9 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
         self.title = title
         self.type = type
         self.infinityWidth = infinityWidth
+        self.fontSize = fontSize
+        self.horizontalPadding = horizontalPadding
+        self.verticalPadding = verticalPadding
         self.accessoryView = accessoryView
         self.prefixView = prefixView
         self.action = action
@@ -58,7 +67,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
                 }
 
                 Text(title)
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: fontSize))
                     .fixedSize()
                     .minimumScaleFactor(0.5)
                 
@@ -68,8 +77,8 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
                 }
             }
             .zForegroundColor(fgColor())
-            .padding(.horizontal, 18)
-            .padding(.vertical, 12)
+            .padding(.horizontal, horizontalPadding)
+            .padding(.vertical, verticalPadding)
             .frame(maxWidth: infinityWidth ? .infinity : nil)
             .background {
                 RoundedRectangle(cornerRadius: Design.Radius._xl)

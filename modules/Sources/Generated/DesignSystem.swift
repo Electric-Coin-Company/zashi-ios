@@ -66,6 +66,7 @@ public enum Design: Colorable {
             case borderHover
             case bgDisabled
             case fgDisabled
+            case disabledStroke
         }
 
         public enum Tertiary: Colorable {
@@ -183,7 +184,17 @@ public enum Design: Colorable {
         case badgeBg
         case badgeFg
     }
-    
+
+    public enum Switcher: Colorable {
+        case defaultText
+        case selectedBg
+        case selectedIcon
+        case selectedText
+        case selectedTagBg
+        case selectedStroke
+        case surfacePrimary
+    }
+
     public enum Checkboxes: Colorable {
         case offBg
         case offStroke
@@ -223,6 +234,12 @@ public enum Design: Colorable {
             case icon
             case dropdown
             case active
+        }
+
+        public enum Disabled: Colorable {
+            case bg
+            case stroke
+            case dropdown
         }
     }
     
@@ -436,14 +453,15 @@ public extension Design.Btns.Primary {
 public extension Design.Btns.Secondary {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark950.color, colorScheme)
+        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.midnight.color, colorScheme)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .fgHover: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         case .border: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         case .borderHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        case .disabledStroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         }
     }
 }
@@ -451,10 +469,10 @@ public extension Design.Btns.Secondary {
 public extension Design.Btns.Tertiary {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
-        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
-        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .fg: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         }
@@ -604,6 +622,20 @@ public extension Design.Avatars {
         }
     }
 }
+
+public extension Design.Switcher {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .defaultText: return Design.col(Asset.Colors.ZDesign.gray800.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .selectedBg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
+        case .selectedIcon: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
+        case .selectedText: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .selectedTagBg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
+        case .selectedStroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .surfacePrimary: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        }
+    }
+}
             
 public extension Design.Checkboxes {
     func color(_ colorScheme: ColorScheme) -> Color {
@@ -653,6 +685,16 @@ public extension Design.Dropdowns.Default {
         case .icon: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
         case .dropdown: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         case .active: return Design.col(Asset.Colors.ZDesign.successGreen500.color, Asset.Colors.ZDesign.successGreen400.color, colorScheme)
+        }
+    }
+}
+
+public extension Design.Dropdowns.Disabled {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .stroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case .dropdown: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         }
     }
 }

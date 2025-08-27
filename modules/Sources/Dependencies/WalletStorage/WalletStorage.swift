@@ -38,6 +38,14 @@ public struct WalletStorage {
             Constants.zcashStoredUserMetadataEncryptionKeys + "_\(account.name?.lowercased() ?? "")"
         }
     }
+    
+    /// States of the Swap API access opt-in
+    public enum SwapAPIAccess: Equatable, Codable, Hashable {
+        /// A user decided to allow the API access over Tor
+        case protected
+        /// A user skipped the protected step by use over Tor so the swaps are done via direct calls, no IP protection
+        case direct
+    }
 
     public enum KeychainError: Error, Equatable {
         case decoding

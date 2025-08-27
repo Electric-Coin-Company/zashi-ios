@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "2.2",
+            "date": "08-28-2025",
+            "timestamp": 1756377767,
+            "sections": [
+                {
+                    "title": "Swap ZEC with Zashi",
+                    "bulletpoints": [
+                        "Swap shielded ZEC to any supported cryptocurrency with the Near Intents integration.",
+                        "Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.1",
             "date": "08-05-2025",
             "timestamp": 1754387043,

@@ -38,13 +38,13 @@ public struct FailureView: View {
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(store.isShielding ? L10n.Send.failureShieldingInfo : L10n.Send.failureInfo)
+                Text(store.failureInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                if store.txIdToExpand != nil {
+                if store.txIdToExpand != nil || store.type != .regular {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,
@@ -57,14 +57,21 @@ public struct FailureView: View {
 
                 Spacer()
                 
-                ZashiButton(L10n.General.close) {
+                ZashiButton(
+                    L10n.General.close,
+                    type: store.type != .regular
+                    ? .ghost
+                    : .primary
+                ) {
                     store.send(.backFromFailureTapped)
                 }
                 .padding(.bottom, 8)
 
                 ZashiButton(
                     L10n.Send.report,
-                    type: .ghost
+                    type: store.type != .regular
+                    ? .primary
+                    : .ghost
                 ) {
                     store.send(.reportTapped)
                 }

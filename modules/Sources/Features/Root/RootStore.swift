@@ -68,6 +68,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case swapAndPayCoordFlow
             case torSetup
             case transactionsCoordFlow
             case walletBackup
@@ -108,6 +109,7 @@ public struct Root {
         public var signWithKeystoneCoordFlowBinding = false
         public var splashAppeared = false
         public var supportData: SupportData?
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -126,6 +128,7 @@ public struct Root {
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
         public var signWithKeystoneCoordFlowState = SignWithKeystoneCoordFlow.State.initial
+        public var swapAndPayCoordFlowState = SwapAndPayCoordFlow.State.initial
         public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
         public var walletBackupCoordFlowState = WalletBackupCoordFlow.State.initial
         public var torSetupState = TorSetup.State.initial
@@ -214,6 +217,7 @@ public struct Root {
         case settings(Settings.Action)
         case signWithKeystoneCoordFlow(SignWithKeystoneCoordFlow.Action)
         case signWithKeystoneRequested
+        case swapAndPayCoordFlow(SwapAndPayCoordFlow.Action)
         case transactionsCoordFlow(TransactionsCoordFlow.Action)
         case walletBackupCoordFlow(WalletBackupCoordFlow.Action)
         case torSetup(TorSetup.Action)
@@ -239,12 +243,15 @@ public struct Root {
         case reportShieldingFailure
         case shareFinished
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
-        
+
         // Tor
         case observeTorInit
         case torInitFailed
         case torDisableTapped
         case torDontDisableTapped
+
+        // Swap API Acccess
+        case loadSwapAPIAccess
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -358,6 +365,10 @@ public struct Root {
             TorSetup()
         }
 
+        Scope(state: \.swapAndPayCoordFlowState, action: \.swapAndPayCoordFlow) {
+            SwapAndPayCoordFlow()
+        }
+
         initializationReduce()
 
         destinationReduce()
@@ -369,7 +380,7 @@ public struct Root {
         addressBookReduce()
         
         userMetadataReduce()
-        
+
         coordinatorReduce()
         
         shieldingProcessorReduce()
