@@ -109,26 +109,6 @@ public struct TransactionDetailsView: View {
                         transactionDetailsList()
                             .screenHorizontalPadding()
                     }
-                    
-//                    if store.isSwap {
-//                        if store.swapStatus != .refunded {
-//                            swapAssetsView()
-//                        }
-//
-//                        swapSlippageView()
-//                            .padding(.top, store.swapStatus != .refunded ? 20 : 0)
-//
-//                        swapStatusView()
-//                            .padding(.top, 16)
-//
-//                        if store.swapStatus == .refunded {
-//                            swapRefundAmountView()
-//                                .padding(.top, 16)
-//                            
-//                            swapRefundInfoView()
-//                                .padding(.top, 16)
-//                        }
-//                    }
 
                     if store.isSwap && store.swapStatus == .refunded {
                         swapRefundInfoView()
@@ -264,6 +244,13 @@ extension TransactionDetailsView {
                     .frame(width: 48, height: 48)
                     .zForegroundColor(Design.Surfaces.brandPrimary)
                     .overlay {
+                        Circle()
+                            .frame(width: 51, height: 51)
+                            .offset(x: 42)
+                            .blendMode(.destinationOut)
+                    }
+                    .compositingGroup()
+                    .overlay {
                         ZcashSymbol()
                             .frame(width: 34, height: 34)
                             .foregroundColor(Asset.Colors.secondary.color)
@@ -274,14 +261,15 @@ extension TransactionDetailsView {
                         .fill(Design.Utility.Purple._500.color(colorScheme))
                         .frame(width: 48, height: 48)
                         .overlay {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 26)
-                                    .stroke(Design.Surfaces.bgPrimary.color(colorScheme), style: StrokeStyle(lineWidth: 3.0))
-                                    .frame(width: 51, height: 51)
-
-                                Asset.Assets.Icons.shieldTickFilled.image
-                                    .zImage(size: 24, style: Design.Text.opposite)
-                            }
+                            Circle()
+                                .frame(width: 51, height: 51)
+                                .offset(x: 42)
+                                .blendMode(.destinationOut)
+                        }
+                        .compositingGroup()
+                        .overlay {
+                            Asset.Assets.Icons.shieldTickFilled.image
+                                .zImage(size: 24, style: Design.Text.opposite)
                         }
                         .offset(x: -4)
                 }
@@ -290,14 +278,8 @@ extension TransactionDetailsView {
                     .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                     .frame(width: 48, height: 48)
                     .overlay {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 26)
-                                .stroke(Design.Surfaces.bgPrimary.color(colorScheme), style: StrokeStyle(lineWidth: 3.0))
-                                .frame(width: 51, height: 51)
-                            
-                            transationIcon()
-                                .zImage(size: 24, style: Design.Text.primary)
-                        }
+                        transationIcon()
+                            .zImage(size: 24, style: Design.Text.primary)
                     }
                     .offset(x: store.transaction.isShieldingTransaction ? -8 : -4)
             }

@@ -734,8 +734,6 @@
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
 "sendSelect.swapWithNear" = "Swap ZEC with NEAR Intents";
 "sendSelect.swapWithNear.desc" = "Swap shielded ZEC to any supported cryptocurrency.";
-"sendSelect.payWithNear" = "Cross-chain payments with NEAR";
-"sendSelect.payWithNear.desc" = "Send any coin or token supported by NEAR.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -835,3 +833,18 @@
 "general.less" = "Less";
 "filter.swap" = "Swaps";
 "transactionHistory.timestamp" = "Timestamp";
+
+// CrossPay
+"sendSelect.payWithNear" = "CrossPay with Near";
+"sendSelect.payWithNear.desc" = "Use shielded ZEC to send private cross-chain payments.";
+"crosspay.title" = "CrossPay";
+"crosspay.help.desc1" = "Make cross-chain payments in any NEAR-supported coin or token.";
+"crosspay.help.desc2" = "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.";
+"crosspay.paymentAmount" = "Payment Amount";
+"crosspay.sendingFrom" = "Sending from";
+"crosspay.pay" = "Pay";
+"crosspay.total" = "Total";
+"crosspay.slippageSet1" = "You may pay up to ";
+"crosspay.slippageSet2a" = "%@% (%@)";
+"crosspay.slippageSet2b" = "%@%";
+"crosspay.slippageSet3" = " more, in addition to transaction fees.";

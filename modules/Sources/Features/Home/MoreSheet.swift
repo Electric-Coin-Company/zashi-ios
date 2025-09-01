@@ -38,6 +38,19 @@ extension HomeView {
                 icon: walletStatus == .restoring
                 ? Asset.Assets.Partners.payWithNearDisabled.image
                 : Asset.Assets.Partners.payWithNear.image,
+                title: L10n.SendSelect.payWithNear,
+                desc: L10n.SendSelect.PayWithNear.desc,
+                customIcon: true
+            ) {
+                store.send(.payWithNearTapped)
+            }
+            .disabled(walletStatus == .restoring)
+            .padding(.top, 32)
+
+            ActionRow(
+                icon: walletStatus == .restoring
+                ? Asset.Assets.Partners.payWithNearDisabled.image
+                : Asset.Assets.Partners.payWithNear.image,
                 title: L10n.SendSelect.swapWithNear,
                 desc: L10n.SendSelect.SwapWithNear.desc,
                 customIcon: store.featureFlags.flexa
@@ -45,20 +58,6 @@ extension HomeView {
                 store.send(.swapWithNearTapped)
             }
             .disabled(walletStatus == .restoring)
-            .padding(.top, 32)
-
-//            ActionRow(
-//                icon: walletStatus == .restoring
-//                ? Asset.Assets.Partners.payWithNearDisabled.image
-//                : Asset.Assets.Partners.payWithNear.image,
-//                title: L10n.SendSelect.payWithNear,
-//                desc: L10n.SendSelect.PayWithNear.desc,
-//                customIcon: true,
-//                divider: store.featureFlags.flexa
-//            ) {
-//                store.send(.payWithNearTapped)
-//            }
-//            .disabled(walletStatus == .restoring)
 
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(

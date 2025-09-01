@@ -53,7 +53,7 @@ public struct ZashiTextField<PrefixContent, InputReplacementContent, AccessoryCo
                     .truncationMode(.middle)
                     .font(.custom(FontFamily.Inter.medium.name, size: 14))
                     .zForegroundColor(Design.Inputs.Filled.label)
-                    .padding(.bottom, 6)
+                    .padding(.bottom, title.isEmpty ? 0 : 6)
             }
             
             HStack(spacing: 0) {

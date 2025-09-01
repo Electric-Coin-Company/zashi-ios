@@ -19,6 +19,8 @@ import SwapAndPay
 import AddressBookClient
 import WalletStorage
 import UserMetadataProvider
+import UserPreferencesStorage
+import BigDecimal
 
 @Reducer
 public struct SwapAndPay {
@@ -29,14 +31,18 @@ public struct SwapAndPay {
 
         public var address = ""
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var amountAssetText = ""
+        public var amountUsdText = ""
         public var amountText = ""
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
         public var chain: String?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var customSlippage = ""
         public var isAddressBookHintVisible = false
         public var isCancelSheetVisible = false
+        public var isCurrencyConversionEnabled = false
         public var isInputInUsd = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
@@ -117,6 +123,26 @@ public struct SwapAndPay {
                 return 0.0
             }
         }
+        
+        public var assetAmount: Decimal {
+            if !_XCTIsTesting {
+                @Dependency(\.numberFormatter) var numberFormatter
+
+                return numberFormatter.number(amountAssetText)?.decimalValue ?? 0.0
+            } else {
+                return 0.0
+            }
+        }
+
+        public var usdAmount: Decimal {
+            if !_XCTIsTesting {
+                @Dependency(\.numberFormatter) var numberFormatter
+
+                return numberFormatter.number(amountUsdText)?.decimalValue ?? 0.0
+            } else {
+                return 0.0
+            }
+        }
     }
 
     public enum Action: BindableAction {
@@ -137,6 +163,7 @@ public struct SwapAndPay {
         case editPaymentTapped
         case enableSwapExperience
         case eraseSearchTermTapped
+        case exchangeRateSetupChanged
         case getQuoteTapped
         case helpSheetRequested(Int)
         case internalBackButtonTapped
@@ -177,6 +204,10 @@ public struct SwapAndPay {
         case notInAddressBookButtonTapped(String)
         case selectedContactClearTapped
         case selectedContactUpdated
+        
+        // crosspay
+        case backFromConfirmationTapped
+        case crossPayConfirmationRequired
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -185,6 +216,7 @@ public struct SwapAndPay {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.userMetadataProvider) var userMetadataProvider
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -205,7 +237,8 @@ public struct SwapAndPay {
             case .onAppear:
                 return .merge(
                     .send(.walletBalances(.onAppear)),
-                    .send(.refreshSwapAssets)
+                    .send(.refreshSwapAssets),
+                    .send(.exchangeRateSetupChanged)
                 )
 
             case .binding(\.customSlippage):
@@ -237,6 +270,36 @@ public struct SwapAndPay {
                 }
                 return .none
                 
+            case .walletBalances(.availableBalanceTapped):
+                state.balancesBinding = true
+                return .none
+
+            case .exchangeRateSetupChanged:
+                if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
+                    state.isCurrencyConversionEnabled = true
+                } else {
+                    state.isCurrencyConversionEnabled = false
+                }
+                return .none
+                
+            case .balances(.dismissTapped):
+                state.balancesBinding = false
+                return .none
+                
+            case .balances(.shieldFundsTapped):
+                state.balancesBinding = false
+                return .none
+                
+            case .balances(.everythingSpendable):
+                if state.balancesBinding {
+                    state.balancesBinding = false
+                }
+                return .none
+                
+            case .balances(.sheetHeightUpdated(let value)):
+                state.sheetHeight = value
+                return .none
+
             case .trySwapsAssetsAgainTapped:
                 return .send(.refreshSwapAssets)
 
@@ -319,10 +382,7 @@ public struct SwapAndPay {
 
             case .scanTapped:
                 return .none
-                
-            case .binding:
-                return .none
-                
+
             case .updateAssetsAccordingToSearchTerm:
                 // all received assets
                 var swapAssets = state.swapAssets
@@ -457,8 +517,10 @@ public struct SwapAndPay {
                     .multiplying(by: NSDecimalNumber(value: Zatoshi.Constants.oneZecInZatoshi)).int64Value
                 var amountString = String(zecAmountInt)
                 if !state.isSwapExperienceEnabled {
-                    let tokenAmountInt = NSDecimalNumber(decimal: (tokenAmountDecimal * Decimal(pow(10.0, Double(toAsset.decimals))))).int64Value
-                    amountString = String(tokenAmountInt)
+                    let bigTokenAmountDecimal = BigDecimal(tokenAmountDecimal)
+                    let pow10 = BigDecimal(pow(10.0, Double(toAsset.decimals)))
+                    let bigTokenAmount = bigTokenAmountDecimal * pow10
+                    amountString = bigTokenAmount.asString(.plain)
                 }
                 state.isQuoteRequestInFlight = true
                 state.quoteRequestedTime = Date().timeIntervalSince1970
@@ -509,6 +571,7 @@ public struct SwapAndPay {
                 state.proposal = proposal
                 if !state.isCancelSheetVisible {
                     state.isQuotePresented = true
+                    return .send(.crossPayConfirmationRequired)
                 }
                 state.isQuoteRequestInFlight = false
                 return .none
@@ -696,6 +759,32 @@ public struct SwapAndPay {
             case .confirmWithKeystoneTapped:
                 state.isQuotePresented = false
                 return .none
+                
+                // MARK: - CrossPay
+
+            case .binding(\.amountAssetText):
+                if !state.amountAssetText.isEmpty {
+                    state.amountUsdText = state.payUsdLabel
+                    state.amountText = state.payAssetLabel
+                }
+                return .none
+
+            case .binding(\.amountUsdText):
+                if !state.amountUsdText.isEmpty {
+                    state.amountAssetText = state.payAssetLabel
+                    state.amountText = state.payAssetLabel
+                }
+                return .none
+
+            case .crossPayConfirmationRequired:
+                return .none
+                
+            case .backFromConfirmationTapped:
+                state.isQuoteRequestInFlight = false
+                return .none
+
+            case .binding:
+                return .none
             }
         }
     }
@@ -704,6 +793,10 @@ public struct SwapAndPay {
 // MARK: - Conversion Logic
 
 extension SwapAndPay.State {
+    public var zeroPlaceholder: String {
+        return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+    }
+    
     public var primaryLabelFrom: String {
         guard let zecAsset else {
             return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
@@ -1089,6 +1182,41 @@ extension SwapAndPay.State {
     }
 }
 
+// MARK: - CrossPay
+
+extension SwapAndPay.State {
+    public var payZecLabel: String {
+        guard let zecAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+        
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInToken = (assetAmount * selectedAsset.usdPrice) / zecAsset.usdPrice
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInToken.simplified)) ?? "\(amountInToken.simplified)"
+    }
+    
+    public var payAssetLabel: String {
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInToken = usdAmount / selectedAsset.usdPrice
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInToken.simplified)) ?? "\(amountInToken.simplified)"
+    }
+    
+    public var payUsdLabel: String {
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInUsd = assetAmount * selectedAsset.usdPrice
+        return amountInUsd.formatted()
+    }
+}
+
 // MARK: - String Representations
 
 extension SwapAndPay.State {
@@ -1205,6 +1333,17 @@ extension SwapAndPay.State {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+
+    public var conversionCrossPayFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 8
         formatter.usesGroupingSeparator = false
         formatter.locale = Locale.current

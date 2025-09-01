@@ -57,6 +57,16 @@ extension SwapAndPayCoordFlow {
                 }
                 return .none
 
+                // MARK: - CrossPay
+                
+            case .swapAndPay(.crossPayConfirmationRequired):
+                state.path.append(.crossPayConfirmation(state.swapAndPayState))
+                return .none
+                
+            case .path(.element(id: _, action: .crossPayConfirmation(.backFromConfirmationTapped))):
+                let _ = state.path.popLast()
+                return .send(.swapAndPay(.backFromConfirmationTapped))
+
                 // MARK: - Keystone
                 
             case .swapAndPay(.confirmWithKeystoneTapped):
@@ -234,6 +244,7 @@ extension SwapAndPayCoordFlow {
                 return .none
                 
             case .swapAndPay(.confirmButtonTapped),
+                    .path(.element(id: _, action: .crossPayConfirmation(.confirmButtonTapped))),
                     .path(.element(id: _, action: .swapAndPayForm(.confirmButtonTapped))):
                 return .run { send in
                     guard await localAuthentication.authenticate() else {

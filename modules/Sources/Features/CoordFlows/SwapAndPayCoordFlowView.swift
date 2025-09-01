@@ -22,6 +22,7 @@ public struct SwapAndPayCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State var moreSheetHeight: CGFloat = .zero
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     
     @Perception.Bindable var store: StoreOf<SwapAndPayCoordFlow>
     let tokenName: String
@@ -52,6 +53,8 @@ public struct SwapAndPayCoordFlowView: View {
                         AddressBookContactView(store: store)
                     case let .confirmWithKeystone(store):
                         SignWithKeystoneView(store: store, tokenName: tokenName)
+                    case let .crossPayConfirmation(store):
+                        CrossPayConfirmationView(store: store, tokenName: tokenName)
                     case let .preSendingFailure(store):
                         PreSendingFailureView(store: store, tokenName: tokenName)
                     case let .scan(store):
@@ -75,12 +78,25 @@ public struct SwapAndPayCoordFlowView: View {
                 .navigationBarHidden(!store.path.isEmpty)
                 .navigationBarItems(
                     trailing:
-                        Button {
-                            store.send(.helpSheetRequested)
-                        } label: {
-                            Asset.Assets.infoCircle.image
-                                .zImage(size: 24, style: Design.Text.primary)
-                                .padding(8)
+                        HStack(spacing: 4) {
+                            if !store.isSwapExperience {
+                                Button {
+                                    $isSensitiveContentHidden.withLock { $0.toggle() }
+                                } label: {
+                                    let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+                                    image
+                                        .zImage(size: 24, color: Asset.Colors.primary.color)
+                                        .padding(8)
+                                }
+                            }
+                            
+                            Button {
+                                store.send(.helpSheetRequested)
+                            } label: {
+                                Asset.Assets.infoCircle.image
+                                    .zImage(size: 24, style: Design.Text.primary)
+                                    .padding(8)
+                            }
                         }
                 )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
@@ -99,15 +115,18 @@ public struct SwapAndPayCoordFlowView: View {
                     Text(
                         store.isSwapExperience
                         ? L10n.SwapAndPay.Help.swapWith
-                        : L10n.SwapAndPay.Help.payWith
+                        : L10n.Crosspay.title.uppercased()
                     )
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                    .padding(.trailing, 10)
-                    
-                    Asset.Assets.Partners.nearLogo.image
-                        .zImage(width: 65, height: 16, style: Design.Text.primary)
+                    .padding(.trailing, store.isSwapExperience ? 10 : 0)
+                    .padding(.leading, store.isSwapExperience ? 0 : 24)
+
+                    if store.isSwapExperience {
+                        Asset.Assets.Partners.nearLogo.image
+                            .zImage(width: 65, height: 16, style: Design.Text.primary)
+                    }
                 }
-                .padding(.trailing, 20)
+                .padding(.trailing, store.isSwapExperience ? 20 : 0)
                 .frame(maxWidth: .infinity)
             }
         }
@@ -132,33 +151,27 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.Icons.swapArrows.image
-                .zImage(size: 20, style: Design.Text.primary)
-                .padding(10)
-                .background {
-                    Circle()
-                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                }
-                .padding(.top, 24)
-
             HStack(spacing: 10) {
                 Text(
                     store.isSwapExperience
                     ? L10n.SwapAndPay.Help.swapWith
-                    : L10n.SwapAndPay.Help.payWith
+                    : L10n.Crosspay.title
                 )
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 
-                Asset.Assets.Partners.nearLogo.image
-                    .zImage(width: 98, height: 24, style: Design.Text.primary)
+                if store.isSwapExperience {
+                    Asset.Assets.Partners.nearLogo.image
+                        .zImage(width: 98, height: 24, style: Design.Text.primary)
+                }
             }
             .padding(.vertical, 12)
+            .padding(.top, 24)
 
             if store.isSwapExperience {
                 infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc, desc2: L10n.SwapAndPay.Help.swapDesc2)
                     .padding(.bottom, 32)
             } else {
-                infoContent(index: 1, text: L10n.SwapAndPay.Help.payDesc1, desc2: L10n.SwapAndPay.Help.payDesc2)
+                infoContent(index: 1, text: L10n.Crosspay.Help.desc1, desc2: L10n.Crosspay.Help.desc2)
                     .padding(.bottom, 32)
             }
             

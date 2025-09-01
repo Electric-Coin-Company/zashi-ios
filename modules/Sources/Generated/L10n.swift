@@ -176,6 +176,36 @@ public enum L10n {
     /// Private
     public static let maxPrivacy = L10n.tr("Localizable", "component.maxPrivacy", fallback: "Private")
   }
+  public enum Crosspay {
+    /// Pay
+    public static let pay = L10n.tr("Localizable", "crosspay.pay", fallback: "Pay")
+    /// Payment Amount
+    public static let paymentAmount = L10n.tr("Localizable", "crosspay.paymentAmount", fallback: "Payment Amount")
+    /// Sending from
+    public static let sendingFrom = L10n.tr("Localizable", "crosspay.sendingFrom", fallback: "Sending from")
+    /// You may pay up to 
+    public static let slippageSet1 = L10n.tr("Localizable", "crosspay.slippageSet1", fallback: "You may pay up to ")
+    /// %@% (%@)
+    public static func slippageSet2a(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "crosspay.slippageSet2a", String(describing: p1), String(describing: p2), fallback: "%@% (%@)")
+    }
+    /// %@%
+    public static func slippageSet2b(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "crosspay.slippageSet2b", String(describing: p1), fallback: "%@%")
+    }
+    ///  more, in addition to transaction fees.
+    public static let slippageSet3 = L10n.tr("Localizable", "crosspay.slippageSet3", fallback: " more, in addition to transaction fees.")
+    /// CrossPay
+    public static let title = L10n.tr("Localizable", "crosspay.title", fallback: "CrossPay")
+    /// Total
+    public static let total = L10n.tr("Localizable", "crosspay.total", fallback: "Total")
+    public enum Help {
+      /// Make cross-chain payments in any NEAR-supported coin or token.
+      public static let desc1 = L10n.tr("Localizable", "crosspay.help.desc1", fallback: "Make cross-chain payments in any NEAR-supported coin or token.")
+      /// If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.
+      public static let desc2 = L10n.tr("Localizable", "crosspay.help.desc2", fallback: "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.")
+    }
+  }
   public enum CurrencyConversion {
     /// Review
     public static let cardButton = L10n.tr("Localizable", "currencyConversion.cardButton", fallback: "Review")
@@ -1072,13 +1102,13 @@ public enum L10n {
     }
   }
   public enum SendSelect {
-    /// Cross-chain payments with NEAR
-    public static let payWithNear = L10n.tr("Localizable", "sendSelect.payWithNear", fallback: "Cross-chain payments with NEAR")
+    /// CrossPay with Near
+    public static let payWithNear = L10n.tr("Localizable", "sendSelect.payWithNear", fallback: "CrossPay with Near")
     /// Swap ZEC with NEAR Intents
     public static let swapWithNear = L10n.tr("Localizable", "sendSelect.swapWithNear", fallback: "Swap ZEC with NEAR Intents")
     public enum PayWithNear {
-      /// Send any coin or token supported by NEAR.
-      public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Send any coin or token supported by NEAR.")
+      /// Use shielded ZEC to send private cross-chain payments.
+      public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Use shielded ZEC to send private cross-chain payments.")
     }
     public enum SwapWithNear {
       /// Swap shielded ZEC to any supported cryptocurrency.
