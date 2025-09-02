@@ -98,9 +98,7 @@ extension Root {
                 return .none
 
             case .home(.getSomeZecTapped):
-                state.requestZecCoordFlowState = .initial
-                state.path = .requestZecCoordFlow
-                return .none
+                return .send(.home(.coinbaseTapped))
                 
             case .home(.flexaTapped):
                 return .send(.flexaOpenRequest)
