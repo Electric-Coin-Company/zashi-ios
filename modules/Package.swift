@@ -916,6 +916,7 @@ let package = Package(
             dependencies: [
                 "BigDecimal",
                 "Models",
+                "PartnerKeys",
                 "SDKSynchronizer",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

@@ -571,7 +571,9 @@ public struct SwapAndPay {
                 state.proposal = proposal
                 if !state.isCancelSheetVisible {
                     state.isQuotePresented = true
-                    return .send(.crossPayConfirmationRequired)
+                    if !state.isSwapExperienceEnabled {
+                        return .send(.crossPayConfirmationRequired)
+                    }
                 }
                 state.isQuoteRequestInFlight = false
                 return .none
