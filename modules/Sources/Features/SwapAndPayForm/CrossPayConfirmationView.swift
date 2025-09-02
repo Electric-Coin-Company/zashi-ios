@@ -146,7 +146,11 @@ public struct CrossPayConfirmationView: View {
             .zashiBack {
                 store.send(.backFromConfirmationTapped)
             }
-            .screenTitle(L10n.Send.confirmationTitle)
+            .screenTitle(
+                store.selectedWalletAccount?.vendor == .keystone
+                ? L10n.Send.review
+                : L10n.Send.confirmationTitle
+            )
             .screenHorizontalPadding()
             .applyScreenBackground()
         }
@@ -162,8 +166,8 @@ public struct CrossPayConfirmationView: View {
                     ZStack {
                         Circle()
                             .fill(Design.Surfaces.bgPrimary.color(colorScheme))
-                            .frame(width: 24, height: 24)
-                            .offset(x: 12, y: 12)
+                            .frame(width: 26, height: 26)
+                            .offset(x: 13, y: 13)
                         
                         asset.chainIcon
                             .resizable()

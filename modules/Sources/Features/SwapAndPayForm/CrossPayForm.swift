@@ -70,6 +70,7 @@ public extension SwapAndPayForm {
                                                 .zImage(size: 20, style: Design.Inputs.Default.text)
                                         )
                                         .keyboardType(.decimalPad)
+                                        .focused($isUsdFocused)
                                         .padding(.top, 23)
                                         .disabled(store.currencyConversion == nil)
                                         .opacity(store.currencyConversion == nil ? 0.5 : 1.0)
@@ -249,6 +250,7 @@ public extension SwapAndPayForm {
                             Button {
                                 isAmountFocused = false
                                 isAddressFocused = false
+                                isUsdFocused = false
                             } label: {
                                 Text(L10n.General.done.uppercased())
                                     .zFont(.regular, size: 14, style: Design.Text.primary)

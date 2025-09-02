@@ -27,6 +27,7 @@ public struct SwapAndPayForm: View {
     
     @FocusState var isAddressFocused
     @FocusState var isAmountFocused
+    @FocusState var isUsdFocused
     @State var isSlippageFocused: Bool = false
     
     @State var safeAreaHeight: CGFloat = 0

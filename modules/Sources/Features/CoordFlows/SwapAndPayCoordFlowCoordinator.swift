@@ -69,9 +69,11 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Keystone
                 
-            case .swapAndPay(.confirmWithKeystoneTapped):
+            case .swapAndPay(.confirmWithKeystoneTapped),
+                    .path(.element(id: _, action: .crossPayConfirmation(.confirmWithKeystoneTapped))):
                 var sendConfirmationState = SendConfirmation.State.initial
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
+                sendConfirmationState.type = state.swapAndPayState.isSwapExperienceEnabled ? .swap : .pay
                 state.path.append(.confirmWithKeystone(sendConfirmationState))
                 if let last = state.path.ids.last {
                     return .send(.path(.element(id: last, action: .confirmWithKeystone(.resolvePCZT))))
@@ -267,7 +269,7 @@ extension SwapAndPayCoordFlow {
                 var sendConfirmationState = SendConfirmation.State.initial
                 sendConfirmationState.address = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
-                sendConfirmationState.type = .swap
+                sendConfirmationState.type = state.swapAndPayState.isSwapExperienceEnabled ? .swap : .pay
                 state.path.append(.sending(sendConfirmationState))
 
                 if let provider = state.swapAndPayState.selectedAsset?.id {
