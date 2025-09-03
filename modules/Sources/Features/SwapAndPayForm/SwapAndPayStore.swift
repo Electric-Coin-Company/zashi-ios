@@ -521,7 +521,9 @@ public struct SwapAndPay {
                     let pow10 = BigDecimal(pow(10.0, Double(toAsset.decimals)))
                     let bigTokenAmount = bigTokenAmountDecimal * pow10
                     amountString = bigTokenAmount.asString(.plain)
-                    amountString = amountString.hasSuffix(".0") ? String(amountString.dropLast(2)) : amountString
+                    if let first = amountString.split(separator: ".").first {
+                        amountString = String(first)
+                    }
                 }
                 state.isQuoteRequestInFlight = true
                 state.quoteRequestedTime = Date().timeIntervalSince1970
