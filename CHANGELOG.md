@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.2.1 build 1 (2025-09-03)
+
+### Fixed
+- A transparent received transaction wrongly marked as failed.
+
 ## 2.2 build 1 (2025-08-28)
 
 ### Added
