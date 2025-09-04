@@ -105,6 +105,21 @@ public struct SwapAndPay {
                 return (amount / zecAsset.usdPrice) > spendableZec
             }
         }
+        
+        public var isCrossPayInsufficientFunds: Bool {
+            guard let selectedAsset else {
+                return false
+            }
+            
+            guard let zecAsset else {
+                return false
+            }
+
+            let spendableZec = walletBalancesState.shieldedBalance.decimalValue.decimalValue
+            let amountInToken = (assetAmount * selectedAsset.usdPrice) / zecAsset.usdPrice
+            
+            return amountInToken >= spendableZec
+        }
 
         public var isCustomSlippageFieldVisible: Bool {
             slippageInSheet >= 40.0
@@ -1218,7 +1233,7 @@ extension SwapAndPay.State {
         }
 
         let amountInUsd = assetAmount * selectedAsset.usdPrice
-        return amountInUsd.formatted()
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInUsd)) ?? "0"
     }
 }
 

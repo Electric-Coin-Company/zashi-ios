@@ -51,7 +51,8 @@ public extension SwapAndPayForm {
                                     ZashiTextField(
                                         text: $store.amountAssetText,
                                         placeholder: store.zeroPlaceholder,
-                                        title: L10n.Send.amount
+                                        title: L10n.Send.amount,
+                                        error: store.isCrossPayInsufficientFunds ? L10n.Send.Error.insufficientFunds : nil
                                     )
                                     .keyboardType(.decimalPad)
                                     .focused($isAmountFocused)
@@ -65,6 +66,7 @@ public extension SwapAndPayForm {
                                         ZashiTextField(
                                             text: $store.amountUsdText,
                                             placeholder: L10n.Send.currencyPlaceholder,
+                                            error: store.isCrossPayInsufficientFunds ? "" : nil,
                                             prefixView:
                                                 Asset.Assets.Icons.currencyDollar.image
                                                 .zImage(size: 20, style: Design.Inputs.Default.text)
@@ -84,7 +86,13 @@ public extension SwapAndPayForm {
                                 zecTicker(colorScheme)
                                 
                                 Text("\(store.payZecLabel) \(tokenName)")
-                                    .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                                    .zFont(
+                                        .semiBold,
+                                        size: 14,
+                                        style: store.isCrossPayInsufficientFunds
+                                        ? Design.Inputs.ErrorFilled.hint
+                                        : Design.Text.primary
+                                    )
                             }
                             .padding(.bottom, 16)
                             
