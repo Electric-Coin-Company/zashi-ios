@@ -56,16 +56,23 @@ public struct HomeView: View {
                         L10n.Tabs.send,
                         icon: Asset.Assets.Icons.sent.image
                     ) {
-                        store.send(.sendTapped)
+                        store.send(.sendRequestTapped)
                     }
 
                     Spacer(minLength: 8)
 
+//                    button(
+//                        L10n.HomeScreen.scan,
+//                        icon: Asset.Assets.Icons.scan.image
+//                    ) {
+//                        store.send(.scanTapped)
+//                    }
+
                     button(
-                        L10n.HomeScreen.scan,
-                        icon: Asset.Assets.Icons.scan.image
+                        L10n.SwapAndPay.swap,
+                        icon: Asset.Assets.Icons.swap.image
                     ) {
-                        store.send(.scanTapped)
+                        store.send(.swapWithNearTapped)
                     }
 
                     Spacer(minLength: 8)
@@ -125,6 +132,10 @@ public struct HomeView: View {
             }
             .sheet(isPresented: $store.moreRequest) {
                 moreContent()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.sendRequest) {
+                sendRequestContent()
                     .applyScreenBackground()
             }
             .navigationBarItems(

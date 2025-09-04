@@ -34,6 +34,7 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
+        public var sendRequest = false
         public var smartBannerState = SmartBanner.State.initial
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -111,6 +112,7 @@ public struct Home {
         case reviewRequestFinished
         case scanTapped
         case seeAllTransactionsTapped
+        case sendRequestTapped
         case sendTapped
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
@@ -198,6 +200,11 @@ public struct Home {
                 return .none
 
             case .sendTapped:
+                state.sendRequest = false
+                return .none
+                
+            case .sendRequestTapped:
+                state.sendRequest = true
                 return .none
 
             case .swapWithNearTapped:
@@ -206,6 +213,7 @@ public struct Home {
 
             case .payWithNearTapped:
                 state.moreRequest = false
+                state.sendRequest = false
                 return .none
 
             case .scanTapped:

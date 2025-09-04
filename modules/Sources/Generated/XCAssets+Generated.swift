@@ -27,6 +27,7 @@ public enum Asset {
       public static let brandmarkKeystone = ImageAsset(name: "brandmarkKeystone")
       public static let brandmarkLow = ImageAsset(name: "brandmarkLow")
       public static let brandmarkMax = ImageAsset(name: "brandmarkMax")
+      public static let brandmarkMaxBranded = ImageAsset(name: "brandmarkMaxBranded")
       public static let brandmarkQR = ImageAsset(name: "brandmarkQR")
     }
     public static let fly = ImageAsset(name: "Fly")

@@ -183,6 +183,12 @@ public enum L10n {
     public static let paymentAmount = L10n.tr("Localizable", "crosspay.paymentAmount", fallback: "Payment Amount")
     /// Sending from
     public static let sendingFrom = L10n.tr("Localizable", "crosspay.sendingFrom", fallback: "Sending from")
+    /// Use shielded ZEC to send cross-chain payments.
+    public static let sendPayDesc = L10n.tr("Localizable", "crosspay.sendPayDesc", fallback: "Use shielded ZEC to send cross-chain payments.")
+    /// Send ZEC
+    public static let sendZec = L10n.tr("Localizable", "crosspay.sendZec", fallback: "Send ZEC")
+    /// Use shielded ZEC to send private Zcash payments.
+    public static let sendZecDesc = L10n.tr("Localizable", "crosspay.sendZecDesc", fallback: "Use shielded ZEC to send private Zcash payments.")
     /// You may pay up to 
     public static let slippageSet1 = L10n.tr("Localizable", "crosspay.slippageSet1", fallback: "You may pay up to ")
     /// %@% (%@)

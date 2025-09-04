@@ -34,30 +34,30 @@ extension HomeView {
                 Spacer()
             }
 
-            ActionRow(
-                icon: walletStatus == .restoring
-                ? Asset.Assets.Partners.payWithNearDisabled.image
-                : Asset.Assets.Partners.payWithNear.image,
-                title: L10n.SendSelect.payWithNear,
-                desc: L10n.SendSelect.PayWithNear.desc,
-                customIcon: true
-            ) {
-                store.send(.payWithNearTapped)
-            }
-            .disabled(walletStatus == .restoring)
-            .padding(.top, 32)
-
-            ActionRow(
-                icon: walletStatus == .restoring
-                ? Asset.Assets.Partners.payWithNearDisabled.image
-                : Asset.Assets.Partners.payWithNear.image,
-                title: L10n.SendSelect.swapWithNear,
-                desc: L10n.SendSelect.SwapWithNear.desc,
-                customIcon: store.featureFlags.flexa
-            ) {
-                store.send(.swapWithNearTapped)
-            }
-            .disabled(walletStatus == .restoring)
+//            ActionRow(
+//                icon: walletStatus == .restoring
+//                ? Asset.Assets.Partners.payWithNearDisabled.image
+//                : Asset.Assets.Partners.payWithNear.image,
+//                title: L10n.SendSelect.payWithNear,
+//                desc: L10n.SendSelect.PayWithNear.desc,
+//                customIcon: true
+//            ) {
+//                store.send(.payWithNearTapped)
+//            }
+//            .disabled(walletStatus == .restoring)
+//            .padding(.top, 32)
+//
+//            ActionRow(
+//                icon: walletStatus == .restoring
+//                ? Asset.Assets.Partners.payWithNearDisabled.image
+//                : Asset.Assets.Partners.payWithNear.image,
+//                title: L10n.SendSelect.swapWithNear,
+//                desc: L10n.SendSelect.SwapWithNear.desc,
+//                customIcon: store.featureFlags.flexa
+//            ) {
+//                store.send(.swapWithNearTapped)
+//            }
+//            .disabled(walletStatus == .restoring)
 
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(
@@ -70,6 +70,7 @@ extension HomeView {
                     store.send(.coinbaseTapped)
                 }
                 .padding(.bottom, store.isKeystoneAccountActive ? 24 : 0)
+                .padding(.top, 32)
             }
             
             if !store.isKeystoneAccountActive {
@@ -86,6 +87,7 @@ extension HomeView {
                 }
                 .disabled(walletStatus == .restoring)
                 .padding(.bottom, store.isKeystoneConnected ? 24 : 0)
+                .padding(.top, store.inAppBrowserURLCoinbase != nil ? 0 : 32)
             }
             
             if !store.isKeystoneConnected {
@@ -123,5 +125,33 @@ extension HomeView {
                     }
             }
         }
+    }
+    
+    @ViewBuilder func sendRequestContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ActionRow(
+                icon: Asset.Assets.Brandmarks.brandmarkMaxBranded.image,
+                title: L10n.Crosspay.sendZec,
+                desc: L10n.Crosspay.sendZecDesc,
+                customIcon: true,
+                divider: false
+            ) {
+                store.send(.sendTapped)
+            }
+            .padding(.top, 32)
+            .padding(.bottom, 16)
+
+            ActionRow(
+                icon: Asset.Assets.Tickers.near.image,
+                title: L10n.Crosspay.title,
+                desc: L10n.Crosspay.sendPayDesc,
+                customIcon: true,
+                divider: false
+            ) {
+                store.send(.payWithNearTapped)
+            }
+            .padding(.bottom, 48)
+        }
+        .padding(.horizontal, 4)
     }
 }

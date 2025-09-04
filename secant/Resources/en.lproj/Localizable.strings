@@ -848,3 +848,6 @@
 "crosspay.slippageSet2a" = "%@% (%@)";
 "crosspay.slippageSet2b" = "%@%";
 "crosspay.slippageSet3" = " more, in addition to transaction fees.";
+"crosspay.sendZec" = "Send ZEC";
+"crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
+"crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
