@@ -1,6 +1,26 @@
 {
     "releases": [
         {
+            "version": "2.2.1",
+            "date": "09-03-2025",
+            "timestamp": 1756889046,
+            "sections": [
+                {
+                    "title": "2.2.1: Corrección de Errores",
+                    "bulletpoints": [
+                        "Solucionamos el problema del marcado erróneo como fallida de una transacción transparente."
+                    ]
+                },
+                {
+                    "title": "2.2: Swap ZEC con Zashi",
+                    "bulletpoints": [
+                        "Swap ZEC protegidos por cualquier criptomoneda compatible con la integración de Near Intents.",
+                        "Zashi es una billetera exclusiva para ZEC, por lo que necesitarás una dirección de billetera válida para el activo al que vas a intercambiar."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.2",
             "date": "08-28-2025",
             "timestamp": 1756377767,

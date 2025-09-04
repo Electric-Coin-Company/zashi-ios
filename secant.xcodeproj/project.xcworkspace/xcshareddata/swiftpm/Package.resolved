@@ -482,8 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "1c6ed29f88a463dc567c20ddea4cc1d0c8b31ea6",
-        "version" : "0.17.0"
+        "revision" : "85d3513c1fe97d9de9562040bc106b3c7b1fb5c2",
+        "version" : "0.17.1"
       }
     },
     {
@@ -500,8 +500,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "6abcb2d2c9d274250f736792b75eb2c047d9c288",
-        "version" : "2.3.1"
+        "revision" : "2eaa6a0ffa1c3ba7417b866081f53ae4875c11dc",
+        "version" : "2.3.2"
       }
     }
   ],
