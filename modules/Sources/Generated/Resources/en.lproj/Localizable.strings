@@ -644,7 +644,6 @@
 "balances.dismiss" = "Dismiss";
 "balances.spendableBalance.title" = "Spendable Balance";
 "balances.spendableBalance" = "Shielded (Spendable)";
-"balances.infoPending" = "Pending transactions are getting mined and confirmed.";
 "balances.infoSyncing" = "Zashi is scanning the blockchain to make sure your balances are displayed correctly.";
 "balances.infoShielding" = "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)";
 "balances.everythingDone" = "All your funds are shielded and spendable.";
@@ -851,3 +850,4 @@
 "crosspay.sendZec" = "Send ZEC";
 "crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
 "crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
+"balances.infoPending" = "Pending receipt of change from a prior transaction.";
