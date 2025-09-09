@@ -132,7 +132,7 @@ public struct CrossPayConfirmationView: View {
                 Spacer()
                 
                 if store.selectedWalletAccount?.vendor == .keystone {
-                    ZashiButton(L10n.Keystone.confirm) {
+                    ZashiButton(L10n.Keystone.confirmPay) {
                         store.send(.confirmWithKeystoneTapped)
                     }
                     .padding(.bottom, 24)

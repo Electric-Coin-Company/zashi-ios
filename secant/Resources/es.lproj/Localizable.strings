@@ -644,7 +644,6 @@
 "balances.dismiss" = "Descartar";
 "balances.spendableBalance.title" = "Balance Gastable";
 "balances.spendableBalance" = "Protegido (Gastable)";
-"balances.infoPending" = "Las transacciones pendientes están siendo minadas y confirmadas.";
 "balances.infoSyncing" = "Zashi está escaneando la blockchain para asegurarse de que tus balances se muestren correctamente.";
 "balances.infoShielding" = "Protege tus ZEC transparentes para hacerlos gastables y privados. Esto creará una transacción de protección en la billetera, consolidando tus fondos transparentes y protegidos. (Tarifa típica: %@)";
 "balances.everythingDone" = "Todos tus fondos están protegidos y son gastables.";
@@ -835,3 +834,6 @@
 "general.less" = "Menos";
 "filter.swap" = "intercambios";
 "transactionHistory.timestamp" = "Marca de tiempo";
+
+// CrossPay
+"balances.infoPending" = "Las transacciones pendientes están siendo minadas y confirmadas.";

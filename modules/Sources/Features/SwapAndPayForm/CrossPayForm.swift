@@ -102,21 +102,54 @@ public extension SwapAndPayForm {
                         
                         Spacer()
 
-                        if store.isQuoteRequestInFlight {
-                            ZashiButton(
-                                L10n.Send.review,
-                                accessoryView: ProgressView()
-                            ) { }
-                            .disabled(true)
-                            .padding(.top, keyboardVisible ? 40 : 0)
-                            .padding(.bottom, 56)
-                        } else {
-                            ZashiButton(L10n.Send.review) {
-                                store.send(.getQuoteTapped)
+                        if let retryFailure = store.swapAssetFailedWithRetry {
+                            VStack(spacing: 0) {
+                                Asset.Assets.infoOutline.image
+                                    .zImage(size: 16, style: Design.Text.error)
+                                    .padding(.bottom, 8)
+                                    .padding(.top, 32)
+                                
+                                Text(retryFailure
+                                     ? L10n.SwapAndPay.Failure.retryTitle
+                                     : L10n.SwapAndPay.Failure.laterTitle
+                                )
+                                .zFont(.medium, size: 14, style: Design.Text.error)
+                                .padding(.bottom, 8)
+                                
+                                Text(retryFailure
+                                     ? L10n.SwapAndPay.Failure.retryDesc
+                                     : L10n.SwapAndPay.Failure.laterDesc
+                                )
+                                .zFont(size: 14, style: Design.Text.error)
+                                .padding(.bottom, retryFailure ? 32 : 56)
+                                
+                                if retryFailure {
+                                    ZashiButton(
+                                        L10n.SwapAndPay.Failure.tryAgain,
+                                        type: .destructive1
+                                    ) {
+                                        store.send(.trySwapsAssetsAgainTapped)
+                                    }
+                                    .padding(.bottom, 56)
+                                }
                             }
-                            .padding(.top, keyboardVisible ? 40 : 0)
-                            .padding(.bottom, 56)
-                            .disabled(!store.isValidForm)
+                        } else {
+                            if store.isQuoteRequestInFlight {
+                                ZashiButton(
+                                    L10n.Send.review,
+                                    accessoryView: ProgressView()
+                                ) { }
+                                    .disabled(true)
+                                    .padding(.top, keyboardVisible ? 40 : 0)
+                                    .padding(.bottom, 56)
+                            } else {
+                                ZashiButton(L10n.Send.review) {
+                                    store.send(.getQuoteTapped)
+                                }
+                                .padding(.top, keyboardVisible ? 40 : 0)
+                                .padding(.bottom, 56)
+                                .disabled(!store.isValidForm)
+                            }
                         }
                     }
                 }

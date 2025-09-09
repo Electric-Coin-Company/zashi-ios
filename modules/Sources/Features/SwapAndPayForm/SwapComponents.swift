@@ -488,7 +488,7 @@ extension SwapAndPayForm {
                 }
 
                 if store.selectedWalletAccount?.vendor == .keystone {
-                    ZashiButton(L10n.Keystone.confirm) {
+                    ZashiButton(L10n.Keystone.confirmSwap) {
                         store.send(.confirmWithKeystoneTapped)
                     }
                     .padding(.bottom, 24)

@@ -107,6 +107,7 @@ public extension SwapAndPayForm {
                         .padding(.bottom, 20)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
+                        .screenHorizontalPadding()
                     
                     if let retryFailure = store.swapAssetFailedWithRetry, retryFailure {
                         ZashiButton(

@@ -155,14 +155,12 @@ public struct SwapAndPayCoordFlowView: View {
                 Text(
                     store.isSwapExperience
                     ? L10n.SwapAndPay.Help.swapWith
-                    : L10n.Crosspay.title
+                    : L10n.Crosspay.Help.payWith
                 )
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                
-                if store.isSwapExperience {
-                    Asset.Assets.Partners.nearLogo.image
-                        .zImage(width: 98, height: 24, style: Design.Text.primary)
-                }
+
+                Asset.Assets.Partners.nearLogo.image
+                    .zImage(width: 98, height: 24, style: Design.Text.primary)
             }
             .padding(.vertical, 12)
             .padding(.top, 24)

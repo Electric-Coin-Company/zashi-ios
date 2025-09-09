@@ -133,8 +133,8 @@ public enum L10n {
     public static let dismiss = L10n.tr("Localizable", "balances.dismiss", fallback: "Dismiss")
     /// All your funds are shielded and spendable.
     public static let everythingDone = L10n.tr("Localizable", "balances.everythingDone", fallback: "All your funds are shielded and spendable.")
-    /// Pending transactions are getting mined and confirmed.
-    public static let infoPending = L10n.tr("Localizable", "balances.infoPending", fallback: "Pending transactions are getting mined and confirmed.")
+    /// Pending receipt of change from a prior transaction.
+    public static let infoPending = L10n.tr("Localizable", "balances.infoPending", fallback: "Pending receipt of change from a prior transaction.")
     /// Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)
     public static func infoShielding(_ p1: Any) -> String {
       return L10n.tr("Localizable", "balances.infoShielding", String(describing: p1), fallback: "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
@@ -210,6 +210,8 @@ public enum L10n {
       public static let desc1 = L10n.tr("Localizable", "crosspay.help.desc1", fallback: "Make cross-chain payments in any NEAR-supported coin or token.")
       /// If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.
       public static let desc2 = L10n.tr("Localizable", "crosspay.help.desc2", fallback: "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.")
+      /// Pay with
+      public static let payWith = L10n.tr("Localizable", "crosspay.help.payWith", fallback: "Pay with")
     }
   }
   public enum CurrencyConversion {
@@ -468,6 +470,10 @@ public enum L10n {
   public enum Keystone {
     /// Confirm with Keystone
     public static let confirm = L10n.tr("Localizable", "keystone.confirm", fallback: "Confirm with Keystone")
+    /// Pay with Keystone
+    public static let confirmPay = L10n.tr("Localizable", "keystone.confirmPay", fallback: "Pay with Keystone")
+    /// Swap with Keystone
+    public static let confirmSwap = L10n.tr("Localizable", "keystone.confirmSwap", fallback: "Swap with Keystone")
     /// Connect Hardware Wallet
     public static let connect = L10n.tr("Localizable", "keystone.connect", fallback: "Connect Hardware Wallet")
     /// Scan Keystone wallet QR code

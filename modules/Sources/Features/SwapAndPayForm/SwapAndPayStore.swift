@@ -69,6 +69,7 @@ public struct SwapAndPay {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        public var swapAssetFailedCounter = 0
         public var swapAssetFailedWithRetry: Bool? = nil
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
@@ -84,6 +85,10 @@ public struct SwapAndPay {
         }
         
         public var isInsufficientFunds: Bool {
+            guard !amountText.isEmpty else {
+                return false
+            }
+            
             guard let selectedAsset else {
                 return false
             }
@@ -363,6 +368,13 @@ public struct SwapAndPay {
                 .cancellable(id: state.SwapAssetsCancelId, cancelInFlight: true)
                 
             case .swapAssetsFailedWithRetry(let retry):
+                if state.swapAssetFailedCounter < 3 {
+                    state.swapAssetFailedCounter += 1
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(5))
+                        await send(.refreshSwapAssets)
+                    }
+                }
                 state.swapAssetFailedWithRetry = retry
                 return .none
 
@@ -637,6 +649,7 @@ public struct SwapAndPay {
                 
             case .swapAssetsLoaded(let swapAssets):
                 state.swapAssetFailedWithRetry = nil
+                state.swapAssetFailedCounter = 0
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil && state.selectedContact == nil {
                     if let lastUsedAssetId = userMetadataProvider.lastUsedAssetHistory().first {

@@ -851,3 +851,6 @@
 "crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
 "crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
 "balances.infoPending" = "Pending receipt of change from a prior transaction.";
+"keystone.confirmSwap" = "Swap with Keystone";
+"keystone.confirmPay" = "Pay with Keystone";
+"crosspay.help.payWith" = "Pay with";

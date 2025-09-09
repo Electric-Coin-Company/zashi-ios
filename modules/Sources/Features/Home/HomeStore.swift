@@ -34,6 +34,7 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
+        public var payRequest = false
         public var sendRequest = false
         public var smartBannerState = SmartBanner.State.initial
         public var walletConfig: WalletConfig
@@ -102,6 +103,7 @@ public struct Home {
         case moreTapped
         case onAppear
         case onDisappear
+        case payTapped
         case payWithNearTapped
         case presentKeystoneWeb
         case rateTooltipTapped
@@ -214,6 +216,7 @@ public struct Home {
             case .payWithNearTapped:
                 state.moreRequest = false
                 state.sendRequest = false
+                state.payRequest = false
                 return .none
 
             case .scanTapped:
@@ -225,6 +228,10 @@ public struct Home {
                 
             case .buyTapped:
                 return .send(.coinbaseTapped)
+                
+            case .payTapped:
+                state.payRequest = true
+                return .none
 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
