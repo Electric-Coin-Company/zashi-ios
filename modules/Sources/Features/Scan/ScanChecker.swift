@@ -41,7 +41,7 @@ public struct RequestZecScanChecker: ScanChecker, Equatable {
         @Dependency(\.uriParser) var uriParser
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
         
-        if let parserResult = uriParser.checkRP(qrCode) {
+        if let parserResult = uriParser.checkRP(qrCode, zcashSDKEnvironment.network.networkType) {
             return .foundRequestZec(parserResult)
         } else {
             return nil

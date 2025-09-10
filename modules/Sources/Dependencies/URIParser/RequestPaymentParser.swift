@@ -8,11 +8,15 @@
 import Foundation
 import Models
 import ZcashPaymentURI
+import ZcashLightClientKit
 
 public struct RequestPaymentParser {
+    let network: NetworkType 
+
     public enum URIParserError: Error { }
 
     public func checkRP(_ dataStr: String) -> ParserResult? {
-        try? ZIP321.request(from: dataStr)
+        try? ZIP321.request(from: dataStr, context: ParserContext.from(networkType: network))
     }
 }
+

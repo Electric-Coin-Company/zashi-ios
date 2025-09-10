@@ -253,7 +253,7 @@ extension ScanCoordFlow {
                         if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
                             textMemo = memo.toString() ?? ""
                         }
-                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount?.toString() ?? "0") ?? ""
                         state.recipient = try Recipient(payment.recipientAddress.value, network: zcashSDKEnvironment.network.networkType)
                         state.memo = textMemo.isEmpty ? nil : try Memo(string: textMemo)
                         
