@@ -375,7 +375,9 @@ extension TransactionDetailsView {
                 if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
                     detailView(
                         title: L10n.TransactionHistory.sentTo,
-                        value: store.alias ?? store.transaction.address.zip316,
+                        value: isSensitiveContentHidden
+                        ? L10n.General.hideBalancesMost
+                        : store.alias ?? store.transaction.address.zip316,
                         icon: Asset.Assets.copy.image,
                         rowAppereance: store.isSwap
                         ? (
@@ -392,7 +394,9 @@ extension TransactionDetailsView {
                     if let recipient = store.swapRecipient, store.isSwap {
                         detailView(
                             title: L10n.SwapAndPay.recipient,
-                            value: recipient.zip316,
+                            value: isSensitiveContentHidden
+                            ? L10n.General.hideBalancesMost
+                            : recipient.zip316,
                             icon: Asset.Assets.copy.image,
                             rowAppereance: .middle
                         )
@@ -403,7 +407,9 @@ extension TransactionDetailsView {
 
                     detailView(
                         title: L10n.TransactionList.transactionId,
-                        value: store.transaction.id.truncateMiddle,
+                        value: isSensitiveContentHidden
+                        ? L10n.General.hideBalancesMost
+                        : store.transaction.id.truncateMiddle,
                         icon: Asset.Assets.copy.image,
                         rowAppereance: (store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction) ? .middle : .top
                     )
@@ -483,7 +489,9 @@ extension TransactionDetailsView {
 
                     detailView(
                         title: L10n.TransactionHistory.timestamp,
-                        value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
+                        value: isSensitiveContentHidden
+                        ? L10n.General.hideBalancesMost
+                        : store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
                 }

@@ -149,7 +149,6 @@
 "send.successInfo" = "Tus monedas fueron enviados exitosamente a";
 "send.failure" = "No se pudo enviar";
 "send.failureInfo" = "Hubo un error al intentar enviar monedas. Por favor, inténtalo de nuevo.";
-"send.resubmission" = "Error de Conexión";
 "send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
 "send.report" = "Reportar";
 "send.shielding" = "Protegiendo";
@@ -183,12 +182,6 @@
 "notEnoughFreeSpace.dataAvailable" = "%@ MB disponibles. ";
 "notEnoughFreeSpace.messagePost" = "La sincronización permanecerá pausada hasta que haya más espacio disponible.";
 "notEnoughFreeSpace.requiredSpace" = "Se requieren ~%@ MB de espacio adicional para continuar.";
-
-// MARK: - About
-"about.info" = "¡Envía y recibe ZEC en Zashi!\nZashi es una billetera de diseño minimalista y autocustodia, exclusiva para ZEC protegida, que mantiene tu historial de transacciones y saldo de billetera en privado.";
-"about.additionalInfo" = "Creado por Zcashers, para Zcashers. Desarrollado y mantenido por Electric Coin Co., el creador de Zcash, Zashi cuenta con un mecanismo integrado de retroalimentación de usuarios para habilitar más funciones, más rápido.";
-"about.title" = "Presentando Zashi";
-"about.privacyPolicy" = "Política de Privacidad";
 
 // MARK: - What's New
 "whatsNew.version" = "Versión de Zashi %@";
@@ -837,3 +830,10 @@
 
 // CrossPay
 "balances.infoPending" = "Las transacciones pendientes están siendo minadas y confirmadas.";
+"send.resubmission" = "Error de Conexión";
+
+// MARK: - About
+"about.info" = "¡Envía y recibe ZEC en Zashi!\nZashi es una billetera de diseño minimalista y autocustodia, exclusiva para ZEC protegida, que mantiene tu historial de transacciones y saldo de billetera en privado.";
+"about.additionalInfo" = "Creado por Zcashers, para Zcashers. Desarrollado y mantenido por Electric Coin Co., el creador de Zcash, Zashi cuenta con un mecanismo integrado de retroalimentación de usuarios para habilitar más funciones, más rápido.";
+"about.title" = "Presentando Zashi";
+"about.privacyPolicy" = "Política de Privacidad";

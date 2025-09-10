@@ -15,20 +15,22 @@ public enum L10n {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
   public enum About {
-    /// Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
-    public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
-    /// Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.
-    public static let info = L10n.tr("Localizable", "about.info", fallback: "Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.")
+    /// Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.
+    public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.")
+    /// Zashi is a Zcash-powered mobile wallet, built for unstoppable private payments. It’s optimized for storage and real-world use of shielded $ZEC—the truly private cryptocurrency.
+    public static let info = L10n.tr("Localizable", "about.info", fallback: "Zashi is a Zcash-powered mobile wallet, built for unstoppable private payments. It’s optimized for storage and real-world use of shielded $ZEC—the truly private cryptocurrency.")
     /// Privacy Policy
     public static let privacyPolicy = L10n.tr("Localizable", "about.privacyPolicy", fallback: "Privacy Policy")
+    /// Terms of Use
+    public static let termsOfUse = L10n.tr("Localizable", "about.termsOfUse", fallback: "Terms of Use")
     /// Introducing Zashi
     public static let title = L10n.tr("Localizable", "about.title", fallback: "Introducing Zashi")
   }
   public enum Accounts {
     /// Keystone
     public static let keystone = L10n.tr("Localizable", "accounts.keystone", fallback: "Keystone")
-    /// Sending from
-    public static let sendingFrom = L10n.tr("Localizable", "accounts.sendingFrom", fallback: "Sending from")
+    /// Send from
+    public static let sendingFrom = L10n.tr("Localizable", "accounts.sendingFrom", fallback: "Send from")
     /// Zashi
     public static let zashi = L10n.tr("Localizable", "accounts.zashi", fallback: "Zashi")
     public enum AddressBook {
@@ -181,8 +183,8 @@ public enum L10n {
     public static let pay = L10n.tr("Localizable", "crosspay.pay", fallback: "Pay")
     /// Payment Amount
     public static let paymentAmount = L10n.tr("Localizable", "crosspay.paymentAmount", fallback: "Payment Amount")
-    /// Sending from
-    public static let sendingFrom = L10n.tr("Localizable", "crosspay.sendingFrom", fallback: "Sending from")
+    /// Send from
+    public static let sendingFrom = L10n.tr("Localizable", "crosspay.sendingFrom", fallback: "Send from")
     /// Use shielded ZEC to send cross-chain payments.
     public static let sendPayDesc = L10n.tr("Localizable", "crosspay.sendPayDesc", fallback: "Use shielded ZEC to send cross-chain payments.")
     /// Send ZEC
@@ -210,8 +212,8 @@ public enum L10n {
       public static let desc1 = L10n.tr("Localizable", "crosspay.help.desc1", fallback: "Make cross-chain payments in any NEAR-supported coin or token.")
       /// If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.
       public static let desc2 = L10n.tr("Localizable", "crosspay.help.desc2", fallback: "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.")
-      /// Pay with
-      public static let payWith = L10n.tr("Localizable", "crosspay.help.payWith", fallback: "Pay with")
+      /// CrossPay with
+      public static let payWith = L10n.tr("Localizable", "crosspay.help.payWith", fallback: "CrossPay with")
     }
   }
   public enum CurrencyConversion {
@@ -1030,8 +1032,8 @@ public enum L10n {
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
     /// Report
     public static let report = L10n.tr("Localizable", "send.report", fallback: "Report")
-    /// Connection Error
-    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Error")
+    /// Connection Issue
+    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Issue")
     /// Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.
     public static let resubmissionInfo = L10n.tr("Localizable", "send.resubmissionInfo", fallback: "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.")
     /// Review
@@ -1054,8 +1056,8 @@ public enum L10n {
     public static let successShieldingInfo = L10n.tr("Localizable", "send.successShieldingInfo", fallback: "Your coins have been successfully shielded")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
-    /// Sending to
-    public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Sending to")
+    /// Send to
+    public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Send to")
     /// View Transaction
     public static let viewTransaction = L10n.tr("Localizable", "send.viewTransaction", fallback: "View Transaction")
     public enum Alert {

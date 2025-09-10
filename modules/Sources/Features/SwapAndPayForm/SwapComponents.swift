@@ -53,7 +53,7 @@ public extension SwapAndPayForm {
                 .padding(.bottom, 32)
                 .padding(.horizontal, 20)
                 
-                if let retryFailure = store.swapAssetFailedWithRetry {
+                if let _ = store.swapAssetFailedWithRetry {
                     assetsFailureComposition(colorScheme)
                 } else if store.swapAssetsToPresent.isEmpty && !store.searchTerm.isEmpty {
                     assetsEmptyComposition(colorScheme)
@@ -275,6 +275,18 @@ extension SwapAndPayForm {
                 
                 Spacer()
                 
+                if !store.isSwapExperienceEnabled {
+                    HStack(alignment: .top, spacing: 0) {
+                        Asset.Assets.infoOutline.image
+                            .zImage(size: 16, style: Design.Text.tertiary)
+                            .padding(.trailing, 12)
+                        
+                        Text(L10n.SwapAndPay.slippageWarn)
+                            .zFont(size: 12, style: Design.Text.tertiary)
+                    }
+                    .padding(.bottom, 24)
+                }
+                
                 ZashiButton(L10n.General.confirm) {
                     store.send(.slippageSetConfirmTapped)
                 }
@@ -367,45 +379,44 @@ extension SwapAndPayForm {
                 ZStack {
                     HStack(spacing: 8) {
                         VStack(spacing: 0) {
-                            HStack(spacing: 2) {
-                                Text(store.zecToBeSpendInQuote)
-                                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.1)
-                                
-                                zecTickerLogo(colorScheme)
-                                    .scaleEffect(0.8)
-                            }
-                            
+                            zecTickerLogo(colorScheme)
+
+                            Text(store.zecToBeSpendInQuote)
+                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.1)
+
                             Text(store.zecUsdToBeSpendInQuote)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         }
-                        .padding(16)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
+                        .frame(height: 94)
                         .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._xl)
-                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                         
                         VStack(spacing: 0) {
-                            HStack(spacing: 2) {
-                                Text(store.tokenToBeReceivedInQuote)
-                                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.1)
+                            tokenTicker(asset: store.selectedAsset, colorScheme)
+                                .scaleEffect(0.8)
 
-                                tokenTicker(asset: store.selectedAsset, colorScheme)
-                                    .scaleEffect(0.8)
-                            }
+                            Text(store.tokenToBeReceivedInQuote)
+                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.1)
                             
                             Text(store.tokenUsdToBeReceivedInQuote)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         }
-                        .padding(16)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
+                        .frame(height: 94)
                         .background {
-                            RoundedRectangle(cornerRadius: Design.Radius._xl)
-                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                     }
                     

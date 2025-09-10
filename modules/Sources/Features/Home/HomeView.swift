@@ -71,7 +71,7 @@ public struct HomeView: View {
                         L10n.SwapAndPay.pay,
                         icon: Asset.Assets.Icons.pay.image
                     ) {
-                        store.send(.payTapped)
+                        store.send(.payWithNearTapped)
                     }
 
                     Spacer(minLength: 8)

@@ -32,6 +32,7 @@ public struct ScreenGradientBackground: View {
         case onboardingDark
         case onboardingLight
         case success
+        case warning
 
         public func stops(_ colorScheme: ColorScheme) -> [Gradient.Stop] {
             switch self {
@@ -69,6 +70,11 @@ public struct ScreenGradientBackground: View {
             case .success:
                 return [
                     Gradient.Stop(color: Design.Utility.SuccessGreen._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
+                ]
+            case .warning:
+                return [
+                    Gradient.Stop(color: Design.Utility.WarningYellow._500.color(colorScheme), location: 0.0),
                     Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
                 ]
             }
@@ -171,6 +177,12 @@ extension View {
     public func applyFailureScreenBackground() -> some View {
         modifier(
             ScreenGradientBackgroundModifier(mode: .failure)
+        )
+    }
+    
+    public func applyWarnScreenBackground() -> some View {
+        modifier(
+            ScreenGradientBackgroundModifier(mode: .warning)
         )
     }
 }

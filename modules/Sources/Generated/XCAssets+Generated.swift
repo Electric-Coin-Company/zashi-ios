@@ -149,6 +149,7 @@ public enum Asset {
       public static let swap = ImageAsset(name: "swap")
       public static let swapArrows = ImageAsset(name: "swapArrows")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
+      public static let terms = ImageAsset(name: "terms")
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")

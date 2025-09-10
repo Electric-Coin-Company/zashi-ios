@@ -73,6 +73,7 @@ public struct SwapAndPay {
         public var swapAssetFailedWithRetry: Bool? = nil
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAsset: SwapAsset?
@@ -112,6 +113,10 @@ public struct SwapAndPay {
         }
         
         public var isCrossPayInsufficientFunds: Bool {
+            guard !amountText.isEmpty else {
+                return false
+            }
+
             guard let selectedAsset else {
                 return false
             }
@@ -435,6 +440,15 @@ public struct SwapAndPay {
             case .assetTapped(let asset):
                 state.selectedAsset = asset
                 state.assetSelectBinding = false
+                if !state.isSwapExperienceEnabled && !state.amountAssetText.isEmpty {
+                    // when the asset changes, the values must recompute, triggering the recompute
+                    let helper = state.amountAssetText
+                    state.amountAssetText = ""
+                    state.amountAssetText = helper
+                    state.amountUsdText = state.payUsdLabel
+                    state.amountText = state.payAssetLabel
+                    state.amountAssetText = state.payAssetLabel
+                }
                 return .none
 
             case .switchInputTapped:
