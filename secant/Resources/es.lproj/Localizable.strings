@@ -740,10 +740,10 @@
 "swapAndPay.quoteUnavailable" = "Cotización no disponible";
 "swapAndPay.cancelPayment" = "Cancelar pago";
 "swapAndPay.editPayment" = "Editar pago";
-"swapAndPay.swapNow" = "Intercambiar ahora";
+"swapAndPay.swapNow" = "Intercambiar Ahora";
 "swapAndPay.swapFrom" = "Intercambiar de";
 "swapAndPay.swapTo" = "Intercambiar a";
-"swapAndPay.payNow" = "Pagar ahora";
+"swapAndPay.payNow" = "Pagar Ahora";
 "swapAndPay.payFrom" = "Pagar desde";
 "swapAndPay.payTo" = "Pagar a";
 "swapAndPay.fee" = "Comisión de transacción ZEC";

@@ -380,6 +380,7 @@ extension SwapAndPayForm {
                     HStack(spacing: 8) {
                         VStack(spacing: 0) {
                             zecTickerLogo(colorScheme)
+                                .scaleEffect(0.8)
 
                             Text(store.zecToBeSpendInQuote)
                                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
@@ -428,7 +429,7 @@ extension SwapAndPayForm {
                     store.isSwapExperienceEnabled
                     ? L10n.SwapAndPay.swapFrom
                     : L10n.SwapAndPay.payFrom,
-                    L10n.SwapAndPay.Quote.zashi
+                    store.selectedWalletAccount?.vendor.name() ?? L10n.SwapAndPay.Quote.zashi
                 )
                 .padding(.bottom, 12)
                 
@@ -441,11 +442,13 @@ extension SwapAndPayForm {
                 .padding(.bottom, 12)
 
                 quoteLineContent(L10n.SwapAndPay.totalFees, "\(store.totalFeesStr) \(tokenName)")
-                HStack(spacing: 0) {
-                    Spacer()
-
-                    Text(store.totalFeesUsdStr)
-                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                if !store.isSwapExperienceEnabled {
+                    HStack(spacing: 0) {
+                        Spacer()
+                        
+                        Text(store.totalFeesUsdStr)
+                            .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                    }
                 }
 
                 if !store.isSwapExperienceEnabled {
@@ -454,11 +457,14 @@ extension SwapAndPayForm {
                         "\(store.swapSlippageStr) \(tokenName)"
                     )
                     .padding(.top, 12)
-                    HStack(spacing: 0) {
-                        Spacer()
-                        
-                        Text(store.swapSlippageUsdStr)
-                            .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                    
+                    if !store.isSwapExperienceEnabled {
+                        HStack(spacing: 0) {
+                            Spacer()
+                            
+                            Text(store.swapSlippageUsdStr)
+                                .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                        }
                     }
                 }
                 

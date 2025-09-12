@@ -70,8 +70,8 @@ public struct ZashiTextField<PrefixContent, InputReplacementContent, AccessoryCo
                         text: text,
                         prompt:
                             Text(placeholder)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                            .foregroundColor(Design.Inputs.Default.text.color(colorScheme))
+                                .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                                .foregroundColor(Design.Inputs.Default.text.color(colorScheme))
                     )
                     .autocapitalization(.none)
                     .autocorrectionDisabled()

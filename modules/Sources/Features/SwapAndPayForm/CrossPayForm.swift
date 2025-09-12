@@ -50,7 +50,7 @@ public extension SwapAndPayForm {
                                 HStack(alignment: .top, spacing: 4) {
                                     ZashiTextField(
                                         text: $store.amountAssetText,
-                                        placeholder: store.zeroPlaceholder,
+                                        placeholder: store.selectedAsset?.tokenName ?? store.zeroPlaceholder,
                                         title: L10n.Send.amount,
                                         error: store.isCrossPayInsufficientFunds ? L10n.Send.Error.insufficientFunds : nil
                                     )
@@ -171,6 +171,11 @@ public extension SwapAndPayForm {
             .popover(isPresented: $store.assetSelectBinding) {
                 assetContent(colorScheme)
                     .padding(.horizontal, 4)
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.isQuotePresented) {
+                quoteContent(colorScheme)
+                    .screenHorizontalPadding()
                     .applyScreenBackground()
             }
             .zashiSheet(isPresented: $store.isQuoteUnavailablePresented) {

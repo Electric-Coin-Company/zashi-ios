@@ -738,10 +738,10 @@
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
 "swapAndPay.cancelPayment" = "Cancel payment";
 "swapAndPay.editPayment" = "Edit payment";
-"swapAndPay.swapNow" = "Swap now";
+"swapAndPay.swapNow" = "Swap Now";
 "swapAndPay.swapFrom" = "Swap from";
 "swapAndPay.swapTo" = "Swap to";
-"swapAndPay.payNow" = "Pay now";
+"swapAndPay.payNow" = "Pay Now";
 "swapAndPay.payFrom" = "Pay from";
 "swapAndPay.payTo" = "Pay to";
 "swapAndPay.fee" = "ZEC transaction fee";

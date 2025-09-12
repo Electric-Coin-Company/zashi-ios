@@ -1528,8 +1528,8 @@ public enum L10n {
     public static let pay = L10n.tr("Localizable", "swapAndPay.pay", fallback: "Pay")
     /// Pay from
     public static let payFrom = L10n.tr("Localizable", "swapAndPay.payFrom", fallback: "Pay from")
-    /// Pay now
-    public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay now")
+    /// Pay Now
+    public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay Now")
     /// Pay to
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
     /// Quote Unavailable
@@ -1584,8 +1584,8 @@ public enum L10n {
     public static let swap = L10n.tr("Localizable", "swapAndPay.swap", fallback: "Swap")
     /// Swap from
     public static let swapFrom = L10n.tr("Localizable", "swapAndPay.swapFrom", fallback: "Swap from")
-    /// Swap now
-    public static let swapNow = L10n.tr("Localizable", "swapAndPay.swapNow", fallback: "Swap now")
+    /// Swap Now
+    public static let swapNow = L10n.tr("Localizable", "swapAndPay.swapNow", fallback: "Swap Now")
     /// You could receive up to %@ less based on the %@ slippage you set.
     public static func swapQuoteSlippageWarn(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.swapQuoteSlippageWarn", String(describing: p1), String(describing: p2), fallback: "You could receive up to %@ less based on the %@ slippage you set.")
