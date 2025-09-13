@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import ZcashSDKEnvironment
 import Utils
+import SwiftUI
 
 import Models
 import BalanceBreakdown
@@ -22,6 +23,8 @@ import UserMetadataProvider
 import UserPreferencesStorage
 import BigDecimal
 import Pasteboard
+import UIComponents
+import Generated
 
 @Reducer
 public struct SwapAndPay {
@@ -29,6 +32,7 @@ public struct SwapAndPay {
     public struct State {
         public var SwapAssetsCancelId = UUID()
         public var ABCancelId = UUID()
+        public var QRCancelId = UUID()
 
         public var address = ""
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
@@ -80,6 +84,13 @@ public struct SwapAndPay {
         public var walletBalancesState: WalletBalances.State
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAsset: SwapAsset?
+
+        // Swap to ZEC
+        public var addressToShare: RedactableString?
+        public var isAddressExpanded = false
+        public var isQRCodeAppreanceFlipped = false
+        public var storedQR: CGImage?
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
         public var isValidForm: Bool {
             selectedAsset != nil
@@ -239,7 +250,15 @@ public struct SwapAndPay {
         
         // swap into zec
         case confirmToZecButtonTapped
+        case copyDepositAddressToPastboard
+        case copySwapToZecAmountTapped
         case enableSwapToZecExperience
+        case generateQRCode(Bool)
+        case qrCodeTapped
+        case rememberQR(CGImage?)
+        case sentTheFundsButtonTapped
+        case shareFinished
+        case shareQR
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -268,6 +287,7 @@ public struct SwapAndPay {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.isQuoteRequestInFlight = false
                 return .merge(
                     .send(.walletBalances(.onAppear)),
                     .send(.refreshSwapAssets),
@@ -293,7 +313,8 @@ public struct SwapAndPay {
             case .onDisappear:
                 return .merge(
                     .cancel(id: state.SwapAssetsCancelId),
-                    .cancel(id: state.ABCancelId)
+                    .cancel(id: state.ABCancelId),
+                    .cancel(id: state.QRCancelId)
                 )
                 
             case .willEnterForeground:
@@ -610,7 +631,6 @@ public struct SwapAndPay {
                 }
                 state.quote = quote
                 if state.isSwapToZecExperienceEnabled {
-                    //pasteboard.setString(quote.depositAddress.redacted)
                     state.isQuoteToZecPresented = true
                     return .none
                 }
@@ -857,8 +877,74 @@ public struct SwapAndPay {
             case .confirmToZecButtonTapped:
                 state.isQuoteToZecPresented = false
                 return .none
+
+            case .copySwapToZecAmountTapped:
+                guard let quote = state.quote else {
+                    return .none
+                }
+                pasteboard.setString("\(quote.amountIn)".redacted)
+                state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
+                return .none
+
+            case .qrCodeTapped:
+                guard state.storedQR != nil else {
+                    return .none
+                }
+                state.isQRCodeAppreanceFlipped.toggle()
+                return .send(.generateQRCode(true))
+
+            case let .rememberQR(image):
+                state.storedQR = image
+                return .none
+
+            case .copyDepositAddressToPastboard:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                pasteboard.setString(depositAddress.redacted)
+                state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
+                return .none
+
+            case .generateQRCode:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                return .publisher {
+                    QRCodeGenerator.generate(
+                        from: depositAddress,
+                        vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+                        color: state.isQRCodeAppreanceFlipped
+                        ? .black
+                        : Asset.Colors.primary.systemColor,
+                        overlayedWithZcashLogo: false
+                    )
+                    .map(Action.rememberQR)
+                }
+                .cancellable(id: state.QRCancelId)
+
+            case .shareFinished:
+                state.addressToShare = nil
+                return .none
                 
-            case .helpSheetRequested:
+            case .shareQR:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                state.addressToShare = depositAddress.redacted
+                return .none
+                
+            case .sentTheFundsButtonTapped:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                if let provider = state.selectedAsset?.id {
+                    let totalFees: Int64 = 0
+                    let totalUSDFees = ""
+                    userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
+                    if let account = state.selectedWalletAccount?.account {
+                        try? userMetadataProvider.store(account)
+                    }
+                }
                 return .none
             }
         }
@@ -1392,6 +1478,14 @@ extension SwapAndPay.State {
         return conversionFormatter.string(from: NSDecimalNumber(decimal: quote.amountIn.simplified)) ?? "\(quote.amountIn.simplified)"
     }
     
+    public var swapToZecAmountInQuotePreciseCopy: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return precisionConversionFormatter.string(from: NSDecimalNumber(decimal: quote.amountIn)) ?? "\(quote.amountIn)"
+    }
+
     public var swapToZecAmountInUsdQuote: String {
         guard let quote else {
             return "0"
@@ -1483,6 +1577,17 @@ extension SwapAndPay.State {
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    public var precisionConversionFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 32
+        formatter.usesGroupingSeparator = false
         formatter.locale = Locale.current
         
         return formatter

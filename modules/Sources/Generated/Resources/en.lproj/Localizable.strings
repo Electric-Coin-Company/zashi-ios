@@ -860,3 +860,9 @@
 "swapToZec.address" = "%@ address...";
 "swapToZec.refundAddress" = "Refund Address";
 "swapToZec.review" = "Review Quote";
+"swapToZec.deposit" = "Deposit Amount";
+"swapToZec.shareQR" = "Share QR";
+"swapToZec.sentTheFunds" = "I’ve sent the funds";
+"swapToZec.info1" = "Use your ";
+"swapToZec.info2" = "%@ on %@";
+"swapToZec.info3" = " wallet to deposit funds. Depositing other assets may result in loss of funds.";

@@ -73,6 +73,14 @@ public struct SwapAndPayCoordFlow {
             swapAndPayState.isQuoteRequestInFlight
         }
         
+        public var isSwapHelpContent: Bool {
+            isSwapExperience || swapAndPayState.isSwapToZecExperienceEnabled
+        }
+
+        public var isSensitiveButtonVisible: Bool {
+            !swapAndPayState.isSwapToZecExperienceEnabled
+        }
+
         public init() { }
     }
 

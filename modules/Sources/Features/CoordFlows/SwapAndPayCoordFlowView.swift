@@ -81,7 +81,7 @@ public struct SwapAndPayCoordFlowView: View {
                 .navigationBarItems(
                     trailing:
                         HStack(spacing: 4) {
-                            if !store.isSwapExperience {
+                            if store.isSensitiveButtonVisible {
                                 Button {
                                     $isSensitiveContentHidden.withLock { $0.toggle() }
                                 } label: {
@@ -118,17 +118,17 @@ public struct SwapAndPayCoordFlowView: View {
                         store.isSwapToZecExperience
                         ? L10n.SwapAndPay.swap.uppercased()
                         : store.isSwapExperience
-                        ? L10n.SwapAndPay.Help.swapWith
+                        ? L10n.SwapAndPay.swap.uppercased()
                         : L10n.Crosspay.title.uppercased()
                     )
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                    .padding(.trailing, store.isSwapExperience ? 10 : 0)
-                    .padding(.leading, store.isSwapExperience ? 0 : 24)
+//                    .padding(.trailing, store.isSwapExperience ? 10 : 0)
+                    .padding(.leading, store.isSensitiveButtonVisible ? 30 : 0)
 
-                    if store.isSwapExperience {
-                        Asset.Assets.Partners.nearLogo.image
-                            .zImage(width: 65, height: 16, style: Design.Text.primary)
-                    }
+//                    if store.isSwapExperience {
+//                        Asset.Assets.Partners.nearLogo.image
+//                            .zImage(width: 65, height: 16, style: Design.Text.primary)
+//                    }
                 }
                 .padding(.trailing, store.isSwapExperience ? 20 : 0)
                 .frame(maxWidth: .infinity)
@@ -157,7 +157,7 @@ public struct SwapAndPayCoordFlowView: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 10) {
                 Text(
-                    store.isSwapExperience
+                    store.isSwapHelpContent
                     ? L10n.SwapAndPay.Help.swapWith
                     : L10n.Crosspay.Help.payWith
                 )
@@ -169,7 +169,7 @@ public struct SwapAndPayCoordFlowView: View {
             .padding(.vertical, 12)
             .padding(.top, 24)
 
-            if store.isSwapExperience {
+            if store.isSwapHelpContent {
                 infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc, desc2: L10n.SwapAndPay.Help.swapDesc2)
                     .padding(.bottom, 32)
             } else {

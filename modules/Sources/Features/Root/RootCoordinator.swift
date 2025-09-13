@@ -268,6 +268,10 @@ extension Root {
 
                 // MARK: - Swap and Pay Coord Flow
 
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .swapToZecSummary(.sentTheFundsButtonTapped)))):
+                state.path = nil
+                return .none
+
             case .swapAndPayCoordFlow(.customBackRequired):
                 state.path = nil
                 return .none

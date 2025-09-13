@@ -1684,10 +1684,24 @@ public enum L10n {
     public static func address(_ p1: Any) -> String {
       return L10n.tr("Localizable", "swapToZec.address", String(describing: p1), fallback: "%@ address...")
     }
+    /// Deposit Amount
+    public static let deposit = L10n.tr("Localizable", "swapToZec.deposit", fallback: "Deposit Amount")
+    /// Use your 
+    public static let info1 = L10n.tr("Localizable", "swapToZec.info1", fallback: "Use your ")
+    /// %@ on %@
+    public static func info2(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "swapToZec.info2", String(describing: p1), String(describing: p2), fallback: "%@ on %@")
+    }
+    ///  wallet to deposit funds. Depositing other assets may result in loss of funds.
+    public static let info3 = L10n.tr("Localizable", "swapToZec.info3", fallback: " wallet to deposit funds. Depositing other assets may result in loss of funds.")
     /// Refund Address
     public static let refundAddress = L10n.tr("Localizable", "swapToZec.refundAddress", fallback: "Refund Address")
     /// Review Quote
     public static let review = L10n.tr("Localizable", "swapToZec.review", fallback: "Review Quote")
+    /// I’ve sent the funds
+    public static let sentTheFunds = L10n.tr("Localizable", "swapToZec.sentTheFunds", fallback: "I’ve sent the funds")
+    /// Share QR
+    public static let shareQR = L10n.tr("Localizable", "swapToZec.shareQR", fallback: "Share QR")
   }
   public enum Sync {
     public enum Alert {

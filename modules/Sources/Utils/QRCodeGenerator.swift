@@ -25,11 +25,18 @@ public enum QRCodeGenerator {
         from string: String,
         maxPrivacy: Bool = true,
         vendor: Vendor = .zashi,
-        color: UIColor = Asset.Colors.primary.systemColor
+        color: UIColor = Asset.Colors.primary.systemColor,
+        overlayedWithZcashLogo: Bool = true
     ) -> Future<CGImage, Never> {
         Future<CGImage, Never> { promise in
             DispatchQueue.global().async {
-                guard let image = generateCode(from: string, maxPrivacy: maxPrivacy, vendor: vendor, color: color) else {
+                guard let image = generateCode(
+                    from: string,
+                    maxPrivacy: maxPrivacy,
+                    vendor: vendor,
+                    color: color,
+                    overlayedWithZcashLogo: overlayedWithZcashLogo
+                ) else {
                     return
                 }
                 
@@ -43,7 +50,8 @@ public enum QRCodeGenerator {
         scale: CGFloat = 15,
         maxPrivacy: Bool = true,
         vendor: Vendor = .zashi,
-        color: UIColor = Asset.Colors.primary.systemColor
+        color: UIColor = Asset.Colors.primary.systemColor,
+        overlayedWithZcashLogo: Bool = true
     ) -> CGImage? {
         let data = string.data(using: String.Encoding.utf8)
         
@@ -61,7 +69,8 @@ public enum QRCodeGenerator {
                 baseImage,
                 context: context,
                 maxPrivacy: maxPrivacy,
-                vendor: vendor
+                vendor: vendor,
+                overlayedWithZcashLogo: overlayedWithZcashLogo
             )
         } else {
             guard let baseImage = filter.outputImage?.transformed(by: transform).tinted(using: color) else {
@@ -73,7 +82,8 @@ public enum QRCodeGenerator {
                 context: context,
                 maxPrivacy: maxPrivacy,
                 vendor : vendor,
-                export: false
+                export: false,
+                overlayedWithZcashLogo: overlayedWithZcashLogo
             )
         }
     }
@@ -83,7 +93,8 @@ public enum QRCodeGenerator {
         context: CIContext,
         maxPrivacy: Bool,
         vendor: Vendor,
-        export: Bool = true
+        export: Bool = true,
+        overlayedWithZcashLogo: Bool = true
     ) -> CGImage? {
         let maxPrivacyPostfix = vendor == .zashi ? maxPrivacy ? "Max" : "Low" : ""
         let vendorPrefix = vendor == .zashi ? "" : "KS_"
@@ -105,9 +116,14 @@ public enum QRCodeGenerator {
         let scaleTransform = CGAffineTransform(scaleX: iconRect.size.width / iconCIImage.extent.width, y: iconRect.size.height / iconCIImage.extent.height)
         let translationTransform = CGAffineTransform(translationX: iconRect.origin.x, y: iconRect.origin.y)
         let transformedIconCIImage = iconCIImage.transformed(by: scaleTransform.concatenating(translationTransform))
-        let combinedImage = transformedIconCIImage.composited(over: baseImage)
-                                               
-        return context.createCGImage(combinedImage, from: combinedImage.extent)
+        
+        if overlayedWithZcashLogo {
+            let combinedImage = transformedIconCIImage.composited(over: baseImage)
+            
+            return context.createCGImage(combinedImage, from: combinedImage.extent)
+        } else {
+            return context.createCGImage(baseImage, from: baseImage.extent)
+        }
     }
 }
 
