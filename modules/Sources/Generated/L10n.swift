@@ -1679,6 +1679,16 @@ public enum L10n {
       public static let success = L10n.tr("Localizable", "swapAndPay.status.success", fallback: "Completed")
     }
   }
+  public enum SwapToZec {
+    /// %@ address...
+    public static func address(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "swapToZec.address", String(describing: p1), fallback: "%@ address...")
+    }
+    /// Refund Address
+    public static let refundAddress = L10n.tr("Localizable", "swapToZec.refundAddress", fallback: "Refund Address")
+    /// Review Quote
+    public static let review = L10n.tr("Localizable", "swapToZec.review", fallback: "Review Quote")
+  }
   public enum Sync {
     public enum Alert {
       /// Error

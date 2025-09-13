@@ -275,7 +275,7 @@ extension SwapAndPayForm {
                 
                 Spacer()
                 
-                if !store.isSwapExperienceEnabled {
+                if !store.isSwapExperienceEnabled && !store.isSwapToZecExperienceEnabled {
                     HStack(alignment: .top, spacing: 0) {
                         Asset.Assets.infoOutline.image
                             .zImage(size: 16, style: Design.Text.tertiary)
@@ -515,6 +515,106 @@ extension SwapAndPayForm {
                     }
                     .padding(.bottom, 24)
                 }
+            }
+        }
+    }
+    
+    @ViewBuilder func quoteToZecContent(_ colorScheme: ColorScheme) -> some View {
+        WithPerceptionTracking {
+            VStack(spacing: 0) {
+                Text(L10n.SwapToZec.review)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.vertical, 24)
+
+                ZStack {
+                    HStack(spacing: 8) {
+                        VStack(spacing: 0) {
+                            tokenTicker(asset: store.selectedAsset, colorScheme)
+                                .scaleEffect(0.8)
+
+                            Text(store.swapToZecAmountInQuote)
+                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.1)
+                            
+                            Text(store.zecUsdToBeSpendInQuote)
+                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 94)
+                        .background {
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                        }
+                        
+                        VStack(spacing: 0) {
+                            zecTickerLogo(colorScheme)
+                                .scaleEffect(0.8)
+
+                            Text(store.tokenToBeReceivedInQuote)
+                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.1)
+
+                            Text(store.tokenUsdToBeReceivedInQuote)
+                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 94)
+                        .background {
+                            RoundedRectangle(cornerRadius: Design.Radius._3xl)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                        }
+                    }
+                    
+                    FloatingArrow()
+                }
+                .padding(.bottom, 32)
+
+                quoteLineContent(L10n.SwapAndPay.totalFees, "\(store.swapToZecTotalFees) \(store.selectedAsset?.tokenName ?? "")")
+
+                Divider()
+                    .frame(height: 1)
+                    .background(Design.Surfaces.strokeSecondary.color(colorScheme))
+                    .padding(.vertical, 12)
+                
+                HStack(spacing: 0) {
+                    Text(L10n.SwapAndPay.totalAmount)
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+
+                    Spacer()
+
+                    Text("\(store.swapToZecAmountInQuote) \(store.selectedAsset?.tokenName ?? "")")
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                }
+                HStack(spacing: 0) {
+                    Spacer()
+
+                    Text(store.zecUsdToBeSpendInQuote)
+                        .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                }
+                .padding(.bottom, 32)
+                
+                HStack(alignment: .top, spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .zImage(size: 16, style: Design.Text.tertiary)
+                        .padding(.trailing, 12)
+                    
+                    Text(L10n.SwapAndPay.swapQuoteSlippageWarn(store.swapToZecQuoteSlippageUsdStr, store.currentSlippageString))
+                }
+                .zFont(size: 12, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 24)
+
+                ZashiButton(L10n.General.confirm) {
+                    store.send(.confirmToZecButtonTapped)
+                }
+                .padding(.bottom, 24)
             }
         }
     }

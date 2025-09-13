@@ -934,6 +934,7 @@ let package = Package(
                 "DerivationTool",
                 "Generated",
                 "Models",
+                "Pasteboard",
                 "Scan",
                 "SDKSynchronizer",
                 "SwapAndPay",

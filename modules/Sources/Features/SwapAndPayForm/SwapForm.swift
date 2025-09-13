@@ -233,6 +233,11 @@ public extension SwapAndPayForm {
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
+            .zashiSheet(isPresented: $store.isQuoteToZecPresented) {
+                quoteToZecContent(colorScheme)
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
             .zashiSheet(isPresented: $store.isQuoteUnavailablePresented) {
                 quoteUnavailableContent(colorScheme)
                     .screenHorizontalPadding()
@@ -257,30 +262,36 @@ public extension SwapAndPayForm {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 0) {
-                    Text(L10n.SwapAndPay.from)
-                        .zFont(.medium, size: 14, style: Design.Text.primary)
-                        .padding(.bottom, 4)
+                    Text(
+                        store.isSwapToZecExperienceEnabled
+                        ? L10n.SwapAndPay.to
+                        : L10n.SwapAndPay.from
+                    )
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .padding(.bottom, 4)
                     
                     Spacer()
                     
-                    HStack(spacing: 0) {
-                        Text(
-                            store.spendability == .nothing
-                            ? L10n.SwapAndPay.max("")
-                            : L10n.SwapAndPay.max(store.maxLabel)
-                        )
-                        .zFont(
-                            .medium,
-                            size: 14,
-                            style: store.isInsufficientFunds
-                            ? Design.Text.error
-                            : Design.Text.tertiary
-                        )
-                        
-                        if store.spendability == .nothing {
-                            ProgressView()
-                                .scaleEffect(0.7)
-                                .frame(width: 11, height: 14)
+                    if !store.isSwapToZecExperienceEnabled {
+                        HStack(spacing: 0) {
+                            Text(
+                                store.spendability == .nothing
+                                ? L10n.SwapAndPay.max("")
+                                : L10n.SwapAndPay.max(store.maxLabel)
+                            )
+                            .zFont(
+                                .medium,
+                                size: 14,
+                                style: store.isInsufficientFunds
+                                ? Design.Text.error
+                                : Design.Text.tertiary
+                            )
+                            
+                            if store.spendability == .nothing {
+                                ProgressView()
+                                    .scaleEffect(0.7)
+                                    .frame(width: 11, height: 14)
+                            }
                         }
                     }
                 }
@@ -406,9 +417,13 @@ public extension SwapAndPayForm {
     
     @ViewBuilder private func toView(_ colorScheme: ColorScheme) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(L10n.SwapAndPay.to)
-                .zFont(.medium, size: 14, style: Design.Text.primary)
-                .padding(.bottom, 4)
+            Text(
+                store.isSwapToZecExperienceEnabled
+                ? L10n.SwapAndPay.from
+                : L10n.SwapAndPay.to
+            )
+            .zFont(.medium, size: 14, style: Design.Text.primary)
+            .padding(.bottom, 4)
             
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
@@ -534,13 +549,22 @@ public extension SwapAndPayForm {
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)
             
-            Asset.Assets.Icons.arrowDown.image
-                .zImage(size: 20, style: Design.Text.disabled)
-                .padding(8)
-                .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._md)
-                        .fill(Design.Btns.Secondary.bg.color(colorScheme))
-                }
+            Button {
+                store.send(.enableSwapToZecExperience)
+            } label: {
+                Asset.Assets.Icons.switchHorizontal.image
+                    .zImage(size: 20, style: Design.Text.primary)
+                    .padding(8)
+                    .rotationEffect(.degrees(90))
+                    .background {
+                        RoundedRectangle(cornerRadius: Design.Radius._md)
+                            .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: Design.Radius._md)
+                                    .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
+                            }
+                    }
+            }
             
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)

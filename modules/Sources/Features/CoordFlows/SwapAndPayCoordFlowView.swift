@@ -71,6 +71,8 @@ public struct SwapAndPayCoordFlowView: View {
                         SwapAndPayForm(store: store, tokenName: tokenName)
                     case let .swapAndPayOptInForced(store):
                         SwapAndPayOptInForcedView(store: store)
+                    case let .swapToZecSummary(store):
+                        SwapToZecSummaryView(store: store, tokenName: tokenName)
                     case let .transactionDetails(store):
                         TransactionDetailsView(store: store, tokenName: tokenName)
                     }
@@ -113,7 +115,9 @@ public struct SwapAndPayCoordFlowView: View {
             .zashiTitle {
                 HStack(spacing: 0) {
                     Text(
-                        store.isSwapExperience
+                        store.isSwapToZecExperience
+                        ? L10n.SwapAndPay.swap.uppercased()
+                        : store.isSwapExperience
                         ? L10n.SwapAndPay.Help.swapWith
                         : L10n.Crosspay.title.uppercased()
                     )

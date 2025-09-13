@@ -42,7 +42,7 @@ public struct SwapAndPayForm: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            if store.isSwapExperienceEnabled {
+            if store.isSwapExperienceEnabled || store.isSwapToZecExperienceEnabled {
                 swapFormView(colorScheme)
             } else {
                 crossPayFormView(colorScheme)
@@ -54,8 +54,12 @@ public struct SwapAndPayForm: View {
         ZashiTextField(
             addressFont: true,
             text: $store.address,
-            placeholder: L10n.SwapAndPay.enterAddress,
-            title: store.isSwapExperienceEnabled ? L10n.SwapAndPay.address : "",
+            placeholder: store.isSwapToZecExperienceEnabled
+            ? L10n.SwapToZec.address(store.selectedAsset?.chainName ?? "")
+            : L10n.SwapAndPay.enterAddress,
+            title: store.isSwapToZecExperienceEnabled
+            ? L10n.SwapToZec.refundAddress
+            : store.isSwapExperienceEnabled ? L10n.SwapAndPay.address : "",
             accessoryView:
                 HStack(spacing: 4) {
                     WithPerceptionTracking {

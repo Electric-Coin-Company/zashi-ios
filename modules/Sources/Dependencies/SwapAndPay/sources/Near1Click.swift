@@ -64,7 +64,7 @@ struct Near1Click {
     
     let submitDepositTxId: (String, String) async throws -> Void
     let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
-    let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
+    let quote: (Bool, Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
     let status: (String) async throws -> SwapDetails
     
     static func getCall(urlString: String, includeJwtKey: Bool = false) async throws -> (Data, URLResponse) {
@@ -217,7 +217,7 @@ extension Near1Click {
             
             return IdentifiedArrayOf(uniqueElements: chainAssets)
         },
-        quote: { dry, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
+        quote: { dry, isSwapToZec, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
             // Deadline in ISO 8601 UTC format
             let now = Date()
             let tenMinutesLater = now.addingTimeInterval(10 * 60)
@@ -229,15 +229,15 @@ extension Near1Click {
             
             let requestData = SwapQuoteRequest(
                 dry: dry,
-                swapType: exactInput ? Constants.exactInput : Constants.exactOutput,
+                swapType: isSwapToZec ? Constants.exactInput : exactInput ? Constants.exactInput : Constants.exactOutput,
                 slippageTolerance: slippageTolerance,
-                originAsset: zecAsset.assetId,
+                originAsset: isSwapToZec ? toAsset.assetId : zecAsset.assetId,
                 depositType: Constants.originChain,
-                destinationAsset: toAsset.assetId,
+                destinationAsset: isSwapToZec ? zecAsset.assetId : toAsset.assetId,
                 amount: amount,
-                refundTo: refundTo,
+                refundTo: isSwapToZec ? destination : refundTo,
                 refundType: Constants.originChain,
-                recipient: destination,
+                recipient: isSwapToZec ? refundTo : destination,
                 recipientType: Constants.destinationChain,
                 deadline: deadline,
                 quoteWaitingTimeMs: 3000,
@@ -283,6 +283,18 @@ extension Near1Click {
             let amountIn = NSDecimalNumber(string: amountInString).decimalValue
             let minAmountIn = NSDecimalNumber(string: minAmountInString).decimalValue
             let amountOut = NSDecimalNumber(string: amountOutString).decimalValue
+            
+            if isSwapToZec {
+                return SwapQuote(
+                    depositAddress: depositAddress,
+                    amountIn: amountIn / Decimal(pow(10.0, Double(toAsset.decimals))),
+                    amountInUsd: amountInUsdString,
+                    minAmountIn: minAmountIn / Decimal(pow(10.0, Double(toAsset.decimals))),
+                    amountOut: amountOut / Decimal(pow(10.0, Double(zecAsset.decimals))),
+                    amountOutUsd: amountOutUsdString,
+                    timeEstimate: TimeInterval(timeEstimate)
+                )
+            }
             
             return SwapQuote(
                 depositAddress: depositAddress,

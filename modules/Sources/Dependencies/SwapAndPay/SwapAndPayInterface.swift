@@ -32,6 +32,6 @@ public struct  SwapAndPayClient {
     
     public let submitDepositTxId: (String, String) async throws -> Void
     public let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
-    public let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
+    public let quote: (Bool, Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
     public let status: (String) async throws -> SwapDetails
 }

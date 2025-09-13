@@ -855,3 +855,8 @@
 "about.title" = "Introducing Zashi";
 "about.privacyPolicy" = "Privacy Policy";
 "about.termsOfUse" = "Terms of Use";
+
+// MARK: - Swap to ZEC
+"swapToZec.address" = "%@ address...";
+"swapToZec.refundAddress" = "Refund Address";
+"swapToZec.review" = "Review Quote";

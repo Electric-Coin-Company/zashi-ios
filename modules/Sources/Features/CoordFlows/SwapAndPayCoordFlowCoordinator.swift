@@ -197,6 +197,9 @@ extension SwapAndPayCoordFlow {
                 // MARK: - Self
 
             case .storeLastUsedAsset:
+                guard state.swapAndPayState.isSwapToZecExperienceEnabled else {
+                    return .none
+                }
                 guard let selectedAsset = state.swapAndPayState.selectedAsset else {
                     return .none
                 }
@@ -208,6 +211,10 @@ extension SwapAndPayCoordFlow {
                 
             case .swapAndPay(.enableSwapExperience):
                 state.isSwapExperience.toggle()
+                return .none
+                
+            case .swapAndPay(.enableSwapToZecExperience):
+                state.isSwapToZecExperience.toggle()
                 return .none
 
             case let .updateFailedData(code, desc, pcztMsg):
@@ -244,7 +251,11 @@ extension SwapAndPayCoordFlow {
                 scanState.checkers = [.swapStringScanChecker]
                 state.path.append(.scan(scanState))
                 return .none
-                
+
+            case .swapAndPay(.confirmToZecButtonTapped):
+                state.path.append(.swapToZecSummary(state.swapAndPayState))
+                return .none
+
             case .swapAndPay(.confirmButtonTapped),
                     .path(.element(id: _, action: .crossPayConfirmation(.confirmButtonTapped))),
                     .path(.element(id: _, action: .swapAndPayForm(.confirmButtonTapped))):

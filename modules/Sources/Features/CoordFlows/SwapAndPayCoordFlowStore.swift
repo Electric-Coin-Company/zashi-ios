@@ -42,6 +42,7 @@ public struct SwapAndPayCoordFlow {
         case sendResultSuccess(SendConfirmation)
         case swapAndPayForm(SwapAndPay)
         case swapAndPayOptInForced(SwapAndPay)
+        case swapToZecSummary(SwapAndPay)
         case transactionDetails(TransactionDetails)
     }
     
@@ -58,6 +59,7 @@ public struct SwapAndPayCoordFlow {
         public var failedPcztMsg: String?
         public var isHelpSheetPresented = false
         public var isSwapExperience = true
+        public var isSwapToZecExperience = false
         public var path = StackState<Path.State>()
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -119,7 +121,8 @@ public struct SwapAndPayCoordFlow {
             case .onAppear:
                 return .none
 
-            case .helpSheetRequested:
+            case .helpSheetRequested,
+                    .path(.element(id: _, action: .swapToZecSummary(.helpSheetRequested))):
                 state.isHelpSheetPresented.toggle()
                 return .none
 
