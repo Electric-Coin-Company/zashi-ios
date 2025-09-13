@@ -105,7 +105,8 @@ let package = Package(
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
-        .package(url: "https://github.com/KeystoneHQ/keystone-sdk-ios/", from: "0.0.1")
+        .package(url: "https://github.com/KeystoneHQ/keystone-sdk-ios/", from: "0.0.1"),
+        .package(url: "https://github.com/mgriebling/BigDecimal.git", from: Version(stringLiteral: "2.2.3"))
     ],
     targets: [
         .target(
@@ -913,7 +914,9 @@ let package = Package(
         .target(
             name: "SwapAndPay",
             dependencies: [
+                "BigDecimal",
                 "Models",
+                "PartnerKeys",
                 "SDKSynchronizer",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
@@ -927,6 +930,7 @@ let package = Package(
                 "AudioServices",
                 "BalanceBreakdown",
                 "BalanceFormatter",
+                "BigDecimal",
                 "DerivationTool",
                 "Generated",
                 "Models",

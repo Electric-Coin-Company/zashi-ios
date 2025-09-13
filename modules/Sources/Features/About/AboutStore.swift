@@ -10,7 +10,8 @@ public struct About {
     public struct State: Equatable {
         public var appVersion = ""
         public var appBuild = ""
-        public var isInAppBrowserOn = false
+        public var isInAppBrowserPolicyOn = false
+        public var isInAppBrowserTermsOn = false
 
         public init(
             appVersion: String = "",
@@ -25,6 +26,7 @@ public struct About {
         case binding(BindingAction<About.State>)
         case onAppear
         case privacyPolicyButtonTapped
+        case termsOfUseButtonTapped
     }
 
     @Dependency(\.appVersion) var appVersion
@@ -45,7 +47,11 @@ public struct About {
                 return .none
 
             case .privacyPolicyButtonTapped:
-                state.isInAppBrowserOn = true
+                state.isInAppBrowserPolicyOn = true
+                return .none
+
+            case .termsOfUseButtonTapped:
+                state.isInAppBrowserTermsOn = true
                 return .none
             }
         }

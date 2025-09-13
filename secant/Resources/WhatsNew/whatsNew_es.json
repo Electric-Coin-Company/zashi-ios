@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "2.3",
+            "date": "09-13-2025",
+            "timestamp": 1757746910,
+            "sections": [
+                {
+                    "title": "CrossPay con Near Intents",
+                    "bulletpoints": [
+                        "Utiliza ZEC protegido para realizar pagos entre cadenas con Zashi y Near Intents.",
+                        "Accesible a través del nuevo botón Pagar en la pantalla de inicio."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.2.1",
             "date": "09-03-2025",
             "timestamp": 1756889046,

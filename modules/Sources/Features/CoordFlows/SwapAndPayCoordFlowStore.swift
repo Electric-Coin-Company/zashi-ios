@@ -33,6 +33,7 @@ public struct SwapAndPayCoordFlow {
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
         case confirmWithKeystone(SendConfirmation)
+        case crossPayConfirmation(SwapAndPay)
         case preSendingFailure(SendConfirmation)
         case scan(Scan)
         case sending(SendConfirmation)

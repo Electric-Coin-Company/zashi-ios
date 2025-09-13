@@ -128,7 +128,7 @@
 "send.addressNotInBook" = "Add contact by tapping on Address Book icon.";
 "send.amountSummary" = "Total Amount";
 "send.amount" = "Amount";
-"send.toSummary" = "Sending to";
+"send.toSummary" = "Send to";
 "send.to" = "Send to";
 "send.feeSummary" = "Fee";
 "send.confirmationTitle" = "Confirmation";
@@ -149,7 +149,6 @@
 "send.successInfo" = "Your coins were successfully sent to";
 "send.failure" = "Unable to send";
 "send.failureInfo" = "There was an error attempting to send coins. Try it again, please.";
-"send.resubmission" = "Connection Error";
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
 "send.report" = "Report";
 "send.shielding" = "Shielding";
@@ -183,12 +182,6 @@
 "notEnoughFreeSpace.dataAvailable" = "%@ MB available. ";
 "notEnoughFreeSpace.messagePost" = "Syncing will stay paused until more space is available.";
 "notEnoughFreeSpace.requiredSpace" = "~%@ MB of additional space required to continue";
-
-// MARK: - About
-"about.info" = "Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.";
-"about.additionalInfo" = "Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
-"about.title" = "Introducing Zashi";
-"about.privacyPolicy" = "Privacy Policy";
 
 // MARK: - What's new
 "whatsNew.version" = "Zashi Version %@";
@@ -463,7 +456,7 @@
 "keystone.scanInfo" = "Scan Keystone wallet QR code";
 "keystone.scanInfoTransaction" = "Scan Keystone QR code to sign the transaction";
 "keystone.settings" = "Switch from Keystone to Zashi to use Integrations.";
-"accounts.sendingFrom" = "Sending from";
+"accounts.sendingFrom" = "Send from";
 "accounts.addressBook.your" = "Your Wallets";
 "accounts.addressBook.contacts" = "Address Book Contacts";
 "accounts.keystone" = "Keystone";
@@ -644,7 +637,6 @@
 "balances.dismiss" = "Dismiss";
 "balances.spendableBalance.title" = "Spendable Balance";
 "balances.spendableBalance" = "Shielded (Spendable)";
-"balances.infoPending" = "Pending transactions are getting mined and confirmed.";
 "balances.infoSyncing" = "Zashi is scanning the blockchain to make sure your balances are displayed correctly.";
 "balances.infoShielding" = "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)";
 "balances.everythingDone" = "All your funds are shielded and spendable.";
@@ -734,8 +726,6 @@
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
 "sendSelect.swapWithNear" = "Swap ZEC with NEAR Intents";
 "sendSelect.swapWithNear.desc" = "Swap shielded ZEC to any supported cryptocurrency.";
-"sendSelect.payWithNear" = "Cross-chain payments with NEAR";
-"sendSelect.payWithNear.desc" = "Send any coin or token supported by NEAR.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -748,10 +738,10 @@
 "swapAndPay.quoteUnavailable" = "Quote Unavailable";
 "swapAndPay.cancelPayment" = "Cancel payment";
 "swapAndPay.editPayment" = "Edit payment";
-"swapAndPay.swapNow" = "Swap now";
+"swapAndPay.swapNow" = "Swap Now";
 "swapAndPay.swapFrom" = "Swap from";
 "swapAndPay.swapTo" = "Swap to";
-"swapAndPay.payNow" = "Pay now";
+"swapAndPay.payNow" = "Pay Now";
 "swapAndPay.payFrom" = "Pay from";
 "swapAndPay.payTo" = "Pay to";
 "swapAndPay.fee" = "ZEC transaction fee";
@@ -835,3 +825,33 @@
 "general.less" = "Less";
 "filter.swap" = "Swaps";
 "transactionHistory.timestamp" = "Timestamp";
+
+// CrossPay
+"sendSelect.payWithNear" = "CrossPay with Near";
+"sendSelect.payWithNear.desc" = "Use shielded ZEC to send private cross-chain payments.";
+"crosspay.title" = "CrossPay";
+"crosspay.help.desc1" = "Make cross-chain payments in any NEAR-supported coin or token.";
+"crosspay.help.desc2" = "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.";
+"crosspay.paymentAmount" = "Payment Amount";
+"crosspay.sendingFrom" = "Send from";
+"crosspay.pay" = "Pay";
+"crosspay.total" = "Total";
+"crosspay.slippageSet1" = "You may pay up to ";
+"crosspay.slippageSet2a" = "%@% (%@)";
+"crosspay.slippageSet2b" = "%@%";
+"crosspay.slippageSet3" = " more, in addition to transaction fees.";
+"crosspay.sendZec" = "Send ZEC";
+"crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
+"crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
+"balances.infoPending" = "Pending receipt of change from a prior transaction.";
+"keystone.confirmSwap" = "Swap with Keystone";
+"keystone.confirmPay" = "Pay with Keystone";
+"crosspay.help.payWith" = "CrossPay with";
+"send.resubmission" = "Connection Issue";
+
+// MARK: - About
+"about.info" = "Zashi is a Zcash-powered mobile wallet, built for unstoppable private payments. It’s optimized for storage and real-world use of shielded $ZEC—the truly private cryptocurrency.";
+"about.additionalInfo" = "Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.";
+"about.title" = "Introducing Zashi";
+"about.privacyPolicy" = "Privacy Policy";
+"about.termsOfUse" = "Terms of Use";

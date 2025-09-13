@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import SDKSynchronizer
 import WalletStorage
 import Utils
+import PartnerKeys
 
 struct Near1Click {
     enum Constants {
@@ -66,7 +67,7 @@ struct Near1Click {
     let quote: (Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
     let status: (String) async throws -> SwapDetails
     
-    static func getCall(urlString: String) async throws -> (Data, URLResponse) {
+    static func getCall(urlString: String, includeJwtKey: Bool = false) async throws -> (Data, URLResponse) {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         
@@ -76,6 +77,10 @@ struct Near1Click {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+
+        if let jwtToken = PartnerKeys.nearKey, includeJwtKey {
+            request.addValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
+        }
 
         do {
             let (data, response) = swapAPIAccess == .direct
@@ -96,7 +101,7 @@ struct Near1Click {
         }
     }
     
-    static func postCall(urlString: String, jsonData: Data) async throws -> (Data, URLResponse) {
+    static func postCall(urlString: String, jsonData: Data, includeJwtKey: Bool = true) async throws -> (Data, URLResponse) {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
 
@@ -108,7 +113,11 @@ struct Near1Click {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
-
+        
+        if let jwtToken = PartnerKeys.nearKey, includeJwtKey {
+            request.addValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
+        }
+        
         return swapAPIAccess == .direct
         ? try await URLSession.shared.data(for: request)
         : try await sdkSynchronizer.httpRequestOverTor(request)
@@ -284,7 +293,7 @@ extension Near1Click {
             )
         },
         status: { depositAddress in
-            let (data, response) = try await Near1Click.getCall(urlString: "\(Constants.statusUrl)\(depositAddress)")
+            let (data, response) = try await Near1Click.getCall(urlString: "\(Constants.statusUrl)\(depositAddress)", includeJwtKey: true)
 
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Cannot parse response")

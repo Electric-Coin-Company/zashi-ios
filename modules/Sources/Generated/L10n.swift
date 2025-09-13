@@ -15,20 +15,22 @@ public enum L10n {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
   public enum About {
-    /// Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
-    public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
-    /// Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.
-    public static let info = L10n.tr("Localizable", "about.info", fallback: "Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.")
+    /// Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.
+    public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.")
+    /// Zashi is a Zcash-powered mobile wallet, built for unstoppable private payments. It’s optimized for storage and real-world use of shielded $ZEC—the truly private cryptocurrency.
+    public static let info = L10n.tr("Localizable", "about.info", fallback: "Zashi is a Zcash-powered mobile wallet, built for unstoppable private payments. It’s optimized for storage and real-world use of shielded $ZEC—the truly private cryptocurrency.")
     /// Privacy Policy
     public static let privacyPolicy = L10n.tr("Localizable", "about.privacyPolicy", fallback: "Privacy Policy")
+    /// Terms of Use
+    public static let termsOfUse = L10n.tr("Localizable", "about.termsOfUse", fallback: "Terms of Use")
     /// Introducing Zashi
     public static let title = L10n.tr("Localizable", "about.title", fallback: "Introducing Zashi")
   }
   public enum Accounts {
     /// Keystone
     public static let keystone = L10n.tr("Localizable", "accounts.keystone", fallback: "Keystone")
-    /// Sending from
-    public static let sendingFrom = L10n.tr("Localizable", "accounts.sendingFrom", fallback: "Sending from")
+    /// Send from
+    public static let sendingFrom = L10n.tr("Localizable", "accounts.sendingFrom", fallback: "Send from")
     /// Zashi
     public static let zashi = L10n.tr("Localizable", "accounts.zashi", fallback: "Zashi")
     public enum AddressBook {
@@ -133,8 +135,8 @@ public enum L10n {
     public static let dismiss = L10n.tr("Localizable", "balances.dismiss", fallback: "Dismiss")
     /// All your funds are shielded and spendable.
     public static let everythingDone = L10n.tr("Localizable", "balances.everythingDone", fallback: "All your funds are shielded and spendable.")
-    /// Pending transactions are getting mined and confirmed.
-    public static let infoPending = L10n.tr("Localizable", "balances.infoPending", fallback: "Pending transactions are getting mined and confirmed.")
+    /// Pending receipt of change from a prior transaction.
+    public static let infoPending = L10n.tr("Localizable", "balances.infoPending", fallback: "Pending receipt of change from a prior transaction.")
     /// Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)
     public static func infoShielding(_ p1: Any) -> String {
       return L10n.tr("Localizable", "balances.infoShielding", String(describing: p1), fallback: "Shield your transparent ZEC to make it spendable and private. Doing so will create a shielding in-wallet transaction, consolidating your transparent and shielded funds. (Typical fee: %@)")
@@ -175,6 +177,44 @@ public enum L10n {
     public static let lowPrivacy = L10n.tr("Localizable", "component.lowPrivacy", fallback: "Not Private")
     /// Private
     public static let maxPrivacy = L10n.tr("Localizable", "component.maxPrivacy", fallback: "Private")
+  }
+  public enum Crosspay {
+    /// Pay
+    public static let pay = L10n.tr("Localizable", "crosspay.pay", fallback: "Pay")
+    /// Payment Amount
+    public static let paymentAmount = L10n.tr("Localizable", "crosspay.paymentAmount", fallback: "Payment Amount")
+    /// Send from
+    public static let sendingFrom = L10n.tr("Localizable", "crosspay.sendingFrom", fallback: "Send from")
+    /// Use shielded ZEC to send cross-chain payments.
+    public static let sendPayDesc = L10n.tr("Localizable", "crosspay.sendPayDesc", fallback: "Use shielded ZEC to send cross-chain payments.")
+    /// Send ZEC
+    public static let sendZec = L10n.tr("Localizable", "crosspay.sendZec", fallback: "Send ZEC")
+    /// Use shielded ZEC to send private Zcash payments.
+    public static let sendZecDesc = L10n.tr("Localizable", "crosspay.sendZecDesc", fallback: "Use shielded ZEC to send private Zcash payments.")
+    /// You may pay up to 
+    public static let slippageSet1 = L10n.tr("Localizable", "crosspay.slippageSet1", fallback: "You may pay up to ")
+    /// %@% (%@)
+    public static func slippageSet2a(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "crosspay.slippageSet2a", String(describing: p1), String(describing: p2), fallback: "%@% (%@)")
+    }
+    /// %@%
+    public static func slippageSet2b(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "crosspay.slippageSet2b", String(describing: p1), fallback: "%@%")
+    }
+    ///  more, in addition to transaction fees.
+    public static let slippageSet3 = L10n.tr("Localizable", "crosspay.slippageSet3", fallback: " more, in addition to transaction fees.")
+    /// CrossPay
+    public static let title = L10n.tr("Localizable", "crosspay.title", fallback: "CrossPay")
+    /// Total
+    public static let total = L10n.tr("Localizable", "crosspay.total", fallback: "Total")
+    public enum Help {
+      /// Make cross-chain payments in any NEAR-supported coin or token.
+      public static let desc1 = L10n.tr("Localizable", "crosspay.help.desc1", fallback: "Make cross-chain payments in any NEAR-supported coin or token.")
+      /// If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.
+      public static let desc2 = L10n.tr("Localizable", "crosspay.help.desc2", fallback: "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.")
+      /// CrossPay with
+      public static let payWith = L10n.tr("Localizable", "crosspay.help.payWith", fallback: "CrossPay with")
+    }
   }
   public enum CurrencyConversion {
     /// Review
@@ -432,6 +472,10 @@ public enum L10n {
   public enum Keystone {
     /// Confirm with Keystone
     public static let confirm = L10n.tr("Localizable", "keystone.confirm", fallback: "Confirm with Keystone")
+    /// Pay with Keystone
+    public static let confirmPay = L10n.tr("Localizable", "keystone.confirmPay", fallback: "Pay with Keystone")
+    /// Swap with Keystone
+    public static let confirmSwap = L10n.tr("Localizable", "keystone.confirmSwap", fallback: "Swap with Keystone")
     /// Connect Hardware Wallet
     public static let connect = L10n.tr("Localizable", "keystone.connect", fallback: "Connect Hardware Wallet")
     /// Scan Keystone wallet QR code
@@ -988,8 +1032,8 @@ public enum L10n {
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
     /// Report
     public static let report = L10n.tr("Localizable", "send.report", fallback: "Report")
-    /// Connection Error
-    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Error")
+    /// Connection Issue
+    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Issue")
     /// Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.
     public static let resubmissionInfo = L10n.tr("Localizable", "send.resubmissionInfo", fallback: "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.")
     /// Review
@@ -1012,8 +1056,8 @@ public enum L10n {
     public static let successShieldingInfo = L10n.tr("Localizable", "send.successShieldingInfo", fallback: "Your coins have been successfully shielded")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
-    /// Sending to
-    public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Sending to")
+    /// Send to
+    public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Send to")
     /// View Transaction
     public static let viewTransaction = L10n.tr("Localizable", "send.viewTransaction", fallback: "View Transaction")
     public enum Alert {
@@ -1072,13 +1116,13 @@ public enum L10n {
     }
   }
   public enum SendSelect {
-    /// Cross-chain payments with NEAR
-    public static let payWithNear = L10n.tr("Localizable", "sendSelect.payWithNear", fallback: "Cross-chain payments with NEAR")
+    /// CrossPay with Near
+    public static let payWithNear = L10n.tr("Localizable", "sendSelect.payWithNear", fallback: "CrossPay with Near")
     /// Swap ZEC with NEAR Intents
     public static let swapWithNear = L10n.tr("Localizable", "sendSelect.swapWithNear", fallback: "Swap ZEC with NEAR Intents")
     public enum PayWithNear {
-      /// Send any coin or token supported by NEAR.
-      public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Send any coin or token supported by NEAR.")
+      /// Use shielded ZEC to send private cross-chain payments.
+      public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Use shielded ZEC to send private cross-chain payments.")
     }
     public enum SwapWithNear {
       /// Swap shielded ZEC to any supported cryptocurrency.
@@ -1484,8 +1528,8 @@ public enum L10n {
     public static let pay = L10n.tr("Localizable", "swapAndPay.pay", fallback: "Pay")
     /// Pay from
     public static let payFrom = L10n.tr("Localizable", "swapAndPay.payFrom", fallback: "Pay from")
-    /// Pay now
-    public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay now")
+    /// Pay Now
+    public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay Now")
     /// Pay to
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
     /// Quote Unavailable
@@ -1540,8 +1584,8 @@ public enum L10n {
     public static let swap = L10n.tr("Localizable", "swapAndPay.swap", fallback: "Swap")
     /// Swap from
     public static let swapFrom = L10n.tr("Localizable", "swapAndPay.swapFrom", fallback: "Swap from")
-    /// Swap now
-    public static let swapNow = L10n.tr("Localizable", "swapAndPay.swapNow", fallback: "Swap now")
+    /// Swap Now
+    public static let swapNow = L10n.tr("Localizable", "swapAndPay.swapNow", fallback: "Swap Now")
     /// You could receive up to %@ less based on the %@ slippage you set.
     public static func swapQuoteSlippageWarn(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "swapAndPay.swapQuoteSlippageWarn", String(describing: p1), String(describing: p2), fallback: "You could receive up to %@ less based on the %@ slippage you set.")

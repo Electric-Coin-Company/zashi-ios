@@ -65,7 +65,15 @@ public struct RequestZecSummaryView: View {
                 }
 
                 Spacer()
-                
+
+                ZashiButton(
+                    L10n.General.close,
+                    type: .ghost
+                ) {
+                    store.send(.cancelRequestTapped)
+                }
+                .padding(.bottom, 8)
+
                 ZashiButton(
                     L10n.RequestZec.Summary.shareQR,
                     prefixView:
@@ -74,17 +82,9 @@ public struct RequestZecSummaryView: View {
                 ) {
                     store.send(.shareQR)
                 }
-                .padding(.bottom, 8)
-                .disabled(store.encryptedOutputToBeShared != nil)
-                
-                ZashiButton(
-                    L10n.General.close,
-                    type: .ghost
-                ) {
-                    store.send(.cancelRequestTapped)
-                }
                 .padding(.bottom, 20)
-                
+                .disabled(store.encryptedOutputToBeShared != nil)
+
                 shareView()
             }
             .frame(maxWidth: .infinity)

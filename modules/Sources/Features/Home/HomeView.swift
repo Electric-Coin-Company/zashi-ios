@@ -18,7 +18,6 @@ public struct HomeView: View {
     let tokenName: String
     
     @State var accountSwitchSheetHeight: CGFloat = .zero
-    @State var moreSheetHeight: CGFloat = .zero
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -61,11 +60,18 @@ public struct HomeView: View {
 
                     Spacer(minLength: 8)
 
+//                    button(
+//                        L10n.HomeScreen.scan,
+//                        icon: Asset.Assets.Icons.scan.image
+//                    ) {
+//                        store.send(.scanTapped)
+//                    }
+
                     button(
-                        L10n.HomeScreen.scan,
-                        icon: Asset.Assets.Icons.scan.image
+                        L10n.SwapAndPay.pay,
+                        icon: Asset.Assets.Icons.pay.image
                     ) {
-                        store.send(.scanTapped)
+                        store.send(.payWithNearTapped)
                     }
 
                     Spacer(minLength: 8)
@@ -123,8 +129,16 @@ public struct HomeView: View {
                 accountSwitchContent()
                     .applyScreenBackground()
             }
-            .sheet(isPresented: $store.moreRequest) {
+            .zashiSheet(isPresented: $store.moreRequest) {
                 moreContent()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.sendRequest) {
+                sendRequestContent()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.payRequest) {
+                payRequestContent()
                     .applyScreenBackground()
             }
             .navigationBarItems(

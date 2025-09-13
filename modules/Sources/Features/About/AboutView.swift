@@ -37,12 +37,21 @@ public struct AboutView: View {
                 ActionRow(
                     icon: Asset.Assets.infoCircle.image,
                     title: L10n.About.privacyPolicy,
-                    divider: false,
+                    divider: true,
                     horizontalPadding: 4
                 ) {
                     store.send(.privacyPolicyButtonTapped)
                 }
                 .padding(.top, 32)
+
+                ActionRow(
+                    icon: Asset.Assets.Icons.terms.image,
+                    title: L10n.About.termsOfUse,
+                    divider: false,
+                    horizontalPadding: 4
+                ) {
+                    store.send(.termsOfUseButtonTapped)
+                }
 
                 Spacer()
                 
@@ -55,8 +64,13 @@ public struct AboutView: View {
                     .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
-            .sheet(isPresented: $store.isInAppBrowserOn) {
+            .sheet(isPresented: $store.isInAppBrowserPolicyOn) {
                 if let url = URL(string: "https://electriccoin.co/zashi-privacy-policy/") {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.isInAppBrowserTermsOn) {
+                if let url = URL(string: "https://electriccoin.co/zashi-terms-of-use") {
                     InAppBrowserView(url: url)
                 }
             }
