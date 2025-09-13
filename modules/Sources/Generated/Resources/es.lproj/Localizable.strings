@@ -726,8 +726,6 @@
 "sendSelect.zashi.send.desc" = "Paga a cualquiera enviándole ZEC.";
 "sendSelect.swapWithNear" = "Intercambiar ZEC con NEAR Intents";
 "sendSelect.swapWithNear.desc" = "Intercambia ZEC protegido por cualquier criptomoneda compatible.";
-"sendSelect.payWithNear" = "Pagos entre cadenas con NEAR";
-"sendSelect.payWithNear.desc" = "Envía cualquier moneda o token compatible con NEAR.";
 "swapAndPay.selectToken" = "Seleccionar activo";
 "swapAndPay.enterAddress" = "Ingresar dirección...";
 "swapAndPay.select" = "Seleccionar...";
@@ -829,11 +827,31 @@
 "transactionHistory.timestamp" = "Marca de tiempo";
 
 // CrossPay
-"balances.infoPending" = "Las transacciones pendientes están siendo minadas y confirmadas.";
-"send.resubmission" = "Error de Conexión";
+"sendSelect.payWithNear" = "CrossPay con Near";
+    "sendSelect.payWithNear.desc" = "Use shielded ZEC to send private cross-chain payments.";
+"crosspay.title" = "CrossPay";
+"crosspay.help.desc1" = "Haz pagos entre cadenas en cualquier moneda o token compatible con NEAR.";
+"crosspay.help.desc2" = "Si el deslizamiento real y las condiciones de la red resultan en que tu destinatario reciba menos de la cantidad prometida, tu transacción será revertida. Recibirás un reembolso completo menos las comisiones de red.";
+"crosspay.paymentAmount" = "Monto de pago";
+"crosspay.sendingFrom" = "Enviando desde";
+"crosspay.pay" = "Pagar";
+"crosspay.total" = "Total";
+"crosspay.slippageSet1" = "Podrías pagar hasta ";
+"crosspay.slippageSet2a" = "%@% (%@)";
+"crosspay.slippageSet2b" = "%@%";
+"crosspay.slippageSet3" = " más, además de las comisiones de transacción.";
+"crosspay.sendZec" = "Enviar ZEC";
+    "crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
+    "crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
+"balances.infoPending" = "Pendiente de recibir el cambio de una transacción anterior.";
+"keystone.confirmSwap" = "Intercambiar con Keystone";
+"keystone.confirmPay" = "Pagar with Keystone";
+"crosspay.help.payWith" = "CrossPay con";
+"send.resubmission" = "Problema de Conexión";
 
 // MARK: - About
-"about.info" = "¡Envía y recibe ZEC en Zashi!\nZashi es una billetera de diseño minimalista y autocustodia, exclusiva para ZEC protegida, que mantiene tu historial de transacciones y saldo de billetera en privado.";
-"about.additionalInfo" = "Creado por Zcashers, para Zcashers. Desarrollado y mantenido por Electric Coin Co., el creador de Zcash, Zashi cuenta con un mecanismo integrado de retroalimentación de usuarios para habilitar más funciones, más rápido.";
+"about.info" = "Zashi es una wallet móvil impulsada por Zcash, creada para pagos privados imparables. Está optimizada para almacenar y usar en el mundo real $ZEC protegido: la criptomoneda verdaderamente privada.";
+"about.additionalInfo" = "Desarrollada por el equipo que continúa marcando el estándar de la industria en privacidad blockchain, los desarrolladores originales del protocolo Zcash en Electric Coin Company.";
 "about.title" = "Presentando Zashi";
-"about.privacyPolicy" = "Política de Privacidad";
+"about.privacyPolicy" = "Política de privacidad";
+"about.termsOfUse" = "Términos de uso";

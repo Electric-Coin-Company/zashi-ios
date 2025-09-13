@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "2.3",
+            "date": "09-13-2025",
+            "timestamp": 1757746910,
+            "sections": [
+                {
+                    "title": "CrossPay with Near Intents",
+                    "bulletpoints": [
+                        "Use shielded ZEC to make cross-chain payments with Zashi and Near Intents.",
+                        "Accessible via the new Pay button on the home screen."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.2.1",
             "date": "09-03-2025",
             "timestamp": 1756889046,
