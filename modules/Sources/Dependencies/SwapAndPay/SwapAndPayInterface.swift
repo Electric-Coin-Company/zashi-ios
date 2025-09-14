@@ -26,6 +26,8 @@ public struct  SwapAndPayClient {
         static public let zashiFeeBps = 50
         /// Address for the affiliate fees
         static let affiliateFeeDepositAddress = "electriccoinco.near"
+        /// Address for the affiliate fees for CrossPay
+        static let affiliateCrossPayFeeDepositAddress = "crosspay.near"
     }
     
     public let submitDepositTxId: (String, String) async throws -> Void

@@ -243,7 +243,9 @@ extension Near1Click {
                 quoteWaitingTimeMs: 3000,
                 appFees: [
                     AppFee(
-                        recipient: SwapAndPayClient.Constants.affiliateFeeDepositAddress,
+                        recipient: exactInput
+                        ? SwapAndPayClient.Constants.affiliateFeeDepositAddress
+                        : SwapAndPayClient.Constants.affiliateCrossPayFeeDepositAddress,
                         fee: SwapAndPayClient.Constants.zashiFeeBps
                     )
                 ]
