@@ -27,6 +27,7 @@ public enum Asset {
       public static let brandmarkKeystone = ImageAsset(name: "brandmarkKeystone")
       public static let brandmarkLow = ImageAsset(name: "brandmarkLow")
       public static let brandmarkMax = ImageAsset(name: "brandmarkMax")
+      public static let brandmarkMaxBranded = ImageAsset(name: "brandmarkMaxBranded")
       public static let brandmarkQR = ImageAsset(name: "brandmarkQR")
     }
     public static let fly = ImageAsset(name: "Fly")
@@ -125,6 +126,7 @@ public enum Asset {
       public static let noMessage = ImageAsset(name: "noMessage")
       public static let noTransactions = ImageAsset(name: "noTransactions")
       public static let partial = ImageAsset(name: "partial")
+      public static let pay = ImageAsset(name: "pay")
       public static let pencil = ImageAsset(name: "pencil")
       public static let plus = ImageAsset(name: "plus")
       public static let qr = ImageAsset(name: "qr")
@@ -147,6 +149,7 @@ public enum Asset {
       public static let swap = ImageAsset(name: "swap")
       public static let swapArrows = ImageAsset(name: "swapArrows")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
+      public static let terms = ImageAsset(name: "terms")
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")

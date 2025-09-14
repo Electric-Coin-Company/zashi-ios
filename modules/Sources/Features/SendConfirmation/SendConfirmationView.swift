@@ -164,14 +164,6 @@ public struct SendConfirmationView: View {
                 .alert($store.scope(state: \.alert, action: \.alert))
                 
                 Spacer()
-                
-                ZashiButton(L10n.Send.goBack, type: .ghost) {
-                    store.send(.cancelTapped)
-                }
-                .screenHorizontalPadding()
-                .disabled(store.isSending)
-                .padding(.top, 40)
-                .padding(.bottom, 8)
 
                 if store.selectedWalletAccount?.vendor == .keystone {
                     ZashiButton(L10n.Keystone.confirm) {
@@ -209,6 +201,9 @@ public struct SendConfirmationView: View {
                 ? L10n.Send.review
                 : L10n.Send.confirmationTitle
             )
+            .zashiBack(store.isSending) {
+                store.send(.cancelTapped)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()

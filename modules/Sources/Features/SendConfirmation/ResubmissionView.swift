@@ -66,7 +66,7 @@ public struct ResubmissionView: View {
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
         .screenHorizontalPadding()
-        .applyFailureScreenBackground()
+        .applyWarnScreenBackground()
     }
 }
 

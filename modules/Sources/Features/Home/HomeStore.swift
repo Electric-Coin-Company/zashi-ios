@@ -34,6 +34,8 @@ public struct Home {
         public var isRateTooltipEnabled = false
         public var migratingDatabase = true
         public var moreRequest = false
+        public var payRequest = false
+        public var sendRequest = false
         public var smartBannerState = SmartBanner.State.initial
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -101,6 +103,7 @@ public struct Home {
         case moreTapped
         case onAppear
         case onDisappear
+        case payTapped
         case payWithNearTapped
         case presentKeystoneWeb
         case rateTooltipTapped
@@ -111,6 +114,7 @@ public struct Home {
         case reviewRequestFinished
         case scanTapped
         case seeAllTransactionsTapped
+        case sendRequestTapped
         case sendTapped
         case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
@@ -198,6 +202,11 @@ public struct Home {
                 return .none
 
             case .sendTapped:
+                state.sendRequest = false
+                return .none
+                
+            case .sendRequestTapped:
+                state.sendRequest = true
                 return .none
 
             case .swapWithNearTapped:
@@ -206,6 +215,8 @@ public struct Home {
 
             case .payWithNearTapped:
                 state.moreRequest = false
+                state.sendRequest = false
+                state.payRequest = false
                 return .none
 
             case .scanTapped:
@@ -217,6 +228,10 @@ public struct Home {
                 
             case .buyTapped:
                 return .send(.coinbaseTapped)
+                
+            case .payTapped:
+                state.payRequest = true
+                return .none
 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {

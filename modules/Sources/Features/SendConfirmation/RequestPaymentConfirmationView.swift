@@ -227,6 +227,7 @@ public struct RequestPaymentConfirmationView: View {
                         ) { }
                             .screenHorizontalPadding()
                             .padding(.top, 40)
+                            .padding(.bottom, 24)
                             .disabled(store.isSending)
                     } else {
                         ZashiButton(L10n.General.send) {
@@ -234,19 +235,15 @@ public struct RequestPaymentConfirmationView: View {
                         }
                         .screenHorizontalPadding()
                         .padding(.top, 40)
+                        .padding(.bottom, 24)
                     }
                 }
-                
-                ZashiButton(L10n.Send.goBack, type: .tertiary) {
-                    store.send(.goBackTappedFromRequestZec)
-                }
-                .screenHorizontalPadding()
-                .disabled(store.isSending)
-                .padding(.top, 8)
-                .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(L10n.Send.RequestPayment.title.uppercased())
+            .zashiBack(store.isSending) {
+                store.send(.goBackTappedFromRequestZec)
+            }
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

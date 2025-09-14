@@ -39,8 +39,11 @@ extension TransactionDetailsView {
         ZStack {
             HStack(spacing: 8) {
                 VStack(spacing: 4) {
-                    HStack(spacing: 0) {
+//                    HStack(spacing: 0) {
                         if let swapAmountIn = store.swapAmountIn {
+                            zecTickerLogo(colorScheme)
+                                .scaleEffect(0.8)
+
                             Text(
                                 store.isSensitiveContentHidden
                                 ? L10n.General.hideBalancesMost
@@ -50,15 +53,12 @@ extension TransactionDetailsView {
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
                             .frame(height: 18)
-
-                            zecTickerLogo(colorScheme)
-                                .scaleEffect(0.8)
                         } else {
-                            unknownValue()
-
                             unknownTickerLogo(colorScheme)
+
+                            unknownValue()
                         }
-                    }
+//                    }
                     
                     if let swapAmountInUsd = store.swapAmountInUsd {
                         Text(
@@ -82,7 +82,14 @@ extension TransactionDetailsView {
                 }
                 
                 VStack(spacing: 4) {
-                    HStack(spacing: 2) {
+                    if let swapDestinationAsset = store.swapDestinationAsset {
+                        tokenTicker(asset: swapDestinationAsset, colorScheme)
+                            .scaleEffect(0.8)
+                    } else {
+                        unknownTickerLogo(colorScheme)
+                    }
+                    
+//                    HStack(spacing: 2) {
                         if let swapAmountOut = store.swapAmountOut {
                             Text(
                                 store.isSensitiveContentHidden
@@ -96,14 +103,7 @@ extension TransactionDetailsView {
                         } else {
                             unknownValue()
                         }
-
-                        if let swapDestinationAsset = store.swapDestinationAsset {
-                            tokenTicker(asset: swapDestinationAsset, colorScheme)
-                                .scaleEffect(0.8)
-                        } else {
-                            unknownTickerLogo(colorScheme)
-                        }
-                    }
+//                    }
                     
                     if let swapAmountOutUsd = store.swapAmountOutUsd {
                         Text(
