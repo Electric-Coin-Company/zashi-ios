@@ -100,6 +100,8 @@ public struct SwapAndPay {
         }
         
         public var isInsufficientFunds: Bool {
+            guard !isSwapToZecExperienceEnabled else { return false }
+
             guard !amountText.isEmpty else {
                 return false
             }

@@ -866,3 +866,4 @@
 "swapToZec.info1" = "Use your ";
 "swapToZec.info2" = "%@ on %@";
 "swapToZec.info3" = " wallet to deposit funds. Depositing other assets may result in loss of funds.";
+"swapToZec.transparentWarn" = "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.";

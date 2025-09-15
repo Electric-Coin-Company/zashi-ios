@@ -1702,6 +1702,8 @@ public enum L10n {
     public static let sentTheFunds = L10n.tr("Localizable", "swapToZec.sentTheFunds", fallback: "I’ve sent the funds")
     /// Share QR
     public static let shareQR = L10n.tr("Localizable", "swapToZec.shareQR", fallback: "Share QR")
+    /// NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.
+    public static let transparentWarn = L10n.tr("Localizable", "swapToZec.transparentWarn", fallback: "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.")
   }
   public enum Sync {
     public enum Alert {
