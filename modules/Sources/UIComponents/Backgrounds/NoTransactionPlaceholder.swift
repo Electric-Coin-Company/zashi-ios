@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import Generated
 
 public struct ShimmerConfiguration {
@@ -26,59 +27,6 @@ public struct ShimmerConfiguration {
         duration: 1.5,
         opacity: 0.15
     )
-}
-
-public struct ShimmeringView<Content: View>: View {
-    let on: Bool
-    private let content: () -> Content
-    private let configuration: ShimmerConfiguration
-    @State private var startPoint: UnitPoint
-    @State private var endPoint: UnitPoint
-    
-    public init(on: Bool, configuration: ShimmerConfiguration, @ViewBuilder content: @escaping () -> Content) {
-        self.on = on
-        self.configuration = configuration
-        self.content = content
-        _startPoint = .init(wrappedValue: configuration.initialLocation.start)
-        _endPoint = .init(wrappedValue: configuration.initialLocation.end)
-    }
-    
-    public var body: some View {
-        ZStack {
-            content()
-            LinearGradient(
-                gradient: configuration.gradient,
-                startPoint: startPoint,
-                endPoint: endPoint
-            )
-            .opacity(configuration.opacity)
-            .blendMode(.screen)
-            .onAppear {
-                if on {
-                    withAnimation(Animation.linear(duration: configuration.duration).repeatForever(autoreverses: false)) {
-                        startPoint = configuration.finalLocation.start
-                        endPoint = configuration.finalLocation.end
-                    }
-                }
-            }
-        }
-    }
-}
-
-public struct ShimmerModifier: ViewModifier {
-    let on: Bool
-    let configuration: ShimmerConfiguration
-
-    public func body(content: Content) -> some View {
-        ShimmeringView(on: on, configuration: configuration) { content }
-    }
-}
-
-
-public extension View {
-    func shimmer(_ on: Bool = false, configuration: ShimmerConfiguration = .default) -> some View {
-        modifier(ShimmerModifier(on: on, configuration: configuration))
-    }
 }
 
 public struct NoTransactionPlaceholder: View {
@@ -118,5 +66,171 @@ public struct NoTransactionPlaceholder: View {
         }
         .screenHorizontalPadding()
         .padding(.vertical, 12)
+    }
+}
+
+class ShimmerCALayer: UIView {
+    private var gradientLayer: CAGradientLayer?
+    private let configuration: ShimmerConfiguration
+    private var isAnimating = false
+    
+    init(configuration: ShimmerConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        setupLayer()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupLayer() {
+        backgroundColor = UIColor.clear
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = configuration.gradient.stops.map { stop in
+            // Convert SwiftUI Color to CGColor
+            UIColor(stop.color).cgColor
+        }
+        
+        gradient.locations = configuration.gradient.stops.map { stop in
+            NSNumber(value: stop.location)
+        }
+        
+        // Set initial positions (off-screen to the left)
+        gradient.startPoint = CGPoint(x: -1, y: 0.5)
+        gradient.endPoint = CGPoint(x: 0, y: 0.5)
+        
+        layer.addSublayer(gradient)
+        gradientLayer = gradient
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer?.frame = bounds
+    }
+    
+    func startAnimation() {
+        guard !isAnimating, let gradientLayer = gradientLayer else { return }
+        
+        isAnimating = true
+        
+        // Animate start point
+        let startPointAnimation = CABasicAnimation(keyPath: "startPoint")
+        startPointAnimation.fromValue = CGPoint(x: -1, y: 0.5)
+        startPointAnimation.toValue = CGPoint(x: 1, y: 0.5)
+        
+        // Animate end point
+        let endPointAnimation = CABasicAnimation(keyPath: "endPoint")
+        endPointAnimation.fromValue = CGPoint(x: 0, y: 0.5)
+        endPointAnimation.toValue = CGPoint(x: 2, y: 0.5)
+        
+        // Group animations
+        let animationGroup = CAAnimationGroup()
+        animationGroup.animations = [startPointAnimation, endPointAnimation]
+        animationGroup.duration = configuration.duration
+        animationGroup.repeatCount = .infinity
+        animationGroup.timingFunction = CAMediaTimingFunction(name: .linear)
+        
+        gradientLayer.add(animationGroup, forKey: "shimmer")
+    }
+    
+    func stopAnimation() {
+        guard isAnimating else { return }
+        
+        isAnimating = false
+        gradientLayer?.removeAnimation(forKey: "shimmer")
+        
+        // Reset to initial position
+        gradientLayer?.startPoint = CGPoint(x: -1, y: 0.5)
+        gradientLayer?.endPoint = CGPoint(x: 0, y: 0.5)
+    }
+}
+
+struct DirectCAShimmerView: View {
+    let isActive: Bool
+    let configuration: ShimmerConfiguration
+    
+    var body: some View {
+        GeometryReader { geometry in
+            CALayerView(isActive: isActive, configuration: configuration, size: geometry.size)
+        }
+    }
+}
+
+struct CALayerView: UIViewRepresentable {
+    let isActive: Bool
+    let configuration: ShimmerConfiguration
+    let size: CGSize
+    
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(origin: .zero, size: size)
+        gradientLayer.colors = configuration.gradient.stops.map { stop in
+            UIColor(stop.color).cgColor
+        }
+        gradientLayer.locations = configuration.gradient.stops.map { stop in
+            NSNumber(value: stop.location)
+        }
+        gradientLayer.startPoint = CGPoint(x: -1, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 0.5)
+        
+        view.layer.addSublayer(gradientLayer)
+        
+        // Store gradient layer reference
+        view.layer.setValue(gradientLayer, forKey: "shimmerGradient")
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {
+        guard let gradientLayer = uiView.layer.value(forKey: "shimmerGradient") as? CAGradientLayer else {
+            return
+        }
+        
+        // Update frame
+        gradientLayer.frame = CGRect(origin: .zero, size: size)
+        
+        if isActive {
+            // Start animation if not already running
+            if gradientLayer.animation(forKey: "shimmer") == nil {
+                let startPointAnimation = CABasicAnimation(keyPath: "startPoint")
+                startPointAnimation.fromValue = CGPoint(x: -1, y: 0.5)
+                startPointAnimation.toValue = CGPoint(x: 1, y: 0.5)
+                
+                let endPointAnimation = CABasicAnimation(keyPath: "endPoint")
+                endPointAnimation.fromValue = CGPoint(x: 0, y: 0.5)
+                endPointAnimation.toValue = CGPoint(x: 2, y: 0.5)
+                
+                let animationGroup = CAAnimationGroup()
+                animationGroup.animations = [startPointAnimation, endPointAnimation]
+                animationGroup.duration = configuration.duration
+                animationGroup.repeatCount = .infinity
+                animationGroup.timingFunction = CAMediaTimingFunction(name: .linear)
+                
+                gradientLayer.add(animationGroup, forKey: "shimmer")
+            }
+        } else {
+            // Stop animation
+            gradientLayer.removeAnimation(forKey: "shimmer")
+            gradientLayer.startPoint = CGPoint(x: -1, y: 0.5)
+            gradientLayer.endPoint = CGPoint(x: 0, y: 0.5)
+        }
+    }
+}
+
+public extension View {
+    func shimmer(_ active: Bool, configuration: ShimmerConfiguration = ShimmerConfiguration.default) -> some View {
+        self.overlay(
+            active ?
+            DirectCAShimmerView(isActive: active, configuration: configuration)
+                .opacity(configuration.opacity)
+                .blendMode(.screen)
+                .allowsHitTesting(false)
+            : nil
+        )
     }
 }

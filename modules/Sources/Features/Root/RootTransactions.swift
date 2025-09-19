@@ -11,6 +11,7 @@ import Foundation
 import ZcashLightClientKit
 import Generated
 import Models
+import UserMetadataProvider
 
 extension Root {
     public func transactionsReduce() -> Reduce<Root.State, Root.Action> {
@@ -67,9 +68,31 @@ extension Root {
             case .fetchedTransactions(let transactions):
                 let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
                 
-                let sortedTransactions = transactions
+                // swaps to zec
+                var mixedTransactions = transactions
+
+                let allSwaps: [UMSwapId] = userMetadataProvider.allSwaps().filter {
+                    // TODO: make it without hardcoded value
+                    $0.provider == "near.zec.zec"
+                }
+
+                allSwaps.forEach { swap in
+                    mixedTransactions.append(
+                        TransactionState(
+                            depositAddress: swap.depositAddress,
+                            timestamp: TimeInterval(swap.lastUpdated / 1000),
+                            zecAmount: swap.totalUSDFees.isEmpty ? nil : swap.totalUSDFees
+                        )
+                    )
+                }
+
+                let sortedTransactions = mixedTransactions
                     .sorted { lhs, rhs in
-                        lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
+                        if let lhsTimestamp = lhs.timestamp, let rhsTimestamp = rhs.timestamp {
+                            return lhsTimestamp > rhsTimestamp
+                        } else {
+                            return lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
+                        }
                     }
                 
                 let identifiedArray = IdentifiedArrayOf<TransactionState>(uniqueElements: sortedTransactions)

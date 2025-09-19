@@ -118,7 +118,9 @@ public struct TransactionRowView: View {
     }
 
     func transationIcon() -> Image {
-        if transaction.isShieldingTransaction {
+        if transaction.status == .swapToZec {
+            return Asset.Assets.Icons.swapTransaction.image
+        } else if transaction.isShieldingTransaction {
             return Asset.Assets.Icons.switchHorizontal.image
         } else if transaction.isSentTransaction {
             return Asset.Assets.Icons.sent.image
@@ -131,6 +133,9 @@ public struct TransactionRowView: View {
         Group {
             if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMost)
+            } else if let swapToZecAmount = transaction.swapToZecAmount {
+                Text(swapToZecAmount)
+                + Text(" \(tokenName)")
             } else {
                 Text(transaction.isSpending ? "- " : "")
                 + Text(transaction.netValue)

@@ -41,8 +41,17 @@ extension TransactionDetailsView {
                 VStack(spacing: 4) {
 //                    HStack(spacing: 0) {
                         if let swapAmountIn = store.swapAmountIn {
-                            zecTickerLogo(colorScheme)
-                                .scaleEffect(0.8)
+                            if store.transaction.status != .swapToZec {
+                                zecTickerLogo(colorScheme)
+                                    .scaleEffect(0.8)
+                            } else {
+                                if let swapDestinationAsset = store.swapDestinationAsset {
+                                    tokenTicker(asset: swapDestinationAsset, colorScheme)
+                                        .scaleEffect(0.8)
+                                } else {
+                                    unknownTickerLogo(colorScheme)
+                                }
+                            }
 
                             Text(
                                 store.isSensitiveContentHidden
@@ -74,19 +83,25 @@ extension TransactionDetailsView {
                         unknownValue()
                     }
                 }
-                .padding(16)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
                 
                 VStack(spacing: 4) {
-                    if let swapDestinationAsset = store.swapDestinationAsset {
-                        tokenTicker(asset: swapDestinationAsset, colorScheme)
+                    if store.transaction.status == .swapToZec {
+                        zecTickerLogo(colorScheme)
                             .scaleEffect(0.8)
                     } else {
-                        unknownTickerLogo(colorScheme)
+                        if let swapDestinationAsset = store.swapDestinationAsset {
+                            tokenTicker(asset: swapDestinationAsset, colorScheme)
+                                .scaleEffect(0.8)
+                        } else {
+                            unknownTickerLogo(colorScheme)
+                        }
                     }
                     
 //                    HStack(spacing: 2) {
@@ -119,10 +134,11 @@ extension TransactionDetailsView {
                         unknownValue()
                     }
                 }
-                .padding(16)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
             }
@@ -196,5 +212,26 @@ extension TransactionDetailsView {
             .fill(Design.Surfaces.bgTertiary.color(colorScheme))
             .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
             .frame(width: 44, height: 18)
+    }
+    
+    @ViewBuilder func unknownAmount() -> some View {
+        RoundedRectangle(cornerRadius: Design.Radius._xl)
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._xl))
+            .frame(width: 178, height: 44)
+    }
+    
+    @ViewBuilder func unknownAsset() -> some View {
+        Circle()
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(Circle())
+            .frame(width: 48, height: 48)
+    }
+    
+    @ViewBuilder func unknownTitle() -> some View {
+        RoundedRectangle(cornerRadius: Design.Radius._sm)
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+            .frame(width: 120, height: 28)
     }
 }

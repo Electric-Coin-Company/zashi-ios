@@ -725,7 +725,6 @@
 "sendSelect.zashi.send" = "Pagar en ZEC";
 "sendSelect.zashi.send.desc" = "Paga a cualquiera enviándole ZEC.";
 "sendSelect.swapWithNear" = "Intercambiar ZEC con NEAR Intents";
-"sendSelect.swapWithNear.desc" = "Intercambia ZEC protegido por cualquier criptomoneda compatible.";
 "swapAndPay.selectToken" = "Seleccionar activo";
 "swapAndPay.enterAddress" = "Ingresar dirección...";
 "swapAndPay.select" = "Seleccionar...";
@@ -855,3 +854,5 @@
 "about.title" = "Presentando Zashi";
 "about.privacyPolicy" = "Política de privacidad";
 "about.termsOfUse" = "Términos de uso";
+
+"sendSelect.swapWithNear.desc" = "Intercambia ZEC protegido por cualquier criptomoneda compatible.";

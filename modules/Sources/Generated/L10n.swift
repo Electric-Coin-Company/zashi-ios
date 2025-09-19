@@ -1125,8 +1125,8 @@ public enum L10n {
       public static let desc = L10n.tr("Localizable", "sendSelect.payWithNear.desc", fallback: "Use shielded ZEC to send private cross-chain payments.")
     }
     public enum SwapWithNear {
-      /// Swap shielded ZEC to any supported cryptocurrency.
-      public static let desc = L10n.tr("Localizable", "sendSelect.swapWithNear.desc", fallback: "Swap shielded ZEC to any supported cryptocurrency.")
+      /// Swap ZEC with other cryptocurrencies.
+      public static let desc = L10n.tr("Localizable", "sendSelect.swapWithNear.desc", fallback: "Swap ZEC with other cryptocurrencies.")
     }
     public enum Zashi {
       /// Pay in ZEC
@@ -1671,8 +1671,14 @@ public enum L10n {
       public static let zashi = L10n.tr("Localizable", "swapAndPay.quote.zashi", fallback: "Zashi")
     }
     public enum Status {
+      /// Failed
+      public static let failed = L10n.tr("Localizable", "swapAndPay.status.failed", fallback: "Failed")
       /// Pending
       public static let pending = L10n.tr("Localizable", "swapAndPay.status.pending", fallback: "Pending")
+      /// Pending Deposit
+      public static let pendingDeposit = L10n.tr("Localizable", "swapAndPay.status.pendingDeposit", fallback: "Pending Deposit")
+      /// Processing
+      public static let processing = L10n.tr("Localizable", "swapAndPay.status.processing", fallback: "Processing")
       /// Refunded
       public static let refunded = L10n.tr("Localizable", "swapAndPay.status.refunded", fallback: "Refunded")
       /// Completed
@@ -1686,6 +1692,8 @@ public enum L10n {
     }
     /// Deposit Amount
     public static let deposit = L10n.tr("Localizable", "swapToZec.deposit", fallback: "Deposit Amount")
+    /// Deposit to
+    public static let depositTo = L10n.tr("Localizable", "swapToZec.depositTo", fallback: "Deposit to")
     /// Use your 
     public static let info1 = L10n.tr("Localizable", "swapToZec.info1", fallback: "Use your ")
     /// %@ on %@
@@ -1702,6 +1710,18 @@ public enum L10n {
     public static let sentTheFunds = L10n.tr("Localizable", "swapToZec.sentTheFunds", fallback: "I’ve sent the funds")
     /// Share QR
     public static let shareQR = L10n.tr("Localizable", "swapToZec.shareQR", fallback: "Share QR")
+    /// Swap Completed
+    public static let swapCompleted = L10n.tr("Localizable", "swapToZec.swapCompleted", fallback: "Swap Completed")
+    /// Swap Details
+    public static let swapDetails = L10n.tr("Localizable", "swapToZec.swapDetails", fallback: "Swap Details")
+    /// Swap Failed
+    public static let swapFailed = L10n.tr("Localizable", "swapToZec.swapFailed", fallback: "Swap Failed")
+    /// Swap Pending
+    public static let swapPending = L10n.tr("Localizable", "swapToZec.swapPending", fallback: "Swap Pending")
+    /// Swap Processing
+    public static let swapProcessing = L10n.tr("Localizable", "swapToZec.swapProcessing", fallback: "Swap Processing")
+    /// Swap Refunded
+    public static let swapRefunded = L10n.tr("Localizable", "swapToZec.swapRefunded", fallback: "Swap Refunded")
     /// NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.
     public static let transparentWarn = L10n.tr("Localizable", "swapToZec.transparentWarn", fallback: "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.")
   }

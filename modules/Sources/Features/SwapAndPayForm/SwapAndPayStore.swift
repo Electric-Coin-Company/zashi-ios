@@ -587,7 +587,7 @@ public struct SwapAndPay {
                 }
 
                 let isSwapToZec = state.isSwapToZecExperienceEnabled
-                let exactInput = state.isSwapExperienceEnabled
+                let exactInput = state.isSwapToZecExperienceEnabled ? true : state.isSwapExperienceEnabled
                 let slippageTolerance = NSDecimalNumber(decimal: (state.slippage * 100.0)).intValue
                 let destination = state.address
                 let zecAmountInt = NSDecimalNumber(decimal: zecAmountDecimal)
@@ -939,9 +939,9 @@ public struct SwapAndPay {
                 guard let depositAddress = state.quote?.depositAddress else {
                     return .none
                 }
-                if let provider = state.selectedAsset?.id {
+                if let provider = state.zecAsset?.id {
                     let totalFees: Int64 = 0
-                    let totalUSDFees = ""
+                    let totalUSDFees = state.tokenToBeReceivedInQuote
                     userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
                     if let account = state.selectedWalletAccount?.account {
                         try? userMetadataProvider.store(account)

@@ -725,7 +725,6 @@
 "sendSelect.zashi.send" = "Pay in ZEC";
 "sendSelect.zashi.send.desc" = "Pay anyone by sending them ZEC.";
 "sendSelect.swapWithNear" = "Swap ZEC with NEAR Intents";
-"sendSelect.swapWithNear.desc" = "Swap shielded ZEC to any supported cryptocurrency.";
 "swapAndPay.selectToken" = "Select asset";
 "swapAndPay.enterAddress" = "Enter address...";
 "swapAndPay.select" = "Select...";
@@ -867,3 +866,15 @@
 "swapToZec.info2" = "%@ on %@";
 "swapToZec.info3" = " wallet to deposit funds. Depositing other assets may result in loss of funds.";
 "swapToZec.transparentWarn" = "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.";
+"swapToZec.swapDetails" = "Swap Details";
+"swapToZec.swapPending" = "Swap Pending";
+"swapToZec.swapProcessing" = "Swap Processing";
+"swapToZec.swapCompleted" = "Swap Completed";
+"swapToZec.swapRefunded" = "Swap Refunded";
+"swapToZec.swapFailed" = "Swap Failed";
+"swapToZec.depositTo" = "Deposit to";
+
+"sendSelect.swapWithNear.desc" = "Swap ZEC with other cryptocurrencies.";
+"swapAndPay.status.failed" = "Failed";
+"swapAndPay.status.pendingDeposit" = "Pending Deposit";
+"swapAndPay.status.processing" = "Processing";

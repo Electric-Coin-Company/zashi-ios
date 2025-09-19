@@ -13,51 +13,54 @@ public struct SwapBadge: View {
     @Environment(\.colorScheme) private var colorScheme
     
     public enum Status {
+        case failed
         case pending
+        case pendingDeposit
+        case processing
         case refunded
         case success
         
         public var title: String {
             switch self {
-            case .pending:
-                return L10n.SwapAndPay.Status.pending
-            case .refunded:
-                return L10n.SwapAndPay.Status.refunded
-            case .success:
-                return L10n.SwapAndPay.Status.success
+            case .pending: return L10n.SwapAndPay.Status.pending
+            case .processing: return L10n.SwapAndPay.Status.processing
+            case .refunded: return L10n.SwapAndPay.Status.refunded
+            case .success: return L10n.SwapAndPay.Status.success
+            case .failed: return L10n.SwapAndPay.Status.failed
+            case .pendingDeposit: return L10n.SwapAndPay.Status.pendingDeposit
             }
         }
         
         public var fontStyle: Colorable {
             switch self {
-            case .pending:
-                return Design.Utility.HyperBlue._700
-            case .refunded:
-                return Design.Utility.ErrorRed._700
-            case .success:
-                return Design.Utility.SuccessGreen._700
+            case .pending: return Design.Utility.HyperBlue._700
+            case .processing: return Design.Utility.HyperBlue._700
+            case .refunded: return Design.Utility.ErrorRed._700
+            case .success: return Design.Utility.SuccessGreen._700
+            case .failed: return Design.Utility.ErrorRed._700
+            case .pendingDeposit: return Design.Utility.WarningYellow._700
             }
         }
         
         public var bcgStyle: Colorable {
             switch self {
-            case .pending:
-                return Design.Utility.HyperBlue._50
-            case .refunded:
-                return Design.Utility.ErrorRed._50
-            case .success:
-                return Design.Utility.SuccessGreen._50
+            case .pending: return Design.Utility.HyperBlue._50
+            case .processing: return Design.Utility.HyperBlue._50
+            case .refunded: return Design.Utility.ErrorRed._50
+            case .success: return Design.Utility.SuccessGreen._50
+            case .failed: return Design.Utility.ErrorRed._50
+            case .pendingDeposit: return Design.Utility.WarningYellow._50
             }
         }
         
         public var outlineStyle: Colorable {
             switch self {
-            case .pending:
-                return Design.Utility.HyperBlue._200
-            case .refunded:
-                return Design.Utility.ErrorRed._200
-            case .success:
-                return Design.Utility.SuccessGreen._200
+            case .pending: return Design.Utility.HyperBlue._200
+            case .processing: return Design.Utility.HyperBlue._200
+            case .refunded: return Design.Utility.ErrorRed._200
+            case .success: return Design.Utility.SuccessGreen._200
+            case .failed: return Design.Utility.ErrorRed._200
+            case .pendingDeposit: return Design.Utility.WarningYellow._200
             }
         }
     }

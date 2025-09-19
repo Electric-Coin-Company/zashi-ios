@@ -85,6 +85,21 @@ public struct TransactionDetails {
             return Zatoshi(totalFees).decimalString()
         }
         
+        public var swapToZecTitle: String? {
+            guard let swapDetails else {
+                return nil
+            }
+            
+            switch swapDetails.status {
+            case .pending: return L10n.SwapToZec.swapPending
+            case .refunded: return L10n.SwapToZec.swapRefunded
+            case .success: return L10n.SwapToZec.swapCompleted
+            case .failed: return L10n.SwapToZec.swapFailed
+            case .pendingDeposit: return L10n.SwapToZec.swapPending
+            case .processing: return L10n.SwapToZec.swapProcessing
+            }
+        }
+        
         public init(
             transaction: TransactionState
         ) {
@@ -220,8 +235,8 @@ public struct TransactionDetails {
                 guard state.isSwap else {
                     return .none
                 }
-                return .run { [address = state.transaction.address] send in
-                    let swapDetails = try? await swapAndPay.status(address)
+                return .run { [address = state.transaction.address, isSwapToZec = state.transaction.status == .swapToZec] send in
+                    let swapDetails = try? await swapAndPay.status(address, isSwapToZec)
                     await send(.swapDetailsLoaded(swapDetails))
                     
                     // fire another check if not done
@@ -389,6 +404,9 @@ extension TransactionDetails.State {
         case .pending: return .pending
         case .refunded: return .refunded
         case .success: return .success
+        case .pendingDeposit: return .pendingDeposit
+        case .failed: return .failed
+        case .processing: return .processing
         }
     }
     

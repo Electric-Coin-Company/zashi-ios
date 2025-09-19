@@ -102,11 +102,11 @@ public struct UMSwapId: Codable, Equatable {
         case lastUpdated
     }
     
-    let depositAddress: String
-    let provider: String
+    public let depositAddress: String
+    public let provider: String
     public let totalFees: Int64
-    let totalUSDFees: String
-    let lastUpdated: Int64
+    public let totalUSDFees: String
+    public let lastUpdated: Int64
 }
 
 public extension UserMetadata {

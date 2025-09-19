@@ -44,6 +44,7 @@ struct Near1Click {
         static let quoteRequest = "quoteRequest"
         static let swapType = "swapType"
         static let destinationAsset = "destinationAsset"
+        static let originAsset = "originAsset"
         static let swapDetails = "swapDetails"
         static let slippage = "slippage"
         static let slippageTolerance = "slippageTolerance"
@@ -60,12 +61,18 @@ struct Near1Click {
         static let pendingDeposit = "PENDING_DEPOSIT"
         static let refunded = "REFUNDED"
         static let success = "SUCCESS"
+        static let failed = "FAILED"
+        static let incompleteDeposit = "INCOMPLETE_DEPOSIT"
+        static let processing = "PROCESSING"
+
+        // zec asset
+        static let nearZecAssetId = "nep141:zec.omft.near"
     }
     
     let submitDepositTxId: (String, String) async throws -> Void
     let swapAssets: () async throws -> IdentifiedArrayOf<SwapAsset>
     let quote: (Bool, Bool, Bool, Int, SwapAsset, SwapAsset, String, String, String) async throws -> SwapQuote
-    let status: (String) async throws -> SwapDetails
+    let status: (String, Bool) async throws -> SwapDetails
     
     static func getCall(urlString: String, includeJwtKey: Bool = false) async throws -> (Data, URLResponse) {
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -306,7 +313,7 @@ extension Near1Click {
                 timeEstimate: TimeInterval(timeEstimate)
             )
         },
-        status: { depositAddress in
+        status: { depositAddress, isSwapToZec in
             let (data, response) = try await Near1Click.getCall(urlString: "\(Constants.statusUrl)\(depositAddress)", includeJwtKey: true)
 
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -317,11 +324,25 @@ extension Near1Click {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
             }
             
-            let status: SwapDetails.Status = switch statusStr {
-            case Constants.pendingDeposit: .pending
-            case Constants.refunded: .refunded
-            case Constants.success: .success
-            default: .pending
+            let status: SwapDetails.Status
+            
+            if isSwapToZec {
+                status = switch statusStr {
+                case Constants.pendingDeposit: .pendingDeposit
+                case Constants.refunded: .refunded
+                case Constants.success: .success
+                case Constants.failed: .failed
+                case Constants.incompleteDeposit: .pendingDeposit
+                case Constants.processing: .processing
+                default: .pending
+                }
+            } else {
+                status = switch statusStr {
+                case Constants.pendingDeposit: .pending
+                case Constants.refunded: .refunded
+                case Constants.success: .success
+                default: .pending
+                }
             }
             
             guard let quoteResponseDict = jsonObject[Constants.quoteResponse] as? [String: Any],
@@ -333,8 +354,17 @@ extension Near1Click {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
             }
             
-            guard let destinationAsset = quoteRequestDict[Constants.destinationAsset] as? String else {
+            guard var destinationAsset = quoteRequestDict[Constants.destinationAsset] as? String else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
+            }
+            
+            // swap to zec exchange
+            if destinationAsset == Constants.nearZecAssetId {
+                guard let originAsset = quoteRequestDict[Constants.originAsset] as? String else {
+                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `originAsset` parameter.")
+                }
+
+                destinationAsset = originAsset
             }
             
             guard let swapDetailsDict = jsonObject[Constants.swapDetails] as? [String: Any] else {
@@ -374,7 +404,7 @@ extension Near1Click {
                 swapRecipient = recipient
             }
             
-            if status == .pending || status == .refunded {
+            if status == .pending || status == .refunded || status == .pendingDeposit || status == .failed || status == .processing {
                 if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
                     if let amountInFormatted = quoteDict[Constants.amountInFormatted] as? String {
                         amountInFormattedDecimal = amountInFormatted.usDecimal

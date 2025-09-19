@@ -208,6 +208,9 @@ public struct SmartBanner {
                 return .none
                 
             case .shieldingProcessorStateChanged(let shieldingProcessorState):
+                if shieldingProcessorState == .succeeded {
+                    state.transparentBalance = .zero
+                }
                 state.isShielding = shieldingProcessorState == .requested
                 if (state.isOpen || state.isSmartBannerSheetPresented) && state.priorityContent == .priority7 {
                     var hideEverything = false
@@ -359,8 +362,8 @@ public struct SmartBanner {
                     default: break
                     }
                     
-                    if state.priorityContent == .priority7 {
-                        if let account = state.selectedWalletAccount, let accountBalance = latestState.data.accountsBalances[account.id] {
+                    if let account = state.selectedWalletAccount, let accountBalance = latestState.data.accountsBalances[account.id] {
+                        if state.priorityContent == .priority7 {
                             if accountBalance.unshielded.amount > 0 {
                                 return .send(.transparentBalanceUpdated(accountBalance.unshielded))
                             } else {
@@ -369,6 +372,12 @@ public struct SmartBanner {
                                     .send(.closeSheetTapped)
                                 )
                             }
+                        } else if state.transparentBalance.amount == 0 && accountBalance.unshielded.amount > 0 {
+                            return .merge(
+                                .send(.transparentBalanceUpdated(accountBalance.unshielded)),
+                                .send(.triggerPriority(.priority7))
+                            )
+
                         }
                     }
                 }

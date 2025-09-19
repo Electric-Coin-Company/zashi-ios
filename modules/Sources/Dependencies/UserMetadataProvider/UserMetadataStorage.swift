@@ -284,6 +284,10 @@ public class UserMetadataStorage {
     
     // MARK: - Swap Id
     
+    public func allSwaps() -> [UMSwapId] {
+        swapIds.values.compactMap(\.self)
+    }
+    
     public func isSwapTransaction(depositAddress: String) -> Bool {
         guard let swapDepositAddress = swapIds[depositAddress]?.depositAddress else {
             return false

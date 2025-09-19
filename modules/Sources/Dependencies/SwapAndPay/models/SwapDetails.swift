@@ -12,7 +12,10 @@ import Foundation
 /// https://docs.near-intents.org/near-intents/integration/distribution-channels/1click-api#get-v0-status
 public struct SwapDetails: Codable, Equatable, Hashable {
     public enum Status: Codable, Equatable, Hashable {
+        case failed
         case pending
+        case pendingDeposit
+        case processing
         case refunded
         case success
     }

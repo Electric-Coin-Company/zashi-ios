@@ -20,6 +20,7 @@ public struct TransactionState: Equatable, Identifiable {
         case sending
         case shielding
         case shielded
+        case swapToZec
     }
 
     public var errorMessage: String?
@@ -42,6 +43,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var hasTransparentOutputs = false
     public var totalSpent: Zatoshi?
     public var totalReceived: Zatoshi?
+    public var swapToZecAmount: String? = nil
 
     public var rawID: Data? = nil
     
@@ -111,6 +113,8 @@ public struct TransactionState: Equatable, Identifiable {
             return L10n.Transaction.shieldingFunds
         case .shielded:
             return L10n.Transaction.shieldedFunds
+        case .swapToZec:
+            return "Swapped"
         }
     }
 
@@ -180,6 +184,8 @@ public struct TransactionState: Equatable, Identifiable {
             return false
         case .shielding:
             return true
+        case .swapToZec:
+            return false
         }
     }
 
@@ -194,6 +200,8 @@ public struct TransactionState: Equatable, Identifiable {
             return false
         case .failed:
             return isSentTransaction
+        case .swapToZec:
+            return false
         }
     }
 
@@ -303,6 +311,30 @@ extension TransactionState {
             case (false, false): status = .received
             }
         }
+    }
+    
+    public init(
+        depositAddress: String,
+        timestamp: TimeInterval,
+        zecAmount: String? = nil
+    ) {
+        zAddress = depositAddress
+        self.timestamp = timestamp
+        swapToZecAmount = zecAmount
+            memoCount = 0
+        isSentTransaction = true
+        isShieldingTransaction = false
+        isTransparentRecipient = true
+        hasTransparentOutputs = true
+        status = .swapToZec
+        self.zecAmount = .zero
+        id = UUID().debugDescription
+
+        expiryHeight = nil
+        minedHeight = nil
+        fee = .zero
+        totalSpent = .zero
+        totalReceived = .zero
     }
 }
 

@@ -38,6 +38,7 @@ public struct UserMetadataProviderClient {
     public let readTx: (String) -> Void
     
     // Swap Id
+    public let allSwaps: () -> [UMSwapId]
     public let isSwapTransaction: (String) -> Bool
     public let swapDetailsForTransaction: (String) -> UMSwapId?
     public let markTransactionAsSwapFor: (String, String, Int64, String) -> Void

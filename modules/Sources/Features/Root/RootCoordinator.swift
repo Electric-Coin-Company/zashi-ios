@@ -270,7 +270,7 @@ extension Root {
 
             case .swapAndPayCoordFlow(.path(.element(id: _, action: .swapToZecSummary(.sentTheFundsButtonTapped)))):
                 state.path = nil
-                return .none
+                return .send(.fetchTransactionsForTheSelectedAccount)
 
             case .swapAndPayCoordFlow(.customBackRequired):
                 state.path = nil
