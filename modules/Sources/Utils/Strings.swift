@@ -32,6 +32,14 @@ public extension String {
         }
     }
 
+    var truncateMiddle10: String {
+        if self.count > 20 {
+            return "\(self.prefix(10))...\(self.suffix(10))"
+        } else {
+            return self.truncateMiddle
+        }
+    }
+
     var localeUsdDecimal: Decimal? {
         let usFormatter = NumberFormatter()
         usFormatter.locale = Locale(identifier: "en_US")

@@ -12,6 +12,7 @@ import SDKSynchronizer
 import WalletStorage
 import Utils
 import PartnerKeys
+import Generated
 
 struct Near1Click {
     enum Constants {
@@ -161,6 +162,8 @@ struct Near1Click {
                         errorMsgConverted = "Amount is too low for bridge, try at least \(localeValue) \(toAsset.token)."
                     }
                 }
+            } else if errorMsg.contains("Failed to get quote") {
+                errorMsgConverted = L10n.Swap.quoteUnavailable
             }
             
             throw SwapAndPayClient.EndpointError.message(errorMsgConverted)

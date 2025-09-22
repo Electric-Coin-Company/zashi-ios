@@ -878,3 +878,10 @@
 "swapAndPay.status.failed" = "Failed";
 "swapAndPay.status.pendingDeposit" = "Pending Deposit";
 "swapAndPay.status.processing" = "Processing";
+
+"swapToZec.share.title" = "Swap Deposit Address";
+"swapToZec.share.msg" = "Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.";
+"swap.quoteUnavailable" = "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.";
+
+"general.copiedAmount" = "Copied amount";
+"general.copiedAddress" = "Copied %@";

@@ -475,4 +475,31 @@ extension TransactionDetails.State {
     public var swapRecipient: String? {
         swapDetails?.swapRecipient
     }
+    
+    public var totalSwapToZecFee: String? {
+        guard let amountIn = swapDetails?.amountInFormatted else {
+            return nil
+        }
+        
+        let fee = amountIn * 0.005
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: fee)) ?? ""
+    }
+    
+    public var totalSwapToZecFeeAssetName: String? {
+        guard let destinationAssetId = swapDetails?.destinationAsset else {
+            return nil
+        }
+        
+        let asset = swapAssets.first { $0.assetId == destinationAssetId }
+        return asset?.token ?? nil
+    }
+    
+    public var swapToZecFeeInProgress: Bool {
+        guard let swapStatus else {
+            return true
+        }
+        
+        return !(swapStatus == .success)
+    }
 }

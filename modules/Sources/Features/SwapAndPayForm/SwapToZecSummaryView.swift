@@ -71,7 +71,18 @@ public struct SwapToZecSummaryView: View {
                                 )
                         }
                 }
-                .padding(.bottom, 8)
+                
+                if let depositAddress = store.quote?.depositAddress {
+                    Text(depositAddress.truncateMiddle10)
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background {
+                            RoundedRectangle(cornerRadius: Design.Radius._full)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                        }
+                        .padding(.bottom, 12)
+                }
                 
                 HStack(spacing: 8) {
                     button(
@@ -171,9 +182,9 @@ public struct SwapToZecSummaryView: View {
             UIShareDialogView(activityItems: [
                 ShareableImage(
                     image: UIImage(cgImage: cgImg),
-                    title: L10n.AddressDetails.shareTitle,
-                    reason: L10n.AddressDetails.shareDesc
-                ), L10n.AddressDetails.shareDesc
+                    title: L10n.SwapToZec.Share.title,
+                    reason: L10n.SwapToZec.Share.msg(store.swapToZecAmountInQuotePreciseCopy, store.shareAssetName)
+                ), L10n.SwapToZec.Share.msg(store.swapToZecAmountInQuotePreciseCopy, store.shareAssetName)
             ]) {
                 store.send(.shareFinished)
             }

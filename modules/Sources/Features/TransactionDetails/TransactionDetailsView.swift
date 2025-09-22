@@ -520,7 +520,7 @@ extension TransactionDetailsView {
                         }
                     }
 
-                    if store.transaction.isSentTransaction && store.transaction.status != .swapToZec {
+                    if store.transaction.isSentTransaction {
                         if store.isSensitiveContentHidden {
                             detailView(
                                 title: L10n.Send.feeSummary,
@@ -528,25 +528,43 @@ extension TransactionDetailsView {
                                 rowAppereance: .middle
                             )
                         } else {
-                            if let totalFeesStr = store.totalFeesStr {
-                                detailView(
+                            if store.transaction.status == .swapToZec {
+                                detailAnyView(
                                     title: L10n.SwapAndPay.totalFees,
-                                    value: "\(totalFeesStr) \(tokenName)",
                                     rowAppereance: .middle
-                                )
+                                ) {
+                                    if let fee = store.totalSwapToZecFee, let assetName = store.totalSwapToZecFeeAssetName {
+                                        Text("\(store.swapToZecFeeInProgress ? "~" : "")\(fee) \(assetName)")
+                                            .zFont(.medium, size: 14, style: Design.Text.primary)
+                                            .frame(height: 20)
+                                    } else {
+                                        RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+                                            .frame(width: 86, height: 20)
+                                    }
+                                }
                             } else {
-                                if store.transaction.fee == nil {
+                                if let totalFeesStr = store.totalFeesStr {
                                     detailView(
-                                        title: L10n.Send.feeSummary,
-                                        value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                        title: L10n.SwapAndPay.totalFees,
+                                        value: "\(totalFeesStr) \(tokenName)",
                                         rowAppereance: .middle
                                     )
                                 } else {
-                                    detailView(
-                                        title: L10n.Send.feeSummary,
-                                        value: "\(store.feeStr) \(tokenName)",
-                                        rowAppereance: .middle
-                                    )
+                                    if store.transaction.fee == nil {
+                                        detailView(
+                                            title: L10n.Send.feeSummary,
+                                            value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                            rowAppereance: .middle
+                                        )
+                                    } else {
+                                        detailView(
+                                            title: L10n.Send.feeSummary,
+                                            value: "\(store.feeStr) \(tokenName)",
+                                            rowAppereance: .middle
+                                        )
+                                    }
                                 }
                             }
                         }

@@ -184,6 +184,10 @@ public struct SwapAndPay {
                 return 0.0
             }
         }
+        
+        public var shareAssetName: String {
+            selectedAsset?.token ?? ""
+        }
     }
 
     public enum Action: BindableAction {
@@ -885,7 +889,7 @@ public struct SwapAndPay {
                     return .none
                 }
                 pasteboard.setString("\(quote.amountIn)".redacted)
-                state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
+                state.$toast.withLock { $0 = .top(L10n.General.copiedAmount) }
                 return .none
 
             case .qrCodeTapped:
@@ -904,7 +908,7 @@ public struct SwapAndPay {
                     return .none
                 }
                 pasteboard.setString(depositAddress.redacted)
-                state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
+                state.$toast.withLock { $0 = .topDelayed(L10n.General.copiedAddress(depositAddress.truncateMiddle10)) }
                 return .none
 
             case .generateQRCode:

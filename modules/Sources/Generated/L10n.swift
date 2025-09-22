@@ -349,6 +349,12 @@ public enum L10n {
     public static let close = L10n.tr("Localizable", "general.close", fallback: "Close")
     /// Confirm
     public static let confirm = L10n.tr("Localizable", "general.confirm", fallback: "Confirm")
+    /// Copied %@
+    public static func copiedAddress(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "general.copiedAddress", String(describing: p1), fallback: "Copied %@")
+    }
+    /// Copied amount
+    public static let copiedAmount = L10n.tr("Localizable", "general.copiedAmount", fallback: "Copied amount")
     /// Copied to the clipboard!
     public static let copiedToTheClipboard = L10n.tr("Localizable", "general.copiedToTheClipboard", fallback: "Copied to the clipboard!")
     /// Delete
@@ -1461,6 +1467,10 @@ public enum L10n {
       public static let time = L10n.tr("Localizable", "supportData.timeItem.time", fallback: "Current time")
     }
   }
+  public enum Swap {
+    /// We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.
+    public static let quoteUnavailable = L10n.tr("Localizable", "swap.quoteUnavailable", fallback: "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.")
+  }
   public enum SwapAndPay {
     /// Address
     public static let address = L10n.tr("Localizable", "swapAndPay.address", fallback: "Address")
@@ -1724,6 +1734,14 @@ public enum L10n {
     public static let swapRefunded = L10n.tr("Localizable", "swapToZec.swapRefunded", fallback: "Swap Refunded")
     /// NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.
     public static let transparentWarn = L10n.tr("Localizable", "swapToZec.transparentWarn", fallback: "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.")
+    public enum Share {
+      /// Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.
+      public static func msg(_ p1: Any, _ p2: Any) -> String {
+        return L10n.tr("Localizable", "swapToZec.share.msg", String(describing: p1), String(describing: p2), fallback: "Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.")
+      }
+      /// Swap Deposit Address
+      public static let title = L10n.tr("Localizable", "swapToZec.share.title", fallback: "Swap Deposit Address")
+    }
   }
   public enum Sync {
     public enum Alert {
