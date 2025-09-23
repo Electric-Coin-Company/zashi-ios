@@ -55,6 +55,7 @@ public struct SwapAndPay {
         public var isQuotePresented = false
         public var isQuoteToZecPresented = false
         public var isQuoteUnavailablePresented = false
+        public var isRefundAddressExplainerEnabled = false
         public var isSlippagePresented = false
         public var isSwapCanceled = false
         public var isSwapExperienceEnabled = true
@@ -261,6 +262,8 @@ public struct SwapAndPay {
         case enableSwapToZecExperience
         case generateQRCode(Bool)
         case qrCodeTapped
+        case refundAddressCloseTapped
+        case refundAddressTapped
         case rememberQR(CGImage?)
         case sentTheFundsButtonTapped
         case shareFinished
@@ -951,6 +954,14 @@ public struct SwapAndPay {
                         try? userMetadataProvider.store(account)
                     }
                 }
+                return .none
+                
+            case .refundAddressTapped:
+                state.isRefundAddressExplainerEnabled.toggle()
+                return .none
+                
+            case .refundAddressCloseTapped:
+                state.isRefundAddressExplainerEnabled = false
                 return .none
             }
         }

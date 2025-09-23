@@ -264,6 +264,11 @@ public extension SwapAndPayForm {
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
+            .zashiSheet(isPresented: $store.isRefundAddressExplainerEnabled) {
+                refundAddressSheetContent(colorScheme)
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
         }
         .onAppear {
             store.send(.onAppear)
@@ -313,7 +318,7 @@ public extension SwapAndPayForm {
                 }
                 
                 HStack(spacing: 0) {
-                    zecTicker(colorScheme)
+                    zecTicker(colorScheme, shield: !store.isSwapToZecExperienceEnabled)
                         .frame(maxWidth: .infinity)
 
                     if store.isSwapExperienceEnabled {

@@ -1651,10 +1651,12 @@ public enum L10n {
       public static let payWith = L10n.tr("Localizable", "swapAndPay.help.payWith", fallback: "Pay with")
       /// Pay with NEAR
       public static let payWithNear = L10n.tr("Localizable", "swapAndPay.help.payWithNear", fallback: "Pay with NEAR")
-      /// Swap from shielded ZEC to any NEAR-supported coin or token.
-      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap from shielded ZEC to any NEAR-supported coin or token.")
-      /// Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.
-      public static let swapDesc2 = L10n.tr("Localizable", "swapAndPay.help.swapDesc2", fallback: "Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.")
+      /// Swap ZEC with any NEAR-supported token. 
+      public static let swapDesc = L10n.tr("Localizable", "swapAndPay.help.swapDesc", fallback: "Swap ZEC with any NEAR-supported token. ")
+      /// If swapping TO ZEC, you will send funds from a 3rd party wallet and provide an address where change can be refunded.
+      public static let swapDesc1 = L10n.tr("Localizable", "swapAndPay.help.swapDesc1", fallback: "If swapping TO ZEC, you will send funds from a 3rd party wallet and provide an address where change can be refunded.")
+      /// If swapping FROM ZEC, you must provide a valid address for the asset you are swapping to.
+      public static let swapDesc2 = L10n.tr("Localizable", "swapAndPay.help.swapDesc2", fallback: "If swapping FROM ZEC, you must provide a valid address for the asset you are swapping to.")
       /// Swap with
       public static let swapWith = L10n.tr("Localizable", "swapAndPay.help.swapWith", fallback: "Swap with")
       /// Swap with NEAR
@@ -1734,10 +1736,18 @@ public enum L10n {
     public static let swapRefunded = L10n.tr("Localizable", "swapToZec.swapRefunded", fallback: "Swap Refunded")
     /// NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.
     public static let transparentWarn = L10n.tr("Localizable", "swapToZec.transparentWarn", fallback: "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.")
+    public enum RefundAddress {
+      /// If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.
+      public static let msg1 = L10n.tr("Localizable", "swapToZec.refundAddress.msg1", fallback: "If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.")
+      /// The refunded amount will be returned to your wallet in the source currency - USDC on NEAR. Please enter a valid address to avoid loss of funds.
+      public static let msg2 = L10n.tr("Localizable", "swapToZec.refundAddress.msg2", fallback: "The refunded amount will be returned to your wallet in the source currency - USDC on NEAR. Please enter a valid address to avoid loss of funds.")
+      /// Refund Address
+      public static let title = L10n.tr("Localizable", "swapToZec.refundAddress.title", fallback: "Refund Address")
+    }
     public enum Share {
-      /// Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.
+      /// Deposit address for %@ %@ on Near swap to ZEC in Zashi.
       public static func msg(_ p1: Any, _ p2: Any) -> String {
-        return L10n.tr("Localizable", "swapToZec.share.msg", String(describing: p1), String(describing: p2), fallback: "Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.")
+        return L10n.tr("Localizable", "swapToZec.share.msg", String(describing: p1), String(describing: p2), fallback: "Deposit address for %@ %@ on Near swap to ZEC in Zashi.")
       }
       /// Swap Deposit Address
       public static let title = L10n.tr("Localizable", "swapToZec.share.title", fallback: "Swap Deposit Address")

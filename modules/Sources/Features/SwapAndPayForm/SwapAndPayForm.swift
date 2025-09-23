@@ -51,78 +51,101 @@ public struct SwapAndPayForm: View {
     }
 
     @ViewBuilder func addressView() -> some View {
-        ZashiTextField(
-            addressFont: true,
-            text: $store.address,
-            placeholder: store.isSwapToZecExperienceEnabled
-            ? L10n.SwapToZec.address(store.selectedAsset?.chainName ?? "")
-            : L10n.SwapAndPay.enterAddress,
-            title: store.isSwapToZecExperienceEnabled
-            ? L10n.SwapToZec.refundAddress
-            : store.isSwapExperienceEnabled ? L10n.SwapAndPay.address : "",
-            accessoryView:
-                HStack(spacing: 4) {
-                    WithPerceptionTracking {
-                        fieldButton(
-                            icon: store.isNotAddressInAddressBook
-                            ? Asset.Assets.Icons.userPlus.image
-                            : Asset.Assets.Icons.user.image
-                        ) {
-                            if store.isNotAddressInAddressBook {
-                                store.send(.notInAddressBookButtonTapped(store.address))
-                            } else {
-                                store.send(.addressBookTapped)
+        VStack(spacing: 0) {
+            Button {
+                store.send(.refundAddressTapped)
+            } label: {
+                HStack(spacing: 0) {
+                    Text(store.isSwapToZecExperienceEnabled
+                         ? L10n.SwapToZec.refundAddress
+                         : store.isSwapExperienceEnabled ? L10n.SwapAndPay.address : ""
+                    )
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                    .zForegroundColor(Design.Inputs.Filled.label)
+
+                    if store.isSwapToZecExperienceEnabled {
+                        Asset.Assets.infoCircle.image
+                            .zImage(size: 13, style: Design.Text.primary)
+                            .padding(8)
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .disabled(!store.isSwapToZecExperienceEnabled)
+
+            ZashiTextField(
+                addressFont: true,
+                text: $store.address,
+                placeholder: store.isSwapToZecExperienceEnabled
+                ? L10n.SwapToZec.address(store.selectedAsset?.chainName ?? "")
+                : L10n.SwapAndPay.enterAddress,
+                accessoryView:
+                    HStack(spacing: 4) {
+                        WithPerceptionTracking {
+                            fieldButton(
+                                icon: store.isNotAddressInAddressBook
+                                ? Asset.Assets.Icons.userPlus.image
+                                : Asset.Assets.Icons.user.image
+                            ) {
+                                if store.isNotAddressInAddressBook {
+                                    store.send(.notInAddressBookButtonTapped(store.address))
+                                } else {
+                                    store.send(.addressBookTapped)
+                                }
+                            }
+                            
+                            fieldButton(icon: Asset.Assets.Icons.qr.image) {
+                                store.send(.scanTapped)
                             }
                         }
-                        
-                        fieldButton(icon: Asset.Assets.Icons.qr.image) {
-                            store.send(.scanTapped)
-                        }
+                    }
+                    .frame(height: 20)
+                    .offset(x: 8),
+                inputReplacementView:
+                    store.selectedContact != nil
+                ? HStack(spacing: 0) {
+                    Text(store.selectedContact?.name ?? "")
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                        .padding(.trailing, 3)
+                    
+                    Button {
+                        store.send(.selectedContactClearTapped)
+                    } label: {
+                        Asset.Assets.buttonCloseX.image
+                            .zImage(size: 14, style: Design.Tags.tcHoverFg)
+                            .padding(3)
+                            .background {
+                                Circle()
+                                    .fill(Design.Tags.tcHoverBg.color(colorScheme))
+                            }
                     }
                 }
-                .frame(height: 20)
-                .offset(x: 8),
-            inputReplacementView:
-                store.selectedContact != nil
-            ? HStack(spacing: 0) {
-                Text(store.selectedContact?.name ?? "")
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                    .padding(.trailing, 3)
-
-                Button {
-                    store.send(.selectedContactClearTapped)
-                } label: {
-                    Asset.Assets.buttonCloseX.image
-                        .zImage(size: 14, style: Design.Tags.tcHoverFg)
-                        .padding(3)
-                        .background {
-                            Circle()
-                                .fill(Design.Tags.tcHoverBg.color(colorScheme))
-                        }
-                }
-            }
-            .padding(4)
-            .background {
-                RoundedRectangle(cornerRadius: Design.Radius._sm)
-                    .fill(Design.Tags.surfacePrimary.color(colorScheme))
-                    .overlay {
+                    .padding(4)
+                    .background {
                         RoundedRectangle(cornerRadius: Design.Radius._sm)
-                            .stroke(Design.Tags.surfaceStroke.color(colorScheme))
-
+                            .fill(Design.Tags.surfacePrimary.color(colorScheme))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                    .stroke(Design.Tags.surfaceStroke.color(colorScheme))
+                                
+                            }
                     }
-            }
-            : nil
-        )
-        .frame(minHeight: 44)
-        .disabled(store.isQuoteRequestInFlight)
-        .id(InputID.addressBookHint)
-        .keyboardType(.alphabet)
-        .focused($isAddressFocused)
-        .padding(.top, 8)
-        .anchorPreference(
-            key: UnknownAddressPreferenceKey.self,
-            value: .bounds
-        ) { $0 }
+                : nil
+            )
+            .frame(minHeight: 44)
+            .disabled(store.isQuoteRequestInFlight)
+            .id(InputID.addressBookHint)
+            .keyboardType(.alphabet)
+            .focused($isAddressFocused)
+            .padding(.top, 8)
+            .anchorPreference(
+                key: UnknownAddressPreferenceKey.self,
+                value: .bounds
+            ) { $0 }
+        }
     }
     
     @ViewBuilder func slippageView() -> some View {
@@ -186,9 +209,9 @@ public struct SwapAndPayForm: View {
         }
     }
     
-    @ViewBuilder func zecTicker(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func zecTicker(_ colorScheme: ColorScheme, shield: Bool = true) -> some View {
         HStack(spacing: 0) {
-            zecTickerLogo(colorScheme)
+            zecTickerLogo(colorScheme, shield: shield)
             
             Text(tokenName)
                 .zFont(.semiBold, size: 14, style: Design.Text.primary)
@@ -197,19 +220,26 @@ public struct SwapAndPayForm: View {
         }
     }
     
-    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme, shield: Bool = true) -> some View {
         Asset.Assets.Brandmarks.brandmarkMax.image
             .zImage(size: 24, style: Design.Text.primary)
             .padding(.trailing, 12)
             .overlay {
-                Asset.Assets.Icons.shieldBcg.image
-                    .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
-                    .offset(x: 4, y: 8)
-                    .overlay {
-                        Asset.Assets.Icons.shieldTickFilled.image
-                            .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
-                            .offset(x: 4, y: 8)
-                    }
+                if shield {
+                    Asset.Assets.Icons.shieldBcg.image
+                        .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
+                        .offset(x: 4, y: 8)
+                        .overlay {
+                            Asset.Assets.Icons.shieldTickFilled.image
+                                .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
+                                .offset(x: 4, y: 8)
+                        }
+                } else {
+                    Asset.Assets.Icons.shieldOffSolid.image
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                        .offset(x: 4, y: 8)
+                }
             }
     }
     

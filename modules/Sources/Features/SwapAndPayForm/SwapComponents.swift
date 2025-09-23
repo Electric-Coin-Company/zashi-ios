@@ -550,7 +550,7 @@ extension SwapAndPayForm {
                         }
                         
                         VStack(spacing: 0) {
-                            zecTickerLogo(colorScheme)
+                            zecTickerLogo(colorScheme, shield: !store.isSwapToZecExperienceEnabled)
                                 .scaleEffect(0.8)
 
                             Text(store.tokenToBeReceivedInQuote)
@@ -666,6 +666,31 @@ extension SwapAndPayForm {
             
             ZashiButton(L10n.SwapAndPay.cancelDont) {
                 store.send(.dontCancelTapped)
+            }
+            .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder func refundAddressSheetContent(_ colorScheme: ColorScheme) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(L10n.SwapToZec.RefundAddress.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.bottom, 8)
+                .padding(.top, 32)
+
+            Text(L10n.SwapToZec.RefundAddress.msg1)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 16)
+
+            Text(L10n.SwapToZec.RefundAddress.msg2)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 16)
+                .padding(.bottom, 32)
+
+            ZashiButton(L10n.General.ok) {
+                store.send(.refundAddressCloseTapped)
             }
             .padding(.bottom, 24)
         }

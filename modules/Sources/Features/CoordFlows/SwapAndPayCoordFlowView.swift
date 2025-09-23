@@ -170,11 +170,20 @@ public struct SwapAndPayCoordFlowView: View {
             .padding(.top, 24)
 
             if store.isSwapHelpContent {
-                infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc, desc2: L10n.SwapAndPay.Help.swapDesc2)
-                    .padding(.bottom, 32)
+                infoContent(
+                    index: 0,
+                    text: L10n.SwapAndPay.Help.swapDesc,
+                    desc1: L10n.SwapAndPay.Help.swapDesc1,
+                    desc2: L10n.SwapAndPay.Help.swapDesc2
+                )
+                .padding(.bottom, 32)
             } else {
-                infoContent(index: 1, text: L10n.Crosspay.Help.desc1, desc2: L10n.Crosspay.Help.desc2)
-                    .padding(.bottom, 32)
+                infoContent(
+                    index: 1,
+                    text: L10n.Crosspay.Help.desc1,
+                    desc1: L10n.Crosspay.Help.desc2
+                )
+                .padding(.bottom, 32)
             }
             
             ZashiButton(L10n.General.ok.uppercased()) {
@@ -184,13 +193,26 @@ public struct SwapAndPayCoordFlowView: View {
         }
     }
     
-    @ViewBuilder private func infoContent(index: Int, text: String, desc2: String? = nil) -> some View {
+    @ViewBuilder private func infoContent(
+        index: Int,
+        text: String,
+        desc1: String? = nil,
+        desc2: String? = nil
+    ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(text)
                 .zFont(size: 16, style: Design.Text.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
                 .lineSpacing(2)
             
+            if let desc1 {
+                Text(desc1)
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(2)
+                    .padding(.top, 16)
+            }
+
             if let desc2 {
                 Text(desc2)
                     .zFont(size: 16, style: Design.Text.tertiary)

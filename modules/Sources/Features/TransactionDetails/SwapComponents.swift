@@ -93,7 +93,7 @@ extension TransactionDetailsView {
                 
                 VStack(spacing: 4) {
                     if store.transaction.status == .swapToZec {
-                        zecTickerLogo(colorScheme)
+                        zecTickerLogo(colorScheme, shield: false)
                             .scaleEffect(0.8)
                     } else {
                         if let swapDestinationAsset = store.swapDestinationAsset {
@@ -170,19 +170,26 @@ extension TransactionDetailsView {
         }
     }
     
-    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme, shield: Bool = true) -> some View {
         Asset.Assets.Brandmarks.brandmarkMax.image
             .zImage(size: 24, style: Design.Text.primary)
             .padding(.trailing, 12)
             .overlay {
-                Asset.Assets.Icons.shieldBcg.image
-                    .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
-                    .offset(x: 4, y: 8)
-                    .overlay {
-                        Asset.Assets.Icons.shieldTickFilled.image
-                            .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
-                            .offset(x: 4, y: 8)
-                    }
+                if shield {
+                    Asset.Assets.Icons.shieldBcg.image
+                        .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
+                        .offset(x: 4, y: 8)
+                        .overlay {
+                            Asset.Assets.Icons.shieldTickFilled.image
+                                .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
+                                .offset(x: 4, y: 8)
+                        }
+                } else {
+                    Asset.Assets.Icons.shieldOffSolid.image
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                        .offset(x: 4, y: 8)
+                }
             }
     }
     

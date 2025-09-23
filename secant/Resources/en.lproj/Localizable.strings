@@ -769,8 +769,9 @@
 "swapAndPay.help.payWith" = "Pay with";
 "swapAndPay.help.swapWithNear" = "Swap with NEAR";
 "swapAndPay.help.payWithNear" = "Pay with NEAR";
-"swapAndPay.help.swapDesc" = "Swap from shielded ZEC to any NEAR-supported coin or token.";
-"swapAndPay.help.swapDesc2" = "Zashi is a ZEC-only wallet, so you’ll need a valid wallet address for the asset you’re swapping to.";
+"swapAndPay.help.swapDesc" = "Swap ZEC with any NEAR-supported token. ";
+"swapAndPay.help.swapDesc1" = "If swapping TO ZEC, you will send funds from a 3rd party wallet and provide an address where change can be refunded.";
+"swapAndPay.help.swapDesc2" = "If swapping FROM ZEC, you must provide a valid address for the asset you are swapping to.";
 "swapAndPay.help.payDesc1" = "Make cross-chain payments in any NEAR-supported coin or token.";
 "swapAndPay.help.payDesc2" = "If the actual slippage and network conditions result in your recipient receiving less than the promised amount, your transaction will be reversed. You will receive a full refund minus network fees.";
 "swapAndPay.quote.zashi" = "Zashi";
@@ -880,8 +881,12 @@
 "swapAndPay.status.processing" = "Processing";
 
 "swapToZec.share.title" = "Swap Deposit Address";
-"swapToZec.share.msg" = "Send %@ %@ on Near to the deposit address to receive ZEC in Zashi.";
+"swapToZec.share.msg" = "Deposit address for %@ %@ on Near swap to ZEC in Zashi.";
 "swap.quoteUnavailable" = "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.";
 
 "general.copiedAmount" = "Copied amount";
 "general.copiedAddress" = "Copied %@";
+
+"swapToZec.refundAddress.title" = "Refund Address";
+"swapToZec.refundAddress.msg1" = "If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.";
+"swapToZec.refundAddress.msg2" = "The refunded amount will be returned to your wallet in the source currency - USDC on NEAR. Please enter a valid address to avoid loss of funds.";

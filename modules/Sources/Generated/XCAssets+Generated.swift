@@ -142,6 +142,7 @@ public enum Asset {
       public static let share = ImageAsset(name: "share")
       public static let shieldBcg = ImageAsset(name: "shieldBcg")
       public static let shieldOff = ImageAsset(name: "shieldOff")
+      public static let shieldOffSolid = ImageAsset(name: "shieldOffSolid")
       public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let shieldZap = ImageAsset(name: "shieldZap")
       public static let shoppingBag = ImageAsset(name: "shoppingBag")
