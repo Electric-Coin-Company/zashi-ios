@@ -55,53 +55,55 @@ public struct RestoreWalletCoordFlowView: View {
                             ForEach(0..<8, id: \.self) { j in
                                 HStack(spacing: 4) {
                                     ForEach(0..<3, id: \.self) { i in
-                                        HStack(spacing: 0) {
-                                            Text("\(j * 3 + i + 1)")
-                                                .zFont(.medium, size: 14, style: Design.Tags.tcCountFg)
-                                                .frame(minWidth: 12)
-                                                .padding(.vertical, 2)
-                                                .padding(.horizontal, 4)
-                                                .background {
-                                                    RoundedRectangle(cornerRadius: Design.Radius._lg)
-                                                        .fill(Design.Tags.tcCountBg.color(colorScheme))
-                                                }
-                                                .padding(.trailing, 4)
-
-                                            TextField("", text: $store.words[j * 3 + i])
-                                                .zFont(size: 16, style: Design.Text.primary)
-                                                .disableAutocorrection(true)
-                                                .textInputAutocapitalization(.never)
-                                                .focused($focusedField, equals: .field((j * 3 + i)))
-                                                .keyboardType(.alphabet)
-                                                .submitLabel(.next)
-                                                .onSubmit {
-                                                    focusedField = ((j * 3 + i) < 23)
-                                                    ? .field((j * 3 + i) + 1)
-                                                    : .field(0)
-                                                }
+                                        WithPerceptionTracking {
+                                            HStack(spacing: 0) {
+                                                Text("\(j * 3 + i + 1)")
+                                                    .zFont(.medium, size: 14, style: Design.Tags.tcCountFg)
+                                                    .frame(minWidth: 12)
+                                                    .padding(.vertical, 2)
+                                                    .padding(.horizontal, 4)
+                                                    .background {
+                                                        RoundedRectangle(cornerRadius: Design.Radius._lg)
+                                                            .fill(Design.Tags.tcCountBg.color(colorScheme))
+                                                    }
+                                                    .padding(.trailing, 4)
+                                                
+                                                TextField("", text: $store.words[j * 3 + i])
+                                                    .zFont(size: 16, style: Design.Text.primary)
+                                                    .disableAutocorrection(true)
+                                                    .textInputAutocapitalization(.never)
+                                                    .focused($focusedField, equals: .field((j * 3 + i)))
+                                                    .keyboardType(.alphabet)
+                                                    .submitLabel(.next)
+                                                    .onSubmit {
+                                                        focusedField = ((j * 3 + i) < 23)
+                                                        ? .field((j * 3 + i) + 1)
+                                                        : .field(0)
+                                                    }
+                                            }
+                                            .padding(6)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: Design.Radius._xl)
+                                                    .fill(
+                                                        focusedField == .field(j * 3 + i)
+                                                        ? Design.Surfaces.bgPrimary.color(colorScheme)
+                                                        : Design.Surfaces.bgSecondary.color(colorScheme)
+                                                    )
+                                                    .background {
+                                                        RoundedRectangle(cornerRadius: Design.Radius._xl)
+                                                            .stroke(
+                                                                !store.wordsValidity[j * 3 + i]
+                                                                ? Design.Inputs.ErrorFilled.stroke.color(colorScheme)
+                                                                : focusedField == .field(j * 3 + i)
+                                                                ? Design.Text.primary.color(colorScheme)
+                                                                : Design.Surfaces.bgSecondary.color(colorScheme),
+                                                                lineWidth: 2
+                                                            )
+                                                    }
+                                            }
+                                            .padding(2)
+                                            .padding(.bottom, 4)
                                         }
-                                        .padding(6)
-                                        .background {
-                                            RoundedRectangle(cornerRadius: Design.Radius._xl)
-                                                .fill(
-                                                    focusedField == .field(j * 3 + i)
-                                                    ? Design.Surfaces.bgPrimary.color(colorScheme)
-                                                    : Design.Surfaces.bgSecondary.color(colorScheme)
-                                                )
-                                                .background {
-                                                    RoundedRectangle(cornerRadius: Design.Radius._xl)
-                                                        .stroke(
-                                                            !store.wordsValidity[j * 3 + i]
-                                                            ? Design.Inputs.ErrorFilled.stroke.color(colorScheme)
-                                                            : focusedField == .field(j * 3 + i)
-                                                            ? Design.Text.primary.color(colorScheme)
-                                                            : Design.Surfaces.bgSecondary.color(colorScheme),
-                                                            lineWidth: 2
-                                                        )
-                                                }
-                                        }
-                                        .padding(2)
-                                        .padding(.bottom, 4)
                                     }
                                 }
                             }

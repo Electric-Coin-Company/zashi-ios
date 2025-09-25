@@ -158,7 +158,7 @@ public struct TransactionsManagerView: View {
         .zashiBack() {
             store.send(.dismissRequired)
         }
-        .screenTitle(L10n.TransactionHistory.title.uppercased())
+        .screenTitle(L10n.General.activity.uppercased())
     }
     
     @ViewBuilder func hideBalancesButton() -> some View {

@@ -324,8 +324,8 @@ extension TransactionDetailsView {
         VStack(alignment: .center, spacing: 0) {
             HStack(spacing: 0) {
                 // FROM asset
-                if let swapDestinationAsset = store.swapDestinationAsset {
-                    swapDestinationAsset.tokenIcon
+                if let swapFromAsset = store.swapFromAsset {
+                    swapFromAsset.tokenIcon
                         .resizable()
                         .frame(width: 48, height: 48)
                         .overlay {

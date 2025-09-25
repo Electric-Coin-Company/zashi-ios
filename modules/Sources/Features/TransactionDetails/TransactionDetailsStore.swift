@@ -115,6 +115,7 @@ public struct TransactionDetails {
         case checkSwapAssets
         case checkSwapStatus
         case closeDetailTapped
+        case compareAndUpdateMetadataOfSwap
         case deleteNoteTapped
         case memosLoaded([Memo])
         case messageTapped(Int)
@@ -175,7 +176,7 @@ public struct TransactionDetails {
                     )
                 }
                 return .send(.observeTransactionChange)
-
+                
             case .onDisappear:
                 if state.hasInteractedWithBookmark {
                     if let account = state.selectedWalletAccount?.account {
@@ -193,7 +194,7 @@ public struct TransactionDetails {
                 
             case .trySwapsAssetsAgainTapped:
                 return .send(.checkSwapAssets)
-
+                
             case .observeTransactionChange:
                 if state.transaction.isPending {
                     return .merge(
@@ -203,7 +204,7 @@ public struct TransactionDetails {
                                     TransactionDetails.Action.transactionsUpdated
                                 }
                         }
-                        .cancellable(id: state.CancelId, cancelInFlight: true),
+                            .cancellable(id: state.CancelId, cancelInFlight: true),
                         .send(.checkSwapAssets)
                     )
                 }
@@ -249,7 +250,7 @@ public struct TransactionDetails {
                 
             case .swapDetailsLoaded(let swapDetails):
                 state.swapDetails = swapDetails
-                return .none
+                return .send(.compareAndUpdateMetadataOfSwap)
                 
             case .transactionsUpdated:
                 if let index = state.transactions.index(id: state.transaction.id) {
@@ -271,7 +272,7 @@ public struct TransactionDetails {
                 
             case .binding:
                 return .none
-
+                
             case .closeDetailTapped:
                 return .none
                 
@@ -283,7 +284,7 @@ public struct TransactionDetails {
                     try? userMetadataProvider.store(account)
                 }
                 return .none
-
+                
             case .saveNoteTapped, .addNoteTapped:
                 userMetadataProvider.addAnnotationFor(state.annotationToInput, state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
@@ -293,7 +294,7 @@ public struct TransactionDetails {
                     try? userMetadataProvider.store(account)
                 }
                 return .none
-
+                
             case .resolveMemos:
                 if let rawID = state.transaction.rawID {
                     return .run { send in
@@ -304,7 +305,7 @@ public struct TransactionDetails {
                 }
                 state.areMessagesResolved = true
                 return .none
-
+                
             case .memosLoaded(let memos):
                 state.areMessagesResolved = true
                 state.$transactionMemos.withLock {
@@ -314,20 +315,20 @@ public struct TransactionDetails {
                     $0.count < State.Constants.messageExpandThreshold ? .short : .longCollapsed
                 }
                 return .none
-
+                
             case .noteButtonTapped:
                 state.isEditMode = !state.annotation.isEmpty
                 state.annotationOrigin = state.annotation
                 state.annotationToInput = state.annotation
                 state.annotationRequest = true
                 return .none
-
+                
             case .bookmarkTapped:
                 state.hasInteractedWithBookmark = true
                 userMetadataProvider.toggleBookmarkFor(state.transaction.id)
                 state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
                 return .none
-
+                
             case .messageTapped(let index):
                 if index < state.messageStates.count && state.messageStates[index] != .short {
                     if state.messageStates[index] == .longExpanded {
@@ -337,22 +338,22 @@ public struct TransactionDetails {
                     }
                 }
                 return .none
-
+                
             case .saveAddressTapped:
                 return .none
                 
             case .sendAgainTapped:
                 return .none
                 
-//            case .sentToRowTapped:
-//                state.areDetailsExpanded.toggle()
-//                return .none
+                //            case .sentToRowTapped:
+                //                state.areDetailsExpanded.toggle()
+                //                return .none
                 
             case .addressTapped:
                 pasteboard.setString(state.transaction.address.redacted)
                 state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
                 return .none
-
+                
             case .transactionIdTapped:
                 pasteboard.setString(state.transaction.id.redacted)
                 state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
@@ -367,6 +368,59 @@ public struct TransactionDetails {
                 
             case .showHideButtonTapped:
                 state.areDetailsExpanded.toggle()
+                return .none
+                
+            case .compareAndUpdateMetadataOfSwap:
+                guard let umSwapId = state.umSwapId, let swapDetails = state.swapDetails else {
+                    return .none
+                }
+                
+                var needsUpdate = false
+                
+                // from asset
+                if let fromAsset = state.swapAssets.filter({ $0.assetId == swapDetails.fromAsset }).first {
+                    if umSwapId.fromAsset != fromAsset.id {
+                        needsUpdate = true
+                        state.umSwapId?.fromAsset = fromAsset.id
+                    }
+                }
+                // to asset
+                if let toAsset = state.swapAssets.filter({ $0.assetId == swapDetails.toAsset }).first {
+                    if umSwapId.toAsset != toAsset.id {
+                        needsUpdate = true
+                        state.umSwapId?.toAsset = toAsset.id
+                    }
+                }
+                // swap vs. pay update
+                if umSwapId.exactInput != swapDetails.isSwap {
+                    needsUpdate = true
+                    state.umSwapId?.exactInput = swapDetails.isSwap
+                }
+                // amountOutFormatted
+                if let amountOutFormattedValue = swapDetails.amountOutFormatted {
+                    let amountOutFormatted = "\(amountOutFormattedValue)"
+                    if umSwapId.amountOutFormatted != amountOutFormatted {
+                        needsUpdate = true
+                        state.umSwapId?.amountOutFormatted = amountOutFormatted
+                        if let localeString = amountOutFormatted.localeString {
+                            state.transaction.swapToZecAmount = localeString
+                        }
+                    }
+                }
+                // status
+                if umSwapId.status != swapDetails.status.rawName {
+                    needsUpdate = true
+                    state.umSwapId?.status = swapDetails.status.rawName
+                }
+                // update of metadata needed
+                if let account = state.selectedWalletAccount?.account, let umSwapId = state.umSwapId, needsUpdate {
+                    userMetadataProvider.update(umSwapId)
+                    try? userMetadataProvider.store(account)
+//                    var transactionsCopy = state.transactions
+//                    transactionsCopy[id: state.transaction.id] = state.transaction
+                    state.$transactions.withLock { $0[id: state.transaction.id] = state.transaction }
+                    return .none
+                }
                 return .none
             }
         }
@@ -448,7 +502,7 @@ extension TransactionDetails.State {
         swapDetails?.isSwap ?? false
     }
     
-    public var swapDestinationAsset: SwapAsset? {
+    public var swapFromAsset: SwapAsset? {
         guard !swapAssets.isEmpty else {
             return nil
         }
@@ -457,11 +511,27 @@ extension TransactionDetails.State {
             return nil
         }
         
-        guard let swapDetailsDestinationAssetId = swapDetails?.destinationAsset?.lowercased() else {
+        guard let swapDetailsFromAssetId = swapDetails?.fromAsset?.lowercased() else {
             return nil
         }
         
-        return swapAssets.first { $0.assetId.lowercased() == swapDetailsDestinationAssetId }
+        return swapAssets.first { $0.assetId.lowercased() == swapDetailsFromAssetId }
+    }
+    
+    public var swapToAsset: SwapAsset? {
+        guard !swapAssets.isEmpty else {
+            return nil
+        }
+        
+        guard swapAmountOut != nil else {
+            return nil
+        }
+        
+        guard let swapDetailsToAssetId = swapDetails?.toAsset?.lowercased() else {
+            return nil
+        }
+        
+        return swapAssets.first { $0.assetId.lowercased() == swapDetailsToAssetId }
     }
     
     public var refundedAmount: String? {
@@ -487,11 +557,11 @@ extension TransactionDetails.State {
     }
     
     public var totalSwapToZecFeeAssetName: String? {
-        guard let destinationAssetId = swapDetails?.destinationAsset else {
+        guard let toAssetId = swapDetails?.fromAsset else {
             return nil
         }
         
-        let asset = swapAssets.first { $0.assetId == destinationAssetId }
+        let asset = swapAssets.first { $0.assetId == toAssetId }
         return asset?.token ?? nil
     }
     

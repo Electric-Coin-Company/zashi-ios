@@ -65,27 +65,39 @@ extension Root {
                     }
                 }
                 
-            case .fetchedTransactions(let transactions):
+            case .fetchedTransactions(var transactions):
                 let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
-                
-                // swaps to zec
-                var mixedTransactions = transactions
 
-                let allSwaps: [UMSwapId] = userMetadataProvider.allSwaps().filter {
-                    // TODO: make it without hardcoded value
-                    $0.provider == "near.zec.zec"
+                // Resolve Swaps
+                let allSwaps = userMetadataProvider.allSwaps()
+                
+                // Swaps From ZEC and CrossPays
+                let swapsFromZecAndCrossPays = allSwaps.filter {
+                    $0.fromAsset == "near.zec.zec"
+                }
+                
+                swapsFromZecAndCrossPays.forEach { swap in
+                    transactions[id: swap.depositAddress]?.isNonZcashActivity = true
                 }
 
-                allSwaps.forEach { swap in
+                // Swaps To ZEC
+                let swapsToZec = allSwaps.filter {
+                    $0.toAsset == "near.zec.zec"
+                }
+
+                var mixedTransactions = transactions
+
+                swapsToZec.forEach { swap in
                     mixedTransactions.append(
                         TransactionState(
                             depositAddress: swap.depositAddress,
                             timestamp: TimeInterval(swap.lastUpdated / 1000),
-                            zecAmount: swap.totalUSDFees.isEmpty ? nil : swap.totalUSDFees
+                            zecAmount: swap.amountOutFormatted.localeString ?? swap.amountOutFormatted
                         )
                     )
                 }
 
+                // Sort all transactions
                 let sortedTransactions = mixedTransactions
                     .sorted { lhs, rhs in
                         if let lhsTimestamp = lhs.timestamp, let rhsTimestamp = rhs.timestamp {
@@ -97,6 +109,7 @@ extension Root {
                 
                 let identifiedArray = IdentifiedArrayOf<TransactionState>(uniqueElements: sortedTransactions)
                 
+                // Update transactions
                 if state.transactions != identifiedArray {
                     state.$transactions.withLock {
                         $0 = identifiedArray

@@ -21,10 +21,7 @@ struct Near1Click {
         static let tokensUrl = "https://1click.chaindefuser.com/v0/tokens"
         static let quoteUrl = "https://1click.chaindefuser.com/v0/quote"
         static let statusUrl = "https://1click.chaindefuser.com/v0/status?depositAddress="
-        
-        // provider
-        static let near = "near"
-        
+
         // keys
         static let blockchain = "blockchain"
         static let symbol = "symbol"
@@ -131,7 +128,7 @@ struct Near1Click {
         : try await sdkSynchronizer.httpRequestOverTor(request)
     }
     
-    static func amountMessageResolution(exactInput: Bool, toAsset: SwapAsset, jsonObject: [String: Any]) throws {
+    static func amountMessageResolution(exactInput: Bool, isSwapToZec: Bool, toAsset: SwapAsset, jsonObject: [String: Any]) throws {
         // evaluate error
         if let errorMsg = jsonObject[Constants.message] as? String {
             var errorMsgConverted = errorMsg
@@ -149,7 +146,7 @@ struct Near1Click {
                     formatter.locale = Locale.current
                     
                     // ZEC asset
-                    if exactInput {
+                    if exactInput && !isSwapToZec {
                         let zecAmount = (NSDecimalNumber(decimal: valueDecimal / Decimal(Zatoshi.Constants.oneZecInZatoshi))).decimalValue.simplified
                         
                         let localeValue = formatter.string(from: NSDecimalNumber(decimal: zecAmount)) ?? "\(zecAmount)"
@@ -216,7 +213,7 @@ extension Near1Click {
                 }
 
                 return SwapAsset(
-                    provider: Near1Click.Constants.near,
+                    provider: L10n.Swap.nearProvider,
                     chain: chain,
                     token: symbol,
                     assetId: assetId,
@@ -276,7 +273,12 @@ extension Near1Click {
             }
             
             if httpResponse.statusCode >= 400 {
-                try amountMessageResolution(exactInput: exactInput, toAsset: toAsset, jsonObject: jsonObject)
+                try amountMessageResolution(
+                    exactInput: exactInput,
+                    isSwapToZec: isSwapToZec,
+                    toAsset: toAsset,
+                    jsonObject: jsonObject
+                )
             }
             
             guard let quote = jsonObject[Constants.quote] as? [String: Any],
@@ -356,19 +358,23 @@ extension Near1Click {
             guard let swapType = quoteRequestDict[Constants.swapType] as? String else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapType` parameter.")
             }
-            
-            guard var destinationAsset = quoteRequestDict[Constants.destinationAsset] as? String else {
+
+            guard var fromAsset = quoteRequestDict[Constants.originAsset] as? String else {
+                throw SwapAndPayClient.EndpointError.message("Check status: Missing `originAsset` parameter.")
+            }
+
+            guard var toAsset = quoteRequestDict[Constants.destinationAsset] as? String else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `destinationAsset` parameter.")
             }
             
             // swap to zec exchange
-            if destinationAsset == Constants.nearZecAssetId {
-                guard let originAsset = quoteRequestDict[Constants.originAsset] as? String else {
-                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `originAsset` parameter.")
-                }
-
-                destinationAsset = originAsset
-            }
+//            if destinationAsset == Constants.nearZecAssetId {
+//                guard let originAsset = quoteRequestDict[Constants.originAsset] as? String else {
+//                    throw SwapAndPayClient.EndpointError.message("Check status: Missing `originAsset` parameter.")
+//                }
+//
+//                destinationAsset = originAsset
+//            }
             
             guard let swapDetailsDict = jsonObject[Constants.swapDetails] as? [String: Any] else {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `swapDetails` parameter.")
@@ -427,7 +433,8 @@ extension Near1Click {
                 amountInUsd: amountInUsd,
                 amountOutFormatted: amountOutFormattedDecimal,
                 amountOutUsd: amountOutUsd,
-                destinationAsset: destinationAsset,
+                fromAsset: fromAsset,
+                toAsset: toAsset,
                 isSwap: swapType == Constants.exactInput,
                 slippage: slippage,
                 status: status,

@@ -29,30 +29,34 @@ public struct SwapToZecSummaryView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                Text(L10n.SwapToZec.deposit)
-                    .zFont(.medium, size: 16, style: Design.Text.primary)
-                    .padding(.top, 24)
-                
                 Button {
                     store.send(.copySwapToZecAmountTapped)
                 } label: {
-                    HStack(spacing: 8) {
-                        tokenTicker(asset: store.selectedAsset, colorScheme)
+                    VStack(spacing: 8) {
+                        HStack(spacing: 12) {
+                            Text(L10n.SwapToZec.deposit)
+                                .zFont(.medium, size: 16, style: Design.Text.primary)
+                            
+                            Asset.Assets.copy.image
+                                .zImage(size: 20, style: Design.Btns.Ghost.fg)
+                        }
+                        .padding(.top, 24)
                         
-                        Text(store.swapToZecAmountInQuotePreciseCopy)
-                            .zFont(.semiBold, size: 48, style: Design.Text.primary)
-                            .minimumScaleFactor(0.1)
-                            .lineLimit(1)
-
-                        Asset.Assets.copy.image
-                            .zImage(size: 20, style: Design.Btns.Ghost.fg)
+                        HStack(spacing: 8) {
+                            tokenTicker(asset: store.selectedAsset, colorScheme)
+                            
+                            Text(store.swapToZecAmountInQuotePreciseCopy)
+                                .zFont(.semiBold, size: 48, style: Design.Text.primary)
+                                .minimumScaleFactor(0.1)
+                                .lineLimit(1)
+                        }
                         
+                        Text(store.zecUsdToBeSpendInQuote)
+                            .zFont(.medium, size: 18, style: Design.Text.tertiary)
+                            .padding(.bottom, 8)
                     }
+                    .frame(maxWidth: .infinity)
                 }
-
-                Text(store.zecUsdToBeSpendInQuote)
-                    .zFont(.medium, size: 18, style: Design.Text.tertiary)
-                    .padding(.bottom, 8)
 
                 Button {
                     store.send(.qrCodeTapped)

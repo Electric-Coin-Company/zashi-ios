@@ -41,7 +41,7 @@ public struct BalancesView: View {
                     Text(
                         store.spendability == .everything
                         ? L10n.Balances.everythingDone
-                        : store.isPendingTransaction
+                        : store.isPendingChange
                         ? L10n.Balances.infoPending
                         : L10n.Balances.infoSyncing
                     )

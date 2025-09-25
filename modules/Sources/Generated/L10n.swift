@@ -341,6 +341,8 @@ public enum L10n {
     public static let yesterday = L10n.tr("Localizable", "filter.yesterday", fallback: "Yesterday")
   }
   public enum General {
+    /// Activity
+    public static let activity = L10n.tr("Localizable", "general.activity", fallback: "Activity")
     /// Back
     public static let back = L10n.tr("Localizable", "general.back", fallback: "Back")
     /// Cancel
@@ -1468,6 +1470,8 @@ public enum L10n {
     }
   }
   public enum Swap {
+    /// near
+    public static let nearProvider = L10n.tr("Localizable", "swap.nearProvider", fallback: "near")
     /// We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.
     public static let quoteUnavailable = L10n.tr("Localizable", "swap.quoteUnavailable", fallback: "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.")
   }

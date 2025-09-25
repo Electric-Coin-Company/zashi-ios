@@ -586,6 +586,7 @@ public extension SwapAndPayForm {
                             }
                     }
             }
+            .disabled(store.isQuoteRequestInFlight)
             
             Design.Utility.Gray._100.color(colorScheme)
                 .frame(height: 1)

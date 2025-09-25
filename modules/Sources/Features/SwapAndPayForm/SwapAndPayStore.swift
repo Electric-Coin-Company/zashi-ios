@@ -601,7 +601,10 @@ public struct SwapAndPay {
                     .multiplying(by: NSDecimalNumber(value: Zatoshi.Constants.oneZecInZatoshi)).int64Value
                 var amountString = String(zecAmountInt)
                 if !state.isSwapExperienceEnabled {
-                    let bigTokenAmountDecimal = BigDecimal(tokenAmountDecimal)
+                    var bigTokenAmountDecimal = BigDecimal(tokenAmountDecimal)
+                    if let tokenAmountUsdDecimal = numberFormatter.number(state.secondaryLabelTo)?.decimalValue, state.isInputInUsd {
+                        bigTokenAmountDecimal = BigDecimal(tokenAmountUsdDecimal)
+                    }
                     let pow10 = BigDecimal(pow(10.0, Double(toAsset.decimals)))
                     let bigTokenAmount = bigTokenAmountDecimal * pow10
                     amountString = bigTokenAmount.asString(.plain)
@@ -641,6 +644,7 @@ public struct SwapAndPay {
                 state.quote = quote
                 if state.isSwapToZecExperienceEnabled {
                     state.isQuoteToZecPresented = true
+                    state.isQuoteRequestInFlight = false
                     return .none
                 }
                 let zecAmount = Zatoshi(NSDecimalNumber(decimal: quote.amountIn).int64Value)
@@ -719,7 +723,7 @@ public struct SwapAndPay {
                     }
 
                     if state.selectedAsset == nil {
-                        state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" }
+                        state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == L10n.Swap.nearProvider }
                     }
                 }
 
@@ -946,10 +950,18 @@ public struct SwapAndPay {
                 guard let depositAddress = state.quote?.depositAddress else {
                     return .none
                 }
-                if let provider = state.zecAsset?.id {
-                    let totalFees: Int64 = 0
-                    let totalUSDFees = state.tokenToBeReceivedInQuote
-                    userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
+                if let provider = state.zecAsset?.provider {
+                    userMetadataProvider.markTransactionAsSwapFor(
+                        depositAddress,
+                        provider,
+                        0,
+                        "",
+                        state.selectedAsset?.id ?? "",
+                        state.zecAsset?.id ?? "",
+                        true,
+                        "PENDING_DEPOSIT",
+                        state.tokenToBeReceivedInSwapToZecQuote
+                    )
                     if let account = state.selectedWalletAccount?.account {
                         try? userMetadataProvider.store(account)
                     }
@@ -1395,6 +1407,27 @@ extension SwapAndPay.State {
     }
 }
 
+// MARK: Swap to ZEC
+
+extension SwapAndPay.State {
+    public var tokenToBeReceivedInSwapToZecQuote: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return "\(quote.amountOut)"
+    }
+    
+    public var zecToBeSpendInQuoteUSFormat: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        let amount = quote.amountIn / Decimal(Zatoshi.Constants.oneZecInZatoshi)
+        return "\(amount)"
+    }
+}
+
 // MARK: - String Representations
 
 extension SwapAndPay.State {
@@ -1484,7 +1517,7 @@ extension SwapAndPay.State {
     }
 }
 
-// MARK: - Quote Wap To Zec
+// MARK: - Quote Swap To Zec
 
 extension SwapAndPay.State {
     public var swapToZecAmountInQuote: String {

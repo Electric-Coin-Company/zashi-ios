@@ -15,7 +15,7 @@ import Utils
 
 public struct UserMetadata: Codable {
     public enum Constants {
-        public static let version = 2
+        public static let version = 3
     }
     
     public enum CodingKeys: CodingKey {
@@ -100,13 +100,23 @@ public struct UMSwapId: Codable, Equatable {
         case totalFees
         case totalUSDFees
         case lastUpdated
+        case fromAsset
+        case toAsset
+        case exactInput
+        case status
+        case amountOutFormatted
     }
     
-    public let depositAddress: String
-    public let provider: String
-    public let totalFees: Int64
-    public let totalUSDFees: String
-    public let lastUpdated: Int64
+    public var depositAddress: String
+    public var provider: String
+    public var totalFees: Int64
+    public var totalUSDFees: String
+    public var lastUpdated: Int64
+    public var fromAsset: String
+    public var toAsset: String
+    public var exactInput: Bool
+    public var status: String
+    public var amountOutFormatted: String
 }
 
 public extension UserMetadata {
@@ -206,6 +216,9 @@ public extension UserMetadata {
                     switch metadataVersion {
                     case 1:
                         let latestUserMetadata = try UserMetadata.userMetadataV1From(encryptedSubData: encryptedSubData, subKey: subKey)
+                        return (latestUserMetadata, true)
+                    case 2:
+                        let latestUserMetadata = try UserMetadata.userMetadataV2From(encryptedSubData: encryptedSubData, subKey: subKey)
                         return (latestUserMetadata, true)
                     default:
                         throw UserMetadataStorage.UMError.metadataVersionNotSupported

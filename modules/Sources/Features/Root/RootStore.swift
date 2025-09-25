@@ -227,7 +227,7 @@ public struct Root {
         case foundTransactions([ZcashTransaction.Overview])
         case minedTransaction(ZcashTransaction.Overview)
         case fetchTransactionsForTheSelectedAccount
-        case fetchedTransactions([TransactionState])
+        case fetchedTransactions(IdentifiedArrayOf<TransactionState>)
         case noChangeInTransactions
         
         // Address Book

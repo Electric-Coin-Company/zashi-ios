@@ -197,7 +197,7 @@ public struct HomeView: View {
     @ViewBuilder func transactionsView() -> some View {
         WithPerceptionTracking {
             HStack(spacing: 0) {
-                Text(L10n.TransactionHistory.title)
+                Text(L10n.General.activity)
                     .zFont(.semiBold, size: 18, style: Design.Text.primary)
                 
                 Spacer()

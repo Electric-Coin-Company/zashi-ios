@@ -16,7 +16,7 @@ extension DependencyValues {
 }
 
 @DependencyClient
-public struct  SwapAndPayClient {
+public struct SwapAndPayClient {
     public enum EndpointError: Equatable, Error {
         case message(String)
     }

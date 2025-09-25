@@ -18,13 +18,25 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         case processing
         case refunded
         case success
+
+        public var rawName: String {
+            switch self {
+            case .failed: return "FAILED"
+            case .pending: return "PENDING_DEPOSIT"
+            case .pendingDeposit: return "PENDING_DEPOSIT"
+            case .processing: return "PROCESSING"
+            case .refunded: return "REFUNDED"
+            case .success: return "SUCCESS"
+            }
+        }
     }
     
     public let amountInFormatted: Decimal?
     public let amountInUsd: String?
     public let amountOutFormatted: Decimal?
     public let amountOutUsd: String?
-    public let destinationAsset: String?
+    public let fromAsset: String?
+    public let toAsset: String?
     public let isSwap: Bool
     public let slippage: Decimal?
     public let status: Status
@@ -36,7 +48,8 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         amountInUsd: String?,
         amountOutFormatted: Decimal?,
         amountOutUsd: String?,
-        destinationAsset: String?,
+        fromAsset: String?,
+        toAsset: String?,
         isSwap: Bool,
         slippage: Decimal?,
         status: Status,
@@ -47,7 +60,8 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         self.amountInUsd = amountInUsd
         self.amountOutFormatted = amountOutFormatted
         self.amountOutUsd = amountOutUsd
-        self.destinationAsset = destinationAsset
+        self.fromAsset = fromAsset
+        self.toAsset = toAsset
         self.isSwap = isSwap
         self.slippage = slippage
         self.status = status

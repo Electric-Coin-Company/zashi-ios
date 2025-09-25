@@ -56,6 +56,10 @@ public extension String {
         self.localeUsdDecimal?.formatted(.currency(code: "USD"))
     }
     
+    var localeString: String? {
+        self.localeUsdDecimal?.formatted()
+    }
+    
     var usDecimal: Decimal? {
         let formatter = NumberFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

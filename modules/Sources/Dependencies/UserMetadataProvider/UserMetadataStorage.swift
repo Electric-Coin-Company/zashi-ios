@@ -304,17 +304,31 @@ public class UserMetadataStorage {
         depositAddress: String,
         provider: String,
         totalFees: Int64,
-        totalUSDFees: String
+        totalUSDFees: String,
+        fromAsset: String,
+        toAsset: String,
+        exactInput: Bool,
+        status: String,
+        amountOutFormatted: String
     ) {
         swapIds[depositAddress] = UMSwapId(
             depositAddress: depositAddress,
             provider: provider,
             totalFees: totalFees,
             totalUSDFees: totalUSDFees,
-            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000)
+            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000),
+            fromAsset: fromAsset,
+            toAsset: toAsset,
+            exactInput: exactInput,
+            status: status,
+            amountOutFormatted: amountOutFormatted
         )
     }
     
+    public func update(_ swap: UMSwapId) -> Void {
+        swapIds[swap.depositAddress] = swap
+    }
+
     // Last Used Asset History
     public func addLastUsedSwap(asset: String) {
         lastUsedAssetHistory.removeAll { $0 == asset }

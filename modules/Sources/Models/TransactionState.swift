@@ -47,6 +47,9 @@ public struct TransactionState: Equatable, Identifiable {
 
     public var rawID: Data? = nil
     
+    // Swaps
+    public var isNonZcashActivity = false
+    
     // UI Colors
     public func balanceColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
@@ -328,7 +331,8 @@ extension TransactionState {
         hasTransparentOutputs = true
         status = .swapToZec
         self.zecAmount = .zero
-        id = UUID().debugDescription
+        id = depositAddress
+        isNonZcashActivity = true
 
         expiryHeight = nil
         minedHeight = nil

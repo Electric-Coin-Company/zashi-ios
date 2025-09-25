@@ -890,3 +890,5 @@
 "swapToZec.refundAddress.title" = "Refund Address";
 "swapToZec.refundAddress.msg1" = "If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.";
 "swapToZec.refundAddress.msg2" = "The refunded amount will be returned to your wallet in the source currency - USDC on NEAR. Please enter a valid address to avoid loss of funds.";
+"swap.nearProvider" = "near";
+"general.activity" = "Activity";

@@ -45,7 +45,11 @@ public struct Balances {
         public var isPendingTransaction: Bool {
             transactions.isAnythingPending()
         }
-        
+
+        public var isPendingChange: Bool {
+            changePending.amount > 0
+        }
+
         public var isPendingInProcess: Bool {
             changePending.amount + pendingTransactions.amount > 0
         }

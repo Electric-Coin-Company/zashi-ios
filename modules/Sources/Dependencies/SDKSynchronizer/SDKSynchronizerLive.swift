@@ -309,7 +309,7 @@ extension SDKSynchronizerClient {
         accountUUID: AccountUUID?,
         zcashTransactions: [ZcashTransaction.Overview],
         synchronizer: SDKSynchronizer
-    ) async throws -> [TransactionState] {
+    ) async throws -> IdentifiedArrayOf<TransactionState> {
         guard let accountUUID else {
             return []
         }
@@ -355,6 +355,6 @@ extension SDKSynchronizerClient {
             clearedTxs.append(transaction)
         }
 
-        return clearedTxs
+        return IdentifiedArrayOf<TransactionState>(uniqueElements: clearedTxs)
     }
 }

@@ -70,12 +70,12 @@ public struct TransactionRowView: View {
                                 .offset(x: 9, y: 11)
                         }
                         
-                        if isSwap {
-                            Asset.Assets.Tickers.nearChain.image
+                        if transaction.isNonZcashActivity {
+                            Asset.Assets.Tickers.near.image
                                 .zImage(size: 20, color: Design.screenBackground.color(colorScheme))
                                 .offset(x: 9, y: 12)
                                 .overlay {
-                                    Asset.Assets.Tickers.nearChain.image
+                                    Asset.Assets.Icons.pay.image
                                         .resizable()
                                         .frame(width: 18, height: 18)
                                         .offset(x: 9, y: 12)
@@ -134,8 +134,10 @@ public struct TransactionRowView: View {
             if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMost)
             } else if let swapToZecAmount = transaction.swapToZecAmount {
-                Text(swapToZecAmount)
-                + Text(" \(tokenName)")
+                if !swapToZecAmount.isEmpty {
+                    Text(swapToZecAmount)
+                    + Text(" \(tokenName)")
+                }
             } else {
                 Text(transaction.isSpending ? "- " : "")
                 + Text(transaction.netValue)

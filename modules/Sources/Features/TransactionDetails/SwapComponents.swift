@@ -45,8 +45,8 @@ extension TransactionDetailsView {
                                 zecTickerLogo(colorScheme)
                                     .scaleEffect(0.8)
                             } else {
-                                if let swapDestinationAsset = store.swapDestinationAsset {
-                                    tokenTicker(asset: swapDestinationAsset, colorScheme)
+                                if let swapFromAsset = store.swapFromAsset {
+                                    tokenTicker(asset: swapFromAsset, colorScheme)
                                         .scaleEffect(0.8)
                                 } else {
                                     unknownTickerLogo(colorScheme)
@@ -96,8 +96,8 @@ extension TransactionDetailsView {
                         zecTickerLogo(colorScheme, shield: false)
                             .scaleEffect(0.8)
                     } else {
-                        if let swapDestinationAsset = store.swapDestinationAsset {
-                            tokenTicker(asset: swapDestinationAsset, colorScheme)
+                        if let swapToAsset = store.swapToAsset {
+                            tokenTicker(asset: swapToAsset, colorScheme)
                                 .scaleEffect(0.8)
                         } else {
                             unknownTickerLogo(colorScheme)

@@ -90,10 +90,22 @@ extension SwapAndPayCoordFlow {
                 for (id, element) in zip(state.path.ids, state.path) {
                     if case .confirmWithKeystone(let sendConfirmationState) = element {
                         let depositAddress = state.swapAndPayState.quote?.depositAddress ?? state.swapAndPayState.address
-                        if let provider = state.swapAndPayState.selectedAsset?.id {
+                        let crosspay = state.swapAndPayState.isSwapExperienceEnabled
+                        
+                        if let provider = state.swapAndPayState.selectedAsset?.provider {
                             let totalFees = state.swapAndPayState.totalFees
                             let totalUSDFees = state.swapAndPayState.totalUSDFees
-                            userMetadataProvider.markTransactionAsSwapFor(depositAddress, provider, totalFees, totalUSDFees)
+                            userMetadataProvider.markTransactionAsSwapFor(
+                                depositAddress,
+                                provider,
+                                totalFees,
+                                totalUSDFees,
+                                state.swapAndPayState.zecAsset?.id ?? "",
+                                state.swapAndPayState.selectedAsset?.id ?? "",
+                                !crosspay,
+                                "PENDING_DEPOSIT",
+                                state.swapAndPayState.zecToBeSpendInQuoteUSFormat
+                            )
                             if let account = state.selectedWalletAccount?.account {
                                 try? userMetadataProvider.store(account)
                             }
@@ -283,10 +295,20 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.type = state.swapAndPayState.isSwapExperienceEnabled ? .swap : .pay
                 state.path.append(.sending(sendConfirmationState))
 
-                if let provider = state.swapAndPayState.selectedAsset?.id {
+                if let provider = state.swapAndPayState.selectedAsset?.provider {
                     let totalFees = state.swapAndPayState.totalFees
                     let totalUSDFees = state.swapAndPayState.totalUSDFees
-                    userMetadataProvider.markTransactionAsSwapFor(sendConfirmationState.address, provider, totalFees, totalUSDFees)
+                    userMetadataProvider.markTransactionAsSwapFor(
+                        sendConfirmationState.address,
+                        provider,
+                        totalFees,
+                        totalUSDFees,
+                        state.swapAndPayState.zecAsset?.id ?? "",
+                        state.swapAndPayState.selectedAsset?.id ?? "",
+                        sendConfirmationState.type == .swap,
+                        "PENDING_DEPOSIT",
+                        state.swapAndPayState.zecToBeSpendInQuoteUSFormat
+                    )
                     if let account = state.selectedWalletAccount?.account {
                         try? userMetadataProvider.store(account)
                     }
