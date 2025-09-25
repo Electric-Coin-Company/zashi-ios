@@ -127,7 +127,8 @@ extension AddressBookClient: DependencyKey {
                 let result = try syncContacts(
                     account: account,
                     contacts: abContacts,
-                    remoteStorage: remoteStorage
+                    remoteStorage: remoteStorage,
+                    storeAfterSync: true
                 )
 
                 latestKnownContacts = result.contacts
@@ -201,7 +202,7 @@ extension AddressBookClient: DependencyKey {
         account: Account,
         contacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
-        storeAfterSync: Bool = true
+        storeAfterSync: Bool
     ) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult) {
         // Ensure remote contacts are prepared.
         var remoteContacts: AddressBookContacts = .empty
