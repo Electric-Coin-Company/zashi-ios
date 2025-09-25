@@ -873,12 +873,14 @@
 "swapToZec.swapCompleted" = "Swap Completed";
 "swapToZec.swapRefunded" = "Swap Refunded";
 "swapToZec.swapFailed" = "Swap Failed";
+"swapToZec.swapExpired" = "Swap Expired";
 "swapToZec.depositTo" = "Deposit to";
 
 "sendSelect.swapWithNear.desc" = "Swap ZEC with other cryptocurrencies.";
 "swapAndPay.status.failed" = "Failed";
 "swapAndPay.status.pendingDeposit" = "Pending Deposit";
 "swapAndPay.status.processing" = "Processing";
+"swapAndPay.status.expired" = "Expired";
 
 "swapToZec.share.title" = "Swap Deposit Address";
 "swapToZec.share.msg" = "Deposit address for %@ %@ on Near swap to ZEC in Zashi.";

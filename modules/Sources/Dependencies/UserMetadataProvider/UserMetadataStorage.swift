@@ -11,6 +11,7 @@ import ComposableArchitecture
 import WalletStorage
 import RemoteStorage
 import UserDefaults
+import Models
 
 public class UserMetadataStorage {
     enum Constants {

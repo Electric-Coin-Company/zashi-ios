@@ -8,6 +8,7 @@
 import Foundation
 import CryptoKit
 import Generated
+import Models
 
 // The structure of Metadata in version 2, this exactly must be loaded and migrated
 public struct UserMetadataV2: Codable {
@@ -97,7 +98,7 @@ extension UserMetadata {
                     totalFees: $0.totalFees,
                     totalUSDFees: $0.totalUSDFees,
                     lastUpdated: $0.lastUpdated,
-                    fromAsset: "near.zec.zec",
+                    fromAsset: $0.provider == "near.zec.zec" ? "" : "near.zec.zec",
                     toAsset: $0.provider,
                     exactInput: true,
                     status: "SUCCESS",

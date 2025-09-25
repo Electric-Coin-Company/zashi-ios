@@ -97,6 +97,7 @@ public struct TransactionDetails {
             case .failed: return L10n.SwapToZec.swapFailed
             case .pendingDeposit: return L10n.SwapToZec.swapPending
             case .processing: return L10n.SwapToZec.swapProcessing
+            case .expired: return L10n.SwapToZec.swapExpired
             }
         }
         
@@ -236,7 +237,7 @@ public struct TransactionDetails {
                 guard state.isSwap else {
                     return .none
                 }
-                return .run { [address = state.transaction.address, isSwapToZec = state.transaction.status == .swapToZec] send in
+                return .run { [address = state.transaction.address, isSwapToZec = state.transaction.isSwapToZec] send in
                     let swapDetails = try? await swapAndPay.status(address, isSwapToZec)
                     await send(.swapDetailsLoaded(swapDetails))
                     
@@ -397,7 +398,7 @@ public struct TransactionDetails {
                     state.umSwapId?.exactInput = swapDetails.isSwap
                 }
                 // amountOutFormatted
-                if let amountOutFormattedValue = swapDetails.amountOutFormatted {
+                if let amountOutFormattedValue = swapDetails.amountOutFormatted, swapDetails.isSwapToZec {
                     let amountOutFormatted = "\(amountOutFormattedValue)"
                     if umSwapId.amountOutFormatted != amountOutFormatted {
                         needsUpdate = true
@@ -416,8 +417,7 @@ public struct TransactionDetails {
                 if let account = state.selectedWalletAccount?.account, let umSwapId = state.umSwapId, needsUpdate {
                     userMetadataProvider.update(umSwapId)
                     try? userMetadataProvider.store(account)
-//                    var transactionsCopy = state.transactions
-//                    transactionsCopy[id: state.transaction.id] = state.transaction
+//                    _ = state.transaction.checkAndUpdateWith(umSwapId)
                     state.$transactions.withLock { $0[id: state.transaction.id] = state.transaction }
                     return .none
                 }
@@ -461,6 +461,7 @@ extension TransactionDetails.State {
         case .pendingDeposit: return .pendingDeposit
         case .failed: return .failed
         case .processing: return .processing
+        case .expired: return .expired
         }
     }
     

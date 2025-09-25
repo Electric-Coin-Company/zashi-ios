@@ -66,7 +66,7 @@ public struct TransactionDetailsView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
-                if store.transaction.status == .swapToZec {
+                if store.transaction.isSwapToZec {
                     headerViewSwapToZec()
                         .screenHorizontalPadding()
                 } else {
@@ -155,7 +155,7 @@ public struct TransactionDetailsView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .screenHorizontalPadding()
-                } else if store.transaction.status != .swapToZec {
+                } else if !store.transaction.isSwapToZec {
                     HStack(spacing: 12) {
                         ZashiButton(
                             store.annotation.isEmpty
@@ -297,7 +297,7 @@ extension TransactionDetailsView {
             Group {
                 if store.isSensitiveContentHidden {
                     Text(L10n.General.hideBalancesMost)
-                } else if store.transaction.status == .swapToZec {
+                } else if store.transaction.isSwapToZec {
                     if let amount = store.swapAmountOut {
                         Text(amount)
                         + Text(" \(tokenName)")
@@ -405,7 +405,7 @@ extension TransactionDetailsView {
     @ViewBuilder func transactionDetailsTitle() -> some View {
         HStack(spacing: 0) {
             Text(
-                store.transaction.status == .swapToZec
+                store.transaction.isSwapToZec
                 ? L10n.SwapToZec.swapDetails
                 : L10n.TransactionHistory.details
             )
@@ -473,7 +473,7 @@ extension TransactionDetailsView {
 
                 if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
                     detailView(
-                        title: store.transaction.status == .swapToZec
+                        title: store.transaction.isSwapToZec
                         ? L10n.SwapToZec.depositTo
                         : L10n.TransactionHistory.sentTo,
                         value: isSensitiveContentHidden
@@ -506,7 +506,7 @@ extension TransactionDetailsView {
                         }
                     }
                     
-                    if store.transaction.status != .swapToZec {
+                    if !store.transaction.isSwapToZec {
                         detailView(
                             title: L10n.TransactionList.transactionId,
                             value: isSensitiveContentHidden
@@ -528,7 +528,7 @@ extension TransactionDetailsView {
                                 rowAppereance: .middle
                             )
                         } else {
-                            if store.transaction.status == .swapToZec {
+                            if store.transaction.isSwapToZec {
                                 detailAnyView(
                                     title: L10n.SwapAndPay.totalFees,
                                     rowAppereance: .middle

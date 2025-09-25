@@ -69,18 +69,6 @@ public struct TransactionRowView: View {
                                 }
                                 .offset(x: 9, y: 11)
                         }
-                        
-                        if transaction.isNonZcashActivity {
-                            Asset.Assets.Tickers.near.image
-                                .zImage(size: 20, color: Design.screenBackground.color(colorScheme))
-                                .offset(x: 9, y: 12)
-                                .overlay {
-                                    Asset.Assets.Icons.pay.image
-                                        .resizable()
-                                        .frame(width: 18, height: 18)
-                                        .offset(x: 9, y: 12)
-                                }
-                        }
                     }
 
                     VStack(alignment: .leading, spacing: 0) {
@@ -118,7 +106,7 @@ public struct TransactionRowView: View {
     }
 
     func transationIcon() -> Image {
-        if transaction.status == .swapToZec {
+        if transaction.isSwapToZec {
             return Asset.Assets.Icons.swapTransaction.image
         } else if transaction.isShieldingTransaction {
             return Asset.Assets.Icons.switchHorizontal.image

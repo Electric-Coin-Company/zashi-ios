@@ -20,9 +20,15 @@ public struct TransactionState: Equatable, Identifiable {
         case sending
         case shielding
         case shielded
-        case swapToZec
     }
 
+    public enum `Type`: Equatable {
+        case zcash
+        case swapToZec
+        case swapFromZec
+        case crossPay
+    }
+    
     public var errorMessage: String?
     public var expiryHeight: BlockHeight?
     public var memoCount: Int
@@ -36,6 +42,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var fee: Zatoshi?
     public var id: String
     public var status: Status
+    public var type = `Type`.zcash
     public var timestamp: TimeInterval?
     public var zecAmount: Zatoshi
     public var isMarkedAsRead = false
@@ -43,13 +50,20 @@ public struct TransactionState: Equatable, Identifiable {
     public var hasTransparentOutputs = false
     public var totalSpent: Zatoshi?
     public var totalReceived: Zatoshi?
-    public var swapToZecAmount: String? = nil
 
     public var rawID: Data? = nil
     
     // Swaps
-    public var isNonZcashActivity = false
+    public var swapToZecAmount: String? = nil
+
+    public var isSwapToZec: Bool {
+        type == .swapToZec
+    }
     
+    public var isNonZcashActivity: Bool {
+        type != .zcash
+    }
+
     // UI Colors
     public func balanceColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
@@ -97,27 +111,34 @@ public struct TransactionState: Equatable, Identifiable {
     }
     
     public var title: String {
-        switch status {
-        case .failed:
-            return isShieldingTransaction
-            ? L10n.Transaction.failedShieldedFunds
-            : isSentTransaction
-            ? L10n.Transaction.failedSend
-            : L10n.Transaction.failedReceive
-        case .paid:
-            return L10n.Transaction.sent
-        case .received:
-            return L10n.Transaction.received
-        case .receiving:
-            return L10n.Transaction.receiving
-        case .sending:
-            return L10n.Transaction.sending
-        case .shielding:
-            return L10n.Transaction.shieldingFunds
-        case .shielded:
-            return L10n.Transaction.shieldedFunds
-        case .swapToZec:
-            return "Swapped"
+        if type == .zcash {
+            switch status {
+            case .failed:
+                return isShieldingTransaction
+                ? L10n.Transaction.failedShieldedFunds
+                : isSentTransaction
+                ? L10n.Transaction.failedSend
+                : L10n.Transaction.failedReceive
+            case .paid:
+                return L10n.Transaction.sent
+            case .received:
+                return L10n.Transaction.received
+            case .receiving:
+                return L10n.Transaction.receiving
+            case .sending:
+                return L10n.Transaction.sending
+            case .shielding:
+                return L10n.Transaction.shieldingFunds
+            case .shielded:
+                return L10n.Transaction.shieldedFunds
+            }
+        } else {
+            switch type {
+            case .swapToZec: return "SwappedTo"
+            case .swapFromZec: return "SwappedFrom"
+            case .crossPay: return "Paid"
+            default: return ""
+            }
         }
     }
 
@@ -172,38 +193,42 @@ public struct TransactionState: Equatable, Identifiable {
 
     // Helper flags
     public var isPending: Bool {
-        switch status {
-        case .failed:
-            return false
-        case .paid:
-            return false
-        case .received:
-            return false
-        case .receiving:
-            return true
-        case .sending:
-            return true
-        case .shielded:
-            return false
-        case .shielding:
-            return true
-        case .swapToZec:
+        if type == .zcash {
+            switch status {
+            case .failed:
+                return false
+            case .paid:
+                return false
+            case .received:
+                return false
+            case .receiving:
+                return true
+            case .sending:
+                return true
+            case .shielded:
+                return false
+            case .shielding:
+                return true
+            }
+        } else {
             return false
         }
     }
 
     /// The purpose of this flag is to help understand if the transaction affected the wallet and a user paid a fee
     public var isSpending: Bool {
-        switch status {
-        case .paid, .sending:
-            return true
-        case .received, .receiving:
-            return false
-        case .shielded, .shielding:
-            return false
-        case .failed:
-            return isSentTransaction
-        case .swapToZec:
+        if type == .zcash {
+            switch status {
+            case .paid, .sending:
+                return true
+            case .received, .receiving:
+                return false
+            case .shielded, .shielding:
+                return false
+            case .failed:
+                return isSentTransaction
+            }
+        } else {
             return false
         }
     }
@@ -276,6 +301,18 @@ public struct TransactionState: Equatable, Identifiable {
         
         return tlHeight
     }
+    
+//    public mutating func checkAndUpdateWith(_ swap: UMSwapId) -> Bool {
+//        var needsUpdate = false
+//        
+//        // crosspay
+//        if !swap.exactInput && type != .crossPay {
+//            type = .crossPay
+//            needsUpdate = true
+//        }
+//
+//        return needsUpdate
+//    }
 }
 
 extension TransactionState {
@@ -329,10 +366,10 @@ extension TransactionState {
         isShieldingTransaction = false
         isTransparentRecipient = true
         hasTransparentOutputs = true
-        status = .swapToZec
+        status = .sending
+        type = .swapToZec
         self.zecAmount = .zero
         id = depositAddress
-        isNonZcashActivity = true
 
         expiryHeight = nil
         minedHeight = nil

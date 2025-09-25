@@ -50,6 +50,7 @@ struct Near1Click {
         static let amountInFormatted = "amountInFormatted"
         static let amountOutFormatted = "amountOutFormatted"
         static let recipient = "recipient"
+        static let deadline = "deadline"
         
         // params
         static let exactInput = "EXACT_INPUT"
@@ -329,7 +330,7 @@ extension Near1Click {
                 throw SwapAndPayClient.EndpointError.message("Check status: Missing `status` parameter.")
             }
             
-            let status: SwapDetails.Status
+            var status: SwapDetails.Status
             
             if isSwapToZec {
                 status = switch statusStr {
@@ -425,6 +426,22 @@ extension Near1Click {
                     
                     amountInUsd = quoteDict[Constants.amountInUsd] as? String
                     amountOutUsd = quoteDict[Constants.amountOutUsd] as? String
+                }
+            }
+            
+            // expired?
+            if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
+                if let deadline = quoteDict[Constants.deadline] as? String {
+                    let formatter = ISO8601DateFormatter()
+                    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    
+                    if let date = formatter.date(from: deadline) {
+                        // 5 minutes earlier than the deadline
+                        let adjustedDeadline = date.addingTimeInterval(-5 * 60)
+                        if Date() > adjustedDeadline {
+                            status = .expired
+                        }
+                    }
                 }
             }
             

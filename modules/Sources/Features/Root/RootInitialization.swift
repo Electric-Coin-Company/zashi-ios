@@ -491,6 +491,7 @@ extension Root {
                 try? readTransactionsStorage.resetZashi()
                 state.walletAccounts.forEach { account in
                     try? userMetadataProvider.resetAccount(account.account)
+                    try? addressBook.resetAccount(account.account)
                 }
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }

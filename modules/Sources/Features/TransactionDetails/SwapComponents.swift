@@ -41,7 +41,7 @@ extension TransactionDetailsView {
                 VStack(spacing: 4) {
 //                    HStack(spacing: 0) {
                         if let swapAmountIn = store.swapAmountIn {
-                            if store.transaction.status != .swapToZec {
+                            if !store.transaction.isSwapToZec {
                                 zecTickerLogo(colorScheme)
                                     .scaleEffect(0.8)
                             } else {
@@ -92,7 +92,7 @@ extension TransactionDetailsView {
                 }
                 
                 VStack(spacing: 4) {
-                    if store.transaction.status == .swapToZec {
+                    if store.transaction.isSwapToZec {
                         zecTickerLogo(colorScheme, shield: false)
                             .scaleEffect(0.8)
                     } else {

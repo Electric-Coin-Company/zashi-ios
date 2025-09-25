@@ -7,6 +7,7 @@
 
 import Foundation
 import CryptoKit
+import Models
 
 // The structure of Metadata in version 1, this exactly must be loaded and migrated
 public struct UserMetadataV1: Codable {

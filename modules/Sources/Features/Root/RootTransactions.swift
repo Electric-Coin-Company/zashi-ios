@@ -77,7 +77,9 @@ extension Root {
                 }
                 
                 swapsFromZecAndCrossPays.forEach { swap in
-                    transactions[id: swap.depositAddress]?.isNonZcashActivity = true
+//                    if let transaction = transactions.filter({ $0.zAddress == swap.depositAddress }).first {
+//                        transactions[id: transaction.id]?.type = swap.exactInput ? .swapFromZec : .crossPay
+//                    }
                 }
 
                 // Swaps To ZEC

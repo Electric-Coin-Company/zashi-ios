@@ -19,6 +19,7 @@ public struct SwapBadge: View {
         case processing
         case refunded
         case success
+        case expired
         
         public var title: String {
             switch self {
@@ -28,6 +29,7 @@ public struct SwapBadge: View {
             case .success: return L10n.SwapAndPay.Status.success
             case .failed: return L10n.SwapAndPay.Status.failed
             case .pendingDeposit: return L10n.SwapAndPay.Status.pendingDeposit
+            case .expired: return L10n.SwapAndPay.Status.expired
             }
         }
         
@@ -39,6 +41,7 @@ public struct SwapBadge: View {
             case .success: return Design.Utility.SuccessGreen._700
             case .failed: return Design.Utility.ErrorRed._700
             case .pendingDeposit: return Design.Utility.WarningYellow._700
+            case .expired: return Design.Utility.ErrorRed._700
             }
         }
         
@@ -50,6 +53,7 @@ public struct SwapBadge: View {
             case .success: return Design.Utility.SuccessGreen._50
             case .failed: return Design.Utility.ErrorRed._50
             case .pendingDeposit: return Design.Utility.WarningYellow._50
+            case .expired: return Design.Utility.ErrorRed._50
             }
         }
         
@@ -61,6 +65,7 @@ public struct SwapBadge: View {
             case .success: return Design.Utility.SuccessGreen._200
             case .failed: return Design.Utility.ErrorRed._200
             case .pendingDeposit: return Design.Utility.WarningYellow._200
+            case .expired: return Design.Utility.ErrorRed._200
             }
         }
     }

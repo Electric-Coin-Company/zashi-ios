@@ -1687,6 +1687,8 @@ public enum L10n {
       public static let zashi = L10n.tr("Localizable", "swapAndPay.quote.zashi", fallback: "Zashi")
     }
     public enum Status {
+      /// Expired
+      public static let expired = L10n.tr("Localizable", "swapAndPay.status.expired", fallback: "Expired")
       /// Failed
       public static let failed = L10n.tr("Localizable", "swapAndPay.status.failed", fallback: "Failed")
       /// Pending
@@ -1730,6 +1732,8 @@ public enum L10n {
     public static let swapCompleted = L10n.tr("Localizable", "swapToZec.swapCompleted", fallback: "Swap Completed")
     /// Swap Details
     public static let swapDetails = L10n.tr("Localizable", "swapToZec.swapDetails", fallback: "Swap Details")
+    /// Swap Expired
+    public static let swapExpired = L10n.tr("Localizable", "swapToZec.swapExpired", fallback: "Swap Expired")
     /// Swap Failed
     public static let swapFailed = L10n.tr("Localizable", "swapToZec.swapFailed", fallback: "Swap Failed")
     /// Swap Pending

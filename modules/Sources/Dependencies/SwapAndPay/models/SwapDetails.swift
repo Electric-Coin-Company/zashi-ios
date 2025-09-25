@@ -18,6 +18,7 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         case processing
         case refunded
         case success
+        case expired
 
         public var rawName: String {
             switch self {
@@ -27,6 +28,7 @@ public struct SwapDetails: Codable, Equatable, Hashable {
             case .processing: return "PROCESSING"
             case .refunded: return "REFUNDED"
             case .success: return "SUCCESS"
+            case .expired: return ""
             }
         }
     }
@@ -43,6 +45,10 @@ public struct SwapDetails: Codable, Equatable, Hashable {
     public let refundedAmountFormatted: Decimal?
     public let swapRecipient: String?
 
+    public var isSwapToZec: Bool {
+        toAsset == "nep141:zec.omft.near"
+    }
+    
     init(
         amountInFormatted: Decimal?,
         amountInUsd: String?,

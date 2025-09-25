@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
+import Models
 
 extension DependencyValues {
     public var userMetadataProvider: UserMetadataProviderClient {
