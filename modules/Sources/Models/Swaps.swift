@@ -131,6 +131,18 @@ public struct UMSwapId: Codable, Equatable {
     public var status: String
     public var amountOutFormatted: String
 
+    public var isPending: Bool {
+        if status == "FAILED" || status == "REFUNDED" || status == "SUCCESS" {
+            return false
+        }
+
+        if status == "PENDING_DEPOSIT" || status == "PROCESSING" || status == "INCOMPLETE_DEPPSIT" {
+            return true
+        }
+        
+        return false
+    }
+    
     public init(
         depositAddress: String,
         provider: String,

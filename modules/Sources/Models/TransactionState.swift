@@ -55,6 +55,7 @@ public struct TransactionState: Equatable, Identifiable {
     
     // Swaps
     public var swapToZecAmount: String? = nil
+    public var swapPending = true
 
     public var isSwapToZec: Bool {
         type == .swapToZec
@@ -133,12 +134,20 @@ public struct TransactionState: Equatable, Identifiable {
                 return L10n.Transaction.shieldedFunds
             }
         } else {
-            switch type {
-//            case .swapToZec: return "SwappedTo"
-            case .swapToZec: return "Swapped"
-            case .swapFromZec: return "SwappedFrom"
-            case .crossPay: return "Paid"
-            default: return ""
+            if swapPending {
+                switch type {
+                case .swapToZec: return "Swapping To"
+                case .swapFromZec: return "Swapping From"
+                case .crossPay: return "Paying"
+                default: return ""
+                }
+            } else {
+                switch type {
+                case .swapToZec: return "Swapped To"
+                case .swapFromZec: return "Swapped From"
+                case .crossPay: return "Paid"
+                default: return ""
+                }
             }
         }
     }
@@ -212,7 +221,7 @@ public struct TransactionState: Equatable, Identifiable {
                 return true
             }
         } else {
-            return false
+            return swapPending
         }
     }
 
@@ -303,17 +312,21 @@ public struct TransactionState: Equatable, Identifiable {
         return tlHeight
     }
     
-//    public mutating func checkAndUpdateWith(_ swap: UMSwapId) -> Bool {
-//        var needsUpdate = false
-//        
-//        // crosspay
-//        if !swap.exactInput && type != .crossPay {
-//            type = .crossPay
-//            needsUpdate = true
-//        }
-//
-//        return needsUpdate
-//    }
+    public mutating func checkAndUpdateWith(_ swap: UMSwapId) {
+        // crosspay
+        if !swap.exactInput && type != .crossPay {
+            type = .crossPay
+        }
+        
+        // pending
+        if swapPending && !swap.isPending {
+            swapPending = false
+        }
+
+        if !swapPending && swap.isPending {
+            swapPending = true
+        }
+    }
 }
 
 extension TransactionState {
