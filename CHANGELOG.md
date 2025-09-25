@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Fixed a bug that could cause newly added address book entries not to be saved remotely.
+
 ## 2.2.1 build 1 (2025-09-03)
 
 ### Fixed
