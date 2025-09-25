@@ -203,7 +203,7 @@ extension AddressBookClient: DependencyKey {
         remoteStorage: RemoteStorageClient,
         storeAfterSync: Bool = true
     ) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult) {
-        // Ensure remote contacts are prepared
+        // Ensure remote contacts are prepared.
         var remoteContacts: AddressBookContacts = .empty
         var shouldUpdateRemote = false
         var cannotUpdateRemote = false
@@ -224,14 +224,16 @@ extension AddressBookClient: DependencyKey {
             throw error
         }
 
-        // Merge strategy
+        // We merge from the local contacts into the remote contacts, which
+        // makes it easy to see when the merged contacts have changed relative
+        // to the previous remote contacts.
         var syncedContacts = AddressBookContacts(
             lastUpdated: Date(),
             version: AddressBookContacts.Constants.version,
-            contacts: contacts.contacts
+            contacts: remoteContacts.contacts
         )
 
-        remoteContacts.contacts.forEach {
+        contacts.contacts.forEach {
             var notFound = true
             
             for i in 0..<syncedContacts.contacts.count {
