@@ -134,7 +134,8 @@ public struct TransactionState: Equatable, Identifiable {
             }
         } else {
             switch type {
-            case .swapToZec: return "SwappedTo"
+//            case .swapToZec: return "SwappedTo"
+            case .swapToZec: return "Swapped"
             case .swapFromZec: return "SwappedFrom"
             case .crossPay: return "Paid"
             default: return ""

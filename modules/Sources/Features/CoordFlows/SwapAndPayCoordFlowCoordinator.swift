@@ -406,6 +406,11 @@ extension SwapAndPayCoordFlow {
             case .path(.element(id: _, action: .swapAndPayForm(.internalBackButtonTapped))):
                 return .send(.swapAndPay(.backButtonTapped(state.isSwapInFlight)))
 
+            // MARK: - Swap to ZEC Summary
+                
+            case .path(.element(id: _, action: .swapToZecSummary(.sentTheFundsButtonTapped))):
+                return .send(.storeLastUsedAsset)
+
             default: return .none
             }
         }
