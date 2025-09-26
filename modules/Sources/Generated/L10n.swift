@@ -1703,6 +1703,28 @@ public enum L10n {
       public static let success = L10n.tr("Localizable", "swapAndPay.status.success", fallback: "Completed")
     }
   }
+  public enum SwapStatus {
+    /// Paid
+    public static let paid = L10n.tr("Localizable", "swapStatus.paid", fallback: "Paid")
+    /// Paying
+    public static let paying = L10n.tr("Localizable", "swapStatus.paying", fallback: "Paying")
+    /// Payment Expired
+    public static let paymentExpired = L10n.tr("Localizable", "swapStatus.paymentExpired", fallback: "Payment Expired")
+    /// Payment Failed
+    public static let paymentFailed = L10n.tr("Localizable", "swapStatus.paymentFailed", fallback: "Payment Failed")
+    /// Payment Refunded
+    public static let paymentRefunded = L10n.tr("Localizable", "swapStatus.paymentRefunded", fallback: "Payment Refunded")
+    /// Swap Expired
+    public static let swapExpired = L10n.tr("Localizable", "swapStatus.swapExpired", fallback: "Swap Expired")
+    /// Swap Failed
+    public static let swapFailed = L10n.tr("Localizable", "swapStatus.swapFailed", fallback: "Swap Failed")
+    /// Swapped
+    public static let swapped = L10n.tr("Localizable", "swapStatus.swapped", fallback: "Swapped")
+    /// Swapping
+    public static let swapping = L10n.tr("Localizable", "swapStatus.swapping", fallback: "Swapping")
+    /// Swap Refunded
+    public static let swapRefunded = L10n.tr("Localizable", "swapStatus.swapRefunded", fallback: "Swap Refunded")
+  }
   public enum SwapToZec {
     /// %@ address...
     public static func address(_ p1: Any) -> String {

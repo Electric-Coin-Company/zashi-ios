@@ -13,6 +13,7 @@ import WalletStorage
 import Utils
 import PartnerKeys
 import Generated
+import Models
 
 struct Near1Click {
     enum Constants {
@@ -57,12 +58,6 @@ struct Near1Click {
         static let exactOutput = "EXACT_OUTPUT"
         static let originChain = "ORIGIN_CHAIN"
         static let destinationChain = "DESTINATION_CHAIN"
-        static let pendingDeposit = "PENDING_DEPOSIT"
-        static let refunded = "REFUNDED"
-        static let success = "SUCCESS"
-        static let failed = "FAILED"
-        static let incompleteDeposit = "INCOMPLETE_DEPOSIT"
-        static let processing = "PROCESSING"
 
         // zec asset
         static let nearZecAssetId = "nep141:zec.omft.near"
@@ -334,19 +329,19 @@ extension Near1Click {
             
             if isSwapToZec {
                 status = switch statusStr {
-                case Constants.pendingDeposit: .pendingDeposit
-                case Constants.refunded: .refunded
-                case Constants.success: .success
-                case Constants.failed: .failed
-                case Constants.incompleteDeposit: .pendingDeposit
-                case Constants.processing: .processing
+                case SwapConstants.pendingDeposit: .pendingDeposit
+                case SwapConstants.refunded: .refunded
+                case SwapConstants.success: .success
+                case SwapConstants.failed: .failed
+                case SwapConstants.incompleteDeposit: .pendingDeposit
+                case SwapConstants.processing: .processing
                 default: .pending
                 }
             } else {
                 status = switch statusStr {
-                case Constants.pendingDeposit: .pending
-                case Constants.refunded: .refunded
-                case Constants.success: .success
+                case SwapConstants.pendingDeposit: .pending
+                case SwapConstants.refunded: .refunded
+                case SwapConstants.success: .success
                 default: .pending
                 }
             }

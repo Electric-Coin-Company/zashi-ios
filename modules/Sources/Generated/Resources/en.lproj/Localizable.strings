@@ -894,3 +894,14 @@
 "swapToZec.refundAddress.msg2" = "The refunded amount will be returned to your wallet in the source currency - USDC on NEAR. Please enter a valid address to avoid loss of funds.";
 "swap.nearProvider" = "near";
 "general.activity" = "Activity";
+
+"swapStatus.swapping" = "Swapping";
+"swapStatus.paying" = "Paying";
+"swapStatus.swapRefunded" = "Swap Refunded";
+"swapStatus.paymentRefunded" = "Payment Refunded";
+"swapStatus.swapFailed" = "Swap Failed";
+"swapStatus.paymentFailed" = "Payment Failed";
+"swapStatus.swapExpired" = "Swap Expired";
+"swapStatus.paymentExpired" = "Payment Expired";
+"swapStatus.swapped" = "Swapped";
+"swapStatus.paid" = "Paid";

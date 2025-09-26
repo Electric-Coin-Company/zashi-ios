@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import Generated
+import Models
 
 // Path
 import AddressBook
@@ -103,7 +104,7 @@ extension SwapAndPayCoordFlow {
                                 state.swapAndPayState.zecAsset?.id ?? "",
                                 state.swapAndPayState.selectedAsset?.id ?? "",
                                 !crosspay,
-                                "PENDING_DEPOSIT",
+                                SwapConstants.pendingDeposit,
                                 state.swapAndPayState.zecToBeSpendInQuoteUSFormat
                             )
                             if let account = state.selectedWalletAccount?.account {
@@ -306,7 +307,7 @@ extension SwapAndPayCoordFlow {
                         state.swapAndPayState.zecAsset?.id ?? "",
                         state.swapAndPayState.selectedAsset?.id ?? "",
                         sendConfirmationState.type == .swap,
-                        "PENDING_DEPOSIT",
+                        SwapConstants.pendingDeposit,
                         state.swapAndPayState.zecToBeSpendInQuoteUSFormat
                     )
                     if let account = state.selectedWalletAccount?.account {

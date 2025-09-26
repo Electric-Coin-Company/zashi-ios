@@ -60,6 +60,7 @@ public struct SwapAndPay {
         public var isSwapCanceled = false
         public var isSwapExperienceEnabled = true
         public var isSwapToZecExperienceEnabled = false
+        public var keyboardDismissCounter = 0
         public var optionOneChecked = false
         public var optionTwoChecked = false
         public var selectedContact: Contact?
@@ -533,6 +534,7 @@ public struct SwapAndPay {
             case .assetSelectRequested:
                 state.searchTerm = ""
                 state.assetSelectBinding = true
+                state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .send(.updateAssetsAccordingToSearchTerm)
                 
             case .slippageChipTapped(let index):
@@ -959,7 +961,7 @@ public struct SwapAndPay {
                         state.selectedAsset?.id ?? "",
                         state.zecAsset?.id ?? "",
                         true,
-                        "PENDING_DEPOSIT",
+                        SwapConstants.pendingDeposit,
                         state.tokenToBeReceivedInSwapToZecQuote
                     )
                     if let account = state.selectedWalletAccount?.account {

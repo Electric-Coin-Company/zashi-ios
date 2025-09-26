@@ -39,7 +39,7 @@ public struct TransactionRowView: View {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ZStack {
-                        transationIcon()
+                        transaction.transationIcon
                             .zImage(size: 20, color: transaction.iconColor(colorScheme))
                             .background {
                                 Circle()
@@ -102,18 +102,6 @@ public struct TransactionRowView: View {
                     .padding(.horizontal, 4)
                     .opacity(divider ? 1.0 : 0.0)
             }
-        }
-    }
-
-    func transationIcon() -> Image {
-        if transaction.isSwapToZec {
-            return Asset.Assets.Icons.swapTransaction.image
-        } else if transaction.isShieldingTransaction {
-            return Asset.Assets.Icons.switchHorizontal.image
-        } else if transaction.isSentTransaction {
-            return Asset.Assets.Icons.sent.image
-        } else {
-            return Asset.Assets.Icons.received.image
         }
     }
 

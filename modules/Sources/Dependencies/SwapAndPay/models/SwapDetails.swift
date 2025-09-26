@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Models
 
 /// Codable struct for JSON serialization
 /// Check the status of a swap.
@@ -22,13 +23,13 @@ public struct SwapDetails: Codable, Equatable, Hashable {
 
         public var rawName: String {
             switch self {
-            case .failed: return "FAILED"
-            case .pending: return "PENDING_DEPOSIT"
-            case .pendingDeposit: return "PENDING_DEPOSIT"
-            case .processing: return "PROCESSING"
-            case .refunded: return "REFUNDED"
-            case .success: return "SUCCESS"
-            case .expired: return ""
+            case .failed: return SwapConstants.failed
+            case .pending: return SwapConstants.pendingDeposit
+            case .pendingDeposit: return SwapConstants.pendingDeposit
+            case .processing: return SwapConstants.processing
+            case .refunded: return SwapConstants.refunded
+            case .success: return SwapConstants.success
+            case .expired: return SwapConstants.expired
             }
         }
     }

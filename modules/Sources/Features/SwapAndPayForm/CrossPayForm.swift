@@ -161,6 +161,10 @@ public extension SwapAndPayForm {
             .onAppear {
                 observeKeyboardNotifications()
             }
+            .onChange(of: store.keyboardDismissCounter) { _ in
+                isAmountFocused = false
+                isAddressFocused = false
+            }
             .applyScreenBackground()
             .zashiBack {
                 store.send(.internalBackButtonTapped)

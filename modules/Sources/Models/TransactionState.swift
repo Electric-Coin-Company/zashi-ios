@@ -28,7 +28,7 @@ public struct TransactionState: Equatable, Identifiable {
         case swapFromZec
         case crossPay
     }
-    
+
     public var errorMessage: String?
     public var expiryHeight: BlockHeight?
     public var memoCount: Int
@@ -55,7 +55,7 @@ public struct TransactionState: Equatable, Identifiable {
     
     // Swaps
     public var swapToZecAmount: String? = nil
-    public var swapPending = true
+    public var swapStatus = UMSwapId.SwapStatus.pending
 
     public var isSwapToZec: Bool {
         type == .swapToZec
@@ -67,7 +67,7 @@ public struct TransactionState: Equatable, Identifiable {
 
     // UI Colors
     public func balanceColor(_ colorScheme: ColorScheme) -> Color {
-        status == .failed
+        (status == .failed || swapStatus == .failed || swapStatus == .expired || swapStatus == .refunded)
         ? Design.Utility.ErrorRed._600.color(colorScheme)
         : (isSpending || isShieldingTransaction)
         ? Design.Utility.ErrorRed._600.color(colorScheme)
@@ -75,7 +75,7 @@ public struct TransactionState: Equatable, Identifiable {
     }
 
     public func titleColor(_ colorScheme: ColorScheme) -> Color {
-        status == .failed
+        (status == .failed || swapStatus == .failed || swapStatus == .expired || swapStatus == .refunded)
         ? Design.Text.error.color(colorScheme)
         : !isSentTransaction
         ? Design.Utility.SuccessGreen._700.color(colorScheme)
@@ -83,7 +83,7 @@ public struct TransactionState: Equatable, Identifiable {
     }
     
     public func iconColor(_ colorScheme: ColorScheme) -> Color {
-        status == .failed
+        (status == .failed || swapStatus == .failed || swapStatus == .expired || swapStatus == .refunded)
         ? Design.Utility.WarningYellow._500.color(colorScheme)
         : isPending
         ? Design.Utility.HyperBlue._500.color(colorScheme)
@@ -91,7 +91,7 @@ public struct TransactionState: Equatable, Identifiable {
     }
 
     public func iconGradientStartColor(_ colorScheme: ColorScheme) -> Color {
-        status == .failed
+        (status == .failed || swapStatus == .failed || swapStatus == .expired || swapStatus == .refunded)
         ? Design.Utility.WarningYellow._50.color(colorScheme)
         : isPending
         ? Design.Utility.HyperBlue._50.color(colorScheme)
@@ -99,7 +99,7 @@ public struct TransactionState: Equatable, Identifiable {
     }
 
     public func iconGradientEndColor(_ colorScheme: ColorScheme) -> Color {
-        status == .failed
+        (status == .failed || swapStatus == .failed || swapStatus == .expired || swapStatus == .refunded)
         ? Design.Utility.WarningYellow._100.color(colorScheme)
         : isPending
         ? Design.Utility.HyperBlue._100.color(colorScheme)
@@ -134,18 +134,34 @@ public struct TransactionState: Equatable, Identifiable {
                 return L10n.Transaction.shieldedFunds
             }
         } else {
-            if swapPending {
+            if swapStatus == .pending {
                 switch type {
-                case .swapToZec: return "Swapping To"
-                case .swapFromZec: return "Swapping From"
-                case .crossPay: return "Paying"
+                case .swapToZec, .swapFromZec: return L10n.SwapStatus.swapping
+                case .crossPay: return L10n.SwapStatus.paying
+                default: return ""
+                }
+            } else if swapStatus == .refunded {
+                switch type {
+                case .swapToZec, .swapFromZec: return L10n.SwapStatus.swapRefunded
+                case .crossPay: return L10n.SwapStatus.paymentRefunded
+                default: return ""
+                }
+            } else if swapStatus == .failed {
+                switch type {
+                case .swapToZec, .swapFromZec: return L10n.SwapStatus.swapFailed
+                case .crossPay: return L10n.SwapStatus.paymentFailed
+                default: return ""
+                }
+            } else if swapStatus == .expired {
+                switch type {
+                case .swapToZec, .swapFromZec: return L10n.SwapStatus.swapExpired
+                case .crossPay: return L10n.SwapStatus.paymentExpired
                 default: return ""
                 }
             } else {
                 switch type {
-                case .swapToZec: return "Swapped To"
-                case .swapFromZec: return "Swapped From"
-                case .crossPay: return "Paid"
+                case .swapToZec, .swapFromZec: return L10n.SwapStatus.swapped
+                case .crossPay: return L10n.SwapStatus.paid
                 default: return ""
                 }
             }
@@ -221,7 +237,7 @@ public struct TransactionState: Equatable, Identifiable {
                 return true
             }
         } else {
-            return swapPending
+            return swapStatus == .pending
         }
     }
 
@@ -239,7 +255,21 @@ public struct TransactionState: Equatable, Identifiable {
                 return isSentTransaction
             }
         } else {
-            return false
+            return (type == .crossPay || type == .swapFromZec)
+        }
+    }
+    
+    public var transationIcon: Image {
+        if type == .crossPay {
+            return Asset.Assets.Icons.trPaid.image
+        } else if isSwapToZec {
+            return Asset.Assets.Icons.trIn.image
+        } else if isShieldingTransaction {
+            return Asset.Assets.Icons.switchHorizontal.image
+        } else if isSentTransaction {
+            return Asset.Assets.Icons.trOut.image
+        } else {
+            return Asset.Assets.Icons.trIn.image
         }
     }
 
@@ -319,12 +349,8 @@ public struct TransactionState: Equatable, Identifiable {
         }
         
         // pending
-        if swapPending && !swap.isPending {
-            swapPending = false
-        }
-
-        if !swapPending && swap.isPending {
-            swapPending = true
+        if swapStatus != swap.swapStatus {
+            swapStatus = swap.swapStatus
         }
     }
 }

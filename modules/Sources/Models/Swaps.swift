@@ -7,6 +7,16 @@
 
 import Foundation
 
+public enum SwapConstants {
+    public static let pendingDeposit = "PENDING_DEPOSIT"
+    public static let incompleteDeposit = "INCOMPLETE_DEPPSIT"
+    public static let processing = "PROCESSING"
+    public static let success = "SUCCESS"
+    public static let failed = "FAILED"
+    public static let refunded = "REFUNDED"
+    public static let expired = "EXPIRED"
+}
+
 public struct UserMetadata: Codable {
     public enum Constants {
         public static let version = 3
@@ -120,6 +130,14 @@ public struct UMSwapId: Codable, Equatable {
         case amountOutFormatted
     }
     
+    public enum SwapStatus: Equatable {
+        case completed
+        case expired
+        case failed
+        case pending
+        case refunded
+    }
+    
     public var depositAddress: String
     public var provider: String
     public var totalFees: Int64
@@ -131,16 +149,28 @@ public struct UMSwapId: Codable, Equatable {
     public var status: String
     public var amountOutFormatted: String
 
-    public var isPending: Bool {
-        if status == "FAILED" || status == "REFUNDED" || status == "SUCCESS" {
-            return false
+    public var swapStatus: SwapStatus {
+        if status == SwapConstants.failed {
+            return .failed
         }
 
-        if status == "PENDING_DEPOSIT" || status == "PROCESSING" || status == "INCOMPLETE_DEPPSIT" {
-            return true
+        if status == SwapConstants.refunded {
+            return .refunded
+        }
+
+        if status == SwapConstants.expired {
+            return .expired
+        }
+
+        if status == SwapConstants.success {
+            return .completed
+        }
+
+        if status == SwapConstants.pendingDeposit || status == SwapConstants.processing || status == SwapConstants.incompleteDeposit {
+            return .pending
         }
         
-        return false
+        return .pending
     }
     
     public init(
