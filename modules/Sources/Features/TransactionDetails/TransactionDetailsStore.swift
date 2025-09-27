@@ -228,7 +228,8 @@ public struct TransactionDetails {
                 state.swapAssetFailedWithRetry = nil
                 // exclude all tokens with price == 0
                 // exclude zec token
-                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+//                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                let filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
                 state.$swapAssets.withLock { $0 = filteredSwapAssets }
                 return .send(.checkSwapStatus)
                 

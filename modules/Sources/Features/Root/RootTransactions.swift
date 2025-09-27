@@ -95,7 +95,8 @@ extension Root {
                         TransactionState(
                             depositAddress: swap.depositAddress,
                             timestamp: TimeInterval(swap.lastUpdated / 1000),
-                            zecAmount: swap.amountOutFormatted.localeString ?? swap.amountOutFormatted
+                            zecAmount: swap.amountOutFormatted.localeString ?? swap.amountOutFormatted,
+                            swapStatus: swap.swapStatus
                         )
                     )
                 }

@@ -48,6 +48,7 @@ public enum Asset {
     public enum Partners {
       public static let nearLogo = ImageAsset(name: "NearLogo")
       public static let coinbase = ImageAsset(name: "coinbase")
+      public static let coinbaseDisabled = ImageAsset(name: "coinbaseDisabled")
       public static let coinbaseSeeklogo = ImageAsset(name: "coinbaseSeeklogo")
       public static let coinbaseSeeklogoDisabled = ImageAsset(name: "coinbaseSeeklogoDisabled")
       public static let flexa = ImageAsset(name: "flexa")

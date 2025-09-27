@@ -257,7 +257,8 @@ public struct HomeView: View {
                         .zFont(.semiBold, size: 18, style: Design.Text.primary)
                         .padding(.bottom, 8)
 
-                    if walletStatus != .restoring {
+                    // FIXME: Temporarily unavailable
+                    if walletStatus != .restoring && false {
                         Text(L10n.TransactionHistory.makeTransaction)
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .padding(.bottom, 20)

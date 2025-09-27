@@ -172,6 +172,10 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "balances.spendableBalance.title", fallback: "Spendable Balance")
     }
   }
+  public enum Coinbase {
+    /// Coinbase Onramp is temporarily unavailable.
+    public static let disabled = L10n.tr("Localizable", "coinbase.disabled", fallback: "Coinbase Onramp is temporarily unavailable.")
+  }
   public enum Component {
     /// Not Private
     public static let lowPrivacy = L10n.tr("Localizable", "component.lowPrivacy", fallback: "Not Private")

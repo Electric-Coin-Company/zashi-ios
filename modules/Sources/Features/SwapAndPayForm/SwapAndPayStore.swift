@@ -731,8 +731,9 @@ public struct SwapAndPay {
 
                 // exclude all tokens with price == 0
                 // exclude zec token
-                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
-                
+//                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                var filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
+
                 // history assets
                 let historyAssetIds = userMetadataProvider.lastUsedAssetHistory()
                 var historyAssets: IdentifiedArrayOf<SwapAsset> = []

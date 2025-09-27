@@ -55,11 +55,14 @@ extension HomeView {
                 .padding(.bottom, store.isKeystoneAccountActive ? 24 : 0)
             }
             
+            // FIXME: Temporarily disabled until we resolve the issue with Secure Init
+            // When done, revert to Asset.Assets.Partners.coinbase.image and remove .disabled(true)
+            // Desc revert to L10n.Settings.coinbaseDesc
             if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(
-                    icon: Asset.Assets.Partners.coinbase.image,
+                    icon: Asset.Assets.Partners.coinbaseDisabled.image,
                     title: L10n.Settings.buyZecCB,
-                    desc: L10n.Settings.coinbaseDesc,
+                    desc: L10n.Coinbase.disabled,
                     customIcon: true,
                     divider: !store.isKeystoneConnected
                 ) {
@@ -67,6 +70,7 @@ extension HomeView {
                 }
                 .padding(.bottom, store.isKeystoneConnected ? 24 : 0)
                 .padding(.top, store.inAppBrowserURLCoinbase != nil ? 0 : 32)
+                .disabled(true)
             }
 
             if !store.isKeystoneConnected {

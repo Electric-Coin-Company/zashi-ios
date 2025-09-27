@@ -425,16 +425,18 @@ extension Near1Click {
             }
             
             // expired?
-            if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
-                if let deadline = quoteDict[Constants.deadline] as? String {
-                    let formatter = ISO8601DateFormatter()
-                    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                    
-                    if let date = formatter.date(from: deadline) {
-                        // 5 minutes earlier than the deadline
-                        let adjustedDeadline = date.addingTimeInterval(-5 * 60)
-                        if Date() > adjustedDeadline {
-                            status = .expired
+            if statusStr == SwapConstants.pendingDeposit {
+                if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
+                    if let deadline = quoteDict[Constants.deadline] as? String {
+                        let formatter = ISO8601DateFormatter()
+                        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                        
+                        if let date = formatter.date(from: deadline) {
+                            // 5 minutes earlier than the deadline
+                            let adjustedDeadline = date.addingTimeInterval(-5 * 60)
+                            if Date() > adjustedDeadline {
+                                status = .expired
+                            }
                         }
                     }
                 }

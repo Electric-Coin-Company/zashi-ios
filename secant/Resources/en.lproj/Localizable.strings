@@ -905,3 +905,5 @@
 "swapStatus.paymentExpired" = "Payment Expired";
 "swapStatus.swapped" = "Swapped";
 "swapStatus.paid" = "Paid";
+
+"coinbase.disabled" = "Coinbase Onramp is temporarily unavailable.";

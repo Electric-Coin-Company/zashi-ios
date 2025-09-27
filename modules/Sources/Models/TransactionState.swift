@@ -396,7 +396,8 @@ extension TransactionState {
     public init(
         depositAddress: String,
         timestamp: TimeInterval,
-        zecAmount: String? = nil
+        zecAmount: String? = nil,
+        swapStatus: UMSwapId.SwapStatus
     ) {
         zAddress = depositAddress
         self.timestamp = timestamp
@@ -410,6 +411,7 @@ extension TransactionState {
         type = .swapToZec
         self.zecAmount = .zero
         id = depositAddress
+        self.swapStatus = swapStatus
 
         expiryHeight = nil
         minedHeight = nil
