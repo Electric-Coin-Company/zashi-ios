@@ -13,19 +13,6 @@ import UIComponents
 extension HomeView {
     @ViewBuilder func moreContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-//            ActionRow(
-//                icon: walletStatus == .restoring
-//                ? Asset.Assets.Partners.payWithNearDisabled.image
-//                : Asset.Assets.Partners.payWithNear.image,
-//                title: L10n.SendSelect.payWithNear,
-//                desc: L10n.SendSelect.PayWithNear.desc,
-//                customIcon: true
-//            ) {
-//                store.send(.payWithNearTapped)
-//            }
-//            .disabled(walletStatus == .restoring)
-//            .padding(.top, 32)
-//
             ActionRow(
                 icon: walletStatus == .restoring
                 ? Asset.Assets.Partners.payWithNearDisabled.image

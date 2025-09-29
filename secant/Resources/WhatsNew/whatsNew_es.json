@@ -1,6 +1,22 @@
 {
     "releases": [
         {
+            "version": "2.4",
+            "date": "10-01-2025",
+            "timestamp": 1759312704,
+            "sections": [
+                {
+                    "title": "¡La función de swap a ZEC que todos estaban esperando!",
+                    "bulletpoints": [
+                        "Usa Zashi para intercambiar cualquier criptomoneda compatible hacia Zcash.",
+                        "Deposita fondos con cualquiera de tus billeteras favoritas.",
+                        "Recibe ZEC en Zashi y protégelos.",
+                        "Con el apoyo de Near Intents."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.3",
             "date": "09-13-2025",
             "timestamp": 1757746910,

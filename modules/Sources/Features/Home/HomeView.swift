@@ -60,13 +60,6 @@ public struct HomeView: View {
 
                     Spacer(minLength: 8)
 
-//                    button(
-//                        L10n.HomeScreen.scan,
-//                        icon: Asset.Assets.Icons.scan.image
-//                    ) {
-//                        store.send(.scanTapped)
-//                    }
-
                     button(
                         L10n.SwapAndPay.pay,
                         icon: Asset.Assets.Icons.pay.image
