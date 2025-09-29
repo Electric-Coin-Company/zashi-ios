@@ -98,10 +98,10 @@ extension UserMetadata {
                     totalFees: $0.totalFees,
                     totalUSDFees: $0.totalUSDFees,
                     lastUpdated: $0.lastUpdated,
-                    fromAsset: $0.provider == "near.zec.zec" ? "" : "near.zec.zec",
+                    fromAsset: $0.provider == SwapConstants.zecAssetIdOnNear ? "" : SwapConstants.zecAssetIdOnNear,
                     toAsset: $0.provider,
                     exactInput: true,
-                    status: "SUCCESS",
+                    status: SwapConstants.success,
                     amountOutFormatted: ""
                 )
             },

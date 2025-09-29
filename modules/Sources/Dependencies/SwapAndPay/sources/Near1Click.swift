@@ -156,7 +156,7 @@ struct Near1Click {
                     }
                 }
             } else if errorMsg.contains("Failed to get quote") {
-                errorMsgConverted = L10n.Swap.quoteUnavailable
+                errorMsgConverted = exactInput ? L10n.Swap.quoteUnavailableSwap : L10n.Swap.quoteUnavailable
             }
             
             throw SwapAndPayClient.EndpointError.message(errorMsgConverted)

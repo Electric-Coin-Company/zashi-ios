@@ -769,8 +769,9 @@
 "swapAndPay.help.payWith" = "Pagar con";
 "swapAndPay.help.swapWithNear" = "Intercambiar con NEAR";
 "swapAndPay.help.payWithNear" = "Pagar con NEAR";
-"swapAndPay.help.swapDesc" = "Intercambia ZEC protegido por cualquier moneda o token compatible con NEAR.";
-"swapAndPay.help.swapDesc2" = "Zashi es una billetera solo para ZEC, por lo que necesitarás una dirección de billetera válida del activo al que estás intercambiando.";
+"swapAndPay.help.swapDesc" = "Haz swap de ZEC con cualquier token compatible con NEAR.";
+"swapAndPay.help.swapDesc1" = "Si haces swap HACIA ZEC, enviarás fondos desde una wallet de terceros y deberás proporcionar una dirección donde se pueda reembolsar el cambio.";
+"swapAndPay.help.swapDesc2" = "Si haces swap DESDE ZEC, debes proporcionar una dirección válida para el activo al que haces swap.";
 "swapAndPay.help.payDesc1" = "Realiza pagos entre cadenas en cualquier moneda o token compatible con NEAR.";
 "swapAndPay.help.payDesc2" = "Si el deslizamiento real y las condiciones de red resultan en que tu destinatario reciba menos de lo prometido, tu transacción será revertida. Recibirás un reembolso completo menos las comisiones de red.";
 "swapAndPay.quote.zashi" = "Zashi";
@@ -792,7 +793,8 @@
 "swapAndPay.executedSlippage" = "Deslizamiento realizado";
 "swapAndPay.canceltitle" = "¿Estás seguro?";
 "swapAndPay.cancelMsg" = "Si sales de esta pantalla, toda la información ingresada se perderá.";
-"swapAndPay.cancelSwap" = "Cancelar intercambio";
+"swapAndPay.cancelSwap" = "Cancelar swap";
+"swapAndPay.editSwap" = "Editar swap";
 "swapAndPay.cancelDont" = "No cancelar";
 "swapAndPay.optIn.title" = "Intercambiar o Pagar con";
 "swapAndPay.optIn.desc" = "Esta función es provista por una API de terceros de NEAR. Zashi necesita hacer llamadas de red para obtener tasas, cotizaciones, ejecutar transacciones y revisar su estado en el historial de transacciones, lo cual puede exponer tu dirección IP. Te recomendamos permitir la conexión por Tor para proteger tu dirección IP en todo momento.";
@@ -855,4 +857,55 @@
 "about.privacyPolicy" = "Política de privacidad";
 "about.termsOfUse" = "Términos de uso";
 
-"sendSelect.swapWithNear.desc" = "Intercambia ZEC protegido por cualquier criptomoneda compatible.";
+// MARK: - Swap to ZEC
+"swapToZec.address" = "Dirección %@...";
+"swapToZec.refundAddress" = "Dirección de reembolso";
+"swapToZec.review" = "Revisar cotización";
+"swapToZec.deposit" = "Monto a depositar";
+"swapToZec.shareQR" = "Compartir QR";
+"swapToZec.sentTheFunds" = "Ya envié los fondos";
+"swapToZec.info1" = "Usa tu ";
+"swapToZec.info2" = "%@ en %@";
+"swapToZec.info3" = " wallet para depositar fondos. Depositar otros activos puede resultar en la pérdida de fondos.";
+"swapToZec.transparentWarn" = "NEAR solo admite swaps hacia una dirección transparente. Zashi te pedirá proteger tus fondos al recibirlos.";
+"swapToZec.swapDetails" = "Detalles del swap";
+"swapToZec.swapPending" = "Swap pendiente";
+"swapToZec.swapProcessing" = "Procesando swap";
+"swapToZec.swapCompleted" = "Swap completado";
+"swapToZec.swapRefunded" = "Swap reembolsado";
+"swapToZec.swapFailed" = "Swap fallido";
+"swapToZec.swapExpired" = "Swap expirado";
+"swapToZec.depositTo" = "Depositar en";
+
+"sendSelect.swapWithNear.desc" = "Haz swap de ZEC con otras criptomonedas.";
+"swapAndPay.status.failed" = "Fallido";
+"swapAndPay.status.pendingDeposit" = "Depósito pendiente";
+"swapAndPay.status.processing" = "Procesando";
+"swapAndPay.status.expired" = "Expirado";
+
+"swapToZec.share.title" = "Dirección de depósito para swap";
+"swapToZec.share.msg" = "Dirección de depósito para %@ %@ en Near swap a ZEC en Zashi.";
+"swap.quoteUnavailable" = "Intentamos, pero no pudimos obtener una cotización para un pago con tus parámetros. Puedes ajustar el slippage o intentar más tarde.";
+"swap.quoteUnavailableSwap" = "Intentamos, pero no pudimos obtener una cotización para un swap con tus parámetros. Puedes ajustar el slippage o intentar más tarde.";
+
+"general.copiedAmount" = "Monto copiado";
+"general.copiedAddress" = "Dirección %@ copiada";
+
+"swapToZec.refundAddress.title" = "Dirección de reembolso";
+"swapToZec.refundAddress.msg1" = "Si el swap falla o cambian las condiciones del mercado, tu transacción puede ser reembolsada menos las comisiones de transacción.";
+"swapToZec.refundAddress.msg2" = "El monto reembolsado será devuelto a tu wallet en la moneda de origen - USDC en NEAR. Ingresa una dirección válida para evitar la pérdida de fondos.";
+"swap.nearProvider" = "near";
+"general.activity" = "Actividad";
+
+"swapStatus.swapping" = "Haciendo swap";
+"swapStatus.paying" = "Pagando";
+"swapStatus.swapRefunded" = "Swap reembolsado";
+"swapStatus.paymentRefunded" = "Pago reembolsado";
+"swapStatus.swapFailed" = "Swap fallido";
+"swapStatus.paymentFailed" = "Pago fallido";
+"swapStatus.swapExpired" = "Swap expirado";
+"swapStatus.paymentExpired" = "Pago expirado";
+"swapStatus.swapped" = "Swap realizado";
+"swapStatus.paid" = "Pagado";
+
+"coinbase.disabled" = "Coinbase Onramp está temporalmente no disponible.";

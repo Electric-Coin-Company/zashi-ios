@@ -792,6 +792,7 @@ public struct SwapAndPay {
                 return .none
 
             case .addressBookTapped:
+                state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .none
 
             case .addressBookContactSelected(let address):

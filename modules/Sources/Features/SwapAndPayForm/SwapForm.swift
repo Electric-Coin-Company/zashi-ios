@@ -493,9 +493,9 @@ public extension SwapAndPayForm {
                             "",
                             text: $store.amountText,
                             prompt:
-                                Text(store.localePlaceholder)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
-                                .foregroundColor(Design.Text.tertiary.color(colorScheme))
+                                Text(isAmountFocused ? "" : store.localePlaceholder)
+                                    .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
+                                    .foregroundColor(Design.Text.tertiary.color(colorScheme))
                         )
                         .disabled(store.isQuoteRequestInFlight)
                         .frame(maxWidth: .infinity)

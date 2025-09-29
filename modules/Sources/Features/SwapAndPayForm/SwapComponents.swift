@@ -350,14 +350,20 @@ extension SwapAndPayForm {
                     .fixedSize(horizontal: false, vertical: true)
 
                 ZashiButton(
-                    L10n.SwapAndPay.cancelPayment,
+                    (store.isSwapExperienceEnabled || store.isSwapToZecExperienceEnabled)
+                    ? L10n.SwapAndPay.cancelSwap
+                    : L10n.SwapAndPay.cancelPayment,
                     type: .destructive1
                 ) {
                     store.send(.cancelPaymentTapped)
                 }
                 .padding(.bottom, 8)
 
-                ZashiButton(L10n.SwapAndPay.editPayment) {
+                ZashiButton(
+                    (store.isSwapExperienceEnabled || store.isSwapToZecExperienceEnabled)
+                    ? L10n.SwapAndPay.editSwap
+                    : L10n.SwapAndPay.editPayment
+                ) {
                     store.send(.editPaymentTapped)
                 }
                 .padding(.bottom, 24)

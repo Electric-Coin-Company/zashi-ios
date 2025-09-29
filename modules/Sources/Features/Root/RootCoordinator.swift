@@ -112,8 +112,11 @@ extension Root {
                 state.swapAndPayCoordFlowState = .initial
                 state.swapAndPayCoordFlowState.isSwapExperience = true
                 state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = true
+//                state.swapAndPayCoordFlowState.isSwapToZecExperience = true
+//                state.swapAndPayCoordFlowState.swapAndPayState.isSwapToZecExperienceEnabled = true
                 state.path = .swapAndPayCoordFlow
-                return .none
+                // whether to start on SwapToZEC or fromZEC
+                return .send(.swapAndPayCoordFlow(.swapAndPay(.enableSwapToZecExperience)))
 
             case .home(.payWithNearTapped):
                 state.swapAndPayCoordFlowState = .initial

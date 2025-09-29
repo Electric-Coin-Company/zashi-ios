@@ -73,7 +73,7 @@ extension Root {
                 
                 // Swaps From ZEC and CrossPays
                 let swapsFromZecAndCrossPays = allSwaps.filter {
-                    $0.fromAsset == "near.zec.zec"
+                    $0.fromAsset == SwapConstants.zecAssetIdOnNear
                 }
                 
                 swapsFromZecAndCrossPays.forEach { swap in
@@ -85,7 +85,7 @@ extension Root {
 
                 // Swaps To ZEC
                 let swapsToZec = allSwaps.filter {
-                    $0.toAsset == "near.zec.zec"
+                    $0.toAsset == SwapConstants.zecAssetIdOnNear
                 }
 
                 var mixedTransactions = transactions

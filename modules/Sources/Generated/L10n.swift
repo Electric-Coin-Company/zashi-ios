@@ -1478,6 +1478,8 @@ public enum L10n {
     public static let nearProvider = L10n.tr("Localizable", "swap.nearProvider", fallback: "near")
     /// We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.
     public static let quoteUnavailable = L10n.tr("Localizable", "swap.quoteUnavailable", fallback: "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.")
+    /// We tried but couldn’t get a quote for a swap with your parameters. You can try to adjust the slippage or try again later.
+    public static let quoteUnavailableSwap = L10n.tr("Localizable", "swap.quoteUnavailableSwap", fallback: "We tried but couldn’t get a quote for a swap with your parameters. You can try to adjust the slippage or try again later.")
   }
   public enum SwapAndPay {
     /// Address
@@ -1508,6 +1510,8 @@ public enum L10n {
     public static let customSlippage = L10n.tr("Localizable", "swapAndPay.customSlippage", fallback: "Enter custom slippage")
     /// Edit payment
     public static let editPayment = L10n.tr("Localizable", "swapAndPay.editPayment", fallback: "Edit payment")
+    /// Edit swap
+    public static let editSwap = L10n.tr("Localizable", "swapAndPay.editSwap", fallback: "Edit swap")
     /// Enter address...
     public static let enterAddress = L10n.tr("Localizable", "swapAndPay.enterAddress", fallback: "Enter address...")
     /// Realized slippage

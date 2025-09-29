@@ -9,12 +9,14 @@ import Foundation
 
 public enum SwapConstants {
     public static let pendingDeposit = "PENDING_DEPOSIT"
-    public static let incompleteDeposit = "INCOMPLETE_DEPPSIT"
+    public static let incompleteDeposit = "INCOMPLETE_DEPOSIT"
     public static let processing = "PROCESSING"
     public static let success = "SUCCESS"
     public static let failed = "FAILED"
     public static let refunded = "REFUNDED"
     public static let expired = "EXPIRED"
+    
+    public static let zecAssetIdOnNear = "near.zec.zec"
 }
 
 public struct UserMetadata: Codable {

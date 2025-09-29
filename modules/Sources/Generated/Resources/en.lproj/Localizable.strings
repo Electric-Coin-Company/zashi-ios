@@ -794,6 +794,7 @@
 "swapAndPay.canceltitle" = "Are you sure?";
 "swapAndPay.cancelMsg" = "If you leave this screen, all the information you entered will be lost.";
 "swapAndPay.cancelSwap" = "Cancel swap";
+"swapAndPay.editSwap" = "Edit swap";
 "swapAndPay.cancelDont" = "Don’t cancel";
 "swapAndPay.optIn.title" = "Swap or Pay with";
 "swapAndPay.optIn.desc" = "This feature is powered by a third-party NEAR API. Zashi needs to make networking calls to fetch rates, quotes, execute transactions and check their status in the transaction history which can leak your IP address. We recommend you to allow Tor connection to protect your IP address at all times.";
@@ -885,6 +886,7 @@
 "swapToZec.share.title" = "Swap Deposit Address";
 "swapToZec.share.msg" = "Deposit address for %@ %@ on Near swap to ZEC in Zashi.";
 "swap.quoteUnavailable" = "We tried but couldn’t get a quote for a payment with your parameters. You can try to adjust the slippage or try again later.";
+"swap.quoteUnavailableSwap" = "We tried but couldn’t get a quote for a swap with your parameters. You can try to adjust the slippage or try again later.";
 
 "general.copiedAmount" = "Copied amount";
 "general.copiedAddress" = "Copied %@";
