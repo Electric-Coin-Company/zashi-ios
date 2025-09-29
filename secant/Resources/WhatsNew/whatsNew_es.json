@@ -6,12 +6,13 @@
             "timestamp": 1759312704,
             "sections": [
                 {
-                    "title": "¡La función de swap a ZEC que todos estaban esperando!",
+                    "title": "¡La función de swap hacia ZEC que estaban esperando! Con el apoyo de Near Intents.",
                     "bulletpoints": [
                         "Usa Zashi para intercambiar cualquier criptomoneda compatible hacia Zcash.",
                         "Deposita fondos con cualquiera de tus billeteras favoritas.",
                         "Recibe ZEC en Zashi y protégelos.",
-                        "Con el apoyo de Near Intents."
+                        "Consulta las transacciones entrantes más rápido con la detección de mempool.",
+                        "Confirma tu cambio más rápido con 3 confirmaciones."
                     ]
                 }
             ]
