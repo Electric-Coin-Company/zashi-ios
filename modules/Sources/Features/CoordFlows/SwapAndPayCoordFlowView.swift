@@ -115,9 +115,7 @@ public struct SwapAndPayCoordFlowView: View {
             .zashiTitle {
                 HStack(spacing: 0) {
                     Text(
-                        store.isSwapToZecExperience
-                        ? L10n.SwapAndPay.swap.uppercased()
-                        : store.isSwapExperience
+                        store.isSwapHelpContent
                         ? L10n.SwapAndPay.swap.uppercased()
                         : L10n.Crosspay.title.uppercased()
                     )
@@ -130,7 +128,7 @@ public struct SwapAndPayCoordFlowView: View {
 //                            .zImage(width: 65, height: 16, style: Design.Text.primary)
 //                    }
                 }
-                .padding(.trailing, store.isSwapExperience ? 20 : 0)
+                .padding(.trailing, (store.isSwapExperience || store.isSwapToZecExperience) ? 20 : 0)
                 .frame(maxWidth: .infinity)
             }
         }

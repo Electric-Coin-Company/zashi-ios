@@ -721,10 +721,10 @@
 "receive.ua.rotateInfo" = "Rota cada vez que la usas";
 
 // MARK: - Swap and Pay
-"swapAndPay.title" = "Intercambiar o Pagar con";
+"swapAndPay.title" = "Swap o Pagar con";
 "sendSelect.zashi.send" = "Pagar en ZEC";
 "sendSelect.zashi.send.desc" = "Paga a cualquiera enviándole ZEC.";
-"sendSelect.swapWithNear" = "Intercambiar ZEC con NEAR Intents";
+"sendSelect.swapWithNear" = "Swap ZEC con NEAR Intents";
 "swapAndPay.selectToken" = "Seleccionar activo";
 "swapAndPay.enterAddress" = "Ingresar dirección...";
 "swapAndPay.select" = "Seleccionar...";
@@ -737,9 +737,9 @@
 "swapAndPay.quoteUnavailable" = "Cotización no disponible";
 "swapAndPay.cancelPayment" = "Cancelar pago";
 "swapAndPay.editPayment" = "Editar pago";
-"swapAndPay.swapNow" = "Intercambiar Ahora";
-"swapAndPay.swapFrom" = "Intercambiar de";
-"swapAndPay.swapTo" = "Intercambiar a";
+"swapAndPay.swapNow" = "Swap Ahora";
+"swapAndPay.swapFrom" = "Swap de";
+"swapAndPay.swapTo" = "Swap a";
 "swapAndPay.payNow" = "Pagar Ahora";
 "swapAndPay.payFrom" = "Pagar desde";
 "swapAndPay.payTo" = "Pagar a";
@@ -760,14 +760,14 @@
 "swapAndPay.from" = "De";
 "swapAndPay.max" = "Gastable: %@";
 "swapAndPay.to" = "A";
-"swapAndPay.swap" = "Intercambiar";
+"swapAndPay.swap" = "Swap";
 "swapAndPay.pay" = "Pagar";
 "swapAndPay.oneZecRate" = "1 ZEC = %@ %@";
 "swapAndPay.rate" = "Tasa";
 "swapAndPay.address" = "Dirección";
-"swapAndPay.help.swapWith" = "Intercambiar con";
+"swapAndPay.help.swapWith" = "Swap con";
 "swapAndPay.help.payWith" = "Pagar con";
-"swapAndPay.help.swapWithNear" = "Intercambiar con NEAR";
+"swapAndPay.help.swapWithNear" = "Swap con NEAR";
 "swapAndPay.help.payWithNear" = "Pagar con NEAR";
 "swapAndPay.help.swapDesc" = "Haz swap de ZEC con cualquier token compatible con NEAR.";
 "swapAndPay.help.swapDesc1" = "Si haces swap HACIA ZEC, enviarás fondos desde una wallet de terceros y deberás proporcionar una dirección donde se pueda reembolsar el cambio.";
@@ -781,7 +781,7 @@
 "swapAndPay.failureSwapInfo" = "Hubo un error al iniciar el intercambio. Inténtalo de nuevo, por favor.";
 "swapAndPay.failurePayInfo" = "Hubo un error al iniciar el pago entre cadenas. Inténtalo de nuevo, por favor.";
 "swapAndPay.checkStatus" = "Ver estado";
-"swapAndPay.custom" = "Personalizado";
+"swapAndPay.custom" = "Otro";
 "swapAndPay.status" = "Estado";
 "swapAndPay.status.pending" = "Pendiente";
 "swapAndPay.status.success" = "Completado";
@@ -796,7 +796,7 @@
 "swapAndPay.cancelSwap" = "Cancelar swap";
 "swapAndPay.editSwap" = "Editar swap";
 "swapAndPay.cancelDont" = "No cancelar";
-"swapAndPay.optIn.title" = "Intercambiar o Pagar con";
+"swapAndPay.optIn.title" = "Swap o Pagar con";
 "swapAndPay.optIn.desc" = "Esta función es provista por una API de terceros de NEAR. Zashi necesita hacer llamadas de red para obtener tasas, cotizaciones, ejecutar transacciones y revisar su estado en el historial de transacciones, lo cual puede exponer tu dirección IP. Te recomendamos permitir la conexión por Tor para proteger tu dirección IP en todo momento.";
 "swapAndPay.optIn.optionOneTitle" = "Permitir solicitudes de terceros";
 "swapAndPay.optIn.optionOneSubtitle" = "Habilitar llamadas API a la API de NEAR.";
@@ -824,7 +824,7 @@
 
 "general.more" = "Más";
 "general.less" = "Menos";
-"filter.swap" = "intercambios";
+"filter.swap" = "Swaps";
 "transactionHistory.timestamp" = "Marca de tiempo";
 
 // CrossPay
@@ -845,7 +845,7 @@
     "crosspay.sendZecDesc" = "Use shielded ZEC to send private Zcash payments.";
     "crosspay.sendPayDesc" = "Use shielded ZEC to send cross-chain payments.";
 "balances.infoPending" = "Pendiente de recibir el cambio de una transacción anterior.";
-"keystone.confirmSwap" = "Intercambiar con Keystone";
+"keystone.confirmSwap" = "Swap con Keystone";
 "keystone.confirmPay" = "Pagar with Keystone";
 "crosspay.help.payWith" = "CrossPay con";
 "send.resubmission" = "Problema de Conexión";
