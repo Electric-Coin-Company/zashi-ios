@@ -39,7 +39,7 @@ public struct TransactionRowView: View {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ZStack {
-                        transationIcon()
+                        transaction.transationIcon
                             .zImage(size: 20, color: transaction.iconColor(colorScheme))
                             .background {
                                 Circle()
@@ -68,18 +68,6 @@ public struct TransactionRowView: View {
                                         .frame(width: 14, height: 14)
                                 }
                                 .offset(x: 9, y: 11)
-                        }
-                        
-                        if isSwap {
-                            Asset.Assets.Tickers.nearChain.image
-                                .zImage(size: 20, color: Design.screenBackground.color(colorScheme))
-                                .offset(x: 9, y: 12)
-                                .overlay {
-                                    Asset.Assets.Tickers.nearChain.image
-                                        .resizable()
-                                        .frame(width: 18, height: 18)
-                                        .offset(x: 9, y: 12)
-                                }
                         }
                     }
 
@@ -117,20 +105,15 @@ public struct TransactionRowView: View {
         }
     }
 
-    func transationIcon() -> Image {
-        if transaction.isShieldingTransaction {
-            return Asset.Assets.Icons.switchHorizontal.image
-        } else if transaction.isSentTransaction {
-            return Asset.Assets.Icons.sent.image
-        } else {
-            return Asset.Assets.Icons.received.image
-        }
-    }
-
     @ViewBuilder private func balanceView() -> some View {
         Group {
             if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMost)
+            } else if let swapToZecAmount = transaction.swapToZecAmount {
+                if !swapToZecAmount.isEmpty {
+                    Text(swapToZecAmount)
+                    + Text(" \(tokenName)")
+                }
             } else {
                 Text(transaction.isSpending ? "- " : "")
                 + Text(transaction.netValue)

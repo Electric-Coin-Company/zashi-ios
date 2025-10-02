@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import ZcashSDKEnvironment
 import Utils
+import SwiftUI
 
 import Models
 import BalanceBreakdown
@@ -19,6 +20,11 @@ import SwapAndPay
 import AddressBookClient
 import WalletStorage
 import UserMetadataProvider
+import UserPreferencesStorage
+import BigDecimal
+import Pasteboard
+import UIComponents
+import Generated
 
 @Reducer
 public struct SwapAndPay {
@@ -26,26 +32,35 @@ public struct SwapAndPay {
     public struct State {
         public var SwapAssetsCancelId = UUID()
         public var ABCancelId = UUID()
+        public var QRCancelId = UUID()
 
         public var address = ""
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var amountAssetText = ""
+        public var amountUsdText = ""
         public var amountText = ""
         public var assetSelectBinding = false
         public var balancesBinding = false
         public var balancesState = Balances.State.initial
         public var chain: String?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var customSlippage = ""
         public var isAddressBookHintVisible = false
         public var isCancelSheetVisible = false
+        public var isCurrencyConversionEnabled = false
         public var isInputInUsd = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
         public var isQuoteRequestInFlight = false
         public var isQuotePresented = false
+        public var isQuoteToZecPresented = false
         public var isQuoteUnavailablePresented = false
+        public var isRefundAddressExplainerEnabled = false
         public var isSlippagePresented = false
         public var isSwapCanceled = false
         public var isSwapExperienceEnabled = true
+        public var isSwapToZecExperienceEnabled = false
+        public var keyboardDismissCounter = 0
         public var optionOneChecked = false
         public var optionTwoChecked = false
         public var selectedContact: Contact?
@@ -63,12 +78,21 @@ public struct SwapAndPay {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+        public var swapAssetFailedCounter = 0
         public var swapAssetFailedWithRetry: Bool? = nil
         public var swapAssetsToPresent: IdentifiedArrayOf<SwapAsset> = []
         public var token: String?
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAsset: SwapAsset?
+
+        // Swap to ZEC
+        public var addressToShare: RedactableString?
+        public var isAddressExpanded = false
+        public var isQRCodeAppreanceFlipped = false
+        public var storedQR: CGImage?
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
         public var isValidForm: Bool {
             selectedAsset != nil
@@ -78,6 +102,12 @@ public struct SwapAndPay {
         }
         
         public var isInsufficientFunds: Bool {
+            guard !isSwapToZecExperienceEnabled else { return false }
+
+            guard !amountText.isEmpty else {
+                return false
+            }
+            
             guard let selectedAsset else {
                 return false
             }
@@ -99,6 +129,25 @@ public struct SwapAndPay {
                 return (amount / zecAsset.usdPrice) > spendableZec
             }
         }
+        
+        public var isCrossPayInsufficientFunds: Bool {
+            guard !amountText.isEmpty else {
+                return false
+            }
+
+            guard let selectedAsset else {
+                return false
+            }
+            
+            guard let zecAsset else {
+                return false
+            }
+
+            let spendableZec = walletBalancesState.shieldedBalance.decimalValue.decimalValue
+            let amountInToken = (assetAmount * selectedAsset.usdPrice) / zecAsset.usdPrice
+            
+            return amountInToken >= spendableZec
+        }
 
         public var isCustomSlippageFieldVisible: Bool {
             slippageInSheet >= 40.0
@@ -116,6 +165,30 @@ public struct SwapAndPay {
             } else {
                 return 0.0
             }
+        }
+        
+        public var assetAmount: Decimal {
+            if !_XCTIsTesting {
+                @Dependency(\.numberFormatter) var numberFormatter
+
+                return numberFormatter.number(amountAssetText)?.decimalValue ?? 0.0
+            } else {
+                return 0.0
+            }
+        }
+
+        public var usdAmount: Decimal {
+            if !_XCTIsTesting {
+                @Dependency(\.numberFormatter) var numberFormatter
+
+                return numberFormatter.number(amountUsdText)?.decimalValue ?? 0.0
+            } else {
+                return 0.0
+            }
+        }
+        
+        public var shareAssetName: String {
+            selectedAsset?.token ?? ""
         }
     }
 
@@ -137,6 +210,7 @@ public struct SwapAndPay {
         case editPaymentTapped
         case enableSwapExperience
         case eraseSearchTermTapped
+        case exchangeRateSetupChanged
         case getQuoteTapped
         case helpSheetRequested(Int)
         case internalBackButtonTapped
@@ -177,14 +251,34 @@ public struct SwapAndPay {
         case notInAddressBookButtonTapped(String)
         case selectedContactClearTapped
         case selectedContactUpdated
+        
+        // crosspay
+        case backFromConfirmationTapped
+        case crossPayConfirmationRequired
+        
+        // swap into zec
+        case confirmToZecButtonTapped
+        case copyDepositAddressToPastboard
+        case copySwapToZecAmountTapped
+        case enableSwapToZecExperience
+        case generateQRCode(Bool)
+        case qrCodeTapped
+        case refundAddressCloseTapped
+        case refundAddressTapped
+        case rememberQR(CGImage?)
+        case sentTheFundsButtonTapped
+        case shareFinished
+        case shareQR
     }
 
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.userMetadataProvider) var userMetadataProvider
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -203,9 +297,11 @@ public struct SwapAndPay {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.isQuoteRequestInFlight = false
                 return .merge(
                     .send(.walletBalances(.onAppear)),
-                    .send(.refreshSwapAssets)
+                    .send(.refreshSwapAssets),
+                    .send(.exchangeRateSetupChanged)
                 )
 
             case .binding(\.customSlippage):
@@ -227,7 +323,8 @@ public struct SwapAndPay {
             case .onDisappear:
                 return .merge(
                     .cancel(id: state.SwapAssetsCancelId),
-                    .cancel(id: state.ABCancelId)
+                    .cancel(id: state.ABCancelId),
+                    .cancel(id: state.QRCancelId)
                 )
                 
             case .willEnterForeground:
@@ -237,6 +334,36 @@ public struct SwapAndPay {
                 }
                 return .none
                 
+            case .walletBalances(.availableBalanceTapped):
+                state.balancesBinding = true
+                return .none
+
+            case .exchangeRateSetupChanged:
+                if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
+                    state.isCurrencyConversionEnabled = true
+                } else {
+                    state.isCurrencyConversionEnabled = false
+                }
+                return .none
+                
+            case .balances(.dismissTapped):
+                state.balancesBinding = false
+                return .none
+                
+            case .balances(.shieldFundsTapped):
+                state.balancesBinding = false
+                return .none
+                
+            case .balances(.everythingSpendable):
+                if state.balancesBinding {
+                    state.balancesBinding = false
+                }
+                return .none
+                
+            case .balances(.sheetHeightUpdated(let value)):
+                state.sheetHeight = value
+                return .none
+
             case .trySwapsAssetsAgainTapped:
                 return .send(.refreshSwapAssets)
 
@@ -285,9 +412,20 @@ public struct SwapAndPay {
                 .cancellable(id: state.SwapAssetsCancelId, cancelInFlight: true)
                 
             case .swapAssetsFailedWithRetry(let retry):
+                if state.swapAssetFailedCounter < 3 {
+                    state.swapAssetFailedCounter += 1
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(5))
+                        await send(.refreshSwapAssets)
+                    }
+                }
                 state.swapAssetFailedWithRetry = retry
                 return .none
 
+            case .enableSwapToZecExperience:
+                state.isSwapToZecExperienceEnabled.toggle()
+                return .send(.enableSwapExperience)
+                
             case .enableSwapExperience:
                 state.isSwapExperienceEnabled.toggle()
                 if !state.isInputInUsd {
@@ -308,7 +446,7 @@ public struct SwapAndPay {
                     }
                 }
                 return .none
-            
+
             case .cancelPaymentTapped:
                 state.isQuoteUnavailablePresented = false
                 return .none
@@ -319,10 +457,7 @@ public struct SwapAndPay {
 
             case .scanTapped:
                 return .none
-                
-            case .binding:
-                return .none
-                
+
             case .updateAssetsAccordingToSearchTerm:
                 // all received assets
                 var swapAssets = state.swapAssets
@@ -348,6 +483,15 @@ public struct SwapAndPay {
             case .assetTapped(let asset):
                 state.selectedAsset = asset
                 state.assetSelectBinding = false
+                if !state.isSwapExperienceEnabled && !state.amountAssetText.isEmpty {
+                    // when the asset changes, the values must recompute, triggering the recompute
+                    let helper = state.amountAssetText
+                    state.amountAssetText = ""
+                    state.amountAssetText = helper
+                    state.amountUsdText = state.payUsdLabel
+                    state.amountText = state.payAssetLabel
+                    state.amountAssetText = state.payAssetLabel
+                }
                 return .none
 
             case .switchInputTapped:
@@ -390,6 +534,7 @@ public struct SwapAndPay {
             case .assetSelectRequested:
                 state.searchTerm = ""
                 state.assetSelectBinding = true
+                state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .send(.updateAssetsAccordingToSearchTerm)
                 
             case .slippageChipTapped(let index):
@@ -450,15 +595,24 @@ public struct SwapAndPay {
                     return .none
                 }
 
-                let exactInput = state.isSwapExperienceEnabled
+                let isSwapToZec = state.isSwapToZecExperienceEnabled
+                let exactInput = state.isSwapToZecExperienceEnabled ? true : state.isSwapExperienceEnabled
                 let slippageTolerance = NSDecimalNumber(decimal: (state.slippage * 100.0)).intValue
                 let destination = state.address
                 let zecAmountInt = NSDecimalNumber(decimal: zecAmountDecimal)
                     .multiplying(by: NSDecimalNumber(value: Zatoshi.Constants.oneZecInZatoshi)).int64Value
                 var amountString = String(zecAmountInt)
                 if !state.isSwapExperienceEnabled {
-                    let tokenAmountInt = NSDecimalNumber(decimal: (tokenAmountDecimal * Decimal(pow(10.0, Double(toAsset.decimals))))).int64Value
-                    amountString = String(tokenAmountInt)
+                    var bigTokenAmountDecimal = BigDecimal(tokenAmountDecimal)
+                    if let tokenAmountUsdDecimal = numberFormatter.number(state.secondaryLabelTo)?.decimalValue, state.isInputInUsd {
+                        bigTokenAmountDecimal = BigDecimal(tokenAmountUsdDecimal)
+                    }
+                    let pow10 = BigDecimal(pow(10.0, Double(toAsset.decimals)))
+                    let bigTokenAmount = bigTokenAmountDecimal * pow10
+                    amountString = bigTokenAmount.asString(.plain)
+                    if let first = amountString.split(separator: ".").first {
+                        amountString = String(first)
+                    }
                 }
                 state.isQuoteRequestInFlight = true
                 state.quoteRequestedTime = Date().timeIntervalSince1970
@@ -466,6 +620,7 @@ public struct SwapAndPay {
                     do {
                         let swapQuote = try await swapAndPay.quote(
                             false,
+                            isSwapToZec,
                             exactInput,
                             slippageTolerance,
                             zecAsset,
@@ -489,6 +644,11 @@ public struct SwapAndPay {
                     return .none
                 }
                 state.quote = quote
+                if state.isSwapToZecExperienceEnabled {
+                    state.isQuoteToZecPresented = true
+                    state.isQuoteRequestInFlight = false
+                    return .none
+                }
                 let zecAmount = Zatoshi(NSDecimalNumber(decimal: quote.amountIn).int64Value)
                 return .run { send in
                     do {
@@ -509,6 +669,9 @@ public struct SwapAndPay {
                 state.proposal = proposal
                 if !state.isCancelSheetVisible {
                     state.isQuotePresented = true
+//                    if !state.isSwapExperienceEnabled {
+//                        return .send(.crossPayConfirmationRequired)
+//                    }
                 }
                 state.isQuoteRequestInFlight = false
                 return .none
@@ -554,6 +717,7 @@ public struct SwapAndPay {
                 
             case .swapAssetsLoaded(let swapAssets):
                 state.swapAssetFailedWithRetry = nil
+                state.swapAssetFailedCounter = 0
                 state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
                 if state.selectedAsset == nil && state.selectedContact == nil {
                     if let lastUsedAssetId = userMetadataProvider.lastUsedAssetHistory().first {
@@ -561,14 +725,15 @@ public struct SwapAndPay {
                     }
 
                     if state.selectedAsset == nil {
-                        state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == "near" }
+                        state.selectedAsset = swapAssets.first { $0.token.lowercased() == "usdc" && $0.chain.lowercased() == L10n.Swap.nearProvider }
                     }
                 }
 
                 // exclude all tokens with price == 0
                 // exclude zec token
-                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
-                
+//                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
+                var filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
+
                 // history assets
                 let historyAssetIds = userMetadataProvider.lastUsedAssetHistory()
                 var historyAssets: IdentifiedArrayOf<SwapAsset> = []
@@ -627,6 +792,7 @@ public struct SwapAndPay {
                 return .none
 
             case .addressBookTapped:
+                state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .none
 
             case .addressBookContactSelected(let address):
@@ -696,6 +862,123 @@ public struct SwapAndPay {
             case .confirmWithKeystoneTapped:
                 state.isQuotePresented = false
                 return .none
+                
+                // MARK: - CrossPay
+
+            case .binding(\.amountAssetText):
+                if !state.amountAssetText.isEmpty {
+                    state.amountUsdText = state.payUsdLabel
+                    state.amountText = state.payAssetLabel
+                }
+                return .none
+
+            case .binding(\.amountUsdText):
+                if !state.amountUsdText.isEmpty {
+                    state.amountAssetText = state.payAssetLabel
+                    state.amountText = state.payAssetLabel
+                }
+                return .none
+
+            case .crossPayConfirmationRequired:
+                return .none
+                
+            case .backFromConfirmationTapped:
+                state.isQuoteRequestInFlight = false
+                return .none
+
+            case .binding:
+                return .none
+                
+                // MARK: - Swap into Zec
+                
+            case .confirmToZecButtonTapped:
+                state.isQuoteToZecPresented = false
+                return .none
+
+            case .copySwapToZecAmountTapped:
+                guard let quote = state.quote else {
+                    return .none
+                }
+                pasteboard.setString("\(quote.amountIn)".redacted)
+                state.$toast.withLock { $0 = .top(L10n.General.copiedAmount) }
+                return .none
+
+            case .qrCodeTapped:
+                guard state.storedQR != nil else {
+                    return .none
+                }
+                state.isQRCodeAppreanceFlipped.toggle()
+                return .send(.generateQRCode(true))
+
+            case let .rememberQR(image):
+                state.storedQR = image
+                return .none
+
+            case .copyDepositAddressToPastboard:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                pasteboard.setString(depositAddress.redacted)
+                state.$toast.withLock { $0 = .topDelayed(L10n.General.copiedAddress(depositAddress.truncateMiddle10)) }
+                return .none
+
+            case .generateQRCode:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                return .publisher {
+                    QRCodeGenerator.generate(
+                        from: depositAddress,
+                        vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+                        color: state.isQRCodeAppreanceFlipped
+                        ? .black
+                        : Asset.Colors.primary.systemColor,
+                        overlayedWithZcashLogo: false
+                    )
+                    .map(Action.rememberQR)
+                }
+                .cancellable(id: state.QRCancelId)
+
+            case .shareFinished:
+                state.addressToShare = nil
+                return .none
+                
+            case .shareQR:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                state.addressToShare = depositAddress.redacted
+                return .none
+                
+            case .sentTheFundsButtonTapped:
+                guard let depositAddress = state.quote?.depositAddress else {
+                    return .none
+                }
+                if let provider = state.zecAsset?.provider {
+                    userMetadataProvider.markTransactionAsSwapFor(
+                        depositAddress,
+                        provider,
+                        0,
+                        "",
+                        state.selectedAsset?.id ?? "",
+                        state.zecAsset?.id ?? "",
+                        true,
+                        SwapConstants.pendingDeposit,
+                        state.tokenToBeReceivedInSwapToZecQuote
+                    )
+                    if let account = state.selectedWalletAccount?.account {
+                        try? userMetadataProvider.store(account)
+                    }
+                }
+                return .none
+                
+            case .refundAddressTapped:
+                state.isRefundAddressExplainerEnabled.toggle()
+                return .none
+                
+            case .refundAddressCloseTapped:
+                state.isRefundAddressExplainerEnabled = false
+                return .none
             }
         }
     }
@@ -704,6 +987,10 @@ public struct SwapAndPay {
 // MARK: - Conversion Logic
 
 extension SwapAndPay.State {
+    public var zeroPlaceholder: String {
+        return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
+    }
+    
     public var primaryLabelFrom: String {
         guard let zecAsset else {
             return conversionFormatter.string(from: NSNumber(value: 0.0)) ?? "0.00"
@@ -1089,6 +1376,62 @@ extension SwapAndPay.State {
     }
 }
 
+// MARK: - CrossPay
+
+extension SwapAndPay.State {
+    public var payZecLabel: String {
+        guard let zecAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+        
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInToken = (assetAmount * selectedAsset.usdPrice) / zecAsset.usdPrice
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInToken.simplified)) ?? "\(amountInToken.simplified)"
+    }
+    
+    public var payAssetLabel: String {
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInToken = usdAmount / selectedAsset.usdPrice
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInToken.simplified)) ?? "\(amountInToken.simplified)"
+    }
+    
+    public var payUsdLabel: String {
+        guard let selectedAsset else {
+            return conversionCrossPayFormatter.string(from: NSNumber(value: 0.0)) ?? "0"
+        }
+
+        let amountInUsd = assetAmount * selectedAsset.usdPrice
+        return conversionCrossPayFormatter.string(from: NSDecimalNumber(decimal: amountInUsd)) ?? "0"
+    }
+}
+
+// MARK: Swap to ZEC
+
+extension SwapAndPay.State {
+    public var tokenToBeReceivedInSwapToZecQuote: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return "\(quote.amountOut)"
+    }
+    
+    public var zecToBeSpendInQuoteUSFormat: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        let amount = quote.amountIn / Decimal(Zatoshi.Constants.oneZecInZatoshi)
+        return "\(amount)"
+    }
+}
+
 // MARK: - String Representations
 
 extension SwapAndPay.State {
@@ -1178,6 +1521,66 @@ extension SwapAndPay.State {
     }
 }
 
+// MARK: - Quote Swap To Zec
+
+extension SwapAndPay.State {
+    public var swapToZecAmountInQuote: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: quote.amountIn.simplified)) ?? "\(quote.amountIn.simplified)"
+    }
+    
+    public var swapToZecAmountInQuotePreciseCopy: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return precisionConversionFormatter.string(from: NSDecimalNumber(decimal: quote.amountIn)) ?? "\(quote.amountIn)"
+    }
+
+    public var swapToZecAmountInUsdQuote: String {
+        guard let quote else {
+            return "0"
+        }
+        
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: quote.amountIn.simplified)) ?? "\(quote.amountIn.simplified)"
+    }
+    
+    public var swapToZecTotalFees: String {
+        guard let quote else {
+            return "0"
+        }
+
+        // zashi fee
+        let zashiFee = quote.amountIn * 0.005
+
+        return conversionFormatter.string(from: NSDecimalNumber(decimal: zashiFee.simplified)) ?? "\(zashiFee.simplified)"
+    }
+    
+    public var swapToZecQuoteSlippageUsdStr: String {
+        guard let quote else {
+            return "0"
+        }
+
+        guard let zecAsset else {
+            return "0"
+        }
+
+        let slippageAmount = quote.amountOut * slippage * 0.01 * zecAsset.usdPrice
+        
+        if slippageAmount < 0.01 {
+            let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
+                .precision(.fractionLength(4))
+            
+            return NSDecimalNumber(decimal: slippageAmount).doubleValue.formatted(formatter)
+        } else {
+            return slippageAmount.formatted(.currency(code: CurrencyISO4217.usd.code))
+        }
+    }
+}
+
 // MARK: - Formatters
 
 extension SwapAndPay.State {
@@ -1212,11 +1615,33 @@ extension SwapAndPay.State {
         return formatter
     }
 
+    public var conversionCrossPayFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+
     public var slippageFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    public var precisionConversionFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 32
+        formatter.usesGroupingSeparator = false
         formatter.locale = Locale.current
         
         return formatter

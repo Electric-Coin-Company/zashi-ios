@@ -94,6 +94,7 @@ public struct RestoreWalletCoordFlow {
             case .selectedIndex(let index):
                 state.selectedIndex = index
                 state.nextIndex = state.selectedIndex
+                //print("__LD selectedIndex \(index) \(state.nextIndex)")
                 if let index {
                     return .send(.suggestionsRequested(index))
                 }
@@ -115,6 +116,7 @@ public struct RestoreWalletCoordFlow {
                     if !state.isValidSeed && state.selectedIndex != 23 {
                         state.prevWords = state.words
                         state.nextIndex = index + 1 < 24 ? index + 1 : 0
+                        //print("__LD suggestedWordTapped \(state.nextIndex)")
                     }
                     return .send(.evaluateSeedValidity)
                 }
@@ -136,6 +138,7 @@ public struct RestoreWalletCoordFlow {
                         if let first = state.suggestedWords.first, first == prefix && !state.isValidSeed && state.suggestedWords.count == 1 {
                             state.prevWords = state.words
                             state.nextIndex = index + 1 < 24 ? index + 1 : 0
+                            //print("__LD evaluateSeedValidity \(state.nextIndex)")
                         }
                     }
                 }

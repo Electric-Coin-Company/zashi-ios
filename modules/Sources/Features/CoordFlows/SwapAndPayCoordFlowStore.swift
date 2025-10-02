@@ -33,6 +33,7 @@ public struct SwapAndPayCoordFlow {
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
         case confirmWithKeystone(SendConfirmation)
+        case crossPayConfirmation(SwapAndPay)
         case preSendingFailure(SendConfirmation)
         case scan(Scan)
         case sending(SendConfirmation)
@@ -41,6 +42,7 @@ public struct SwapAndPayCoordFlow {
         case sendResultSuccess(SendConfirmation)
         case swapAndPayForm(SwapAndPay)
         case swapAndPayOptInForced(SwapAndPay)
+        case swapToZecSummary(SwapAndPay)
         case transactionDetails(TransactionDetails)
     }
     
@@ -57,6 +59,7 @@ public struct SwapAndPayCoordFlow {
         public var failedPcztMsg: String?
         public var isHelpSheetPresented = false
         public var isSwapExperience = true
+        public var isSwapToZecExperience = false
         public var path = StackState<Path.State>()
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -70,6 +73,14 @@ public struct SwapAndPayCoordFlow {
             swapAndPayState.isQuoteRequestInFlight
         }
         
+        public var isSwapHelpContent: Bool {
+            isSwapExperience || swapAndPayState.isSwapToZecExperienceEnabled
+        }
+
+        public var isSensitiveButtonVisible: Bool {
+            !swapAndPayState.isSwapToZecExperienceEnabled
+        }
+
         public init() { }
     }
 
@@ -118,7 +129,8 @@ public struct SwapAndPayCoordFlow {
             case .onAppear:
                 return .none
 
-            case .helpSheetRequested:
+            case .helpSheetRequested,
+                    .path(.element(id: _, action: .swapToZecSummary(.helpSheetRequested))):
                 state.isHelpSheetPresented.toggle()
                 return .none
 

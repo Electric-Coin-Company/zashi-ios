@@ -39,8 +39,20 @@ extension TransactionDetailsView {
         ZStack {
             HStack(spacing: 8) {
                 VStack(spacing: 4) {
-                    HStack(spacing: 0) {
+//                    HStack(spacing: 0) {
                         if let swapAmountIn = store.swapAmountIn {
+                            if !store.transaction.isSwapToZec {
+                                zecTickerLogo(colorScheme)
+                                    .scaleEffect(0.8)
+                            } else {
+                                if let swapFromAsset = store.swapFromAsset {
+                                    tokenTicker(asset: swapFromAsset, colorScheme)
+                                        .scaleEffect(0.8)
+                                } else {
+                                    unknownTickerLogo(colorScheme)
+                                }
+                            }
+
                             Text(
                                 store.isSensitiveContentHidden
                                 ? L10n.General.hideBalancesMost
@@ -50,15 +62,12 @@ extension TransactionDetailsView {
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
                             .frame(height: 18)
-
-                            zecTickerLogo(colorScheme)
-                                .scaleEffect(0.8)
                         } else {
-                            unknownValue()
-
                             unknownTickerLogo(colorScheme)
+
+                            unknownValue()
                         }
-                    }
+//                    }
                     
                     if let swapAmountInUsd = store.swapAmountInUsd {
                         Text(
@@ -74,15 +83,28 @@ extension TransactionDetailsView {
                         unknownValue()
                     }
                 }
-                .padding(16)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
                 
                 VStack(spacing: 4) {
-                    HStack(spacing: 2) {
+                    if store.transaction.isSwapToZec {
+                        zecTickerLogo(colorScheme, shield: false)
+                            .scaleEffect(0.8)
+                    } else {
+                        if let swapToAsset = store.swapToAsset {
+                            tokenTicker(asset: swapToAsset, colorScheme)
+                                .scaleEffect(0.8)
+                        } else {
+                            unknownTickerLogo(colorScheme)
+                        }
+                    }
+                    
+//                    HStack(spacing: 2) {
                         if let swapAmountOut = store.swapAmountOut {
                             Text(
                                 store.isSensitiveContentHidden
@@ -96,14 +118,7 @@ extension TransactionDetailsView {
                         } else {
                             unknownValue()
                         }
-
-                        if let swapDestinationAsset = store.swapDestinationAsset {
-                            tokenTicker(asset: swapDestinationAsset, colorScheme)
-                                .scaleEffect(0.8)
-                        } else {
-                            unknownTickerLogo(colorScheme)
-                        }
-                    }
+//                    }
                     
                     if let swapAmountOutUsd = store.swapAmountOutUsd {
                         Text(
@@ -119,10 +134,11 @@ extension TransactionDetailsView {
                         unknownValue()
                     }
                 }
-                .padding(16)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    RoundedRectangle(cornerRadius: Design.Radius._3xl)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
             }
@@ -154,19 +170,26 @@ extension TransactionDetailsView {
         }
     }
     
-    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func zecTickerLogo(_ colorScheme: ColorScheme, shield: Bool = true) -> some View {
         Asset.Assets.Brandmarks.brandmarkMax.image
             .zImage(size: 24, style: Design.Text.primary)
             .padding(.trailing, 12)
             .overlay {
-                Asset.Assets.Icons.shieldBcg.image
-                    .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
-                    .offset(x: 4, y: 8)
-                    .overlay {
-                        Asset.Assets.Icons.shieldTickFilled.image
-                            .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
-                            .offset(x: 4, y: 8)
-                    }
+                if shield {
+                    Asset.Assets.Icons.shieldBcg.image
+                        .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
+                        .offset(x: 4, y: 8)
+                        .overlay {
+                            Asset.Assets.Icons.shieldTickFilled.image
+                                .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
+                                .offset(x: 4, y: 8)
+                        }
+                } else {
+                    Asset.Assets.Icons.shieldOffSolid.image
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                        .offset(x: 4, y: 8)
+                }
             }
     }
     
@@ -196,5 +219,26 @@ extension TransactionDetailsView {
             .fill(Design.Surfaces.bgTertiary.color(colorScheme))
             .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
             .frame(width: 44, height: 18)
+    }
+    
+    @ViewBuilder func unknownAmount() -> some View {
+        RoundedRectangle(cornerRadius: Design.Radius._xl)
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._xl))
+            .frame(width: 178, height: 44)
+    }
+    
+    @ViewBuilder func unknownAsset() -> some View {
+        Circle()
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(Circle())
+            .frame(width: 48, height: 48)
+    }
+    
+    @ViewBuilder func unknownTitle() -> some View {
+        RoundedRectangle(cornerRadius: Design.Radius._sm)
+            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+            .frame(width: 120, height: 28)
     }
 }

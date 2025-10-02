@@ -29,6 +29,8 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         case "op": return "Optimism"
         case "pol": return "Polygon"
         case "ada": return "Cardano"
+        case "xlm": return "Stellar"
+        case "aptos": return "Aptos"
         default: return chain.capitalized
         }
     }

@@ -13,8 +13,9 @@ public struct Toast: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
     
     public enum Edge: Equatable {
-        case top(String)
         case bottom(String)
+        case top(String)
+        case topDelayed(String)
     }
     
     @Shared(.inMemory(.toast)) public var toast: Edge? = nil
@@ -23,6 +24,7 @@ public struct Toast: ViewModifier {
     @State private var edgeOffset: CGFloat = 20
     @State private var opacity: CGFloat = 0
     @State var top = false
+    @State var delay = 1.0
 
     public func body(content: Content) -> some View {
         ZStack(alignment: .top) {
@@ -58,13 +60,13 @@ public struct Toast: ViewModifier {
                         edgeOffset = 50
                         opacity = 1
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (delay + 0.25)) {
                         withAnimation(.easeOut(duration: 0.25)) {
                             edgeOffset = 20
                             opacity = 0
                         }
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (delay + 0.5)) {
                         $toast.withLock { $0 = nil }
                         self.message = nil
                     }
@@ -75,12 +77,18 @@ public struct Toast: ViewModifier {
             guard message == nil else { return }
             
             switch value {
-            case .top(let msg):
-                message = msg
-                top = true
             case .bottom(let msg):
                 message = msg
                 top = false
+                delay = 1.0
+            case .top(let msg):
+                message = msg
+                top = true
+                delay = 1.0
+            case .topDelayed(let msg):
+                message = msg
+                top = true
+                delay = 3.0
             case .none: break
             }
         }

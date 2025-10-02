@@ -11,6 +11,7 @@ import Foundation
 import ZcashLightClientKit
 import Generated
 import Models
+import UserMetadataProvider
 
 extension Root {
     public func transactionsReduce() -> Reduce<Root.State, Root.Action> {
@@ -64,16 +65,55 @@ extension Root {
                     }
                 }
                 
-            case .fetchedTransactions(let transactions):
+            case .fetchedTransactions(var transactions):
                 let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
+
+                // Resolve Swaps
+                let allSwaps = userMetadataProvider.allSwaps()
                 
-                let sortedTransactions = transactions
+                // Swaps From ZEC and CrossPays
+                let swapsFromZecAndCrossPays = allSwaps.filter {
+                    $0.fromAsset == SwapConstants.zecAssetIdOnNear
+                }
+                
+                swapsFromZecAndCrossPays.forEach { swap in
+                    if let transaction = transactions.filter({ $0.zAddress == swap.depositAddress }).first {
+                        transactions[id: transaction.id]?.type = swap.exactInput ? .swapFromZec : .crossPay
+                        transactions[id: transaction.id]?.swapStatus = swap.swapStatus
+                    }
+                }
+
+                // Swaps To ZEC
+                let swapsToZec = allSwaps.filter {
+                    $0.toAsset == SwapConstants.zecAssetIdOnNear
+                }
+
+                var mixedTransactions = transactions
+
+                swapsToZec.forEach { swap in
+                    mixedTransactions.append(
+                        TransactionState(
+                            depositAddress: swap.depositAddress,
+                            timestamp: TimeInterval(swap.lastUpdated / 1000),
+                            zecAmount: swap.amountOutFormatted.localeString ?? swap.amountOutFormatted,
+                            swapStatus: swap.swapStatus
+                        )
+                    )
+                }
+
+                // Sort all transactions
+                let sortedTransactions = mixedTransactions
                     .sorted { lhs, rhs in
-                        lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
+                        if let lhsTimestamp = lhs.timestamp, let rhsTimestamp = rhs.timestamp {
+                            return lhsTimestamp > rhsTimestamp
+                        } else {
+                            return lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
+                        }
                     }
                 
                 let identifiedArray = IdentifiedArrayOf<TransactionState>(uniqueElements: sortedTransactions)
                 
+                // Update transactions
                 if state.transactions != identifiedArray {
                     state.$transactions.withLock {
                         $0 = identifiedArray

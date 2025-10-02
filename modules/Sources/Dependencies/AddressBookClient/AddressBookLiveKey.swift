@@ -46,6 +46,23 @@ extension AddressBookClient: DependencyKey {
         @Dependency(\.remoteStorage) var remoteStorage
 
         return Self(
+            resetAccount: { account in
+                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    throw AddressBookClientError.documentsFolder
+                }
+
+                let filenameForEncryptedFile = try filenameForEncryptedFile(account: account)
+                let fileURL = documentsDirectory.appendingPathComponent(filenameForEncryptedFile)
+
+                try FileManager.default.removeItem(at: fileURL)
+
+                @Dependency(\.remoteStorage) var remoteStorage
+
+                // try to remove the remote as well
+                try? remoteStorage.removeFile(filenameForEncryptedFile)
+                
+                latestKnownContacts = nil
+            },
             allLocalContacts: { account in
                 // return latest known contacts or load ones for the first time
                 guard latestKnownContacts == nil else {

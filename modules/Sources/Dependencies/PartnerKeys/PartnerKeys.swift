@@ -12,18 +12,23 @@ public struct PartnerKeys {
         static let cbProjectId = "cbProjectId"
         static let flexaPublishableKey = "flexaPublishableKey"
         static let flexaPublishableTestKey = "flexaPublishableTestKey"
+        static let nearKey = "nearKey"
     }
-
+    
     public static var cbProjectId: String? {
         PartnerKeys.value(for: Constants.cbProjectId)
     }
-
+    
     public static var flexaPublishableKey: String? {
         PartnerKeys.value(for: Constants.flexaPublishableKey)
     }
-
+    
     public static var flexaPublishableTestKey: String? {
         PartnerKeys.value(for: Constants.flexaPublishableTestKey)
+    }
+    
+    public static var nearKey: String? {
+        PartnerKeys.value(for: Constants.nearKey)
     }
 }
 

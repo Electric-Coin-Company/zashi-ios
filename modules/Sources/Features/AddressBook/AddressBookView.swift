@@ -34,7 +34,7 @@ public struct AddressBookView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
-                if store.isInSelectMode && store.walletAccounts.count > 1 {
+                if store.isInSelectMode && store.walletAccounts.count > 1 && store.context != .swap {
                     contactsList()
                 } else {
                     if store.addressBookContactsToShow.contacts.isEmpty {

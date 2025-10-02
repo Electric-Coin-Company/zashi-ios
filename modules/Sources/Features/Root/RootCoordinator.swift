@@ -98,9 +98,7 @@ extension Root {
                 return .none
 
             case .home(.getSomeZecTapped):
-                state.requestZecCoordFlowState = .initial
-                state.path = .requestZecCoordFlow
-                return .none
+                return .send(.home(.coinbaseTapped))
                 
             case .home(.flexaTapped):
                 return .send(.flexaOpenRequest)
@@ -114,8 +112,11 @@ extension Root {
                 state.swapAndPayCoordFlowState = .initial
                 state.swapAndPayCoordFlowState.isSwapExperience = true
                 state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = true
+//                state.swapAndPayCoordFlowState.isSwapToZecExperience = true
+//                state.swapAndPayCoordFlowState.swapAndPayState.isSwapToZecExperienceEnabled = true
                 state.path = .swapAndPayCoordFlow
-                return .none
+                // whether to start on SwapToZEC or fromZEC
+                return .send(.swapAndPayCoordFlow(.swapAndPay(.enableSwapToZecExperience)))
 
             case .home(.payWithNearTapped):
                 state.swapAndPayCoordFlowState = .initial
@@ -269,6 +270,10 @@ extension Root {
                 return .send(.home(.smartBanner(.closeAndCleanupBanner)))
 
                 // MARK: - Swap and Pay Coord Flow
+
+            case .swapAndPayCoordFlow(.path(.element(id: _, action: .swapToZecSummary(.sentTheFundsButtonTapped)))):
+                state.path = nil
+                return .send(.fetchTransactionsForTheSelectedAccount)
 
             case .swapAndPayCoordFlow(.customBackRequired):
                 state.path = nil

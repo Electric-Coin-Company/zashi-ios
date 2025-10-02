@@ -46,7 +46,7 @@ public struct TransactionDetailsView: View {
             }
         }
     }
-    
+
     @Environment(\.colorScheme) var colorScheme
 
     @State var filtersSheetHeight: CGFloat = .zero
@@ -54,7 +54,7 @@ public struct TransactionDetailsView: View {
 
     @Perception.Bindable var store: StoreOf<TransactionDetails>
     let tokenName: String
-    
+
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
@@ -66,10 +66,14 @@ public struct TransactionDetailsView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
-                headerView()
-                    .screenHorizontalPadding()
-                    .padding(.top, walletStatus == .restoring ? 20 : 0)
-
+                if store.transaction.isNonZcashActivity {
+                    headerViewSwapToZec()
+                        .screenHorizontalPadding()
+                } else {
+                    headerView()
+                        .screenHorizontalPadding()
+                }
+                
                 ScrollView {
                     if store.isSwap {
                         swapAssetsView()
@@ -109,34 +113,14 @@ public struct TransactionDetailsView: View {
                         transactionDetailsList()
                             .screenHorizontalPadding()
                     }
-                    
-//                    if store.isSwap {
-//                        if store.swapStatus != .refunded {
-//                            swapAssetsView()
-//                        }
-//
-//                        swapSlippageView()
-//                            .padding(.top, store.swapStatus != .refunded ? 20 : 0)
-//
-//                        swapStatusView()
-//                            .padding(.top, 16)
-//
-//                        if store.swapStatus == .refunded {
-//                            swapRefundAmountView()
-//                                .padding(.top, 16)
-//                            
-//                            swapRefundInfoView()
-//                                .padding(.top, 16)
-//                        }
-//                    }
 
                     if store.isSwap && store.swapStatus == .refunded {
                         swapRefundInfoView()
                     }
                 }
-
-                Spacer()
+                .padding(.vertical, 1)
                 
+                Spacer()
                 
                 if let retryFailure = store.swapAssetFailedWithRetry {
                     VStack(alignment: .center, spacing: 0) {
@@ -171,7 +155,7 @@ public struct TransactionDetailsView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .screenHorizontalPadding()
-                } else {
+                } else if !store.transaction.isSwapToZec {
                     HStack(spacing: 12) {
                         ZashiButton(
                             store.annotation.isEmpty
@@ -246,15 +230,7 @@ extension TransactionDetailsView {
 // Header
 extension TransactionDetailsView {
     func transationIcon() -> Image {
-        if store.swapStatus == .refunded {
-            return Asset.Assets.Icons.refreshSingleCCW.image
-        } else if store.transaction.isShieldingTransaction {
-            return Asset.Assets.Icons.switchHorizontal.image
-        } else if store.transaction.isSentTransaction {
-            return Asset.Assets.Icons.sent.image
-        } else {
-            return Asset.Assets.Icons.received.image
-        }
+        store.transaction.transationIcon
     }
     
     @ViewBuilder func headerView() -> some View {
@@ -264,53 +240,188 @@ extension TransactionDetailsView {
                     .frame(width: 48, height: 48)
                     .zForegroundColor(Design.Surfaces.brandPrimary)
                     .overlay {
+                        Circle()
+                            .frame(width: 51, height: 51)
+                            .offset(x: 42)
+                            .blendMode(.destinationOut)
+                    }
+                    .compositingGroup()
+                    .overlay {
                         ZcashSymbol()
                             .frame(width: 34, height: 34)
                             .foregroundColor(Asset.Colors.secondary.color)
                     }
+
+                if store.transaction.isShieldingTransaction {
+                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                        .frame(width: 48, height: 48)
+                        .overlay {
+                            Circle()
+                                .frame(width: 51, height: 51)
+                                .offset(x: 42)
+                                .blendMode(.destinationOut)
+                        }
+                        .compositingGroup()
+                        .overlay {
+                            store.transaction.transationIcon
+                                .zImage(size: 24, style: Design.Text.primary)
+                        }
+                        .offset(x: -4)
+                } else {
+                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                        .frame(width: 48, height: 48)
+                        .overlay {
+                            transationIcon()
+                                .zImage(size: 24, style: Design.Text.primary)
+                        }
+                        .offset(x: store.transaction.isShieldingTransaction ? -8 : -4)
+                }
                 
                 if store.transaction.isShieldingTransaction {
                     RoundedRectangle(cornerRadius: Design.Radius._4xl)
                         .fill(Design.Utility.Purple._500.color(colorScheme))
                         .frame(width: 48, height: 48)
                         .overlay {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 26)
-                                    .stroke(Design.Surfaces.bgPrimary.color(colorScheme), style: StrokeStyle(lineWidth: 3.0))
-                                    .frame(width: 51, height: 51)
-
-                                Asset.Assets.Icons.shieldTickFilled.image
-                                    .zImage(size: 24, style: Design.Text.opposite)
-                            }
+                            Asset.Assets.Icons.shieldTickFilled.image
+                                .zImage(size: 24, color: Asset.Colors.ZDesign.purple50.color)
                         }
-                        .offset(x: -4)
+                        .offset(x: -8)
                 }
-                
+            }
+            .offset(x: store.transaction.isShieldingTransaction ? 4 : 2)
+            .padding(.top, 24)
+
+            Text(store.transaction.title)
+                .zFont(.medium, size: 18, style: Design.Text.tertiary)
+                .padding(.top, 10)
+            
+            Group {
+                if store.isSensitiveContentHidden {
+                    Text(L10n.General.hideBalancesMost)
+                } else if store.transaction.isSwapToZec {
+                    if let amount = store.swapAmountOut {
+                        Text(amount)
+                        + Text(" \(tokenName)")
+                            .foregroundColor(Design.Text.quaternary.color(colorScheme))
+                    } else {
+                        unknownAmount()
+                            .padding(.vertical, 2)
+                    }
+                } else {
+                    Text(store.transaction.netValue)
+                    + Text(" \(tokenName)")
+                        .foregroundColor(Design.Text.quaternary.color(colorScheme))
+                }
+            }
+            .zFont(.semiBold, size: 40, style: Design.Text.primary)
+            .minimumScaleFactor(0.1)
+            .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.bottom, 24)
+    }
+    
+    @ViewBuilder func headerViewSwapToZec() -> some View {
+        VStack(alignment: .center, spacing: 0) {
+            HStack(spacing: 0) {
+                // FROM asset
+                if let swapFromAsset = store.swapFromAsset {
+                    swapFromAsset.tokenIcon
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .overlay {
+                            Circle()
+                                .frame(width: 51, height: 51)
+                                .offset(x: 42)
+                                .blendMode(.destinationOut)
+                        }
+                        .compositingGroup()
+                } else {
+                    unknownAsset()
+                        .overlay {
+                            Circle()
+                                .frame(width: 51, height: 51)
+                                .offset(x: 42)
+                                .blendMode(.destinationOut)
+                        }
+                        .compositingGroup()
+                }
+
+                // SWAP icon
                 RoundedRectangle(cornerRadius: Design.Radius._4xl)
                     .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                     .frame(width: 48, height: 48)
                     .overlay {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 26)
-                                .stroke(Design.Surfaces.bgPrimary.color(colorScheme), style: StrokeStyle(lineWidth: 3.0))
-                                .frame(width: 51, height: 51)
-                            
-                            transationIcon()
-                                .zImage(size: 24, style: Design.Text.primary)
-                        }
+                        Circle()
+                            .frame(width: 51, height: 51)
+                            .offset(x: 42)
+                            .blendMode(.destinationOut)
                     }
-                    .offset(x: store.transaction.isShieldingTransaction ? -8 : -4)
-            }
-            .offset(x: store.transaction.isShieldingTransaction ? 4 : 2)
-            .padding(.top, 24)
-            
-            Text(store.transaction.title)
-            .zFont(.medium, size: 18, style: Design.Text.tertiary)
-            .padding(.top, 10)
+                    .compositingGroup()
+                    .overlay {
+                        store.transaction.transationIcon
+                        //Asset.Assets.Icons.swapTransaction.image
+                            .zImage(size: 24, style: Design.Text.primary)
+                    }
+                    .offset(x: -4)
 
+                // TO asset
+                if let swapToAsset = store.swapToAsset {
+                    swapToAsset.tokenIcon
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .offset(x: -8)
+                } else {
+                    unknownAsset()
+                        .offset(x: -8)
+                }
+                
+//                // ZEC icon
+//                Asset.Assets.Brandmarks.brandmarkMax.image
+//                    .zImage(size: 48, style: Design.Surfaces.brandPrimary)
+//                    .offset(x: -8)
+            }
+            .offset(x: 4)
+            .padding(.top, 24)
+
+//            if let swapTitle = store.swapToZecTitle, (store.transaction.type == .swapToZec || store.transaction.type == .swapFromZec) {
+            if !store.transaction.title.isEmpty {
+                Text(store.transaction.title)
+                    .zFont(.medium, size: 18, style: Design.Text.tertiary)
+                    .padding(.top, 10)
+            } else {
+                unknownValue()
+                    .padding(.top, 10)
+            }
+            
+//            Group {
+//                if store.isSensitiveContentHidden {
+//                    Text(L10n.General.hideBalancesMost)
+//                } else {
+//                    if let amount = store.swapAmountOut {
+//                        Text(amount)
+//                        + Text(" \(tokenName)")
+//                            .foregroundColor(Design.Text.quaternary.color(colorScheme))
+//                    } else {
+//                        unknownAmount()
+//                            .padding(.vertical, 2)
+//                    }
+//                }
+//            }
             Group {
                 if store.isSensitiveContentHidden {
                     Text(L10n.General.hideBalancesMost)
+                } else if store.transaction.isSwapToZec {
+                    if let amount = store.swapAmountOut {
+                        Text(amount)
+                        + Text(" \(tokenName)")
+                            .foregroundColor(Design.Text.quaternary.color(colorScheme))
+                    } else {
+                        unknownAmount()
+                            .padding(.vertical, 2)
+                    }
                 } else {
                     Text(store.transaction.netValue)
                     + Text(" \(tokenName)")
@@ -327,9 +438,13 @@ extension TransactionDetailsView {
 
     @ViewBuilder func transactionDetailsTitle() -> some View {
         HStack(spacing: 0) {
-            Text(L10n.TransactionHistory.details)
-                .zFont(.medium, size: 14, style: Design.Text.tertiary)
-                .padding(.bottom, 8)
+            Text(
+                store.transaction.isSwapToZec
+                ? L10n.SwapToZec.swapDetails
+                : L10n.TransactionHistory.details
+            )
+            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+            .padding(.bottom, 8)
             
             Spacer()
             
@@ -389,11 +504,15 @@ extension TransactionDetailsView {
                         }
                     }
                 }
-                
+
                 if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
                     detailView(
-                        title: L10n.TransactionHistory.sentTo,
-                        value: store.alias ?? store.transaction.address.zip316,
+                        title: store.transaction.isSwapToZec
+                        ? L10n.SwapToZec.depositTo
+                        : L10n.TransactionHistory.sentTo,
+                        value: isSensitiveContentHidden
+                        ? L10n.General.hideBalancesMost
+                        : store.alias ?? store.transaction.address.zip316,
                         icon: Asset.Assets.copy.image,
                         rowAppereance: store.isSwap
                         ? (
@@ -410,7 +529,9 @@ extension TransactionDetailsView {
                     if let recipient = store.swapRecipient, store.isSwap {
                         detailView(
                             title: L10n.SwapAndPay.recipient,
-                            value: recipient.zip316,
+                            value: isSensitiveContentHidden
+                            ? L10n.General.hideBalancesMost
+                            : recipient.zip316,
                             icon: Asset.Assets.copy.image,
                             rowAppereance: .middle
                         )
@@ -418,15 +539,19 @@ extension TransactionDetailsView {
                             store.send(.swapRecipientTapped)
                         }
                     }
-
-                    detailView(
-                        title: L10n.TransactionList.transactionId,
-                        value: store.transaction.id.truncateMiddle,
-                        icon: Asset.Assets.copy.image,
-                        rowAppereance: (store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction) ? .middle : .top
-                    )
-                    .onTapGesture {
-                        store.send(.transactionIdTapped)
+                    
+                    if !store.transaction.isSwapToZec {
+                        detailView(
+                            title: L10n.TransactionList.transactionId,
+                            value: isSensitiveContentHidden
+                            ? L10n.General.hideBalancesMost
+                            : store.transaction.id.truncateMiddle,
+                            icon: Asset.Assets.copy.image,
+                            rowAppereance: (store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction) ? .middle : .top
+                        )
+                        .onTapGesture {
+                            store.send(.transactionIdTapped)
+                        }
                     }
 
                     if store.transaction.isSentTransaction {
@@ -437,25 +562,43 @@ extension TransactionDetailsView {
                                 rowAppereance: .middle
                             )
                         } else {
-                            if let totalFeesStr = store.totalFeesStr {
-                                detailView(
+                            if store.transaction.isSwapToZec {
+                                detailAnyView(
                                     title: L10n.SwapAndPay.totalFees,
-                                    value: "\(totalFeesStr) \(tokenName)",
                                     rowAppereance: .middle
-                                )
+                                ) {
+                                    if let fee = store.totalSwapToZecFee, let assetName = store.totalSwapToZecFeeAssetName {
+                                        Text("\(store.swapToZecFeeInProgress ? "~" : "")\(fee) \(assetName)")
+                                            .zFont(.medium, size: 14, style: Design.Text.primary)
+                                            .frame(height: 20)
+                                    } else {
+                                        RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                            .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                            .shimmer(true).clipShape(RoundedRectangle(cornerRadius: Design.Radius._sm))
+                                            .frame(width: 86, height: 20)
+                                    }
+                                }
                             } else {
-                                if store.transaction.fee == nil {
+                                if let totalFeesStr = store.totalFeesStr {
                                     detailView(
-                                        title: L10n.Send.feeSummary,
-                                        value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                        title: L10n.SwapAndPay.totalFees,
+                                        value: "\(totalFeesStr) \(tokenName)",
                                         rowAppereance: .middle
                                     )
                                 } else {
-                                    detailView(
-                                        title: L10n.Send.feeSummary,
-                                        value: "\(store.feeStr) \(tokenName)",
-                                        rowAppereance: .middle
-                                    )
+                                    if store.transaction.fee == nil {
+                                        detailView(
+                                            title: L10n.Send.feeSummary,
+                                            value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                                            rowAppereance: .middle
+                                        )
+                                    } else {
+                                        detailView(
+                                            title: L10n.Send.feeSummary,
+                                            value: "\(store.feeStr) \(tokenName)",
+                                            rowAppereance: .middle
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -501,7 +644,9 @@ extension TransactionDetailsView {
 
                     detailView(
                         title: L10n.TransactionHistory.timestamp,
-                        value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
+                        value: isSensitiveContentHidden
+                        ? L10n.General.hideBalancesMost
+                        : store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
                 }
@@ -517,7 +662,7 @@ extension TransactionDetailsView {
                 Text(L10n.Annotation.title)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 4)
-
+                
                 Text(store.annotation)
                     .zFont(.medium, size: 14, style: Design.Text.primary)
             }
@@ -547,7 +692,7 @@ extension TransactionDetailsView {
                 .zFont(.medium, size: 14, style: Design.Text.primary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
-                
+            
             if let icon {
                 icon
                     .zImage(size: 20, style: Design.Text.primary)
@@ -562,7 +707,7 @@ extension TransactionDetailsView {
         }
         .padding(.bottom, rowAppereance == .full || rowAppereance == .bottom ? 0 : 1)
     }
-    
+
     @ViewBuilder func detailAnyView(
         title: String,
         rowAppereance: RowAppereance = .full,
@@ -584,14 +729,14 @@ extension TransactionDetailsView {
         }
         .padding(.bottom, rowAppereance == .full || rowAppereance == .bottom ? 0 : 1)
     }
-    
+
     @ViewBuilder func messageViews() -> some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.Send.message)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 8)
-                
+
                 ForEach(0..<store.memos.count, id: \.self) { index in
                     VStack(alignment: .leading, spacing: 0) {
                         if index < store.messageStates.count && store.messageStates[index] == .longExpanded {
@@ -637,7 +782,7 @@ extension TransactionDetailsView {
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     @ViewBuilder func noMessageView() -> some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 8) {
@@ -665,7 +810,7 @@ extension TransactionDetailsView {
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     @ViewBuilder func hideBalancesButton() -> some View {
         Button {
             $isSensitiveContentHidden.withLock { $0.toggle() }

@@ -129,7 +129,7 @@ extension SDKSynchronizerClient {
         isInitialized: @escaping () -> Bool = { false },
         importAccount: @escaping (String, [UInt8]?, Zip32AccountIndex?, AccountPurpose, String, String?) async throws -> AccountUUID? = { _, _, _, _, _, _ in nil },
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
-        getAllTransactions: @escaping (AccountUUID?) -> [TransactionState] = { _ in
+        getAllTransactions: @escaping (AccountUUID?) -> IdentifiedArrayOf<TransactionState> = { _ in
             let mockedCleared: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid, uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -178,9 +178,9 @@ extension SDKSynchronizerClient {
             
             clearedTransactions.append(contentsOf: pendingTransactions)
 
-            return clearedTransactions
+            return IdentifiedArrayOf<TransactionState>(uniqueElements: clearedTransactions)
         },
-        transactionStatesFromZcashTransactions: @escaping (AccountUUID?, [ZcashTransaction.Overview]) async throws -> [TransactionState] = { _, _ in [] },
+        transactionStatesFromZcashTransactions: @escaping (AccountUUID?, [ZcashTransaction.Overview]) async throws -> IdentifiedArrayOf<TransactionState> = { _, _ in IdentifiedArrayOf<TransactionState>(uniqueElements: []) },
         getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
         getUnifiedAddress: @escaping (_ account: AccountUUID) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try

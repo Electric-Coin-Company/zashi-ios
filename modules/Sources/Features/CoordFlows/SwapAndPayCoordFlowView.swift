@@ -22,6 +22,7 @@ public struct SwapAndPayCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State var moreSheetHeight: CGFloat = .zero
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     
     @Perception.Bindable var store: StoreOf<SwapAndPayCoordFlow>
     let tokenName: String
@@ -52,6 +53,8 @@ public struct SwapAndPayCoordFlowView: View {
                         AddressBookContactView(store: store)
                     case let .confirmWithKeystone(store):
                         SignWithKeystoneView(store: store, tokenName: tokenName)
+                    case let .crossPayConfirmation(store):
+                        CrossPayConfirmationView(store: store, tokenName: tokenName)
                     case let .preSendingFailure(store):
                         PreSendingFailureView(store: store, tokenName: tokenName)
                     case let .scan(store):
@@ -68,6 +71,8 @@ public struct SwapAndPayCoordFlowView: View {
                         SwapAndPayForm(store: store, tokenName: tokenName)
                     case let .swapAndPayOptInForced(store):
                         SwapAndPayOptInForcedView(store: store)
+                    case let .swapToZecSummary(store):
+                        SwapToZecSummaryView(store: store, tokenName: tokenName)
                     case let .transactionDetails(store):
                         TransactionDetailsView(store: store, tokenName: tokenName)
                     }
@@ -75,12 +80,25 @@ public struct SwapAndPayCoordFlowView: View {
                 .navigationBarHidden(!store.path.isEmpty)
                 .navigationBarItems(
                     trailing:
-                        Button {
-                            store.send(.helpSheetRequested)
-                        } label: {
-                            Asset.Assets.infoCircle.image
-                                .zImage(size: 24, style: Design.Text.primary)
-                                .padding(8)
+                        HStack(spacing: 4) {
+                            if store.isSensitiveButtonVisible {
+                                Button {
+                                    $isSensitiveContentHidden.withLock { $0.toggle() }
+                                } label: {
+                                    let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+                                    image
+                                        .zImage(size: 24, color: Asset.Colors.primary.color)
+                                        .padding(8)
+                                }
+                            }
+                            
+                            Button {
+                                store.send(.helpSheetRequested)
+                            } label: {
+                                Asset.Assets.infoCircle.image
+                                    .zImage(size: 24, style: Design.Text.primary)
+                                    .padding(8)
+                            }
                         }
                 )
                 .zashiSheet(isPresented: $store.isHelpSheetPresented) {
@@ -97,17 +115,20 @@ public struct SwapAndPayCoordFlowView: View {
             .zashiTitle {
                 HStack(spacing: 0) {
                     Text(
-                        store.isSwapExperience
-                        ? L10n.SwapAndPay.Help.swapWith
-                        : L10n.SwapAndPay.Help.payWith
+                        store.isSwapHelpContent
+                        ? L10n.SwapAndPay.swap.uppercased()
+                        : L10n.Crosspay.title.uppercased()
                     )
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                    .padding(.trailing, 10)
-                    
-                    Asset.Assets.Partners.nearLogo.image
-                        .zImage(width: 65, height: 16, style: Design.Text.primary)
+//                    .padding(.trailing, store.isSwapExperience ? 10 : 0)
+                    .padding(.leading, store.isSensitiveButtonVisible ? 30 : 0)
+
+//                    if store.isSwapExperience {
+//                        Asset.Assets.Partners.nearLogo.image
+//                            .zImage(width: 65, height: 16, style: Design.Text.primary)
+//                    }
                 }
-                .padding(.trailing, 20)
+                .padding(.trailing, (store.isSwapExperience || store.isSwapToZecExperience) ? 20 : 0)
                 .frame(maxWidth: .infinity)
             }
         }
@@ -132,34 +153,35 @@ public struct SwapAndPayCoordFlowView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.Icons.swapArrows.image
-                .zImage(size: 20, style: Design.Text.primary)
-                .padding(10)
-                .background {
-                    Circle()
-                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                }
-                .padding(.top, 24)
-
             HStack(spacing: 10) {
                 Text(
-                    store.isSwapExperience
+                    store.isSwapHelpContent
                     ? L10n.SwapAndPay.Help.swapWith
-                    : L10n.SwapAndPay.Help.payWith
+                    : L10n.Crosspay.Help.payWith
                 )
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                
+
                 Asset.Assets.Partners.nearLogo.image
                     .zImage(width: 98, height: 24, style: Design.Text.primary)
             }
             .padding(.vertical, 12)
+            .padding(.top, 24)
 
-            if store.isSwapExperience {
-                infoContent(index: 0, text: L10n.SwapAndPay.Help.swapDesc, desc2: L10n.SwapAndPay.Help.swapDesc2)
-                    .padding(.bottom, 32)
+            if store.isSwapHelpContent {
+                infoContent(
+                    index: 0,
+                    text: L10n.SwapAndPay.Help.swapDesc,
+                    desc1: L10n.SwapAndPay.Help.swapDesc1,
+                    desc2: L10n.SwapAndPay.Help.swapDesc2
+                )
+                .padding(.bottom, 32)
             } else {
-                infoContent(index: 1, text: L10n.SwapAndPay.Help.payDesc1, desc2: L10n.SwapAndPay.Help.payDesc2)
-                    .padding(.bottom, 32)
+                infoContent(
+                    index: 1,
+                    text: L10n.Crosspay.Help.desc1,
+                    desc1: L10n.Crosspay.Help.desc2
+                )
+                .padding(.bottom, 32)
             }
             
             ZashiButton(L10n.General.ok.uppercased()) {
@@ -169,13 +191,26 @@ public struct SwapAndPayCoordFlowView: View {
         }
     }
     
-    @ViewBuilder private func infoContent(index: Int, text: String, desc2: String? = nil) -> some View {
+    @ViewBuilder private func infoContent(
+        index: Int,
+        text: String,
+        desc1: String? = nil,
+        desc2: String? = nil
+    ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(text)
                 .zFont(size: 16, style: Design.Text.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
                 .lineSpacing(2)
             
+            if let desc1 {
+                Text(desc1)
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(2)
+                    .padding(.top, 16)
+            }
+
             if let desc2 {
                 Text(desc2)
                     .zFont(size: 16, style: Design.Text.tertiary)
