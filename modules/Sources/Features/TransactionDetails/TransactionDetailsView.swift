@@ -568,7 +568,7 @@ extension TransactionDetailsView {
                                     rowAppereance: .middle
                                 ) {
                                     if let fee = store.totalSwapToZecFee, let assetName = store.totalSwapToZecFeeAssetName {
-                                        Text("\(store.swapToZecFeeInProgress ? "~" : "")\(fee) \(assetName)")
+                                        Text("~\(fee) \(assetName)")
                                             .zFont(.medium, size: 14, style: Design.Text.primary)
                                             .frame(height: 20)
                                     } else {
