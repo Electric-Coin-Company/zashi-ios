@@ -6,6 +6,14 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4 build 2 (2025-09-03)
+
+### Added
+- Swap TO ZEC with Near Intents
+- Mempool detection
+
+## 2.3 build 1 (2025-09-18)
+
 ### Added
 - CrossPay with Near Intents
 
