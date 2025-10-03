@@ -1,6 +1,23 @@
 {
     "releases": [
         {
+            "version": "2.4.1",
+            "date": "10-02-2025",
+            "timestamp": 1759411813,
+            "sections": [
+                {
+                    "title": "¡La función de swap hacia ZEC que estaban esperando! Con el apoyo de Near Intents.",
+                    "bulletpoints": [
+                        "Usa Zashi para intercambiar cualquier criptomoneda compatible hacia Zcash.",
+                        "Deposita fondos con cualquiera de tus billeteras favoritas.",
+                        "Recibe ZEC en Zashi y protégelos.",
+                        "Consulta las transacciones entrantes más rápido con la detección de mempool.",
+                        "Confirma tu cambio más rápido con 3 confirmaciones."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4",
             "date": "10-01-2025",
             "timestamp": 1759312704,

@@ -1335,7 +1335,7 @@ extension SwapAndPay.State {
         }
 
         // transaction fee
-        let transactionFee =  proposal.totalFeeRequired().amount
+        let transactionFee = proposal.totalFeeRequired().amount
         
         // zashi fee
         let zashiFee = quote.amountIn * 0.005

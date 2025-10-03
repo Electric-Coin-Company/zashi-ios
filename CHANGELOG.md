@@ -6,7 +6,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
-## 2.4 build 2 (2025-09-03)
+## 2.4.1 build 1 (2025-10-03)
+
+### Fixed
+- Zero confirmation transaction.
+- Transaction history cleared after account switches. 
+
+## 2.4 build 2 (2025-10-01)
 
 ### Added
 - Swap TO ZEC with Near Intents

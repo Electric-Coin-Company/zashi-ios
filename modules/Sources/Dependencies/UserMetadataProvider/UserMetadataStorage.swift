@@ -114,7 +114,8 @@ public class UserMetadataStorage {
     
     public func load(account: Account) throws {
         resolveReadTimestamp()
-        
+        clearMemory()
+
         do {
             guard let localData = try loadLocal(account: account) else {
                 checkRemoteAndEventuallyFillMemory(account: account)
@@ -197,6 +198,14 @@ public class UserMetadataStorage {
         }
         
         lastUsedAssetHistory = umData.accountMetadata.swaps.lastUsedAssetHistory
+    }
+    
+    public func clearMemory() {
+        bookmarked.removeAll()
+        read.removeAll()
+        annotations.removeAll()
+        swapIds.removeAll()
+        lastUsedAssetHistory.removeAll()
     }
 
     public func userMetadataFromMemory() -> UserMetadata {
