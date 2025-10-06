@@ -65,6 +65,10 @@ public struct AddressBook {
         public var searchTerm = ""
         public var selectedChain: SwapAsset?
         
+        public var uniqueId: String {
+            "\(address)-\(selectedChain?.chain ?? "zcash")"
+        }
+        
         public var isEditChange: Bool {
             (address != originalAddress || name != originalName)
             && (isValidForm || (context != .send && selectedChain != nil && !isValidZcashAddress))
@@ -122,7 +126,7 @@ public struct AddressBook {
         case deleteIdConfirmed
         case dismissAddContactRequired
         case dismissDeleteContactRequired
-        case editId(String)
+        case editId(String, String)
         case fetchedABContacts(AddressBookContacts, Bool)
         case fetchABContactsRequested
         case onAppear
@@ -167,7 +171,7 @@ public struct AddressBook {
                 }
                 if let editId = state.editId {
                     return .concatenate(
-                        .send(.editId(editId)),
+                        .send(.editId(editId, editId)),
                         .send(.fetchABContactsRequested),
                         .send(.updateAssetsAccordingToSearchTerm)
                     )
@@ -201,7 +205,7 @@ public struct AddressBook {
                     if contact.name == state.name && state.name != state.originalName {
                         state.nameAlreadyExists = true
                     }
-                    if contact.id == state.address && state.address != state.originalAddress {
+                    if contact.id == state.uniqueId && state.address != state.originalAddress {
                         state.addressAlreadyExists = true
                     }
                 }
@@ -255,18 +259,17 @@ public struct AddressBook {
             case .walletAccountTapped:
                 return .none
                 
-            case .editId(let id):
+            case let .editId(address, id):
                 guard !state.isInSelectMode else {
                     return .none
                 }
-                
                 let record = state.addressBookContacts.contacts.first {
                     $0.id == id
                 }
                 guard let record else {
                     return .none
                 }
-                state.address = record.id
+                state.address = record.address
                 state.name = record.name
                 state.originalAddress = state.address
                 state.originalName = state.name
@@ -390,7 +393,7 @@ public struct AddressBook {
             case .chainTapped(let chain):
                 state.selectedChain = chain
                 state.chainSelectBinding = false
-                return .none
+                return .send(.checkDuplicates)
                 
             case .updateAssetsAccordingToSearchTerm:
                 let swapChains = state.chains

@@ -94,6 +94,10 @@ public struct SwapAndPay {
         public var storedQR: CGImage?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
+        public var uniqueId: String {
+            "\(address)-\(selectedAsset?.chain ?? "zcash")"
+        }
+        
         public var isValidForm: Bool {
             selectedAsset != nil
             && !address.isEmpty
@@ -795,9 +799,9 @@ public struct SwapAndPay {
                 state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .none
 
-            case .addressBookContactSelected(let address):
-                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
-                state.address = address
+            case .addressBookContactSelected(let id):
+                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == id }
+                state.address = state.selectedContact?.address ?? ""
                 return .send(.selectedContactUpdated)
 
             case .selectedContactClearTapped:
@@ -827,7 +831,7 @@ public struct SwapAndPay {
                 state.isNotAddressInAddressBook = true
                 var isNotAddressInAddressBook = state.isNotAddressInAddressBook
                 for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.address {
+                    if contact.address == state.address {
                         state.isNotAddressInAddressBook = false
                         isNotAddressInAddressBook = false
                         break
@@ -851,11 +855,16 @@ public struct SwapAndPay {
                 
             case .checkSelectedContact:
                 let address = state.address
-                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
-                return .merge(
-                    .send(.selectedContactUpdated),
-                    .send(.addressBookUpdated)
-                )
+                let occurences = state.addressBookContacts.contacts.filter { $0.address == address }
+                if occurences.count == 1 {
+                    state.selectedContact = state.addressBookContacts.contacts.first { $0.address == address }
+                    return .merge(
+                        .send(.selectedContactUpdated),
+                        .send(.addressBookUpdated)
+                    )
+                } else {
+                    return .none
+                }
                 
                 // MARK: - Keystone
                 

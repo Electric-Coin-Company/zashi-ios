@@ -374,7 +374,6 @@
 "addressBook.newContact.namePlaceholder" = "Enter contact name...";
 "addressBook.error.nameExists" = "This contact name is already in use. Please choose a different name.";
 "addressBook.error.nameLength" = "This contact name exceeds the 32-character limit. Please shorten the name.";
-"addressBook.error.addressExists" = "This wallet address is already in your Address Book.";
 "addressBook.error.invalidAddress" = "Invalid address.";
 "addressBook.alert.title" = "Are you sure?";
 "addressBook.alert.message" = "You are about to delete this contact. This cannot be undone.";
@@ -909,3 +908,5 @@
 "swapStatus.paid" = "Paid";
 
 "coinbase.disabled" = "Coinbase Onramp is temporarily unavailable.";
+
+"addressBook.error.addressExists" = "An address with this chain is already in your Address Book.";

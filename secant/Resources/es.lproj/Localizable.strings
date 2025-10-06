@@ -374,7 +374,6 @@
 "addressBook.newContact.namePlaceholder" = "Ingresa el nombre del contacto...";
 "addressBook.error.nameExists" = "Este nombre de contacto ya está en uso. Por favor, elige un nombre diferente.";
 "addressBook.error.nameLength" = "Este nombre de contacto supera el límite de 32 caracteres. Por favor, acorta el nombre.";
-"addressBook.error.addressExists" = "Esta dirección de billetera ya está en tu Libreta de Direcciones.";
 "addressBook.error.invalidAddress" = "Dirección no válida.";
 "addressBook.alert.title" = "¿Estás seguro?";
 "addressBook.alert.message" = "Estás a punto de eliminar este contacto. Esto no se puede deshacer.";
@@ -909,3 +908,5 @@
 "swapStatus.paid" = "Pagado";
 
 "coinbase.disabled" = "Coinbase Onramp está temporalmente no disponible.";
+
+"addressBook.error.addressExists" = "Esta dirección de billetera ya está en tu Libreta de Direcciones.";

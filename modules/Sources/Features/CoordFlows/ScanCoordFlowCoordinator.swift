@@ -28,7 +28,7 @@ extension ScanCoordFlow {
 
                 // MARK: - Address Book
                 
-            case .path(.element(id: _, action: .addressBook(.editId(let address)))):
+            case let .path(.element(id: _, action: .addressBook(.editId(address, id)))):
                 let _ = state.path.removeLast()
                 audioServices.systemSoundVibrate()
                 if let first = state.path.ids.first {

@@ -23,10 +23,10 @@ extension SwapAndPayCoordFlow {
 
                 // MARK: - Address Book
 
-            case .path(.element(id: _, action: .addressBook(.editId(let address)))):
+            case let .path(.element(id: _, action: .addressBook(.editId(_, id)))):
                 let _ = state.path.popLast()
                 audioServices.systemSoundVibrate()
-                return .send(.swapAndPay(.addressBookContactSelected(address)))
+                return .send(.swapAndPay(.addressBookContactSelected(id)))
 
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 var addressBookState = AddressBook.State.initial

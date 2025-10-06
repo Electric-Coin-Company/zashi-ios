@@ -41,7 +41,7 @@ extension Settings {
 
                 // MARK: - Address Book
 
-            case .path(.element(id: _, action: .addressBook(.editId(let address)))):
+            case let .path(.element(id: _, action: .addressBook(.editId(address, id)))):
                 var addressBookContactState = AddressBook.State.initial
                 addressBookContactState.editId = address
                 addressBookContactState.isNameFocused = true

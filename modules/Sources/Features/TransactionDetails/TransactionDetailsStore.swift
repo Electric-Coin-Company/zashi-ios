@@ -159,10 +159,12 @@ public struct TransactionDetails {
                 state.areDetailsExpanded = state.transaction.isShieldingTransaction
                 state.messageStates = []
                 state.alias = nil
-                for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.transaction.address {
-                        state.alias = contact.name
-                        break
+                if !state.isSwap {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.address == state.transaction.address {
+                            state.alias = contact.name
+                            break
+                        }
                     }
                 }
                 state.areMessagesResolved = false
