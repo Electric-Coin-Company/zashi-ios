@@ -909,4 +909,4 @@
 
 "coinbase.disabled" = "Coinbase Onramp está temporalmente no disponible.";
 
-"addressBook.error.addressExists" = "Esta dirección de billetera ya está en tu Libreta de Direcciones.";
+"addressBook.error.addressExists" = "Ya existe una dirección con esta cadena en tu libreta de direcciones.";
