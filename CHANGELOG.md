@@ -6,6 +6,12 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Near's referral set to `zashi`.
+
+### Removed
+- Lwd servers removed from the server switch list of available servers.
+
 ## 2.4.1 build 1 (2025-10-03)
 
 ### Fixed

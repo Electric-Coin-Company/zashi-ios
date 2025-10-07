@@ -17,6 +17,8 @@ import Models
 
 struct Near1Click {
     enum Constants {
+        static let referral = "zashi"
+        
         // urls
         static let submitUrl = "https://1click.chaindefuser.com/v0/deposit/submit"
         static let tokensUrl = "https://1click.chaindefuser.com/v0/tokens"
@@ -243,6 +245,7 @@ extension Near1Click {
                 recipient: isSwapToZec ? refundTo : destination,
                 recipientType: Constants.destinationChain,
                 deadline: deadline,
+                referral: Constants.referral,
                 quoteWaitingTimeMs: 3000,
                 appFees: [
                     AppFee(
