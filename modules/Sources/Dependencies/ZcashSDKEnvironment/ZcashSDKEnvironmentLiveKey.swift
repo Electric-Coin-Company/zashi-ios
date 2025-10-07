@@ -43,6 +43,11 @@ extension ZcashSDKEnvironment {
             return defaultEndpoint(for: network).serverConfig()
         }
         
+        // Migrate lwdX.zcash-infra.com servers to custom
+        if serverConfig.host.hasSuffix(".zcash-infra.com") {
+            return UserPreferencesStorage.ServerConfig(host: serverConfig.host, port: serverConfig.port, isCustom: true)
+        }
+        
         return serverConfig
     }
     
