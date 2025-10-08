@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.2 build 1 (2025-10-07)
+
 ### Added
 - Near's referral set to `zashi`.
 
