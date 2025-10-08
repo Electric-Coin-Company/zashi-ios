@@ -1,6 +1,29 @@
 {
     "releases": [
         {
+            "version": "2.4.2",
+            "date": "10-08-2025",
+            "timestamp": 1759916882,
+            "sections": [
+                {
+                    "title": "2.4.2: Cambiado",
+                    "bulletpoints": [
+                        "Eliminamos los servidores lwd de la lista de servidores porque pronto dejarán de recibir soporte."
+                    ]
+                },
+                {
+                    "title": "2.4.1: ¡La función de swap hacia ZEC que estaban esperando! Con el apoyo de Near Intents.",
+                    "bulletpoints": [
+                        "Usa Zashi para intercambiar cualquier criptomoneda compatible hacia Zcash.",
+                        "Deposita fondos con cualquiera de tus billeteras favoritas.",
+                        "Recibe ZEC en Zashi y protégelos.",
+                        "Consulta las transacciones entrantes más rápido con la detección de mempool.",
+                        "Confirma tu cambio más rápido con 3 confirmaciones."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.1",
             "date": "10-02-2025",
             "timestamp": 1759411813,
