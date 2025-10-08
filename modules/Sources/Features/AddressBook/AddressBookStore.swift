@@ -259,7 +259,7 @@ public struct AddressBook {
             case .walletAccountTapped:
                 return .none
                 
-            case let .editId(address, id):
+            case let .editId(_, id):
                 guard !state.isInSelectMode else {
                     return .none
                 }

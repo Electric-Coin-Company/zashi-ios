@@ -79,9 +79,7 @@ public struct SwapAndPayForm: View {
             ZashiTextField(
                 addressFont: true,
                 text: $store.address,
-                placeholder: store.isSwapToZecExperienceEnabled
-                ? L10n.SwapToZec.address(store.selectedAsset?.chainName ?? "")
-                : L10n.SwapAndPay.enterAddress,
+                placeholder: L10n.SwapToZec.address(store.selectedAsset?.chainName ?? ""),
                 accessoryView:
                     HStack(spacing: 4) {
                         WithPerceptionTracking {
