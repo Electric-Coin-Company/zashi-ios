@@ -84,7 +84,6 @@ public struct SwapAndPay {
         public var token: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
-        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAsset: SwapAsset?
 
         // Swap to ZEC
@@ -590,7 +589,7 @@ public struct SwapAndPay {
                     return .none
                 }
                 
-                guard let refundTo = state.zashiWalletAccount?.transparentAddress else {
+                guard let refundTo = state.selectedWalletAccount?.transparentAddress else {
                     return .none
                 }
                 
