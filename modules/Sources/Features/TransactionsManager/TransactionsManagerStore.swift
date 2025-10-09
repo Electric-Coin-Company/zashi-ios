@@ -365,7 +365,7 @@ extension TransactionsManager.Filter {
         case .bookmarked:
             return userMetadataProvider.isBookmarked(transaction.id)
         case .contact:
-            return addressBookContacts.contacts.contains(where: { $0.id == transaction.address })
+            return addressBookContacts.contacts.contains(where: { $0.address == transaction.address })
         case .memos:
             return transaction.memoCount > 0
         case .notes:

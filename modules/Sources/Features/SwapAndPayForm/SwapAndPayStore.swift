@@ -84,7 +84,6 @@ public struct SwapAndPay {
         public var token: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletBalancesState: WalletBalances.State
-        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAsset: SwapAsset?
 
         // Swap to ZEC
@@ -94,6 +93,10 @@ public struct SwapAndPay {
         public var storedQR: CGImage?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
+        public var uniqueId: String {
+            "\(address)-\(selectedAsset?.chain ?? "zcash")"
+        }
+        
         public var isValidForm: Bool {
             selectedAsset != nil
             && !address.isEmpty
@@ -466,7 +469,8 @@ public struct SwapAndPay {
                     swapAssets = filteredSwapAssets
                 }
                 guard !state.searchTerm.isEmpty else {
-                    state.swapAssetsToPresent = swapAssets
+                    let swapAssetsWithoutZec = swapAssets.filter { $0.token.lowercased() != "zec" }
+                    state.swapAssetsToPresent = swapAssetsWithoutZec
                     return .none
                 }
                 state.swapAssetsToPresent.removeAll()
@@ -478,6 +482,8 @@ public struct SwapAndPay {
                 state.swapAssetsToPresent.append(contentsOf: tokenMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainNameMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainMatch)
+                let swapAssetsWithoutZec = state.swapAssetsToPresent.filter { $0.token.lowercased() != "zec" }
+                state.swapAssetsToPresent = swapAssetsWithoutZec
                 return .none
 
             case .assetTapped(let asset):
@@ -583,7 +589,7 @@ public struct SwapAndPay {
                     return .none
                 }
                 
-                guard let refundTo = state.zashiWalletAccount?.transparentAddress else {
+                guard let refundTo = state.selectedWalletAccount?.transparentAddress else {
                     return .none
                 }
                 
@@ -718,7 +724,7 @@ public struct SwapAndPay {
             case .swapAssetsLoaded(let swapAssets):
                 state.swapAssetFailedWithRetry = nil
                 state.swapAssetFailedCounter = 0
-                state.zecAsset = swapAssets.first(where: { $0.token.lowercased() == "zec" })
+                state.zecAsset = swapAssets.first { $0.token.lowercased() == "zec" }
                 if state.selectedAsset == nil && state.selectedContact == nil {
                     if let lastUsedAssetId = userMetadataProvider.lastUsedAssetHistory().first {
                         state.selectedAsset = swapAssets.first { $0.id == lastUsedAssetId }
@@ -730,8 +736,6 @@ public struct SwapAndPay {
                 }
 
                 // exclude all tokens with price == 0
-                // exclude zec token
-//                var filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
                 var filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
 
                 // history assets
@@ -747,7 +751,7 @@ public struct SwapAndPay {
                 swapAssetsWithHistory.append(contentsOf: filteredSwapAssets)
 
                 state.$swapAssets.withLock { $0 = swapAssetsWithHistory }
-                
+
                 if let selectedContactChainId = state.selectedContact?.chainId,
                     let selectedAssetChainId = state.selectedAsset?.chain, selectedContactChainId != selectedAssetChainId {
                     state.selectedAsset = nil
@@ -795,9 +799,9 @@ public struct SwapAndPay {
                 state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .none
 
-            case .addressBookContactSelected(let address):
-                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
-                state.address = address
+            case .addressBookContactSelected(let id):
+                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == id }
+                state.address = state.selectedContact?.address ?? ""
                 return .send(.selectedContactUpdated)
 
             case .selectedContactClearTapped:
@@ -807,11 +811,13 @@ public struct SwapAndPay {
                 
             case .selectedContactUpdated:
                 guard let chainId = state.selectedContact?.chainId else {
-                    state.swapAssetsToPresent = state.swapAssets
+                    let swapAssetsWithoutZec = state.swapAssets.filter { $0.token.lowercased() != "zec" }
+                    state.swapAssetsToPresent = swapAssetsWithoutZec
                     return .none
                 }
                 let filteredSwapAssets = state.swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
-                state.swapAssetsToPresent = filteredSwapAssets
+                let filteredSwapAssetsWithoutZec = filteredSwapAssets.filter { $0.token.lowercased() != "zec" }
+                state.swapAssetsToPresent = filteredSwapAssetsWithoutZec
                 if filteredSwapAssets.count == 1 {
                     state.selectedAsset = filteredSwapAssets.first
                 } else if state.selectedAsset?.chain != chainId {
@@ -827,7 +833,7 @@ public struct SwapAndPay {
                 state.isNotAddressInAddressBook = true
                 var isNotAddressInAddressBook = state.isNotAddressInAddressBook
                 for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.address {
+                    if contact.address == state.address {
                         state.isNotAddressInAddressBook = false
                         isNotAddressInAddressBook = false
                         break
@@ -851,11 +857,16 @@ public struct SwapAndPay {
                 
             case .checkSelectedContact:
                 let address = state.address
-                state.selectedContact = state.addressBookContacts.contacts.first { $0.id == address }
-                return .merge(
-                    .send(.selectedContactUpdated),
-                    .send(.addressBookUpdated)
-                )
+                let occurences = state.addressBookContacts.contacts.filter { $0.address == address }
+                if occurences.count == 1 {
+                    state.selectedContact = state.addressBookContacts.contacts.first { $0.address == address }
+                    return .merge(
+                        .send(.selectedContactUpdated),
+                        .send(.addressBookUpdated)
+                    )
+                } else {
+                    return .none
+                }
                 
                 // MARK: - Keystone
                 

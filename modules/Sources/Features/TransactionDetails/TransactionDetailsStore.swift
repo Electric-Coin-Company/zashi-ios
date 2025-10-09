@@ -159,10 +159,12 @@ public struct TransactionDetails {
                 state.areDetailsExpanded = state.transaction.isShieldingTransaction
                 state.messageStates = []
                 state.alias = nil
-                for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.transaction.address {
-                        state.alias = contact.name
-                        break
+                if !state.isSwap {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.address == state.transaction.address {
+                            state.alias = contact.name
+                            break
+                        }
                     }
                 }
                 state.areMessagesResolved = false
@@ -227,9 +229,8 @@ public struct TransactionDetails {
             case .swapAssetsLoaded(let swapAssets):
                 state.swapAssetFailedWithRetry = nil
                 // exclude all tokens with price == 0
-                // exclude zec token
-//                let filteredSwapAssets = swapAssets.filter { !($0.token.lowercased() == "zec" || $0.usdPrice == 0) }
                 let filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
+
                 state.$swapAssets.withLock { $0 = filteredSwapAssets }
                 return .send(.checkSwapStatus)
                 

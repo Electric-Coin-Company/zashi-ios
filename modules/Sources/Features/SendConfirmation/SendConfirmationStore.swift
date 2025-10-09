@@ -224,7 +224,7 @@ public struct SendConfirmation {
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
                 for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.address {
+                    if contact.address == state.address {
                         state.alias = contact.name
                         break
                     }

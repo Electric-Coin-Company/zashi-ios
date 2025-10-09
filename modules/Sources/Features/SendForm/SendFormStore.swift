@@ -449,7 +449,7 @@ public struct SendForm {
                 var isNotAddressInAddressBook = state.isNotAddressInAddressBook
                 if state.isValidAddress {
                     for contact in state.addressBookContacts.contacts {
-                        if contact.id == state.address.data {
+                        if contact.address == state.address.data {
                             state.isNotAddressInAddressBook = false
                             isNotAddressInAddressBook = false
                             break

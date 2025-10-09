@@ -109,6 +109,7 @@ public struct AddressBookView: View {
                 }
                 .screenHorizontalPadding()
                 .padding(.bottom, 24)
+                .padding(.top, 8)
             }
         }
     }
@@ -191,9 +192,9 @@ public struct AddressBookView: View {
                         iconText: record.name.initials,
                         tickerIcon: AddressBook.contactTicker(chainId: record.chainId),
                         title: record.name,
-                        desc: record.id.trailingZip316
+                        desc: record.address.trailingZip316
                     ) {
-                        store.send(.editId(record.id))
+                        store.send(.editId(record.address, record.id))
                     }
 
                     if let last = store.addressBookContactsToShow.contacts.last, last != record {

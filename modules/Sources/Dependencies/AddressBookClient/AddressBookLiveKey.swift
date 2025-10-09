@@ -253,7 +253,7 @@ extension AddressBookClient: DependencyKey {
             
             for i in 0..<syncedContacts.contacts.count {
                 let contact = syncedContacts.contacts[i]
-                
+
                 if $0.id == contact.id {
                     notFound = false
                     

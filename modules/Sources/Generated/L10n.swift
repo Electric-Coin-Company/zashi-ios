@@ -74,8 +74,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "addressBook.alert.title", fallback: "Are you sure?")
     }
     public enum Error {
-      /// This wallet address is already in your Address Book.
-      public static let addressExists = L10n.tr("Localizable", "addressBook.error.addressExists", fallback: "This wallet address is already in your Address Book.")
+      /// An address with this chain is already in your Address Book.
+      public static let addressExists = L10n.tr("Localizable", "addressBook.error.addressExists", fallback: "An address with this chain is already in your Address Book.")
       /// Invalid address.
       public static let invalidAddress = L10n.tr("Localizable", "addressBook.error.invalidAddress", fallback: "Invalid address.")
       /// This contact name is already in use. Please choose a different name.
