@@ -244,7 +244,7 @@ public struct TransactionDetails {
                     await send(.swapDetailsLoaded(swapDetails))
                     
                     // fire another check if not done
-                    if swapDetails?.status != .success {
+                    if let status = swapDetails?.status, status.isPending {
                         try? await mainQueue.sleep(for: .seconds(10))
                         await send(.checkSwapStatus)
                     }

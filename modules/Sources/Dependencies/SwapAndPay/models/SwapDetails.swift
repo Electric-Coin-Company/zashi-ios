@@ -21,6 +21,10 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         case success
         case expired
 
+        public var isPending: Bool {
+            self == .pending || self == .pendingDeposit || self == .processing
+        }
+        
         public var rawName: String {
             switch self {
             case .failed: return SwapConstants.failed

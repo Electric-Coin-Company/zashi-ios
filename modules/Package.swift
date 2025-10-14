@@ -698,6 +698,7 @@ let package = Package(
                 "Settings",
                 "ShieldingProcessor",
                 "SupportDataGenerator",
+                "SwapAndPay",
                 "TorSetup",
                 "TransactionDetails",
                 "TransactionsManager",

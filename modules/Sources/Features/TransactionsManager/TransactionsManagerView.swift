@@ -119,6 +119,16 @@ public struct TransactionsManagerView: View {
                                                             isSwap: TransactionsManager.isSwap(transaction),
                                                             divider: section.latestTransactionId != transaction.id
                                                         )
+                                                        .onAppear {
+                                                            if transaction.requiresAutoUpdate {
+                                                                store.send(.transactionOnAppear(transaction.id))
+                                                            }
+                                                        }
+                                                        .onDisappear {
+                                                            if transaction.requiresAutoUpdate {
+                                                                store.send(.transactionOnDisappear(transaction.id))
+                                                            }
+                                                        }
                                                     }
                                                     .listRowInsets(EdgeInsets())
                                                 }

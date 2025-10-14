@@ -24,6 +24,8 @@ public struct TransactionList {
 
     public enum Action: Equatable {
         case onAppear
+        case transactionOnAppear(String)
+        case transactionOnDisappear(String)
         case transactionsUpdated
         case transactionTapped(String)
     }
@@ -59,6 +61,12 @@ public struct TransactionList {
                         }
                     }
                 }
+                return .none
+                
+            case .transactionOnAppear:
+                return .none
+                
+            case .transactionOnDisappear:
                 return .none
             }
         }
