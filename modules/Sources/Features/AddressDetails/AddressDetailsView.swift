@@ -125,7 +125,7 @@ extension AddressDetailsView {
            let cgImg = QRCodeGenerator.generateCode(
             from: addressToShare.data,
             maxPrivacy: store.maxPrivacy,
-            vendor: store.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+            vendor: .zashi,
             color: .black
            ) {
             UIShareDialogView(activityItems: [

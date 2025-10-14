@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/devicekit/DeviceKit.git",
       "state" : {
-        "revision" : "5757447e9f92c476ee2ca41ead7eb6db07936430",
-        "version" : "5.4.0"
+        "revision" : "581df61650bc457ec00373a592a84be3e7468eb1",
+        "version" : "5.7.0"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "a56a157218877ef3e9625f7e1f7b2cb7e46ead1b",
-        "version" : "1.26.1"
+        "revision" : "f857994e146f5146d702e9c31ac6f3c27d55d18a",
+        "version" : "1.27.0"
       }
     },
     {
@@ -482,7 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "fa07e410df056e386f1f05aad1ce36a8fd8dc3f3"
+        "revision" : "fa07e410df056e386f1f05aad1ce36a8fd8dc3f3",
+        "version" : "0.18.3"
       }
     },
     {
@@ -495,12 +496,12 @@
       }
     },
     {
-      "identity" : "zcashlightclientkit",
+      "identity" : "zcash-swift-wallet-sdk",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
+      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "branch" : "preview-ffi-0-18-3",
-        "revision" : "731bc7a08e23d238e6e6fd7e52bb8969f6a1a984"
+        "revision" : "dc0832ec268f76fc41be95926f80c164e01f8763",
+        "version" : "2.3.6"
       }
     }
   ],
