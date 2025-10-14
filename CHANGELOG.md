@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.3 build 1 (2025-10-13)
+
+### Fixed
+- Shielding issues, Ui/UX improvements.
+
 ## 2.4.2 build 1 (2025-10-07)
 
 ### Added
