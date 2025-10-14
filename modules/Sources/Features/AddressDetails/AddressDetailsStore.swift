@@ -94,7 +94,7 @@ public struct AddressDetails {
                     QRCodeGenerator.generate(
                         from: state.address.data,
                         maxPrivacy: state.maxPrivacy,
-                        vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+                        vendor: .zashi,
                         color: state.isQRCodeAppreanceFlipped
                         ? .black
                         : Asset.Colors.primary.systemColor

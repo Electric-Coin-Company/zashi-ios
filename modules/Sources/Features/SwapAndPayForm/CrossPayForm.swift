@@ -157,7 +157,7 @@ public extension SwapAndPayForm {
                 .frame(minHeight: keyboardVisible ? 0 : safeAreaHeight)
                 .screenHorizontalPadding()
             }
-            .padding(.top, 1)
+            .padding(.vertical, 1)
             .onAppear {
                 observeKeyboardNotifications()
             }

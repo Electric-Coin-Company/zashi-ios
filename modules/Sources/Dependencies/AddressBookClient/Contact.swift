@@ -8,7 +8,11 @@
 import Foundation
 
 public struct Contact: Equatable, Codable, Identifiable, Hashable {
-    public let id: String
+    public var id: String {
+        "\(address)-\(chainId ?? "zcash")"
+    }
+    
+    public var address: String
     public var name: String
     public var lastUpdated: Date
     public var chainId: String?
@@ -19,7 +23,7 @@ public struct Contact: Equatable, Codable, Identifiable, Hashable {
         lastUpdated: Date = Date(),
         chainId: String? = nil
     ) {
-        self.id = address
+        self.address = address
         self.name = name
         self.lastUpdated = lastUpdated
         self.chainId = chainId

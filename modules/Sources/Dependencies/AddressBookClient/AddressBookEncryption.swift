@@ -182,7 +182,7 @@ extension AddressBookClient {
         data.append(contentsOf: AddressBookClient.serializeDate(contact.lastUpdated))
         
         // Serialize `address` (length + UTF-8 bytes)
-        let addressBytes = stringToBytes(contact.id)
+        let addressBytes = stringToBytes(contact.address)
         data.append(contentsOf: intToBytes(addressBytes.count))
         data.append(contentsOf: addressBytes)
         

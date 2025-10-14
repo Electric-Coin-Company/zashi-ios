@@ -130,7 +130,7 @@ public struct AddressBookContactView: View {
 
                 if store.editId != nil {
                     ZashiButton(L10n.General.delete, type: .destructive1) {
-                        store.send(.deleteId(store.address))
+                        store.send(.deleteId(store.uniqueId))
                     }
                     .padding(.bottom, 24)
                 }

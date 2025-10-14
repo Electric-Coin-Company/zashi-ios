@@ -69,7 +69,8 @@ public struct ReceiveView: View {
                                         iconFg: Design.Text.primary,
                                         iconBg: Design.Surfaces.bgTertiary,
                                         bcgColor: Design.Utility.Gray._50.color(colorScheme),
-                                        expanded: store.currentFocus == .tAddress
+                                        expanded: store.currentFocus == .tAddress,
+                                        copyButton: false
                                     ) {
                                         store.send(.copyToPastboard(store.transparentAddress.redacted))
                                     } qrAction: {
@@ -110,7 +111,8 @@ public struct ReceiveView: View {
                                     iconFg: Design.Text.primary,
                                     iconBg: Design.Surfaces.bgTertiary,
                                     bcgColor: Design.Utility.Gray._50.color(colorScheme),
-                                    expanded: store.currentFocus == .tAddress
+                                    expanded: store.currentFocus == .tAddress,
+                                    copyButton: false
                                 ) {
                                     store.send(.copyToPastboard(store.transparentAddress.redacted))
                                 } qrAction: {
@@ -302,6 +304,7 @@ public struct ReceiveView: View {
         bcgColor: Color,
         expanded: Bool,
         shield: Bool = false,
+        copyButton: Bool = true,
         copyAction: @escaping () -> Void,
         qrAction: @escaping () -> Void,
         requestAction: @escaping () -> Void
@@ -366,12 +369,14 @@ public struct ReceiveView: View {
             
             if expanded {
                 HStack(spacing: 8) {
-                    button(
-                        L10n.Receive.copy,
-                        fill: iconBg.color(colorScheme),
-                        icon: Asset.Assets.copy.image
-                    ) {
-                        copyAction()
+                    if copyButton {
+                        button(
+                            L10n.Receive.copy,
+                            fill: iconBg.color(colorScheme),
+                            icon: Asset.Assets.copy.image
+                        ) {
+                            copyAction()
+                        }
                     }
                     
                     button(
