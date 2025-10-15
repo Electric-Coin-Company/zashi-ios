@@ -19,77 +19,95 @@ extension Root {
             case .home(.transactionList(.transactionOnAppear(let txId))),
                 .transactionsCoordFlow(.transactionsManager(.transactionOnAppear(let txId))):
                 if let candidate = state.transactions[id: txId] {
+                    let triggerResolution = state.autoUpdateSwapCandidates.isEmpty
                     state.autoUpdateSwapCandidates.append(candidate)
-//                    print("__LD on \(txId) \(state.autoUpdateSwapCandidates.ids.count)")
+                    if triggerResolution {
+                        return .send(.attemptToCheckSwapStatus(false))
+                    }
                 }
-                return .send(.attemptToCheckSwapStatus)
+                return .none
 
-//            case .home(.transactionList(.transactionOnDisappear(let txId))),
-//                .transactionsCoordFlow(.transactionsManager(.transactionOnDisappear(let txId))):
-//                if let candidate = state.transactions[id: txId] {
-//                    state.autoUpdateSwapCandidates.remove(candidate)
-////                    print("__LD off \(txId) \(state.autoUpdateSwapCandidates.ids.count)")
-//                }
-//                return .none
-
-            case .attemptToCheckSwapStatus:
-//                print("__LD attemptToCheckSwapStatus \(state.autoUpdateSwapCandidates.count)")
+            case .attemptToCheckSwapStatus(let fastSuccessFollowup):
                 guard !state.autoUpdateSwapCandidates.isEmpty else {
                     return .none
                 }
+
                 let now = Date.now.timeIntervalSince1970
                 let diff = now - state.autoUpdateLatestAttemptedTimestamp
                 
                 // schedule next check
-                if diff < 5.0 {
+                if fastSuccessFollowup {
+                    state.autoUpdateRefreshScheduled = true
                     return .run { send in
-                        let waitTIme = UInt64.random(in: 5_000_000_000...15_000_000_000)
-                        try? await Task.sleep(nanoseconds: waitTIme)
-                        await send(.attemptToCheckSwapStatus)
+                        let waitTime = UInt64.random(in: 500_000_000...1_500_000_000)
+                        try? await Task.sleep(nanoseconds: waitTime)
+                        await send(.attemptToCheckSwapStatus(false))
+                    }
+                } else if diff < 5.0 && !state.autoUpdateRefreshScheduled {
+                    state.autoUpdateRefreshScheduled = true
+                    return .run { send in
+                        let waitTime = UInt64.random(in: 5_000_000_000...15_000_000_000)
+                        try? await Task.sleep(nanoseconds: waitTime)
+                        await send(.attemptToCheckSwapStatus(false))
                     }
                 }
                 state.autoUpdateLatestAttemptedTimestamp = now
-                
+
                 // check the status
                 guard state.autoUpdateCandidate == nil else {
                     return .none
                 }
                 if let candidate = state.autoUpdateSwapCandidates.first {
+                    // move it to the end of the queue
+                    state.autoUpdateSwapCandidates.remove(candidate)
+                    state.autoUpdateSwapCandidates.append(candidate)
+
+                    state.autoUpdateRefreshScheduled = true
                     state.autoUpdateCandidate = candidate
                     return .run { send in
                         if let swapDetails = try? await swapAndPay.status(candidate.address, candidate.isSwapToZec) {
                             await send(.autoUpdateCandidatesSwapDetails(swapDetails))
-//                            print("__LD \(swapDetails.status)")
                         }
                     }
                 }
-                return .send(.attemptToCheckSwapStatus)
+                return .none
                 
             case .autoUpdateCandidatesSwapDetails(let swapDetails):
                 guard let candidate = state.autoUpdateCandidate else {
+                    state.autoUpdateRefreshScheduled = false
                     return .none
                 }
                 
+                // terminated status update
                 if candidate.isPending && !swapDetails.status.isPending {
-                    state.autoUpdateSwapDetails = swapDetails
-                    return .send(.compareAndUpdateMetadataOfSwap)
+                    return .send(.compareAndUpdateMetadataOfSwap(swapDetails))
                 }
-                state.autoUpdateCandidate = nil
-                return .send(.attemptToCheckSwapStatus)
                 
-            case .compareAndUpdateMetadataOfSwap:
+                // refresh next schedule
+                state.autoUpdateRefreshScheduled = false
+                state.autoUpdateCandidate = nil
+                
+                return .send(.attemptToCheckSwapStatus(false))
+                
+            case .compareAndUpdateMetadataOfSwap(let swapDetails):
+                state.autoUpdateRefreshScheduled = false
                 guard let candidatesId = state.autoUpdateCandidate?.id else {
-                    return .none
+                    state.autoUpdateCandidate = nil
+                    return .send(.attemptToCheckSwapStatus(false))
                 }
                 guard var candidate = state.transactions[id: candidatesId], let zAddress = candidate.zAddress else {
-                    return .none
+                    state.autoUpdateCandidate = nil
+                    return .send(.attemptToCheckSwapStatus(false))
                 }
+                state.autoUpdateSwapCandidates.remove(candidate)
 
                 let umSwapId = userMetadataProvider.swapDetailsForTransaction(zAddress)
-                guard var umSwapId, let swapDetails = state.autoUpdateSwapDetails else {
-                    return .none
+                guard var umSwapId else {
+                    state.autoUpdateCandidate = nil
+                    return .send(.attemptToCheckSwapStatus(false))
                 }
-                
+                state.autoUpdateCandidate = nil
+
                 var needsUpdate = false
                 
                 // from asset
@@ -128,17 +146,13 @@ extension Root {
                     umSwapId.status = swapDetails.status.rawName
                 }
                 // update of metadata needed
-                state.autoUpdateCandidate = nil
-                state.autoUpdateSwapDetails = nil
                 if let account = state.selectedWalletAccount?.account, needsUpdate {
                     userMetadataProvider.update(umSwapId)
                     try? userMetadataProvider.store(account)
                     candidate.checkAndUpdateWith(umSwapId)
                     state.$transactions.withLock { $0[id: candidate.id] = candidate }
-                    state.autoUpdateSwapCandidates.remove(candidate)
-//                    print("__LD off2 \(candidate.id) \(state.autoUpdateSwapCandidates.ids.count)")
                 }
-                return .send(.attemptToCheckSwapStatus)
+                return .send(.attemptToCheckSwapStatus(true))
 
             default: return .none
             }

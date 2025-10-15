@@ -124,11 +124,6 @@ public struct TransactionsManagerView: View {
                                                                 store.send(.transactionOnAppear(transaction.id))
                                                             }
                                                         }
-                                                        .onDisappear {
-                                                            if transaction.requiresAutoUpdate {
-                                                                store.send(.transactionOnDisappear(transaction.id))
-                                                            }
-                                                        }
                                                     }
                                                     .listRowInsets(EdgeInsets())
                                                 }

@@ -67,11 +67,6 @@ public struct TransactionListView: View {
                                 store.send(.transactionOnAppear(transaction.id))
                             }
                         }
-                        .onDisappear {
-                            if transaction.requiresAutoUpdate {
-                                store.send(.transactionOnDisappear(transaction.id))
-                            }
-                        }
                     }
                     .listRowInsets(EdgeInsets())
                 }

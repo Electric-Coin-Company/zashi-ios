@@ -121,10 +121,10 @@ public struct Root {
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         
         // Auto-update swaps
-        public var autoUpdateSwapCandidates: IdentifiedArrayOf<TransactionState> = []
-        public var autoUpdateLatestAttemptedTimestamp: TimeInterval = 0
         public var autoUpdateCandidate: TransactionState? = nil
-        public var autoUpdateSwapDetails: SwapDetails? = nil
+        public var autoUpdateLatestAttemptedTimestamp: TimeInterval = 0
+        public var autoUpdateRefreshScheduled = false
+        public var autoUpdateSwapCandidates: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
 
         // Path
@@ -262,9 +262,9 @@ public struct Root {
         case loadSwapAPIAccess
         
         // Auto-update Swaps
-        case attemptToCheckSwapStatus
+        case attemptToCheckSwapStatus(Bool)
         case autoUpdateCandidatesSwapDetails(SwapDetails)
-        case compareAndUpdateMetadataOfSwap
+        case compareAndUpdateMetadataOfSwap(SwapDetails)
     }
 
     @Dependency(\.addressBook) var addressBook
