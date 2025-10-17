@@ -65,7 +65,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         torEnabled: unimplemented("\(Self.self).torEnabled"),
         exchangeRateEnabled: unimplemented("\(Self.self).exchangeRateEnabled"),
         isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil),
-        httpRequestOverTor: unimplemented("\(Self.self).httpRequestOverTor", placeholder: (Data(), HTTPURLResponse.mockResponse))
+        httpRequestOverTor: unimplemented("\(Self.self).httpRequestOverTor", placeholder: (Data(), HTTPURLResponse.mockResponse)),
+        debugDatabaseSql: unimplemented("\(Self.self).debugDatabaseSql", placeholder: "")
     )
 }
 
@@ -109,7 +110,8 @@ extension SDKSynchronizerClient {
         torEnabled: { _ in },
         exchangeRateEnabled: { _ in },
         isTorSuccessfullyInitialized: { nil },
-        httpRequestOverTor: { _ in (data: Data(), response: HTTPURLResponse.mockResponse) }
+        httpRequestOverTor: { _ in (data: Data(), response: HTTPURLResponse.mockResponse) },
+        debugDatabaseSql: { _ in "" }
     )
 
     public static let mock = Self.mocked()
@@ -224,7 +226,8 @@ extension SDKSynchronizerClient {
         torEnabled: @escaping (Bool) async throws -> Void = { _ in },
         exchangeRateEnabled: @escaping (Bool) async throws -> Void = { _ in },
         isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil },
-        httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in (Data(), HTTPURLResponse.mockResponse) }
+        httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in (Data(), HTTPURLResponse.mockResponse) },
+        debugDatabaseSql: @escaping (String) -> String = { _ in "" }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -265,7 +268,8 @@ extension SDKSynchronizerClient {
             torEnabled: torEnabled,
             exchangeRateEnabled: exchangeRateEnabled,
             isTorSuccessfullyInitialized: isTorSuccessfullyInitialized,
-            httpRequestOverTor: httpRequestOverTor
+            httpRequestOverTor: httpRequestOverTor,
+            debugDatabaseSql: debugDatabaseSql
         )
     }
 }
