@@ -279,10 +279,20 @@ public enum L10n {
     public static let message3 = L10n.tr("Localizable", "deleteWallet.message3", fallback: "Resetting the Zashi app will delete the app database and cached app data, and disconnect all connected hardware wallets.")
     /// Once you Reset Zashi, the only way to access your funds is through a wallet restore process that requires your Zashi Recovery Phrase and Wallet Birthday Height.
     public static let message4 = L10n.tr("Localizable", "deleteWallet.message4", fallback: "Once you Reset Zashi, the only way to access your funds is through a wallet restore process that requires your Zashi Recovery Phrase and Wallet Birthday Height.")
+    /// Keep encrypted metadata backup - which includes contacts, notes, bookmarks, and swap/payment details.
+    public static let metadataWarn1 = L10n.tr("Localizable", "deleteWallet.metadataWarn1", fallback: "Keep encrypted metadata backup - which includes contacts, notes, bookmarks, and swap/payment details.")
+    /// This data cannot be recovered during Restore.
+    public static let metadataWarn2 = L10n.tr("Localizable", "deleteWallet.metadataWarn2", fallback: "This data cannot be recovered during Restore.")
     /// Reset
     public static let screenTitle = L10n.tr("Localizable", "deleteWallet.screenTitle", fallback: "Reset")
     /// Reset Zashi
     public static let title = L10n.tr("Localizable", "deleteWallet.title", fallback: "Reset Zashi")
+    public enum Sheet {
+      /// Resetting the app cannot be undone. You will need to restore your wallet using your secret recovery phrase.
+      public static let msg = L10n.tr("Localizable", "deleteWallet.sheet.msg", fallback: "Resetting the app cannot be undone. You will need to restore your wallet using your secret recovery phrase.")
+      /// Are you sure?
+      public static let title = L10n.tr("Localizable", "deleteWallet.sheet.title", fallback: "Are you sure?")
+    }
   }
   public enum ErrorPage {
     public enum Action {

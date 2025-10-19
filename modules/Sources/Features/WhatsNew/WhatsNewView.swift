@@ -104,9 +104,11 @@ public struct WhatsNewView: View {
             Asset.Assets.zashiTitle.image
                 .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
                 .padding(.bottom, 16)
+#if !SECANT_DISTRIB
                 .onLongPressGesture {
                     store.send(.enableDebugModeRequested)
                 }
+#endif
             
             Text(L10n.Settings.version(store.appVersion, store.appBuild))
                 .zFont(size: 16, style: Design.Text.tertiary)
