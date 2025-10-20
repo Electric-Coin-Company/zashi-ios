@@ -952,7 +952,7 @@ public struct SwapAndPay {
                 return .publisher {
                     QRCodeGenerator.generate(
                         from: depositAddress,
-                        vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+                        vendor: .zashi,
                         color: state.isQRCodeAppreanceFlipped
                         ? .black
                         : Asset.Colors.primary.systemColor,
