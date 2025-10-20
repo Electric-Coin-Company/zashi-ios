@@ -91,7 +91,7 @@ public struct SwapAndPayForm: View {
                                 if store.isNotAddressInAddressBook {
                                     store.send(.notInAddressBookButtonTapped(store.address))
                                 } else {
-                                    store.send(.addressBookTapped)
+                                    store.send(.addressBookRequested)
                                 }
                             }
                             

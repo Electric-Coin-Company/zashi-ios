@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import ZcashSDKEnvironment
 import Utils
 import SwiftUI
+import LocalAuthenticationHandler
 
 import Models
 import BalanceBreakdown
@@ -247,6 +248,7 @@ public struct SwapAndPay {
         
         // Address Book
         case addressBookContactSelected(String)
+        case addressBookRequested
         case addressBookTapped
         case addressBookUpdated
         case checkSelectedContact
@@ -275,6 +277,7 @@ public struct SwapAndPay {
     }
 
     @Dependency(\.addressBook) var addressBook
+    @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
@@ -795,6 +798,15 @@ public struct SwapAndPay {
             case .notInAddressBookButtonTapped:
                 return .none
 
+            case .addressBookRequested:
+                return .run { send in
+                    guard await localAuthentication.authenticate() else {
+                        return
+                    }
+                    
+                    await send(.addressBookTapped)
+                }
+                
             case .addressBookTapped:
                 state.keyboardDismissCounter = state.keyboardDismissCounter + 1
                 return .none

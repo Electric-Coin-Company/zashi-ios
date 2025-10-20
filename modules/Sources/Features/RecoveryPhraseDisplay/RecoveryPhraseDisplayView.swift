@@ -50,7 +50,7 @@ public struct RecoveryPhraseDisplayView: View {
                                 Asset.Assets.eyeOn.image
                                 .zImage(size: 20, style: Design.Btns.Primary.fg)
                         ) {
-                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
+                            store.send(.recoveryPhraseUnhideRequested, animation: .easeInOut)
                         }
                         .padding(.bottom, 24)
                     } else {
@@ -89,6 +89,15 @@ public struct RecoveryPhraseDisplayView: View {
                 }
             }
             .onAppear { store.send(.onAppear) }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                store.send(.hideEverything)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                store.send(.hideEverything)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                store.send(.hideEverything)
+            }
             .alert($store.scope(state: \.alert, action: \.alert))
             .zashiBack()
             .zashiSheet(isPresented: $store.isHelpSheetPresented) {

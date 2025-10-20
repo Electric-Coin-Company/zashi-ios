@@ -37,8 +37,8 @@ public struct WhatsNew {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<WhatsNew.State>)
         case enableDebugMode
-        case enableDebugModeRequested
         case executeQuery
+        case executeQueryRequested
         case exitDebug
         case onAppear
     }
@@ -65,13 +65,17 @@ public struct WhatsNew {
             case .binding:
                 return .none
                 
-            case .enableDebugModeRequested:
+            case .executeQueryRequested:
+                guard !state.query.isEmpty else {
+                    state.output = "Fill in some query to execute"
+                    return .none
+                }
                 return .run { send in
                     guard await localAuthentication.authenticate() else {
                         return
                     }
                     
-                    await send(.enableDebugMode)
+                    await send(.executeQuery)
                 }
 
             case .enableDebugMode:

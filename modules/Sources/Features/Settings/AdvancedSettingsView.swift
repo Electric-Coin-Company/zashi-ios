@@ -30,7 +30,7 @@ public struct AdvancedSettingsView: View {
                             icon: Asset.Assets.Icons.key.image,
                             title: L10n.Settings.recoveryPhrase
                         ) {
-                            store.send(.operationAccessCheck(.recoveryPhrase))
+                            store.send(.operationAccessGranted(.recoveryPhrase))
                         }
                         
                         ActionRow(

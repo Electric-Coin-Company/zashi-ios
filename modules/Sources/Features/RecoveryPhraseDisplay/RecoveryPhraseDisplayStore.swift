@@ -13,6 +13,7 @@ import ZcashLightClientKit
 import Utils
 import Generated
 import NumberFormatter
+import LocalAuthenticationHandler
 
 @Reducer
 public struct RecoveryPhraseDisplay {
@@ -77,16 +78,19 @@ public struct RecoveryPhraseDisplay {
         case alert(PresentationAction<Action>)
         case finishedTapped
         case helpSheetRequested
+        case hideEverything
         case onAppear
         case recoveryPhraseTapped
+        case recoveryPhraseUnhideRequested
         case remindMeLaterTapped
         case securityWarningNextTapped
         case seedSavedTapped
         case tooltipTapped
     }
     
-    @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.walletStorage) var walletStorage
 
     public init() {}
     
@@ -113,6 +117,10 @@ public struct RecoveryPhraseDisplay {
                 
                 return .none
                 
+            case .hideEverything:
+                state.isRecoveryPhraseHidden = true
+                return .none
+
             case .alert(.presented(let action)):
                 return .send(action)
 
@@ -130,6 +138,15 @@ public struct RecoveryPhraseDisplay {
                 state.isBirthdayHintVisible.toggle()
                 return .none
                 
+            case .recoveryPhraseUnhideRequested:
+                return .run { send in
+                    guard await localAuthentication.authenticate() else {
+                        return
+                    }
+                    
+                    await send(.recoveryPhraseTapped)
+                }
+
             case .recoveryPhraseTapped:
                 state.isRecoveryPhraseHidden.toggle()
                 return .none

@@ -601,6 +601,7 @@ let package = Package(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
+                "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
