@@ -482,8 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "branch" : "preview/hotfix/0.18.4",
-        "revision" : "a089b8103a1773916bb2ab881ef10795f79577a4"
+        "revision" : "a05a3b88906270cb946e16c033f454849296b594",
+        "version" : "0.18.4"
       }
     },
     {
@@ -501,7 +501,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "preview-ffi-0-18-4",
-        "revision" : "f45dd884286e6a29fab5833e38b615b7c5fab38b"
+        "revision" : "cd81a11cb1e42895ee75c199128f392adc5fca63"
       }
     }
   ],
