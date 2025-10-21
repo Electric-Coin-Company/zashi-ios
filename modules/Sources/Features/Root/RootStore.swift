@@ -32,6 +32,7 @@ import UserMetadataProvider
 import AudioServices
 import ShieldingProcessor
 import SupportDataGenerator
+import SwapAndPay
 
 // Path
 import CurrencyConversionSetup
@@ -82,6 +83,7 @@ public struct Root {
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
+        public var areMetadataPreserved = true
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
@@ -118,6 +120,13 @@ public struct Root {
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+        
+        // Auto-update swaps
+        public var autoUpdateCandidate: TransactionState? = nil
+        public var autoUpdateLatestAttemptedTimestamp: TimeInterval = 0
+        public var autoUpdateRefreshScheduled = false
+        public var autoUpdateSwapCandidates: IdentifiedArrayOf<TransactionState> = []
+        @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
 
         // Path
         public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
@@ -252,6 +261,11 @@ public struct Root {
 
         // Swap API Acccess
         case loadSwapAPIAccess
+        
+        // Auto-update Swaps
+        case attemptToCheckSwapStatus(Bool)
+        case autoUpdateCandidatesSwapDetails(SwapDetails)
+        case compareAndUpdateMetadataOfSwap(SwapDetails)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -270,6 +284,7 @@ public struct Root {
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.shieldingProcessor) var shieldingProcessor
+    @Dependency(\.swapAndPay) var swapAndPay
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userMetadataProvider) var userMetadataProvider
@@ -386,6 +401,8 @@ public struct Root {
         shieldingProcessorReduce()
         
         torInitCheckReduce()
+        
+        swapsReduce()
     }
     
     public var body: some Reducer<State, Action> {

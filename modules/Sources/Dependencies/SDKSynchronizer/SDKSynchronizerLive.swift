@@ -299,6 +299,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             httpRequestOverTor: { request in
                 try await synchronizer.httpRequestOverTor(for: request)
+            },
+            debugDatabaseSql: { query in
+                synchronizer.debugDatabase(sql: query)
             }
         )
     }

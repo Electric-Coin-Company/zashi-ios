@@ -64,6 +64,10 @@ public struct TransactionState: Equatable, Identifiable {
     public var isNonZcashActivity: Bool {
         type != .zcash
     }
+    
+    public var requiresAutoUpdate: Bool {
+        isNonZcashActivity && swapStatus == .pending
+    }
 
     // UI Colors
     public func balanceColor(_ colorScheme: ColorScheme) -> Color {

@@ -80,6 +80,7 @@ public struct TransactionsManager {
         case onAppear
         case resetFiltersTapped
         case toggleFilter(Filter)
+        case transactionOnAppear(String)
         case transactionsUpdated
         case transactionTapped(String)
         case updateTransactionPeriods
@@ -266,6 +267,9 @@ public struct TransactionsManager {
                     state.transactionSections.append(section)
                 }
 
+                return .none
+                
+            case .transactionOnAppear:
                 return .none
             }
         }

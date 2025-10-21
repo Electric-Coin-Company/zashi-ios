@@ -1,6 +1,28 @@
 {
     "releases": [
         {
+            "version": "2.4.4",
+            "date": "10-20-2025",
+            "timestamp": 1760967886,
+            "sections": [
+                {
+                    "title": "Changed",
+                    "bulletpoints": [
+                        "We implemented auto-updating of swap/payment statuses, no need to click into them to see them changed.",
+                        "We removed Keystone logo from QR code, nobody needs to know you got one.",
+                        "We improved Reset Zashi flow to allow you to keep a metadata backup."
+                    ]
+                },
+                {
+                    "title": "Fixed",
+                    "bulletpoints": [
+                        "We fixed an issue with a forever pending incoming transaction.",
+                        "We also did a few more bug fixes."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.3",
             "date": "10-11-2025",
             "timestamp": 1760172160,

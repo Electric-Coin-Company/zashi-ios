@@ -910,3 +910,9 @@
 "coinbase.disabled" = "Coinbase Onramp is temporarily unavailable.";
 
 "addressBook.error.addressExists" = "An address with this chain is already in your Address Book.";
+
+"deleteWallet.metadataWarn1" = "Keep encrypted metadata backup - which includes contacts, notes, bookmarks, and swap/payment details.";
+"deleteWallet.metadataWarn2" = "This data cannot be recovered during Restore.";
+
+"deleteWallet.sheet.title" = "Are you sure?";
+"deleteWallet.sheet.msg" = "Resetting the app cannot be undone. You will need to restore your wallet using your secret recovery phrase.";

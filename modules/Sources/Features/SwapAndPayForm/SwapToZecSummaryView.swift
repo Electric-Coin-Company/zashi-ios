@@ -179,7 +179,7 @@ public struct SwapToZecSummaryView: View {
         if let addressToShare = store.addressToShare,
            let cgImg = QRCodeGenerator.generateCode(
             from: addressToShare.data,
-            vendor: store.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
+            vendor: .zashi,
             color: .black,
             overlayedWithZcashLogo: false
            ) {

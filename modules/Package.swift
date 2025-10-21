@@ -101,7 +101,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.6"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.3.6"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.3.7"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -600,6 +600,7 @@ let package = Package(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
+                "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
@@ -698,6 +699,7 @@ let package = Package(
                 "Settings",
                 "ShieldingProcessor",
                 "SupportDataGenerator",
+                "SwapAndPay",
                 "TorSetup",
                 "TransactionDetails",
                 "TransactionsManager",
@@ -1181,6 +1183,7 @@ let package = Package(
             dependencies: [
                 "AppVersion",
                 "Generated",
+                "SDKSynchronizer",
                 "UIComponents",
                 "WhatsNewProvider",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

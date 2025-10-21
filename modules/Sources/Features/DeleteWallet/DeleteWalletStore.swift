@@ -16,22 +16,25 @@ import ZcashLightClientKit
 public struct DeleteWallet {
     @ObservableState
     public struct State: Equatable {
-        public var isAcknowledged: Bool = false
-        public var isProcessing: Bool = false
+        public var areMetadataPreserved = true
+        public var isProcessing = false
+        public var isSheetUp = false
 
         public init(
-            isAcknowledged: Bool = false,
+            areMetadataPreserved: Bool = true,
             isProcessing: Bool = false
         ) {
-            self.isAcknowledged = isAcknowledged
+            self.areMetadataPreserved = areMetadataPreserved
             self.isProcessing = isProcessing
         }
     }
     
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<DeleteWallet.State>)
-        case deleteTapped
+        case deleteRequested
+        case deleteTapped(Bool)
         case deleteCanceled
+        case dismissSheet
     }
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -48,6 +51,14 @@ public struct DeleteWallet {
 
             case .deleteCanceled:
                 state.isProcessing = false
+                return .none
+
+            case .deleteRequested:
+                state.isSheetUp = true
+                return .none
+                
+            case .dismissSheet:
+                state.isSheetUp = false
                 return .none
 
             case .deleteTapped:

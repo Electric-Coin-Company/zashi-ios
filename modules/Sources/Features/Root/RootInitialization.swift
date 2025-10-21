@@ -35,7 +35,7 @@ extension Root {
         case initializationSuccessfullyDone
         case loadedWalletAccounts([WalletAccount])
         case resetZashi
-        case resetZashiRequest
+        case resetZashiRequest(Bool)
         case resetZashiRequestCanceled
         case respondToWalletInitializationState(InitializationState)
         case restoreExistingWallet
@@ -329,6 +329,7 @@ extension Root {
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
                             //await send(.fetchTransactionsForTheSelectedAccount)
                             await send(.resolveMetadataEncryptionKeys)
+                            await send(.loadUserMetadata)
 
                             try await sdkSynchronizer.start(false)
 
@@ -452,9 +453,9 @@ extension Root {
                 }
                 .cancellable(id: CancelId, cancelInFlight: true)
                 
-            case .initialization(.resetZashiRequest):
-                state.alert = AlertState.wipeRequest()
-                return .none
+            case .initialization(.resetZashiRequest(let areMetadataPreserved)):
+                state.areMetadataPreserved = areMetadataPreserved
+                return .send(.initialization(.resetZashi))
                 
             case .initialization(.resetZashiRequestCanceled):
                 state.alert = nil
@@ -489,9 +490,11 @@ extension Root {
                 flexaHandler.signOut()
                 userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()
-                state.walletAccounts.forEach { account in
-                    try? userMetadataProvider.resetAccount(account.account)
-                    try? addressBook.resetAccount(account.account)
+                if !state.areMetadataPreserved {
+                    state.walletAccounts.forEach { account in
+                        try? userMetadataProvider.resetAccount(account.account)
+                        try? addressBook.resetAccount(account.account)
+                    }
                 }
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }

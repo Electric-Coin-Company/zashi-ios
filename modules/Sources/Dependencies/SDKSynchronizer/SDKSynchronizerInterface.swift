@@ -89,4 +89,6 @@ public struct SDKSynchronizerClient {
     public var exchangeRateEnabled: (Bool) async throws -> Void
     public var isTorSuccessfullyInitialized: () async -> Bool?
     public var httpRequestOverTor: (URLRequest) async throws -> (Data, HTTPURLResponse)
+    
+    public var debugDatabaseSql: (String) -> String = { _ in "" }
 }

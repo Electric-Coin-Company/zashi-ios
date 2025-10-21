@@ -175,8 +175,8 @@ extension Root {
 
                 // MARK: - Reset Zashi
 
-            case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped)))):
-                return .send(.initialization(.resetZashiRequest))
+            case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped(let areMetadataPreserved))))):
+                return .send(.initialization(.resetZashiRequest(areMetadataPreserved)))
 
                 // MARK: - Restore Wallet Coord Flow from Onboarding
 
