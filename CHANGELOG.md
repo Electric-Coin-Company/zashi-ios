@@ -6,6 +6,18 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.4 build 1 (2025-10-21)
+
+### Added
+- Auto-updating of swap/payment statuses, no need to click into them to see them changed.
+
+### Changed
+- Removed Keystone logo from QR code, nobody needs to know you got one.
+- Improved Reset Zashi flow to allow you to keep a metadata backup.
+
+### Fixed
+- Issue with a forever pending incoming transaction.
+
 ## 2.4.3 build 1 (2025-10-13)
 
 ### Fixed
