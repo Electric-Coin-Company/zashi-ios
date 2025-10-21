@@ -910,3 +910,9 @@
 "coinbase.disabled" = "Coinbase Onramp está temporalmente no disponible.";
 
 "addressBook.error.addressExists" = "Ya existe una dirección con esta cadena en tu libreta de direcciones.";
+
+"deleteWallet.metadataWarn1" = "Conserva la copia de seguridad cifrada de los metadatos, que incluye contactos, notas, marcadores y detalles de intercambios/pagos.";
+"deleteWallet.metadataWarn2" = "Estos datos no se podrán recuperar durante la restauración.";
+
+"deleteWallet.sheet.title" = "¿Estás seguro?";
+"deleteWallet.sheet.msg" = "Restablecer la app no se puede deshacer. Necesitarás restaurar tu billetera usando tu frase secreta de recuperación.";

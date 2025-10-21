@@ -1,6 +1,28 @@
 {
     "releases": [
         {
+            "version": "2.4.4",
+            "date": "10-20-2025",
+            "timestamp": 1760967886,
+            "sections": [
+                {
+                    "title": "Cambiado",
+                    "bulletpoints": [
+                        "Implementamos la actualización automática de los estados de intercambio/pago; no es necesario hacer clic en ellos para verlos modificados.",
+                        "Eliminamos el logotipo de Keystone del código QR; nadie tiene por qué saber que tienes uno.",
+                        "Mejoramos el flujo de reinicio de Zashi para que puedas mantener una copia de seguridad de los metadatos."
+                    ]
+                },
+                {
+                    "title": "Corregido",
+                    "bulletpoints": [
+                        "Solucionamos un problema con una transacción entrante pendiente permanente.",
+                        "También corregimos algunos errores adicionales."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.3",
             "date": "10-11-2025",
             "timestamp": 1760172160,
