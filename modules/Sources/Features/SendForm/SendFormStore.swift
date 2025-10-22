@@ -48,6 +48,7 @@ public struct SendForm {
         public var isLatestInputFiat = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
+        public var isSheetTexAddressVisible = false
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
@@ -456,6 +457,11 @@ public struct SendForm {
                         }
                     }
                 }
+                
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.isSheetTexAddressVisible = state.isValidTexAddress
+                }
+                
                 if isNotAddressInAddressBook {
                     state.isAddressBookHintVisible = true
                     return .run { send in
@@ -482,6 +488,9 @@ public struct SendForm {
                 state.isValidAddress = derivationTool.isZcashAddress(state.address.data, network)
                 state.isValidTransparentAddress = derivationTool.isTransparentAddress(state.address.data, network)
                 state.isValidTexAddress = derivationTool.isTexAddress(state.address.data, network)
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.isSheetTexAddressVisible = state.isValidTexAddress
+                }
                 return .none
                 
             case .zecAmountUpdated(let newValue):

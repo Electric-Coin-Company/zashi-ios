@@ -210,6 +210,11 @@ public struct SendFormView: View {
             .applyScreenBackground()
             .zashiBack(hidden: store.isPopToRootBack) { store.send(.dismissRequired) }
             .zashiBackV2(hidden: !store.isPopToRootBack) { store.send(.dismissRequired) }
+            .zashiSheet(isPresented: $store.isSheetTexAddressVisible) {
+                helpSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
             .alert(store: store.scope(
                 state: \.$alert,
                 action: \.alert
@@ -319,6 +324,48 @@ public struct SendFormView: View {
             withAnimation {
                 keyboardVisible = false
             }
+        }
+    }
+    
+    @ViewBuilder private func helpSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.Icons.alertOutline.image
+                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
+                .background {
+                    Circle()
+                        .fill(Design.Utility.ErrorRed._100.color(colorScheme))
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.top, 48)
+
+            Text(L10n.TexKeystone.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+
+            Group {
+                Text(L10n.TexKeystone.warn1).bold()
+                + Text(L10n.TexKeystone.warn2)
+            }
+            .zFont(size: 14, style: Design.Text.tertiary)
+            .fixedSize(horizontal: false, vertical: true)
+            .lineSpacing(2)
+            .padding(.bottom, 24)
+
+            Text(L10n.TexKeystone.workaround)
+                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                .padding(.bottom, 16)
+
+            HStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    
+                }
+            }
+            
+            ZashiButton(L10n.TexKeystone.gotIt) {
+            }
+            .padding(.top, 32)
+            .padding(.bottom, 24)
         }
     }
 }

@@ -1869,6 +1869,34 @@ public enum L10n {
     /// Data Export
     public static let title = L10n.tr("Localizable", "taxExport.title", fallback: "Data Export")
   }
+  public enum TexKeystone {
+    /// Got it
+    public static let gotIt = L10n.tr("Localizable", "texKeystone.gotIt", fallback: "Got it")
+    /// Step %@
+    public static func step(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "texKeystone.step", String(describing: p1), fallback: "Step %@")
+    }
+    /// TEX Transfer Not Supported
+    public static let title = L10n.tr("Localizable", "texKeystone.title", fallback: "TEX Transfer Not Supported")
+    /// Keystone doesn't currently support direct TEX transfers.
+    public static let warn1 = L10n.tr("Localizable", "texKeystone.warn1", fallback: "Keystone doesn't currently support direct TEX transfers.")
+    /// Please use the steps below to complete your transaction.
+    public static let warn2 = L10n.tr("Localizable", "texKeystone.warn2", fallback: "Please use the steps below to complete your transaction.")
+    /// Workaround Steps
+    public static let workaround = L10n.tr("Localizable", "texKeystone.workaround", fallback: "Workaround Steps")
+    public enum Step1 {
+      /// Transfer ZEC to your Zashi shielded address
+      public static let desc = L10n.tr("Localizable", "texKeystone.step1.desc", fallback: "Transfer ZEC to your Zashi shielded address")
+      /// Send to Zashi first
+      public static let title = L10n.tr("Localizable", "texKeystone.step1.title", fallback: "Send to Zashi first")
+    }
+    public enum Step2 {
+      /// Once received in Zashi, send the tokens to your final TEX destination address
+      public static let desc = L10n.tr("Localizable", "texKeystone.step2.desc", fallback: "Once received in Zashi, send the tokens to your final TEX destination address")
+      /// Send from Zashi to TEX address
+      public static let title = L10n.tr("Localizable", "texKeystone.step2.title", fallback: "Send from Zashi to TEX address")
+    }
+  }
   public enum Tooltip {
     public enum ExchangeRate {
       /// We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.
