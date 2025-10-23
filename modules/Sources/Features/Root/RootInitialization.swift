@@ -327,7 +327,6 @@ extension Root {
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
-                            //await send(.fetchTransactionsForTheSelectedAccount)
                             await send(.resolveMetadataEncryptionKeys)
                             await send(.loadUserMetadata)
 
@@ -496,6 +495,7 @@ extension Root {
                         try? addressBook.resetAccount(account.account)
                     }
                 }
+                state.autoUpdateSwapCandidates.removeAll()
                 try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }

@@ -21,6 +21,7 @@ extension Root {
                 }
                 state.$selectedWalletAccount.withLock { $0 = walletAccount }
                 state.homeState.transactionListState.isInvalidated = true
+                state.autoUpdateSwapCandidates.removeAll()
                 return .merge(
                     .send(.home(.smartBanner(.walletAccountChanged))),
                     .send(.home(.walletBalances(.updateBalances))),
@@ -38,6 +39,7 @@ extension Root {
 
             case .addKeystoneHWWalletCoordFlow(.path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded)))):
                 state.path = nil
+                state.autoUpdateSwapCandidates.removeAll()
                 return .merge(
                     .send(.loadContacts),
                     .send(.resolveMetadataEncryptionKeys),
@@ -49,6 +51,7 @@ extension Root {
 
             case .settings(.path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded)))):
                 state.path = nil
+                state.autoUpdateSwapCandidates.removeAll()
                 return .merge(
                     .send(.loadContacts),
                     .send(.resolveMetadataEncryptionKeys),
