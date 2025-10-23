@@ -501,7 +501,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "preview-ffi-0-18-5",
-        "revision" : "e644931b8f2ad3983851049bf5322a3b6b46bed4"
+        "revision" : "82bb54b0c85496f5aa2527881e127c6dfb10283f"
       }
     }
   ],

@@ -1,6 +1,19 @@
 {
     "releases": [
         {
+            "version": "2.4.5",
+            "date": "10-23-2025",
+            "timestamp": 1761209533,
+            "sections": [
+                {
+                    "title": "Corregido",
+                    "bulletpoints": [
+                        "Corregimos un problema de saldo y protección que afectaba las billeteras de algunos usuarios."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.4",
             "date": "10-20-2025",
             "timestamp": 1760967886,
