@@ -341,6 +341,10 @@ extension Root {
                             }
 
                             if let account = selectedAccount {
+//                                let sutAddr = try? await sdkSynchronizer.getSingleUseTransparentAddress(account.id)
+//                                print(sutAddr)
+//                                print(sutAddr)
+
                                 let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                                 if addressBookEncryptionKeys == nil {
                                     do {

@@ -302,6 +302,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             debugDatabaseSql: { query in
                 synchronizer.debugDatabase(sql: query)
+            },
+            getSingleUseTransparentAddress: { accountUUID in
+                try await synchronizer.getSingleUseTransparentAddress(accountUUID: accountUUID)
             }
         )
     }

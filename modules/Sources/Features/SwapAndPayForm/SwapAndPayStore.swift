@@ -596,6 +596,8 @@ public struct SwapAndPay {
                     return .none
                 }
                 
+//                let refundTo = "t1c9xHcyeZnMJQgJRXZqoznwuMqeVpxwEMY"
+                
                 guard let zecAmountDecimal = numberFormatter.number(state.zecToBeSpend)?.decimalValue else {
                     return .none
                 }

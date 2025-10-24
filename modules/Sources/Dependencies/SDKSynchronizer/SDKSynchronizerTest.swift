@@ -66,7 +66,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         exchangeRateEnabled: unimplemented("\(Self.self).exchangeRateEnabled"),
         isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil),
         httpRequestOverTor: unimplemented("\(Self.self).httpRequestOverTor", placeholder: (Data(), HTTPURLResponse.mockResponse)),
-        debugDatabaseSql: unimplemented("\(Self.self).debugDatabaseSql", placeholder: "")
+        debugDatabaseSql: unimplemented("\(Self.self).debugDatabaseSql", placeholder: ""),
+        getSingleUseTransparentAddress: unimplemented("\(Self.self).getSingleUseTransparentAddress", placeholder: ""),
     )
 }
 
@@ -111,7 +112,8 @@ extension SDKSynchronizerClient {
         exchangeRateEnabled: { _ in },
         isTorSuccessfullyInitialized: { nil },
         httpRequestOverTor: { _ in (data: Data(), response: HTTPURLResponse.mockResponse) },
-        debugDatabaseSql: { _ in "" }
+        debugDatabaseSql: { _ in "" },
+        getSingleUseTransparentAddress: { _ in "" },
     )
 
     public static let mock = Self.mocked()
@@ -227,7 +229,8 @@ extension SDKSynchronizerClient {
         exchangeRateEnabled: @escaping (Bool) async throws -> Void = { _ in },
         isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil },
         httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in (Data(), HTTPURLResponse.mockResponse) },
-        debugDatabaseSql: @escaping (String) -> String = { _ in "" }
+        debugDatabaseSql: @escaping (String) -> String = { _ in "" },
+        getSingleUseTransparentAddress: @escaping (AccountUUID) async throws -> String = { _ in "" }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -269,7 +272,8 @@ extension SDKSynchronizerClient {
             exchangeRateEnabled: exchangeRateEnabled,
             isTorSuccessfullyInitialized: isTorSuccessfullyInitialized,
             httpRequestOverTor: httpRequestOverTor,
-            debugDatabaseSql: debugDatabaseSql
+            debugDatabaseSql: debugDatabaseSql,
+            getSingleUseTransparentAddress: getSingleUseTransparentAddress
         )
     }
 }
