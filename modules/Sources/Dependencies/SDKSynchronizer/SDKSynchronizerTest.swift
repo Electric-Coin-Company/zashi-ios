@@ -67,7 +67,12 @@ extension SDKSynchronizerClient: TestDependencyKey {
         isTorSuccessfullyInitialized: unimplemented("\(Self.self).isTorSuccessfullyInitialized", placeholder: nil),
         httpRequestOverTor: unimplemented("\(Self.self).httpRequestOverTor", placeholder: (Data(), HTTPURLResponse.mockResponse)),
         debugDatabaseSql: unimplemented("\(Self.self).debugDatabaseSql", placeholder: ""),
-        getSingleUseTransparentAddress: unimplemented("\(Self.self).getSingleUseTransparentAddress", placeholder: ""),
+        getSingleUseTransparentAddress: unimplemented(
+            "\(Self.self).getSingleUseTransparentAddress",
+            placeholder: SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
+        ),
+        checkSingleUseTransparentAddresses: unimplemented("\(Self.self).checkSingleUseTransparentAddresses", placeholder: .notFound),
+        updateTransparentAddressTransactions: unimplemented("\(Self.self).updateTransparentAddressTransactions", placeholder: .notFound)
     )
 }
 
@@ -113,7 +118,11 @@ extension SDKSynchronizerClient {
         isTorSuccessfullyInitialized: { nil },
         httpRequestOverTor: { _ in (data: Data(), response: HTTPURLResponse.mockResponse) },
         debugDatabaseSql: { _ in "" },
-        getSingleUseTransparentAddress: { _ in "" },
+        getSingleUseTransparentAddress: { _ in
+            SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
+        },
+        checkSingleUseTransparentAddresses: { _ in .notFound },
+        updateTransparentAddressTransactions: { _, _ in .notFound }
     )
 
     public static let mock = Self.mocked()
@@ -230,7 +239,11 @@ extension SDKSynchronizerClient {
         isTorSuccessfullyInitialized: @escaping () async -> Bool? = { nil },
         httpRequestOverTor: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse) = { _ in (Data(), HTTPURLResponse.mockResponse) },
         debugDatabaseSql: @escaping (String) -> String = { _ in "" },
-        getSingleUseTransparentAddress: @escaping (AccountUUID) async throws -> String = { _ in "" }
+        getSingleUseTransparentAddress: @escaping (AccountUUID) async throws -> SingleUseTransparentAddress = { _ in
+            SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
+        },
+        checkSingleUseTransparentAddresses: @escaping (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound },
+        updateTransparentAddressTransactions: @escaping (String, BlockHeight) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -273,7 +286,9 @@ extension SDKSynchronizerClient {
             isTorSuccessfullyInitialized: isTorSuccessfullyInitialized,
             httpRequestOverTor: httpRequestOverTor,
             debugDatabaseSql: debugDatabaseSql,
-            getSingleUseTransparentAddress: getSingleUseTransparentAddress
+            getSingleUseTransparentAddress: getSingleUseTransparentAddress,
+            checkSingleUseTransparentAddresses: checkSingleUseTransparentAddresses,
+            updateTransparentAddressTransactions: updateTransparentAddressTransactions
         )
     }
 }

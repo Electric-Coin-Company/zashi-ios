@@ -92,5 +92,10 @@ public struct SDKSynchronizerClient {
     
     public var debugDatabaseSql: (String) -> String = { _ in "" }
     
-    public var getSingleUseTransparentAddress: (AccountUUID) async throws -> String = { _ in "" }
+    public var getSingleUseTransparentAddress: (AccountUUID) async throws -> SingleUseTransparentAddress = { _ in
+        SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
+    }
+    public var checkSingleUseTransparentAddresses: (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound }
+    public var updateTransparentAddressTransactions: (String, BlockHeight) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
 }
+

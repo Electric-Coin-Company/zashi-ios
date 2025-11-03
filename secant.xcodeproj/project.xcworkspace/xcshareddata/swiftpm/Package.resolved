@@ -257,8 +257,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types.git",
       "state" : {
-        "revision" : "45eb0224913ea070ec4fba17291b9e7ecf4749ca",
-        "version" : "1.5.1"
+        "revision" : "9410f6b9a3d418a5416cfe30d8de4227bc6890a0",
+        "version" : "1.5.0"
       }
     },
     {
@@ -482,8 +482,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "branch" : "preview/feature/single_use_addresses",
-        "revision" : "fb3b0e2fdf98e5925ca6e339ecd09023af56614f"
+        "revision" : "87e5e1a92767625942368e2cf29ce9610dba3a42"
       }
     },
     {
@@ -501,7 +500,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "t-ephemeral-addresses",
-        "revision" : "5765fd4b3b60ac301c1272bab8e83fc4c13c8277"
+        "revision" : "4c0c6a6a8a925bdf2d8db99772552e502398c3ea"
       }
     }
   ],

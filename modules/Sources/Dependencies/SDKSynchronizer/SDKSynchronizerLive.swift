@@ -305,6 +305,12 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             getSingleUseTransparentAddress: { accountUUID in
                 try await synchronizer.getSingleUseTransparentAddress(accountUUID: accountUUID)
+            },
+            checkSingleUseTransparentAddresses: { accountUUID in
+                try await synchronizer.checkSingleUseTransparentAddresses(accountUUID: accountUUID)
+            },
+            updateTransparentAddressTransactions: { address, start in
+                try await synchronizer.updateTransparentAddressTransactions(address: address, start: start)
             }
         )
     }
