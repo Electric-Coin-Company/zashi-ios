@@ -732,6 +732,18 @@ public enum L10n {
       public static let rotateInfo = L10n.tr("Localizable", "receive.ua.rotateInfo", fallback: "Rotates every time you use it")
     }
   }
+  public enum RecoverFunds {
+    /// Scan address
+    public static let btn = L10n.tr("Localizable", "recoverFunds.btn", fallback: "Scan address")
+    /// Transparent Address
+    public static let fieldTitle = L10n.tr("Localizable", "recoverFunds.fieldTitle", fallback: "Transparent Address")
+    /// If you confirm, Zashi will scan the transparent address you provide and discover its funds. This may take a few minutes up to a few hours.
+    public static let msg = L10n.tr("Localizable", "recoverFunds.msg", fallback: "If you confirm, Zashi will scan the transparent address you provide and discover its funds. This may take a few minutes up to a few hours.")
+    /// Enter or paste...
+    public static let placeholder = L10n.tr("Localizable", "recoverFunds.placeholder", fallback: "Enter or paste...")
+    /// Discover Funds
+    public static let title = L10n.tr("Localizable", "recoverFunds.title", fallback: "Discover Funds")
+  }
   public enum RecoveryPhraseDisplay {
     /// Wallet Birthday Height
     public static let birthdayTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayTitle", fallback: "Wallet Birthday Height")

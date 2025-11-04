@@ -916,3 +916,9 @@
 
 "deleteWallet.sheet.title" = "Are you sure?";
 "deleteWallet.sheet.msg" = "Resetting the app cannot be undone. You will need to restore your wallet using your secret recovery phrase.";
+
+"recoverFunds.title" = "Discover Funds";
+"recoverFunds.msg" = "If you confirm, Zashi will scan the transparent address you provide and discover its funds. This may take a few minutes up to a few hours.";
+"recoverFunds.fieldTitle" = "Transparent Address";
+"recoverFunds.placeholder" = "Enter or paste...";
+"recoverFunds.btn" = "Scan address";

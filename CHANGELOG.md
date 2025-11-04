@@ -6,6 +6,18 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- A hidden sheet with logic to recover funds from ephemeral transparent addresses.
+- A new server/endpoint added to the list.
+
+### Fixed
+- Missing syncing and restoring widget after a higher priority dismissal.
+
+## 2.4.5 build 1 (2025-10-23)
+
+### Fixed
+- Issues with shielding of transactions.
+
 ## 2.4.4 build 1 (2025-10-21)
 
 ### Added

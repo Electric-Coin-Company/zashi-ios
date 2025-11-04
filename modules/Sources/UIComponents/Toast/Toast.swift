@@ -16,6 +16,7 @@ public struct Toast: ViewModifier {
         case bottom(String)
         case top(String)
         case topDelayed(String)
+        case topDelayed5(String)
     }
     
     @Shared(.inMemory(.toast)) public var toast: Edge? = nil
@@ -89,6 +90,10 @@ public struct Toast: ViewModifier {
                 message = msg
                 top = true
                 delay = 3.0
+            case .topDelayed5(let msg):
+                message = msg
+                top = true
+                delay = 5.0
             case .none: break
             }
         }

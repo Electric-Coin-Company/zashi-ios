@@ -112,6 +112,7 @@ public struct Root {
         public var splashAppeared = false
         public var supportData: SupportData?
         @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -266,6 +267,11 @@ public struct Root {
         case attemptToCheckSwapStatus(Bool)
         case autoUpdateCandidatesSwapDetails(SwapDetails)
         case compareAndUpdateMetadataOfSwap(SwapDetails)
+        
+        // Check funds
+        case checkFundsFailed(String)
+        case checkFundsFoundSomething
+        case checkFundsNothingFound
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -403,6 +409,8 @@ public struct Root {
         torInitCheckReduce()
         
         swapsReduce()
+        
+        checkFundsReduce()
     }
     
     public var body: some Reducer<State, Action> {

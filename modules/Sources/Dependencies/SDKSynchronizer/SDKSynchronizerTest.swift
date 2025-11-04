@@ -72,7 +72,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
             placeholder: SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
         ),
         checkSingleUseTransparentAddresses: unimplemented("\(Self.self).checkSingleUseTransparentAddresses", placeholder: .notFound),
-        updateTransparentAddressTransactions: unimplemented("\(Self.self).updateTransparentAddressTransactions", placeholder: .notFound)
+        updateTransparentAddressTransactions: unimplemented("\(Self.self).updateTransparentAddressTransactions", placeholder: .notFound),
+        fetchUTXOsByAddress: unimplemented("\(Self.self).fetchUTXOsByAddress", placeholder: .notFound)
     )
 }
 
@@ -122,7 +123,8 @@ extension SDKSynchronizerClient {
             SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
         },
         checkSingleUseTransparentAddresses: { _ in .notFound },
-        updateTransparentAddressTransactions: { _, _ in .notFound }
+        updateTransparentAddressTransactions: { _ in .notFound },
+        fetchUTXOsByAddress: { _, _ in .notFound }
     )
 
     public static let mock = Self.mocked()
@@ -243,7 +245,8 @@ extension SDKSynchronizerClient {
             SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
         },
         checkSingleUseTransparentAddresses: @escaping (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound },
-        updateTransparentAddressTransactions: @escaping (String, BlockHeight) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
+        updateTransparentAddressTransactions: @escaping (String) async throws -> TransparentAddressCheckResult = { _ in .notFound },
+        fetchUTXOsByAddress: @escaping (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -288,7 +291,8 @@ extension SDKSynchronizerClient {
             debugDatabaseSql: debugDatabaseSql,
             getSingleUseTransparentAddress: getSingleUseTransparentAddress,
             checkSingleUseTransparentAddresses: checkSingleUseTransparentAddresses,
-            updateTransparentAddressTransactions: updateTransparentAddressTransactions
+            updateTransparentAddressTransactions: updateTransparentAddressTransactions,
+            fetchUTXOsByAddress: fetchUTXOsByAddress
         )
     }
 }

@@ -482,7 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "87e5e1a92767625942368e2cf29ce9610dba3a42"
+        "branch" : "preview/fix/relax_ephemeral_address_unspentness_checks",
+        "revision" : "ff455cdec44c7ccfb54b0c9b33a2e0462ece9f4d"
       }
     },
     {
@@ -500,7 +501,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "t-ephemeral-addresses",
-        "revision" : "4c0c6a6a8a925bdf2d8db99772552e502398c3ea"
+        "revision" : "04fe823aa807baa8800342c1829185a39dbeff49"
       }
     }
   ],

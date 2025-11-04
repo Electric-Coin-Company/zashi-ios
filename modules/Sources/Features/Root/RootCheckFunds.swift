@@ -1,0 +1,54 @@
+//
+//  Untitled.swift
+//  modules
+//
+//  Created by Lukáš Korba on 03.11.2025.
+//
+
+import Combine
+import ComposableArchitecture
+import Foundation
+import ZcashLightClientKit
+import Generated
+import Models
+
+extension Root {
+    public func checkFundsReduce() -> Reduce<Root.State, Root.Action> {
+        Reduce { state, action in
+            switch action {
+            case .settings(.checkFundsForAddress(let address)):
+                guard let accountUUID = state.selectedWalletAccount?.account.id else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let result = try await sdkSynchronizer.fetchUTXOsByAddress(address, accountUUID)
+                        switch result {
+                        case .notFound:
+                            await send(.checkFundsNothingFound)
+                        case .found(let address):
+                            print(address)
+                            await send(.checkFundsFoundSomething)
+                        }
+                    } catch {
+                        await send(.checkFundsFailed(error.localizedDescription))
+                    }
+                }
+            
+            case .checkFundsFailed(let error):
+                state.$toast.withLock { $0 = .topDelayed5("Error: \(error)") }
+                return .none
+
+            case .checkFundsFoundSomething:
+                state.$toast.withLock { $0 = .topDelayed5("Funds were successfully discovered") }
+                return .none
+
+            case .checkFundsNothingFound:
+                state.$toast.withLock { $0 = .topDelayed5("No funds were discovered") }
+                return .none
+
+            default: return .none
+            }
+        }
+    }
+}

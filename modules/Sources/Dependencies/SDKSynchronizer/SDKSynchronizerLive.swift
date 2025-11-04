@@ -309,8 +309,11 @@ extension SDKSynchronizerClient: DependencyKey {
             checkSingleUseTransparentAddresses: { accountUUID in
                 try await synchronizer.checkSingleUseTransparentAddresses(accountUUID: accountUUID)
             },
-            updateTransparentAddressTransactions: { address, start in
-                try await synchronizer.updateTransparentAddressTransactions(address: address, start: start)
+            updateTransparentAddressTransactions: { address in
+                try await synchronizer.updateTransparentAddressTransactions(address: address)
+            },
+            fetchUTXOsByAddress: { address, accountUUID in
+                try await synchronizer.fetchUTXOsBy(address: address, accountUUID: accountUUID)
             }
         )
     }
