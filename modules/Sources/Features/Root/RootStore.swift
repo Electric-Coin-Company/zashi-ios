@@ -129,6 +129,9 @@ public struct Root {
         public var autoUpdateSwapCandidates: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
 
+        // Shared Flags
+        @Shared(.inMemory(.sharedFlagInsufficientFunds)) public var sharedFlagInsufficientFunds: Bool = false
+
         // Path
         public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
         public var currencyConversionSetupState = CurrencyConversionSetup.State.initial
@@ -273,6 +276,9 @@ public struct Root {
         case checkFundsFoundSomething
         case checkFundsNothingFound
         case checkFundsTorRequired
+        
+        // Shared flags
+        case closeInsufficientFundsTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -451,6 +457,10 @@ public struct Root {
             case .onboarding(.newWalletSuccessfulyCreated):
                 return .send(.initialization(.initializeSDK(.newWallet)))
 
+            case .closeInsufficientFundsTapped:
+                state.$sharedFlagInsufficientFunds.withLock { $0 = false }
+                return .none
+                
             default: return .none
             }
         }

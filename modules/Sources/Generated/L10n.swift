@@ -1285,6 +1285,14 @@ public enum L10n {
       }
     }
   }
+  public enum Sheet {
+    public enum InsufficientBalance {
+      /// We couldn’t create this transaction for you. Your wallet doesn’t have enough balance to cover both the transaction amount and transaction fees. Please lower the transaction amount to account for the fees. 
+      public static let msg = L10n.tr("Localizable", "sheet.insufficientBalance.msg", fallback: "We couldn’t create this transaction for you. Your wallet doesn’t have enough balance to cover both the transaction amount and transaction fees. Please lower the transaction amount to account for the fees. ")
+      /// Insufficient Funds
+      public static let title = L10n.tr("Localizable", "sheet.insufficientBalance.title", fallback: "Insufficient Funds")
+    }
+  }
   public enum ShieldFunds {
     public enum Error {
       /// Shielding Error
