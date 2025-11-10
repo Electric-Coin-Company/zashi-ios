@@ -272,6 +272,7 @@ public struct Root {
         case checkFundsFailed(String)
         case checkFundsFoundSomething
         case checkFundsNothingFound
+        case checkFundsTorRequired
     }
 
     @Dependency(\.addressBook) var addressBook

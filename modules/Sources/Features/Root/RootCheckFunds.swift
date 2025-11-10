@@ -24,10 +24,11 @@ extension Root {
                     do {
                         let result = try await sdkSynchronizer.fetchUTXOsByAddress(address, accountUUID)
                         switch result {
+                        case .torRequired:
+                            await send(.checkFundsTorRequired)
                         case .notFound:
                             await send(.checkFundsNothingFound)
                         case .found(let address):
-                            print(address)
                             await send(.checkFundsFoundSomething)
                         }
                     } catch {
@@ -41,6 +42,10 @@ extension Root {
 
             case .checkFundsFoundSomething:
                 state.$toast.withLock { $0 = .topDelayed5("Funds were successfully discovered") }
+                return .none
+
+            case .checkFundsTorRequired:
+                state.$toast.withLock { $0 = .topDelayed5("Tor required") }
                 return .none
 
             case .checkFundsNothingFound:
