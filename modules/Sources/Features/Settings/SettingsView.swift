@@ -82,7 +82,10 @@ public struct SettingsView: View {
                     Asset.Assets.zashiTitle.image
                         .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
                         .padding(.bottom, 16)
-                    
+                        .onLongPressGesture {
+                            store.send(.enableDebugMode)
+                        }
+
                     Text(L10n.Settings.version(store.appVersion, store.appBuild))
                         .zFont(size: 16, style: Design.Text.tertiary)
                         .padding(.bottom, 24)
@@ -130,6 +133,52 @@ public struct SettingsView: View {
             .zashiBack()
             .navigationBarHidden(!store.path.isEmpty)
             .screenTitle(L10n.Settings.title)
+            .zashiSheet(isPresented: $store.isInDebugMode) {
+                helpSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
+        }
+    }
+    
+    @ViewBuilder private func helpSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(L10n.RecoverFunds.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+
+            Text(L10n.RecoverFunds.msg)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, 24)
+            
+            ZashiTextField(
+                addressFont: true,
+                text: $store.addressToRecoverFunds,
+                placeholder: L10n.RecoverFunds.placeholder,
+                title: L10n.RecoverFunds.fieldTitle
+            )
+            .padding(.bottom, 32)
+
+            if !store.isTorOn {
+                HStack(alignment: .top, spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                        .padding(.trailing, 12)
+                    
+                    Text(L10n.RecoverFunds.tor)
+                        .zFont(size: 12, style: Design.Utility.WarningYellow._700)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.bottom, 12)
+            }
+            
+            ZashiButton(L10n.RecoverFunds.btn) {
+                store.send(.checkFundsForAddress(store.addressToRecoverFunds))
+            }
+            .disabled(store.addressToRecoverFunds.isEmpty || !store.isTorOn)
+            .padding(.bottom, 24)
         }
     }
 }

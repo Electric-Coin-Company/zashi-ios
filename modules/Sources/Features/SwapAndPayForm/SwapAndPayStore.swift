@@ -595,7 +595,7 @@ public struct SwapAndPay {
                 guard let refundTo = state.selectedWalletAccount?.transparentAddress else {
                     return .none
                 }
-                
+
                 guard let zecAmountDecimal = numberFormatter.number(state.zecToBeSpend)?.decimalValue else {
                     return .none
                 }

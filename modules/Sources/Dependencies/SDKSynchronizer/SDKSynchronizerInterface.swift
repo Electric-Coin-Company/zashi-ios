@@ -45,26 +45,26 @@ public struct SDKSynchronizerClient {
     public var getAllTransactions: (AccountUUID?) async throws -> IdentifiedArrayOf<TransactionState>
     public var transactionStatesFromZcashTransactions: (AccountUUID?, [ZcashTransaction.Overview]) async throws -> IdentifiedArrayOf<TransactionState>
     public var getMemos: (Data) async throws -> [Memo]
-
+    
     public let getUnifiedAddress: (_ account: AccountUUID) async throws -> UnifiedAddress?
     public let getTransparentAddress: (_ account: AccountUUID) async throws -> TransparentAddress?
     public let getSaplingAddress: (_ account: AccountUUID) async throws -> SaplingAddress?
-
+    
     public let getAccountsBalances: () async throws -> [AccountUUID: AccountBalance]
-
+    
     public var wipe: () -> AnyPublisher<Void, Error>?
-
+    
     public var switchToEndpoint: (LightWalletEndpoint) async throws -> Void
-
+    
     // Proposals
     public var proposeTransfer: (AccountUUID, Recipient, Zatoshi, Memo?) async throws -> Proposal
     public var createProposedTransactions: (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult
     public var proposeShielding: (AccountUUID, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
-
+    
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
     
     public var refreshExchangeRateUSD: () -> Void
-
+    
     public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _,_,_,_,_,_ in [] }
     
     public var walletAccounts: () async throws -> [WalletAccount] = { [] }
@@ -77,7 +77,7 @@ public struct SDKSynchronizerClient {
     public var createTransactionFromPCZT: (Pczt, Pczt) async throws -> CreateProposedTransactionsResult
     public var urEncoderForPCZT: (Pczt) -> UREncoder?
     public var redactPCZTForSigner: (Pczt) async throws  -> Pczt
-
+    
     // Search
     public var fetchTxidsWithMemoContaining: (String) async throws -> [Data]
     
@@ -91,4 +91,12 @@ public struct SDKSynchronizerClient {
     public var httpRequestOverTor: (URLRequest) async throws -> (Data, HTTPURLResponse)
     
     public var debugDatabaseSql: (String) -> String = { _ in "" }
+    
+    public var getSingleUseTransparentAddress: (AccountUUID) async throws -> SingleUseTransparentAddress = { _ in
+        SingleUseTransparentAddress(address: "", gapPosition: 0, gapLimit: 0)
+    }
+    public var checkSingleUseTransparentAddresses: (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound }
+    public var updateTransparentAddressTransactions: (String) async throws -> TransparentAddressCheckResult = { _ in .notFound }
+    public var fetchUTXOsByAddress: (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
 }
+

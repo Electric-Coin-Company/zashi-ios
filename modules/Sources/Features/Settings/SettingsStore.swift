@@ -7,6 +7,7 @@ import Generated
 import Models
 import LocalAuthenticationHandler
 import AudioServices
+import WalletStorage
 
 import About
 import AddKeystoneHWWallet
@@ -46,10 +47,13 @@ public struct Settings {
     
     @ObservableState
     public struct State {
+        public var addressToRecoverFunds = ""
         public var appVersion = ""
         public var appBuild = ""
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isEnoughFreeSpaceMode = true
+        public var isInDebugMode = false
+        public var isTorOn = false
         public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -71,11 +75,14 @@ public struct Settings {
         public init() { }
     }
 
-    public enum Action {
+    public enum Action: BindableAction {
         case aboutTapped
         case addressBookAccessCheck
         case addressBookTapped
         case advancedSettingsTapped
+        case binding(BindingAction<Settings.State>)
+        case checkFundsForAddress(String)
+        case enableDebugMode
         case onAppear
         case path(StackActionOf<Path>)
         case sendUsFeedbackTapped
@@ -85,10 +92,13 @@ public struct Settings {
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
+    @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         coordinatorReduce()
         
         Reduce { state, action in
@@ -97,6 +107,12 @@ public struct Settings {
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
                 state.path.removeAll()
+                if let torOnFlag = walletStorage.exportTorSetupFlag() {
+                    state.isTorOn = torOnFlag
+                }
+                return .none
+                
+            case .binding:
                 return .none
 
             case .aboutTapped:
@@ -122,6 +138,15 @@ public struct Settings {
                 return .none
                 
             case .path:
+                return .none
+                
+            case .checkFundsForAddress:
+                state.isInDebugMode = false
+                return .none
+                
+            case .enableDebugMode:
+                state.addressToRecoverFunds = ""
+                state.isInDebugMode = true
                 return .none
             }
         }

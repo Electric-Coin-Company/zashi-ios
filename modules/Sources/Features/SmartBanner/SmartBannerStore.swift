@@ -339,9 +339,11 @@ public struct SmartBanner {
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
                     
+                    var isSyncing = false
                     if case let .syncing(syncProgress, isScanProgressComplete) = snapshot.syncStatus {
                         state.lastKnownSyncPercentage = Double(syncProgress)
                         state.isScanProgressComplete = isScanProgressComplete
+                        isSyncing = true
 
                         if state.priorityContent == .priority2 {
                             return .send(.closeAndCleanupBanner)
@@ -377,6 +379,15 @@ public struct SmartBanner {
                                 .send(.transparentBalanceUpdated(accountBalance.unshielded)),
                                 .send(.triggerPriority(.priority7))
                             )
+                        }
+                    }
+                    
+                    // return of restoring/syncing
+                    if isSyncing && state.priorityContent == nil {
+                        if state.walletStatus == .restoring {
+                            return .send(.triggerPriority(.priority3))
+                        } else if state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < 0.95 {
+                            return .send(.triggerPriority(.priority4))
                         }
                     }
                 }
