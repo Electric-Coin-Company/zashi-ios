@@ -161,11 +161,24 @@ public struct SettingsView: View {
             )
             .padding(.bottom, 32)
 
+            if !store.isTorOn {
+                HStack(alignment: .top, spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                        .padding(.trailing, 12)
+                    
+                    Text(L10n.RecoverFunds.tor)
+                        .zFont(size: 12, style: Design.Utility.WarningYellow._700)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.bottom, 12)
+            }
+            
             ZashiButton(L10n.RecoverFunds.btn) {
                 store.send(.checkFundsForAddress(store.addressToRecoverFunds))
             }
-            .disabled(store.addressToRecoverFunds.isEmpty)
-            .padding(.bottom, 32)
+            .disabled(store.addressToRecoverFunds.isEmpty || !store.isTorOn)
+            .padding(.bottom, 24)
         }
     }
 }

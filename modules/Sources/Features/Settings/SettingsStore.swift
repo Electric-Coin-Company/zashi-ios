@@ -7,6 +7,7 @@ import Generated
 import Models
 import LocalAuthenticationHandler
 import AudioServices
+import WalletStorage
 
 import About
 import AddKeystoneHWWallet
@@ -52,6 +53,7 @@ public struct Settings {
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isEnoughFreeSpaceMode = true
         public var isInDebugMode = false
+        public var isTorOn = false
         public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -90,6 +92,7 @@ public struct Settings {
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
+    @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
 
@@ -104,6 +107,9 @@ public struct Settings {
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
                 state.path.removeAll()
+                if let torOnFlag = walletStorage.exportTorSetupFlag() {
+                    state.isTorOn = torOnFlag
+                }
                 return .none
                 
             case .binding:

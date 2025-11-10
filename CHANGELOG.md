@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.7 build 1 (2025-11-05)
+
 ### Added
 - A hidden sheet with logic to recover funds from ephemeral transparent addresses.
 - A new server/endpoint added to the list.

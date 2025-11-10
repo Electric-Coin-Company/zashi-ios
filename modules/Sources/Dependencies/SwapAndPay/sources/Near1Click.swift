@@ -225,12 +225,12 @@ extension Near1Click {
         quote: { dry, isSwapToZec, exactInput, slippageTolerance, zecAsset, toAsset, refundTo, destination, amount in
             // Deadline in ISO 8601 UTC format
             let now = Date()
-            let tenMinutesLater = now.addingTimeInterval(10 * 60)
+            let twoHoursLater = now.addingTimeInterval(120 * 60)
             let isoFormatter = ISO8601DateFormatter()
             isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
             isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             
-            let deadline = isoFormatter.string(from: tenMinutesLater)
+            let deadline = isoFormatter.string(from: twoHoursLater)
             
             let requestData = SwapQuoteRequest(
                 dry: dry,

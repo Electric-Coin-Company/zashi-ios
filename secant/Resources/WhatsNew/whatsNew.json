@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "2.4.7",
+            "date": "11-05-2025",
+            "timestamp": 1762348565,
+            "sections": [
+                {
+                    "title": "Changed",
+                    "bulletpoints": [
+                        "We added a new server to the Zashi server list.",
+                        "We increased the swap deadline to prevent early refunds."
+                    ]
+                },
+                {
+                    "title": "Fixed",
+                    "bulletpoints": [
+                        "We made a whole bunch of bug fixes, refactoring and UX/UI improvements.",
+                        "We implemented a mechanism for discovering failed TEX transaction funds."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.5",
             "date": "10-23-2025",
             "timestamp": 1761209533,
