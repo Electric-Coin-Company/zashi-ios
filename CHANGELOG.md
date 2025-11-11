@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- A new sheet with option to turn on Tor prior to restoring their wallet.
+
 ## 2.4.7 build 1 (2025-11-05)
 
 ### Added

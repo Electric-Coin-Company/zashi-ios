@@ -923,3 +923,7 @@
 "recoverFunds.placeholder" = "Enter or paste...";
 "recoverFunds.btn" = "Scan address";
 "recoverFunds.tor" = "This operation requires Tor Protection. Please enable it in the Advanced Settings. ";
+
+"torSettingsSheet.title" = "Enable Tor Protection";
+"torSettingsSheet.msg" = "If Tor is available in your region, we recommend enabling it for enhanced privacy during wallet restoration. This step is completely optional.";
+"torSettingsSheet.desc" = "Routes your connection through the Tor network for enhanced anonymity and privacy protection.";

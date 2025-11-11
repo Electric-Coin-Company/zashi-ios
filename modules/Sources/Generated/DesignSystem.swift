@@ -255,6 +255,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum SuccessGreen: Colorable {
@@ -268,6 +269,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum ErrorRed: Colorable {
@@ -281,6 +283,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum WarningYellow: Colorable {
@@ -294,6 +297,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum HyperBlue: Colorable {
@@ -307,6 +311,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum Indigo: Colorable {
@@ -320,6 +325,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
 
         public enum Purple: Colorable {
@@ -347,6 +353,7 @@ public enum Design: Colorable {
             case _700
             case _800
             case _900
+            case _950
         }
     }
     
@@ -702,16 +709,17 @@ public extension Design.Dropdowns.Disabled {
 public extension Design.Utility.Gray {
     func color(_ colorScheme: ColorScheme) -> Color {
         switch self {
-        case ._50: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
-        case ._100: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
-        case ._200: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
-        case ._300: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
-        case ._400: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
-        case ._500: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
-        case ._600: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
-        case ._700: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
-        case ._800: return Design.col(Asset.Colors.ZDesign.gray800.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
-        case ._900: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
+        case ._50: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark950.color, colorScheme)
+        case ._100: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case ._200: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
+        case ._300: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
+        case ._400: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
+        case ._500: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        case ._600: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
+        case ._700: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
+        case ._800: return Design.col(Asset.Colors.ZDesign.gray800.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case ._900: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.gray950.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
         }
     }
 }
@@ -729,6 +737,7 @@ public extension Design.Utility.SuccessGreen {
         case ._700: return Design.col(Asset.Colors.ZDesign.successGreen700.color, Asset.Colors.ZDesign.successGreen300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.successGreen800.color, Asset.Colors.ZDesign.successGreen200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.successGreen900.color, Asset.Colors.ZDesign.successGreen100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.successGreen950.color, Asset.Colors.ZDesign.successGreen50.color, colorScheme)
         }
     }
 }
@@ -746,6 +755,7 @@ public extension Design.Utility.ErrorRed {
         case ._700: return Design.col(Asset.Colors.ZDesign.errorRed700.color, Asset.Colors.ZDesign.errorRed300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.errorRed800.color, Asset.Colors.ZDesign.errorRed200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.errorRed900.color, Asset.Colors.ZDesign.errorRed100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.errorRed900.color, Asset.Colors.ZDesign.errorRed50.color, colorScheme)
         }
     }
 }
@@ -763,6 +773,7 @@ public extension Design.Utility.WarningYellow {
         case ._700: return Design.col(Asset.Colors.ZDesign.warningYellow700.color, Asset.Colors.ZDesign.warningYellow300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.warningYellow800.color, Asset.Colors.ZDesign.warningYellow200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.warningYellow900.color, Asset.Colors.ZDesign.warningYellow100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.warningYellow900.color, Asset.Colors.ZDesign.warningYellow50.color, colorScheme)
         }
     }
 }
@@ -780,6 +791,7 @@ public extension Design.Utility.HyperBlue {
         case ._700: return Design.col(Asset.Colors.ZDesign.hyperBlue700.color, Asset.Colors.ZDesign.hyperBlue300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.hyperBlue800.color, Asset.Colors.ZDesign.hyperBlue200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.hyperBlue900.color, Asset.Colors.ZDesign.hyperBlue100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.hyperBlue900.color, Asset.Colors.ZDesign.hyperBlue50.color, colorScheme)
         }
     }
 }
@@ -797,6 +809,7 @@ public extension Design.Utility.Indigo {
         case ._700: return Design.col(Asset.Colors.ZDesign.indigo700.color, Asset.Colors.ZDesign.indigo300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.indigo800.color, Asset.Colors.ZDesign.indigo200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.indigo900.color, Asset.Colors.ZDesign.indigo100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.indigo900.color, Asset.Colors.ZDesign.indigo50.color, colorScheme)
         }
     }
 }
@@ -832,6 +845,7 @@ public extension Design.Utility.Brand {
         case ._700: return Design.col(Asset.Colors.ZDesign.brand700.color, Asset.Colors.ZDesign.brand300.color, colorScheme)
         case ._800: return Design.col(Asset.Colors.ZDesign.brand800.color, Asset.Colors.ZDesign.brand200.color, colorScheme)
         case ._900: return Design.col(Asset.Colors.ZDesign.brand900.color, Asset.Colors.ZDesign.brand100.color, colorScheme)
+        case ._950: return Design.col(Asset.Colors.ZDesign.brand900.color, Asset.Colors.ZDesign.brand50.color, colorScheme)
         }
     }
 }

@@ -12,6 +12,7 @@ import ZcashLightClientKit
 import MnemonicSwift
 import Pasteboard
 import WalletStorage
+import SDKSynchronizer
 
 // Path
 import RestoreInfo
@@ -29,9 +30,12 @@ public struct RestoreWalletCoordFlow {
     
     @ObservableState
     public struct State {
+        public var birthday: BlockHeight? = nil
         public var isHelpSheetPresented = false
         public var isKeyboardVisible = false
         public var isValidSeed = false
+        public var isTorOn = false
+        public var isTorSheetPresented = false
         public var nextIndex: Int?
         public var path = StackState<Path.State>()
         public var prevWords: [String] = Array(repeating: "", count: 24)
@@ -50,7 +54,10 @@ public struct RestoreWalletCoordFlow {
         case helpSheetRequested
         case nextTapped
         case path(StackActionOf<Path>)
-        case resolveRestoreWithBirthday(BlockHeight)
+        case resolveRestore
+        case resolveRestoreRequested
+        case resolveRestoreTapped
+        case restoreCancelTapped
         case selectedIndex(Int?)
         case successfullyRecovered
         case suggestedWordTapped(String)
@@ -63,6 +70,7 @@ public struct RestoreWalletCoordFlow {
 
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }

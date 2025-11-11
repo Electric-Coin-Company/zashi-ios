@@ -237,6 +237,11 @@ public struct RestoreWalletCoordFlowView: View {
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
+            .zashiSheet(isPresented: $store.isTorSheetPresented) {
+                torSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
         }
         .applyScreenBackground()
         .zashiBack()
@@ -277,6 +282,50 @@ public struct RestoreWalletCoordFlowView: View {
             .padding(.bottom, 24)
         }
     }
+    
+    @ViewBuilder private func torSheetContent() -> some View {
+            VStack(alignment: .leading, spacing: 0) {
+                Asset.Assets.infoOutline.image
+                    .zImage(size: 20, style: Design.Utility.Gray._500)
+                    .background {
+                        Circle()
+                            .fill(Design.Utility.Gray._50.color(colorScheme))
+                            .frame(width: 44, height: 44)
+                    }
+                    .padding(.top, 48)
+                    .padding(.leading, 12)
+
+                Text(L10n.TorSettingsSheet.title)
+                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                    .padding(.top, 24)
+                    .padding(.bottom, 12)
+
+                Text(L10n.TorSettingsSheet.msg)
+                    .zFont(size: 14, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
+                    .lineSpacing(2)
+                    .padding(.bottom, Design.Spacing._3xl)
+                
+                DescriptiveToggle(
+                    isOn: $store.isTorOn,
+                    title: L10n.TorSettingsSheet.title,
+                    desc: L10n.TorSettingsSheet.desc
+                )
+                .padding(.bottom, 32)
+
+                ZashiButton(L10n.General.cancel, type: .tertiary) {
+                    store.send(.restoreCancelTapped)
+                }
+                .padding(.bottom, Design.Spacing._lg)
+
+                ZashiButton(L10n.ImportWallet.Button.restoreWallet) {
+                    store.send(.resolveRestoreRequested)
+                }
+                .padding(.bottom, 24)
+            }
+        }
+
     
     @ViewBuilder private func infoContent(text: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
