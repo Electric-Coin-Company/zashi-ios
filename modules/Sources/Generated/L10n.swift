@@ -1877,6 +1877,14 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "tooltip.exchangeRate.title", fallback: "Exchange rate unavailable")
     }
   }
+  public enum TorSettingsSheet {
+    /// Routes your connection through the Tor network for enhanced anonymity and privacy protection.
+    public static let desc = L10n.tr("Localizable", "torSettingsSheet.desc", fallback: "Routes your connection through the Tor network for enhanced anonymity and privacy protection.")
+    /// If Tor is available in your region, we recommend enabling it for enhanced privacy during wallet restoration. This step is completely optional.
+    public static let msg = L10n.tr("Localizable", "torSettingsSheet.msg", fallback: "If Tor is available in your region, we recommend enabling it for enhanced privacy during wallet restoration. This step is completely optional.")
+    /// Enable Tor Protection
+    public static let title = L10n.tr("Localizable", "torSettingsSheet.title", fallback: "Enable Tor Protection")
+  }
   public enum TorSetup {
     /// Don’t connect over Tor.
     public static let disableDesc = L10n.tr("Localizable", "torSetup.disableDesc", fallback: "Don’t connect over Tor.")

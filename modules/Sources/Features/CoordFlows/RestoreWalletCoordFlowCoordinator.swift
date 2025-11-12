@@ -22,7 +22,28 @@ extension RestoreWalletCoordFlow {
                 state.path.append(.walletBirthday(WalletBirthday.State.initial))
                 return .none
 
-            case .resolveRestoreWithBirthday(let birthday):
+            case .resolveRestoreTapped:
+                state.isTorOn = false
+                state.isTorSheetPresented = true
+                return .none
+
+            case .restoreCancelTapped:
+                state.isTorSheetPresented = false
+                return .none
+                
+            case .resolveRestoreRequested:
+                state.isTorSheetPresented = false
+                let isTorOn = state.isTorOn
+                try? walletStorage.importTorSetupFlag(isTorOn)
+                return .run { send in
+                    try? await sdkSynchronizer.torEnabled(isTorOn)
+                    await send(.resolveRestore)
+                }
+                
+            case .resolveRestore:
+                guard let birthday = state.birthday else {
+                    return .none
+                }
                 do {
                     let seedPhrase = state.words.joined(separator: " ")
                     
@@ -55,7 +76,8 @@ extension RestoreWalletCoordFlow {
             case .path(.element(id: _, action: .walletBirthday(.restoreTapped))):
                 for element in state.path {
                     if case .walletBirthday(let walletBirthdayState) = element {
-                        return .send(.resolveRestoreWithBirthday(walletBirthdayState.estimatedHeight))
+                        state.birthday = walletBirthdayState.estimatedHeight
+                        return .send(.resolveRestoreTapped)
                     }
                 }
                 return .none
@@ -75,7 +97,8 @@ extension RestoreWalletCoordFlow {
             case .path(.element(id: _, action: .estimatedBirthday(.restoreTapped))):
                 for element in state.path {
                     if case .estimatedBirthday(let estimatedBirthdayState) = element {
-                        return .send(.resolveRestoreWithBirthday(estimatedBirthdayState.estimatedHeight))
+                        state.birthday = estimatedBirthdayState.estimatedHeight
+                        return .send(.resolveRestoreTapped)
                     }
                 }
                 return .none
