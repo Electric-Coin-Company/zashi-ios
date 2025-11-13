@@ -93,32 +93,17 @@ public extension SwapAndPayForm {
                         }
                     } else {
                         VStack(spacing: 0) {
-                            if store.isSwapToZecExperienceEnabled {
-                                HStack(alignment: .top, spacing: 0) {
-                                    Asset.Assets.infoOutline.image
-                                        .zImage(size: 16, style: Design.Text.tertiary)
-                                        .padding(.trailing, 12)
-                                    
-                                    Text(L10n.SwapToZec.transparentWarn)
-                                }
-                                .zFont(size: 12, style: Design.Text.tertiary)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.bottom, 24)
-                            }
-                            
                             if store.isQuoteRequestInFlight {
                                 ZashiButton(
                                     L10n.SwapAndPay.getQuote,
                                     accessoryView: ProgressView()
                                 ) { }
                                     .disabled(true)
-  //                                  .padding(.top, keyboardVisible ? 40 : 0)
                                     .padding(.bottom, 56)
                             } else {
                                 ZashiButton(L10n.SwapAndPay.getQuote) {
                                     store.send(.getQuoteTapped)
                                 }
-//                                .padding(.top, keyboardVisible ? 40 : 0)
                                 .padding(.bottom, 56)
                                 .disabled(!store.isValidForm)
                             }

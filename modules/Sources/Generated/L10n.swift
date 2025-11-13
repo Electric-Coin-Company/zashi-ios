@@ -1796,8 +1796,6 @@ public enum L10n {
     public static let swapProcessing = L10n.tr("Localizable", "swapToZec.swapProcessing", fallback: "Swap Processing")
     /// Swap Refunded
     public static let swapRefunded = L10n.tr("Localizable", "swapToZec.swapRefunded", fallback: "Swap Refunded")
-    /// NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.
-    public static let transparentWarn = L10n.tr("Localizable", "swapToZec.transparentWarn", fallback: "NEAR only supports swaps to a transparent address. Zashi will prompt you to shield your funds upon receipt.")
     public enum RefundAddress {
       /// If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.
       public static let msg1 = L10n.tr("Localizable", "swapToZec.refundAddress.msg1", fallback: "If the swap fails or market conditions change, your transaction may be refunded minus the transaction fees.")

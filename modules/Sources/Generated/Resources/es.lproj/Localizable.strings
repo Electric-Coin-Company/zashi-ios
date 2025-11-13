@@ -866,7 +866,6 @@
 "swapToZec.info1" = "Usa tu ";
 "swapToZec.info2" = "%@ en %@";
 "swapToZec.info3" = " wallet para depositar fondos. Depositar otros activos puede resultar en la pérdida de fondos.";
-"swapToZec.transparentWarn" = "NEAR solo admite swaps hacia una dirección transparente. Zashi te pedirá proteger tus fondos al recibirlos.";
 "swapToZec.swapDetails" = "Detalles del swap";
 "swapToZec.swapPending" = "Swap pendiente";
 "swapToZec.swapProcessing" = "Procesando swap";
