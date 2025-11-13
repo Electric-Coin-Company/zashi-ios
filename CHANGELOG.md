@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- Near swaps updated to use unified addresses.
+
 ## 2.4.7 build 1 (2025-11-05)
 
 ### Added
