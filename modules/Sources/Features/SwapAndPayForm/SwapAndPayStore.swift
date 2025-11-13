@@ -215,6 +215,7 @@ public struct SwapAndPay {
         case enableSwapExperience
         case eraseSearchTermTapped
         case exchangeRateSetupChanged
+        case getQuote
         case getQuoteTapped
         case helpSheetRequested(Int)
         case internalBackButtonTapped
@@ -235,9 +236,10 @@ public struct SwapAndPay {
         case switchInputTapped
         case trySwapsAssetsAgainTapped
         case updateAssetsAccordingToSearchTerm
+        case updatePrivateUA(UnifiedAddress?)
         case walletBalances(WalletBalances.Action)
         case willEnterForeground
-        
+
         // Opt-in
         case confirmForcedOptInTapped
         case confirmOptInTapped
@@ -584,6 +586,21 @@ public struct SwapAndPay {
                 return .send(.updateAssetsAccordingToSearchTerm)
                 
             case .getQuoteTapped:
+                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
+                if let uuid = state.selectedWalletAccount?.id {
+                    return .run { send in
+                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
+                        await send(.updatePrivateUA(privateUA))
+                        await send(.getQuote)
+                    }
+                }
+                return .send(.getQuote)
+
+            case .updatePrivateUA(let privateUA):
+                state.$selectedWalletAccount.withLock { $0?.privateUA = privateUA }
+                return .none
+
+            case .getQuote:
                 guard let zecAsset = state.zecAsset else {
                     return .none
                 }
@@ -592,7 +609,7 @@ public struct SwapAndPay {
                     return .none
                 }
                 
-                guard let refundTo = state.selectedWalletAccount?.transparentAddress else {
+                guard let refundTo = state.selectedWalletAccount?.privateUnifiedAddress else {
                     return .none
                 }
 
