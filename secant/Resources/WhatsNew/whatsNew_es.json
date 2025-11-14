@@ -1,6 +1,19 @@
 {
     "releases": [
         {
+            "version": "2.4.8",
+            "date": "11-17-2025",
+            "timestamp": 1763124135,
+            "sections": [
+                {
+                    "title": "Cambiado",
+                    "bulletpoints": [
+                        "Actualizamos las funciones de Intercambio y Pago para usar direcciones protegidas en lugar de transparentes. ¡Privacidad activada!"
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.7",
             "date": "11-05-2025",
             "timestamp": 1762348565,

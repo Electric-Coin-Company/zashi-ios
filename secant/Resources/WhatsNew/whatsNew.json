@@ -1,6 +1,19 @@
 {
     "releases": [
         {
+            "version": "2.4.8",
+            "date": "11-17-2025",
+            "timestamp": 1763124135,
+            "sections": [
+                {
+                    "title": "Changed",
+                    "bulletpoints": [
+                        "We updated Swap and Pay features to use shielded addresses instead of transparent ones. Shields up!"
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.7",
             "date": "11-05-2025",
             "timestamp": 1762348565,
