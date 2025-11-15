@@ -49,6 +49,7 @@ public struct SwapDetails: Codable, Equatable, Hashable {
     public let status: Status
     public let refundedAmountFormatted: Decimal?
     public let swapRecipient: String?
+    public let addressToCheckShield: String
 
     public var isSwapToZec: Bool {
         toAsset == "nep141:zec.omft.near"
@@ -65,7 +66,8 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         slippage: Decimal?,
         status: Status,
         refundedAmountFormatted: Decimal?,
-        swapRecipient: String?
+        swapRecipient: String?,
+        addressToCheckShield: String
     ) {
         self.amountInFormatted = amountInFormatted
         self.amountInUsd = amountInUsd
@@ -78,5 +80,6 @@ public struct SwapDetails: Codable, Equatable, Hashable {
         self.status = status
         self.refundedAmountFormatted = refundedAmountFormatted
         self.swapRecipient = swapRecipient
+        self.addressToCheckShield = addressToCheckShield
     }
 }

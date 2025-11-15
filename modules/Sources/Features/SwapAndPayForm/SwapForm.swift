@@ -307,7 +307,7 @@ public extension SwapAndPayForm {
                 }
                 
                 HStack(spacing: 0) {
-                    zecTicker(colorScheme, shield: !store.isSwapToZecExperienceEnabled)
+                    zecTicker(colorScheme)
                         .frame(maxWidth: .infinity)
 
                     if store.isSwapExperienceEnabled {
