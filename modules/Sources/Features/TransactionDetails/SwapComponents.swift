@@ -93,7 +93,7 @@ extension TransactionDetailsView {
                 
                 VStack(spacing: 4) {
                     if store.transaction.isSwapToZec {
-                        zecTickerLogo(colorScheme, shield: false)
+                        zecTickerLogo(colorScheme, shield: store.isShielded)
                             .scaleEffect(0.8)
                     } else {
                         if let swapToAsset = store.swapToAsset {

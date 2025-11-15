@@ -54,7 +54,8 @@ struct Near1Click {
         static let amountOutFormatted = "amountOutFormatted"
         static let recipient = "recipient"
         static let deadline = "deadline"
-        
+        static let refundTo = "refundTo"
+
         // params
         static let exactInput = "EXACT_INPUT"
         static let exactOutput = "EXACT_OUTPUT"
@@ -411,7 +412,12 @@ extension Near1Click {
             if let recipient = quoteRequestDict[Constants.recipient] as? String {
                 swapRecipient = recipient
             }
-            
+
+            var refundTo: String?
+            if let refundToAddress = quoteRequestDict[Constants.refundTo] as? String {
+                refundTo = refundToAddress
+            }
+
             if status == .pending || status == .refunded || status == .pendingDeposit || status == .failed || status == .processing {
                 if let quoteDict = quoteResponseDict[Constants.quote] as? [String: Any] {
                     if let amountInFormatted = quoteDict[Constants.amountInFormatted] as? String {
@@ -444,7 +450,7 @@ extension Near1Click {
                     }
                 }
             }
-            
+
             return SwapDetails(
                 amountInFormatted: amountInFormattedDecimal,
                 amountInUsd: amountInUsd,
@@ -456,7 +462,8 @@ extension Near1Click {
                 slippage: slippage,
                 status: status,
                 refundedAmountFormatted: refundedAmountFormattedDecimal,
-                swapRecipient: swapRecipient
+                swapRecipient: swapRecipient,
+                addressToCheckShield: (isSwapToZec ? swapRecipient : refundTo) ?? ""
             )
         }
     )
