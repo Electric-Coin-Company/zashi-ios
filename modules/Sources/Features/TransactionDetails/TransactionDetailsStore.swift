@@ -20,6 +20,7 @@ import UIComponents
 import AddressBookClient
 import UserMetadataProvider
 import SwapAndPay
+import DerivationTool
 
 @Reducer
 public struct TransactionDetails {
@@ -65,6 +66,20 @@ public struct TransactionDetails {
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
+        public var isShielded: Bool {
+            guard let swapDetails else {
+                return false
+            }
+            
+            @Dependency(\.derivationTool) var derivationTool
+            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+            
+            let address = swapDetails.addressToCheckShield
+            let network = zcashSDKEnvironment.network.networkType
+            
+            return !derivationTool.isTransparentAddress(address, network)
+        }
+        
         public var isAnnotationModified: Bool {
             annotationToInput.trimmingCharacters(in: .whitespaces) != annotationOrigin
         }
@@ -419,7 +434,7 @@ public struct TransactionDetails {
                 if let account = state.selectedWalletAccount?.account, let umSwapId = state.umSwapId, needsUpdate {
                     userMetadataProvider.update(umSwapId)
                     try? userMetadataProvider.store(account)
-                    _ = state.transaction.checkAndUpdateWith(umSwapId)
+                    state.transaction.checkAndUpdateWith(umSwapId)
                     state.$transactions.withLock { $0[id: state.transaction.id] = state.transaction }
                     return .none
                 }

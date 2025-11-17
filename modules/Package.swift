@@ -989,6 +989,7 @@ let package = Package(
             dependencies: [
                 "AddressBook",
                 "AddressBookClient",
+                "DerivationTool",
                 "Generated",
                 "Models",
                 "Pasteboard",

@@ -556,7 +556,7 @@ extension SwapAndPayForm {
                         }
                         
                         VStack(spacing: 0) {
-                            zecTickerLogo(colorScheme, shield: !store.isSwapToZecExperienceEnabled)
+                            zecTickerLogo(colorScheme)
                                 .scaleEffect(0.8)
 
                             Text(store.tokenToBeReceivedInQuote)

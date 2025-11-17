@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- Near swaps updated to use unified addresses.
+
 ### Added
 - A new sheet with option to turn on Tor prior to restoring their wallet.
 
