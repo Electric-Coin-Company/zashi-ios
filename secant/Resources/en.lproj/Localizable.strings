@@ -928,8 +928,8 @@
 "torSettingsSheet.msg" = "If Tor is available in your region, we recommend enabling it for enhanced privacy during wallet restoration. This step is completely optional.";
 "torSettingsSheet.desc" = "Routes your connection through the Tor network for enhanced anonymity and privacy protection.";
 
-"texKeystone.title" = "TEX Transfer Not Supported";
-"texKeystone.warn1" = "Keystone doesn't currently support direct TEX transfers.";
+"texKeystone.title" = "Unsupported Address Type";
+"texKeystone.warn1" = "Keystone doesn't currently support transfers to Binance TEX addresses. ";
 "texKeystone.warn2" = "Please use the steps below to complete your transaction.";
 "texKeystone.workaround" = "Workaround Steps";
 "texKeystone.step" = "Step %@";

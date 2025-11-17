@@ -331,6 +331,7 @@ public struct SendFormView: View {
         VStack(alignment: .leading, spacing: 0) {
             Asset.Assets.Icons.alertOutline.image
                 .zImage(size: 20, style: Design.Utility.ErrorRed._500)
+                .padding(12)
                 .background {
                     Circle()
                         .fill(Design.Utility.ErrorRed._100.color(colorScheme))
@@ -340,7 +341,7 @@ public struct SendFormView: View {
 
             Text(L10n.TexKeystone.title)
                 .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                .padding(.top, 12)
+                .padding(.top, 24)
                 .padding(.bottom, 8)
 
             Group {
@@ -356,16 +357,73 @@ public struct SendFormView: View {
                 .zFont(.semiBold, size: 16, style: Design.Text.primary)
                 .padding(.bottom, 16)
 
-            HStack(spacing: 0) {
-                VStack(spacing: 0) {
-                    
-                }
-            }
-            
+            texSupportPoint(0)
+            texSupportPoint(1)
+                .padding(.bottom, 8)
+
             ZashiButton(L10n.TexKeystone.gotIt) {
+                store.send(.gotTexSupportTapped)
             }
             .padding(.top, 32)
             .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder private func texSupportPoint(_ index: Int) -> some View {
+        HStack(alignment: .top, spacing: 0) {
+            VStack(spacing: 0) {
+                Asset.Assets.Icons.trIn.image
+                    .zImage(size: 20, style: index == 0 ? Design.Text.opposite : Design.Text.primary)
+                    .padding(12)
+                    .rotationEffect(.degrees(225 * Double(index)))
+                    .background {
+                        Circle()
+                            .fill(index == 0 ? Design.Surfaces.bgAlt.color(colorScheme) : Design.Surfaces.bgQuaternary.color(colorScheme))
+                            .frame(width: 44, height: 44)
+                    }
+
+                if index == 0 {
+                    Color.white
+                        .frame(width: 3)
+                        .overlay {
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: Design.Utility.Gray._950.color(colorScheme), location: 0.00),
+                                    Gradient.Stop(color: Design.Surfaces.bgQuaternary.color(colorScheme), location: 1.00),
+                                ],
+                                startPoint: UnitPoint(x: 0.5, y: 0),
+                                endPoint: UnitPoint(x: 0.5, y: 1)
+                            )
+                        }
+                        .padding(.vertical, 4)
+                }
+            }
+            .padding(.trailing, Design.Spacing._xl)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.TexKeystone.step("\(index + 1)"))
+                    .zFont(.medium, size: 12, style: Design.Utility.Gray._700)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: Design.Radius._sm)
+                            .fill(Design.Utility.Gray._50.color(colorScheme))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: Design.Radius._sm)
+                                    .stroke(Design.Utility.Gray._200.color(colorScheme))
+                            }
+                    )
+                    .padding(.vertical, 4)
+                
+                Text(index == 0 ? L10n.TexKeystone.Step1.title : L10n.TexKeystone.Step2.title)
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(index == 0 ? L10n.TexKeystone.Step1.desc : L10n.TexKeystone.Step2.desc)
+                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, 24)
+            }
         }
     }
 }

@@ -136,6 +136,14 @@ public struct SendForm {
             && !isInsufficientFunds
             && memoState.isValid
             && isValidAmount
+            && isTexSendSupported
+        }
+        
+        public var isTexSendSupported: Bool {
+            if isValidTexAddress {
+                return selectedWalletAccount?.vendor == .zcash
+            }
+            return true
         }
 
         public var isInsufficientFunds: Bool {
@@ -202,6 +210,7 @@ public struct SendForm {
         case confirmationRequired(Confirmation)
         case dismissRequired
         case getProposal(Confirmation)
+        case gotTexSupportTapped
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
         case exchangeRateSetupChanged
@@ -502,6 +511,10 @@ public struct SendForm {
                 return .none
                 
             case .scanTapped:
+                return .none
+                
+            case .gotTexSupportTapped:
+                state.isSheetTexAddressVisible = false
                 return .none
             }
         }

@@ -1876,10 +1876,10 @@ public enum L10n {
     public static func step(_ p1: Any) -> String {
       return L10n.tr("Localizable", "texKeystone.step", String(describing: p1), fallback: "Step %@")
     }
-    /// TEX Transfer Not Supported
-    public static let title = L10n.tr("Localizable", "texKeystone.title", fallback: "TEX Transfer Not Supported")
-    /// Keystone doesn't currently support direct TEX transfers.
-    public static let warn1 = L10n.tr("Localizable", "texKeystone.warn1", fallback: "Keystone doesn't currently support direct TEX transfers.")
+    /// Unsupported Address Type
+    public static let title = L10n.tr("Localizable", "texKeystone.title", fallback: "Unsupported Address Type")
+    /// Keystone doesn't currently support transfers to Binance TEX addresses. 
+    public static let warn1 = L10n.tr("Localizable", "texKeystone.warn1", fallback: "Keystone doesn't currently support transfers to Binance TEX addresses. ")
     /// Please use the steps below to complete your transaction.
     public static let warn2 = L10n.tr("Localizable", "texKeystone.warn2", fallback: "Please use the steps below to complete your transaction.")
     /// Workaround Steps
