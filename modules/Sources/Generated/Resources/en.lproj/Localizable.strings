@@ -926,3 +926,14 @@
 "torSettingsSheet.title" = "Enable Tor Protection";
 "torSettingsSheet.msg" = "If Tor is available in your region, we recommend enabling it for enhanced privacy during wallet restoration. This step is completely optional.";
 "torSettingsSheet.desc" = "Routes your connection through the Tor network for enhanced anonymity and privacy protection.";
+
+"texKeystone.title" = "Unsupported Address Type";
+"texKeystone.warn1" = "Keystone doesn't currently support transfers to Binance TEX addresses. ";
+"texKeystone.warn2" = "Please use the steps below to complete your transaction.";
+"texKeystone.workaround" = "Workaround Steps";
+"texKeystone.step" = "Step %@";
+"texKeystone.step1.title" = "Send to Zashi first";
+"texKeystone.step1.desc" = "Transfer ZEC to your Zashi shielded address";
+"texKeystone.step2.title" = "Send from Zashi to TEX address";
+"texKeystone.step2.desc" = "Once received in Zashi, send the tokens to your final TEX destination address";
+"texKeystone.gotIt" = "Got it";

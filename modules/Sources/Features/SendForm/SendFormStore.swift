@@ -48,6 +48,7 @@ public struct SendForm {
         public var isLatestInputFiat = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
+        public var isSheetTexAddressVisible = false
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
@@ -135,6 +136,14 @@ public struct SendForm {
             && !isInsufficientFunds
             && memoState.isValid
             && isValidAmount
+            && isTexSendSupported
+        }
+        
+        public var isTexSendSupported: Bool {
+            if isValidTexAddress {
+                return selectedWalletAccount?.vendor == .zcash
+            }
+            return true
         }
 
         public var isInsufficientFunds: Bool {
@@ -201,6 +210,7 @@ public struct SendForm {
         case confirmationRequired(Confirmation)
         case dismissRequired
         case getProposal(Confirmation)
+        case gotTexSupportTapped
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
         case exchangeRateSetupChanged
@@ -456,6 +466,11 @@ public struct SendForm {
                         }
                     }
                 }
+                
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.isSheetTexAddressVisible = state.isValidTexAddress
+                }
+                
                 if isNotAddressInAddressBook {
                     state.isAddressBookHintVisible = true
                     return .run { send in
@@ -482,6 +497,9 @@ public struct SendForm {
                 state.isValidAddress = derivationTool.isZcashAddress(state.address.data, network)
                 state.isValidTransparentAddress = derivationTool.isTransparentAddress(state.address.data, network)
                 state.isValidTexAddress = derivationTool.isTexAddress(state.address.data, network)
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.isSheetTexAddressVisible = state.isValidTexAddress
+                }
                 return .none
                 
             case .zecAmountUpdated(let newValue):
@@ -493,6 +511,10 @@ public struct SendForm {
                 return .none
                 
             case .scanTapped:
+                return .none
+                
+            case .gotTexSupportTapped:
+                state.isSheetTexAddressVisible = false
                 return .none
             }
         }
