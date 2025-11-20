@@ -14,5 +14,6 @@ public extension ZcashError {
     
     var isInsufficientBalance: Bool {
         detailedMessage.lowercased().contains("insufficient balance")
+        || detailedMessage.lowercased().contains("the transaction requires an additional change output of zatbalance")
     }
 }
