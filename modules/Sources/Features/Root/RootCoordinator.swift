@@ -103,7 +103,7 @@ extension Root {
             case .home(.getSomeZecTapped):
                 return .send(.home(.coinbaseTapped))
                 
-            case .home(.flexaTapped):
+            case .home(.flexaTapped), .settings(.payWithFlexaTapped):
                 return .send(.flexaOpenRequest)
                 
             case .home(.addKeystoneHWWalletTapped):

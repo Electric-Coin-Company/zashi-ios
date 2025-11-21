@@ -70,10 +70,10 @@ public struct HomeView: View {
                     Spacer(minLength: 8)
 
                     button(
-                        L10n.HomeScreen.more,
-                        icon: Asset.Assets.Icons.dotsMenu.image
+                        L10n.SwapAndPay.swap,
+                        icon: Asset.Assets.Icons.swap.image
                     ) {
-                        store.send(.moreTapped)
+                        store.send(.swapWithNearTapped)
                     }
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
