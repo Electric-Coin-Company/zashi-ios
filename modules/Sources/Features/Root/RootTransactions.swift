@@ -1,6 +1,6 @@
 //
 //  RootTransactions.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 29.01.2025.
 //

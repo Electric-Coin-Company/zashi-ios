@@ -1,6 +1,6 @@
 //
-//  Untitled.swift
-//  modules
+//  RootCheckFunds.swift
+//  Zashi
 //
 //  Created by Lukáš Korba on 03.11.2025.
 //
@@ -28,7 +28,7 @@ extension Root {
                             await send(.checkFundsTorRequired)
                         case .notFound:
                             await send(.checkFundsNothingFound)
-                        case .found(let address):
+                        case .found:
                             await send(.checkFundsFoundSomething)
                         }
                     } catch {

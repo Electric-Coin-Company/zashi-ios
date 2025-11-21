@@ -294,6 +294,18 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "deleteWallet.sheet.title", fallback: "Are you sure?")
     }
   }
+  public enum EnhanceTransaction {
+    /// Fetch data
+    public static let btn = L10n.tr("Localizable", "enhanceTransaction.btn", fallback: "Fetch data")
+    /// Transaction ID
+    public static let fieldTitle = L10n.tr("Localizable", "enhanceTransaction.fieldTitle", fallback: "Transaction ID")
+    /// If you confirm, Zashi will fetch transaction data for a transaction ID you provide.
+    public static let msg = L10n.tr("Localizable", "enhanceTransaction.msg", fallback: "If you confirm, Zashi will fetch transaction data for a transaction ID you provide.")
+    /// Enter or paste...
+    public static let placeholder = L10n.tr("Localizable", "enhanceTransaction.placeholder", fallback: "Enter or paste...")
+    /// Refresh Transaction Data
+    public static let title = L10n.tr("Localizable", "enhanceTransaction.title", fallback: "Refresh Transaction Data")
+  }
   public enum ErrorPage {
     public enum Action {
       /// Contact Support

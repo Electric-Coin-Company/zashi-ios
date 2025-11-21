@@ -73,7 +73,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         ),
         checkSingleUseTransparentAddresses: unimplemented("\(Self.self).checkSingleUseTransparentAddresses", placeholder: .notFound),
         updateTransparentAddressTransactions: unimplemented("\(Self.self).updateTransparentAddressTransactions", placeholder: .notFound),
-        fetchUTXOsByAddress: unimplemented("\(Self.self).fetchUTXOsByAddress", placeholder: .notFound)
+        fetchUTXOsByAddress: unimplemented("\(Self.self).fetchUTXOsByAddress", placeholder: .notFound),
+        enhanceTransactionBy: unimplemented("\(Self.self).enhanceTransactionBy")
     )
 }
 
@@ -124,7 +125,8 @@ extension SDKSynchronizerClient {
         },
         checkSingleUseTransparentAddresses: { _ in .notFound },
         updateTransparentAddressTransactions: { _ in .notFound },
-        fetchUTXOsByAddress: { _, _ in .notFound }
+        fetchUTXOsByAddress: { _, _ in .notFound },
+        enhanceTransactionBy: { _ in }
     )
 
     public static let mock = Self.mocked()
@@ -246,7 +248,8 @@ extension SDKSynchronizerClient {
         },
         checkSingleUseTransparentAddresses: @escaping (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound },
         updateTransparentAddressTransactions: @escaping (String) async throws -> TransparentAddressCheckResult = { _ in .notFound },
-        fetchUTXOsByAddress: @escaping (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
+        fetchUTXOsByAddress: @escaping (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound },
+        enhanceTransactionBy: @escaping (String) async throws -> Void = { _ in }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -292,7 +295,8 @@ extension SDKSynchronizerClient {
             getSingleUseTransparentAddress: getSingleUseTransparentAddress,
             checkSingleUseTransparentAddresses: checkSingleUseTransparentAddresses,
             updateTransparentAddressTransactions: updateTransparentAddressTransactions,
-            fetchUTXOsByAddress: fetchUTXOsByAddress
+            fetchUTXOsByAddress: fetchUTXOsByAddress,
+            enhanceTransactionBy: enhanceTransactionBy
         )
     }
 }
