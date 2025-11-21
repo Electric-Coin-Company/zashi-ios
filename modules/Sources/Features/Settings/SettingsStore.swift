@@ -85,6 +85,7 @@ public struct Settings {
         case enableDebugMode
         case onAppear
         case path(StackActionOf<Path>)
+        case payWithFlexaTapped
         case sendUsFeedbackTapped
         case whatsNewTapped
     }
@@ -147,6 +148,9 @@ public struct Settings {
             case .enableDebugMode:
                 state.addressToRecoverFunds = ""
                 state.isInDebugMode = true
+                return .none
+                
+            case .payWithFlexaTapped:
                 return .none
             }
         }

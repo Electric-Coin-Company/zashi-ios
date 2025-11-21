@@ -166,9 +166,7 @@ public extension SwapAndPayForm {
                 isAddressFocused = false
             }
             .applyScreenBackground()
-            .zashiBack {
-                store.send(.internalBackButtonTapped)
-            }
+            .zashiBack(true, hidden: true)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 store.send(.willEnterForeground)
             }
