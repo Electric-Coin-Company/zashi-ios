@@ -939,3 +939,9 @@
 "texKeystone.gotIt" = "Got it";
 
 "homeScreen.moreDotted" = "More...";
+
+"enhanceTransaction.title" = "Refresh Transaction Data";
+"enhanceTransaction.msg" = "If you confirm, Zashi will fetch transaction data for a transaction ID you provide.";
+"enhanceTransaction.fieldTitle" = "Transaction ID";
+"enhanceTransaction.placeholder" = "Enter or paste...";
+"enhanceTransaction.btn" = "Fetch data";

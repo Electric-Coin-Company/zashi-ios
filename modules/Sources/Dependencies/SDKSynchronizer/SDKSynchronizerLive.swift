@@ -314,6 +314,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             fetchUTXOsByAddress: { address, accountUUID in
                 try await synchronizer.fetchUTXOsBy(address: address, accountUUID: accountUUID)
+            },
+            enhanceTransactionBy: { txId in
+                try await synchronizer.enhanceTransactionBy(id: txId)
             }
         )
     }

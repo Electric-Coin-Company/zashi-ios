@@ -1,6 +1,6 @@
 //
 //  RootCoordinator.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 07.03.2025.
 //

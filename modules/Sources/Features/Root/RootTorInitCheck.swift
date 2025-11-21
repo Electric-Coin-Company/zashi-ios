@@ -1,6 +1,6 @@
 //
 //  RootTorInitCheck.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 18.07.2025.
 //

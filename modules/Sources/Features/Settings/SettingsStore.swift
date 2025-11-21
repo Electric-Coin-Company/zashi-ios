@@ -8,6 +8,7 @@ import Models
 import LocalAuthenticationHandler
 import AudioServices
 import WalletStorage
+import SDKSynchronizer
 
 import About
 import AddKeystoneHWWallet
@@ -52,10 +53,12 @@ public struct Settings {
         public var appBuild = ""
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isEnoughFreeSpaceMode = true
-        public var isInDebugMode = false
+        public var isInEnhanceTransactionMode = false
+        public var isInRecoverFundsMode = false
         public var isTorOn = false
         public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var txidToEnhance = ""
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public var isKeystoneConnected: Bool {
@@ -82,7 +85,9 @@ public struct Settings {
         case advancedSettingsTapped
         case binding(BindingAction<Settings.State>)
         case checkFundsForAddress(String)
-        case enableDebugMode
+        case enableEnhanceTransactionMode
+        case enableRecoverFundsMode
+        case fetchDataForTxid(String)
         case onAppear
         case path(StackActionOf<Path>)
         case payWithFlexaTapped
@@ -93,6 +98,7 @@ public struct Settings {
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
@@ -142,16 +148,27 @@ public struct Settings {
                 return .none
                 
             case .checkFundsForAddress:
-                state.isInDebugMode = false
+                state.isInRecoverFundsMode = false
                 return .none
                 
-            case .enableDebugMode:
+            case .enableRecoverFundsMode:
                 state.addressToRecoverFunds = ""
-                state.isInDebugMode = true
+                state.isInRecoverFundsMode = true
                 return .none
-                
+
             case .payWithFlexaTapped:
                 return .none
+
+            case .enableEnhanceTransactionMode:
+                state.txidToEnhance = ""
+                state.isInEnhanceTransactionMode = true
+                return .none
+
+            case .fetchDataForTxid(let txId):
+                state.isInEnhanceTransactionMode = false
+                return .run { send in
+                    try? await sdkSynchronizer.enhanceTransactionBy(txId)
+                }
             }
         }
         .forEach(\.path, action: \.path)
