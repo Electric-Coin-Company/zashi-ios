@@ -230,8 +230,13 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
-                        .zashiSheet(isPresented: $store.sharedFlagInsufficientFunds) {
-                            helpSheetContent()
+                        .zashiSheet(isPresented: store.bindingForSharedFlags(.insufficientFunds)) {
+                            insufficientFundsSheetContent()
+                                .screenHorizontalPadding()
+                                .applyScreenBackground()
+                        }
+                        .zashiSheet(isPresented: store.bindingForSharedFlags(.syncTimedOut)) {
+                            syncTimedSheetContent()
                                 .screenHorizontalPadding()
                                 .applyScreenBackground()
                         }
@@ -322,7 +327,7 @@ private extension RootView {
 }
 
 private extension RootView {
-    @ViewBuilder private func helpSheetContent() -> some View {
+    @ViewBuilder private func insufficientFundsSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Asset.Assets.infoOutline.image
                 .zImage(size: 20, style: Design.Utility.ErrorRed._500)
@@ -348,6 +353,45 @@ private extension RootView {
 
             ZashiButton(L10n.General.ok.uppercased()) {
                 store.send(.closeInsufficientFundsTapped)
+            }
+            .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder private func syncTimedSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.infoOutline.image
+                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
+                .background {
+                    Circle()
+                        .fill(Design.Utility.ErrorRed._50.color(colorScheme))
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.top, 48)
+                .padding(.leading, 12)
+
+            Text(L10n.Sheet.SyncTimeout.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+            
+            Text(L10n.Sheet.SyncTimeout.desc)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
+                .lineSpacing(2)
+                .padding(.bottom, 32)
+            
+            Button("Server Switch") {
+                
+            }
+            
+            Button("Tor Protection") {
+
+            }
+
+            ZashiButton(L10n.ErrorPage.Action.contactSupport) {
+                
             }
             .padding(.bottom, 24)
         }
@@ -460,6 +504,13 @@ extension StoreOf<Root> {
         Binding<Bool>(
             get: { self.path == path },
             set: { self.path = $0 ? path : nil }
+        )
+    }
+    
+    func bindingForSharedFlags(_ flag: SharedFlags) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.sharedFlags == flag },
+            set: { self.send(.updateSharedFlags($0 ? flag : nil)) }
         )
     }
 }

@@ -130,7 +130,7 @@ public struct Root {
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
 
         // Shared Flags
-        @Shared(.inMemory(.sharedFlagInsufficientFunds)) public var sharedFlagInsufficientFunds: Bool = false
+        @Shared(.inMemory(.sharedFlags)) public var sharedFlags: SharedFlags? = nil
 
         // Path
         public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
@@ -279,6 +279,7 @@ public struct Root {
         
         // Shared flags
         case closeInsufficientFundsTapped
+        case updateSharedFlags(SharedFlags?)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -458,9 +459,13 @@ public struct Root {
                 return .send(.initialization(.initializeSDK(.newWallet)))
 
             case .closeInsufficientFundsTapped:
-                state.$sharedFlagInsufficientFunds.withLock { $0 = false }
+                state.$sharedFlags.withLock { $0 = nil }
                 return .none
                 
+            case .updateSharedFlags(let newValue):
+                state.$sharedFlags.withLock { $0 = newValue }
+                return .none
+
             default: return .none
             }
         }

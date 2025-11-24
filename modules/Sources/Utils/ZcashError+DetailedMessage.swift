@@ -16,4 +16,8 @@ public extension ZcashError {
         detailedMessage.lowercased().contains("insufficient balance")
         || detailedMessage.lowercased().contains("the transaction requires an additional change output of zatbalance")
     }
+
+    var hasSyncTimedOut: Bool {
+        detailedMessage.lowercased().contains("504 gateway timeout")
+    }
 }

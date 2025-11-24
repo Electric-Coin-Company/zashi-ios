@@ -55,7 +55,7 @@ public struct SendForm {
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        @Shared(.inMemory(.sharedFlagInsufficientFunds)) public var sharedFlagInsufficientFunds: Bool = false
+        @Shared(.inMemory(.sharedFlags)) public var sharedFlags: SharedFlags? = nil
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
@@ -229,6 +229,9 @@ public struct SendForm {
         case validateAddress
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
+        
+        case testA
+        case testB
     }
     
     @Dependency(\.addressBook) var addressBook
@@ -258,6 +261,14 @@ public struct SendForm {
 
         Reduce { state, action in
             switch action {
+            case .testA:
+                state.$sharedFlags.withLock { $0 = .insufficientFunds }
+                return .none
+                
+            case .testB:
+                state.$sharedFlags.withLock { $0 = .syncTimedOut }
+                return .none
+
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 return .send(.exchangeRateSetupChanged)
@@ -350,7 +361,7 @@ public struct SendForm {
                 
             case let .sendFailed(error, confirmationType):
                 if error.isInsufficientBalance {
-                    state.$sharedFlagInsufficientFunds.withLock { $0 = true }
+                    state.$sharedFlags.withLock { $0 = .insufficientFunds }
                     return .none
                 }
                 if confirmationType == .send {

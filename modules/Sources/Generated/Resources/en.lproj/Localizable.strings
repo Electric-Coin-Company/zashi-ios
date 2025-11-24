@@ -948,3 +948,8 @@
 
 "sheet.insufficientBalance.title" = "Insufficient Funds";
 "sheet.insufficientBalance.msg" = "We couldn’t create this transaction for you. Your wallet doesn’t have enough balance to cover both the transaction amount and transaction fees. Please lower the transaction amount to account for the fees. ";
+
+"sheet.syncTimeout.title" = "Something went wrong";
+"sheet.syncTimeout.desc" = "There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:";
+"sheet.syncTimeout.server" = "Switch server";
+"sheet.syncTimeout.tor" = "Disable Tor protection";

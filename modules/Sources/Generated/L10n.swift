@@ -1292,6 +1292,16 @@ public enum L10n {
       /// Insufficient Funds
       public static let title = L10n.tr("Localizable", "sheet.insufficientBalance.title", fallback: "Insufficient Funds")
     }
+    public enum SyncTimeout {
+      /// There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:
+      public static let desc = L10n.tr("Localizable", "sheet.syncTimeout.desc", fallback: "There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:")
+      /// Switch server
+      public static let server = L10n.tr("Localizable", "sheet.syncTimeout.server", fallback: "Switch server")
+      /// Something went wrong
+      public static let title = L10n.tr("Localizable", "sheet.syncTimeout.title", fallback: "Something went wrong")
+      /// Disable Tor protection
+      public static let tor = L10n.tr("Localizable", "sheet.syncTimeout.tor", fallback: "Disable Tor protection")
+    }
   }
   public enum ShieldFunds {
     public enum Error {
