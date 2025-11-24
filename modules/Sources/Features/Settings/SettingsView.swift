@@ -41,13 +41,6 @@ public struct SettingsView: View {
                             }
 
                             ActionRow(
-                                icon: Asset.Assets.Icons.trPaid.image,
-                                title: L10n.Settings.flexa
-                            ) {
-                                store.send(.payWithFlexaTapped)
-                            }
-
-                            ActionRow(
                                 icon: Asset.Assets.Icons.settings.image,
                                 title: L10n.Settings.advanced
                             ) {

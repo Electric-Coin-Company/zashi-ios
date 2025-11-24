@@ -101,6 +101,7 @@ public struct Home {
         case getSomeZecTapped
         case keystoneBannerTapped
         case moreTapped
+        case moreInMoreTapped
         case onAppear
         case onDisappear
         case payTapped
@@ -225,7 +226,11 @@ public struct Home {
             case .moreTapped:
                 state.moreRequest = true
                 return .none
-                
+
+            case .moreInMoreTapped:
+                state.moreRequest = false
+                return .send(.settingsTapped)
+
             case .buyTapped:
                 return .send(.coinbaseTapped)
                 

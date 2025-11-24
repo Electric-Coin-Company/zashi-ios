@@ -937,3 +937,5 @@
 "texKeystone.step2.title" = "Send from Zashi to TEX address";
 "texKeystone.step2.desc" = "Once received in Zashi, send the tokens to your final TEX destination address";
 "texKeystone.gotIt" = "Got it";
+
+"homeScreen.moreDotted" = "More...";
