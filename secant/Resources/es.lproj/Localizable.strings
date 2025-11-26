@@ -523,7 +523,7 @@
 "filter.weTried" = "Lo intentamos, pero no pudimos encontrar nada.";
 "filter.at" = "a las"; // ejemplo: 29 de nov a las 4:15 p. m.
 "filter.daysAgo" = "Hace %@ días";
-"settings.keystone" = "Conectar dispositivo Keystone";
+"settings.keystone" = "Conectar Keystone";
 "settings.keystoneDesc" = "Empareja tu billetera de hardware Keystone con Zashi para firmar transacciones.";
 
 // More actions

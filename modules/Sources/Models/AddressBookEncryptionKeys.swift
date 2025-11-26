@@ -18,6 +18,8 @@ public struct AddressBookEncryptionKeys: Codable, Equatable {
         public static let version = 1
     }
     
+    // FIXME: Integer is not enough information to uniquely identify the key
+    // FIXME: Don't hold keys in the memory when not necessary
     var keys: [Int: AddressBookKey]
 
     public mutating func cacheFor(seed: [UInt8], account: Account, network: NetworkType) throws{
@@ -25,6 +27,7 @@ public struct AddressBookEncryptionKeys: Codable, Equatable {
             return
         }
         
+        // FIXME: index is not enough - possible security issue - override of the keys
         keys[Int(zip32AccountIndex.index)] = try AddressBookKey(seed: seed, account: account, network: network)
     }
 

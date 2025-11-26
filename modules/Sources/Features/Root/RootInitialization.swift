@@ -315,7 +315,7 @@ extension Root {
                     
                     return .run { send in
                         do {
-                            exchangeRate.refreshExchangeRateUSD()
+//                            exchangeRate.refreshExchangeRateUSD()
                             
                             try await sdkSynchronizer.prepareWith(
                                 seedBytes,
@@ -339,6 +339,8 @@ extension Root {
                                     selectedAccount = account
                                 }
                             }
+
+                            exchangeRate.refreshExchangeRateUSD()
 
                             if let account = selectedAccount {
                                 let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
@@ -445,6 +447,7 @@ extension Root {
                 let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
                 
                 return .run { send in
+                    // Delay the splash overlay dismissal
                     try await mainQueue.sleep(for: .seconds(0.5))
                     if !isAtDeeplinkWarningScreen {
                         await send(.destination(.updateDestination(Root.DestinationState.Destination.home)))

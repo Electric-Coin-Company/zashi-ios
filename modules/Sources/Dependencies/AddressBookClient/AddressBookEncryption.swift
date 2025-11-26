@@ -46,7 +46,9 @@ extension AddressBookClient {
     static func encryptContacts(_ contacts: AddressBookContacts, account: Account) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
         
-        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {
+        // TODO: - refactor
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(),
+              let addressBookKey = encryptionKeys.getCached(account: account) else {
             throw AddressBookClient.AddressBookClientError.missingEncryptionKey
         }
         

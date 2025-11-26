@@ -102,7 +102,9 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
 //        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.4.0"),
-        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1619-Enhance-Transaction-Public-API"),
+//        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1619-Enhance-Transaction-Public-API"),
+        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "rate-public-init"),
+//        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "chain-tip-flags-enhancement"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -355,8 +357,11 @@ let package = Package(
         .target(
             name: "ExchangeRate",
             dependencies: [
+//                "Models",
+//                "PartnerKeys",
                 "SDKSynchronizer",
                 "UserPreferencesStorage",
+//                "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
@@ -476,6 +481,7 @@ let package = Package(
             name: "Models",
             dependencies: [
                 "DerivationTool",
+                "Generated",
                 "Utils",
                 .product(name: "MnemonicSwift", package: "MnemonicSwift"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

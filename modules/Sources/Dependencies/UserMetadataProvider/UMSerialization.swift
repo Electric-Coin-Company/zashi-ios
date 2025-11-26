@@ -67,6 +67,7 @@ public extension UserMetadata {
     static func userMetadataFrom(encryptedData: Data, account: Account) throws -> (UserMetadata?, Bool) {
         @Dependency(\.walletStorage) var walletStorage
         
+        // FIXME: refactor
         guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account),
                 let umKey = encryptionKeys.getCached(account: account) else {
             throw UserMetadataStorage.UMError.missingEncryptionKey
@@ -104,25 +105,45 @@ public extension UserMetadata {
                 guard let metadataVersion = UserMetadata.bytesToInt(Array(metadataVersionBytes)) else {
                     return (nil, false)
                 }
-                
-                guard metadataVersion == UserMetadata.Constants.version else {
-                    // Attempt to migrate
-                    switch metadataVersion {
-                    case 1:
-                        let latestUserMetadata = try UserMetadata.userMetadataV1From(encryptedSubData: encryptedSubData, subKey: subKey)
-                        return (latestUserMetadata, true)
-                    case 2:
-                        let latestUserMetadata = try UserMetadata.userMetadataV2From(encryptedSubData: encryptedSubData, subKey: subKey)
-                        return (latestUserMetadata, true)
-                    default:
-                        throw UserMetadataStorage.UMError.metadataVersionNotSupported
-                    }
-                }
-                
+
                 // Unseal the encrypted user metadata.
                 let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32 +  UserMetadataStorage.Constants.int64Size))
                 let data = try ChaChaPoly.open(sealed, using: subKey)
                 
+                // Ignore unencrypted version and try to decode data as JSON and take the version from it
+                if let dataJson = try? JSONDecoder().decode([String: AnyDecodable].self, from: data), let jsonVersion = dataJson["version"]?.value as? Int {
+                    switch jsonVersion {
+                    case 1:
+                        let userMetadataV1Data = try JSONDecoder().decode(UserMetadataV1.self, from: data)
+                        let userMetadataV1 = try UserMetadata.v1ToLatest(userMetadataV1Data)
+                        return (userMetadataV1, true)
+                    case 2:
+                        let userMetadataV2Data = try JSONDecoder().decode(UserMetadataV2.self, from: data)
+                        let userMetadataV2 = try UserMetadata.v2ToLatest(userMetadataV2Data)
+                        return (userMetadataV2, true)
+                    case 3:
+                        // latest version, just continue
+                        break
+                    default:
+                        throw UserMetadataStorage.UMError.metadataVersionNotSupported
+                    }
+                } else {
+                    // fallback
+                    guard metadataVersion == UserMetadata.Constants.version else {
+                        // Attempt to migrate
+                        switch metadataVersion {
+                        case 1:
+                            let latestUserMetadata = try UserMetadata.userMetadataV1From(encryptedSubData: encryptedSubData, subKey: subKey)
+                            return (latestUserMetadata, true)
+                        case 2:
+                            let latestUserMetadata = try UserMetadata.userMetadataV2From(encryptedSubData: encryptedSubData, subKey: subKey)
+                            return (latestUserMetadata, true)
+                        default:
+                            throw UserMetadataStorage.UMError.metadataVersionNotSupported
+                        }
+                    }
+                }
+
                 // deserialize the json's data
                 let latestUserMetadata = try JSONDecoder().decode(UserMetadata.self, from: data)
                 return (latestUserMetadata, false)
