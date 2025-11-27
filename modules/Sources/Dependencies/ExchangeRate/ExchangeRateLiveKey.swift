@@ -15,12 +15,17 @@ import SDKSynchronizer
 import UserPreferencesStorage
 import ZcashSDKEnvironment
 
-//import WalletStorage
-//import PartnerKeys
+import WalletStorage
+import PartnerKeys
+import Models
 
 class ExchangeRateProvider {
+    enum Constants {
+        static let cmcRateURL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ZEC&convert=USD"
+        static let zecKey = "ZEC"
+    }
+    
     var cancellable: AnyCancellable? = nil
-//    let eventStream = CurrentValueSubject<ExchangeRateClient.EchangeRateEvent, Never>(.value(nil))
     let eventStream = CurrentValueSubject<ExchangeRateClient.EchangeRateEvent, Never>(.value(nil))
     var latestRate: FiatCurrencyResult? = nil
     var refreshTimer: Timer? = nil
@@ -38,94 +43,85 @@ class ExchangeRateProvider {
         }
     }
     
-//    static func getRate() async throws -> Double? {
-//        @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-//        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
-//
-//        guard let url = URL(string: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ZEC&convert=USD") else {
-//            throw URLError(.badURL)
-//        }
-//        
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//        request.setValue("application/json", forHTTPHeaderField: "Accept")
-//
-//        if let cmcKey = PartnerKeys.cmcKey {
-//            request.setValue(cmcKey, forHTTPHeaderField: "X-CMC_PRO_API_KEY")
-//        }
-//
-//        do {
-//            let (data, response) = swapAPIAccess == .direct
-//            ? try await URLSession.shared.data(for: request)
-//            : try await sdkSynchronizer.httpRequestOverTor(request)
-//            
-//            guard let http = response as? HTTPURLResponse,
-//                  (200..<300).contains(http.statusCode) else {
-//                let code = (response as? HTTPURLResponse)?.statusCode ?? -1
-//                //throw NetworkError.httpStatus(code: code)
-//                throw ""
-//            }
-//            
-//            if let result = try? JSONDecoder().decode(PriceResponse.self, from: data) {
-//                if let zec = result.data["ZEC"] {
-//                    return zec.quote.USD.price
-//                }
-//            }
-//            
-//            return nil
-//        } catch let urlError as URLError {
-////            throw NetworkError.transport(urlError)
-//            throw ""
-//        } catch {
-////            throw NetworkError.unknown(error)
-//            throw ""
-//        }
-//    }
-    
-    
-    func refreshExchangeRateUSD() {
+    func getCMCRate() async throws -> Double {
+        guard let cmcKey = PartnerKeys.cmcKey else {
+            throw "CMC API Key missing"
+        }
+
+        @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
+
+        guard let url = URL(string: Constants.cmcRateURL) else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(cmcKey, forHTTPHeaderField: "X-CMC_PRO_API_KEY")
+
+        do {
+            let (data, response) = swapAPIAccess == .direct
+            ? try await URLSession.shared.data(for: request)
+            : try await sdkSynchronizer.httpRequestOverTor(request)
+            
+            guard let http = response as? HTTPURLResponse,
+                  (200..<300).contains(http.statusCode) else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+                throw "httpStatus \(code)"
+            }
+            
+            if let result = try? JSONDecoder().decode(CMCPrice.self, from: data) {
+                if let zec = result.data[Constants.zecKey] {
+                    return zec.quote.USD.price
+                }
+            }
+            
+            throw "decode CMCPrice.self failed"
+        } catch {
+            throw error
+        }
+    }
+
+    func refreshExchangeRateUSD(_ rateSource: ExchangeRateClient.RateSource = .coinMarketCap) {
         if !_XCTIsTesting {
             // guard the feature is opted-in by a user
             @Dependency(\.userStoredPreferences) var userStoredPreferences
-            
+
             guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
                 return
             }
-            
+
             guard refreshTimer == nil else {
                 return
             }
-            
-            Task {
-//                if let price = try? await ExchangeRateProvider.getRate() {
-//                    
-//                    var fiat = FiatCurrencyResult(
-//                        date: Date(),
-//                        rate: NSDecimalNumber(value: price),
-//                        state: .success
-//                    )
-//                    
-//                    eventStream.send(.value(fiat))
-//                }
+
+            if rateSource == .coinMarketCap {
+                Task(priority: .low) {
+                    do {
+                        let price = try await getCMCRate()
+                        
+                        let fiat = FiatCurrencyResult(
+                            date: Date(),
+                            rate: NSDecimalNumber(value: price),
+                            state: .success
+                        )
+                        
+                        eventStream.send(.value(fiat))
+                    } catch {
+                        await coinMarketCapRateFailed()
+                    }
+                }
+            } else if rateSource == .sdk {
+                @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+                
+                sdkSynchronizer.refreshExchangeRateUSD()
             }
         }
-
-//        if !_XCTIsTesting {
-//            // guard the feature is opted-in by a user
-//            @Dependency(\.userStoredPreferences) var userStoredPreferences
-//            
-//            guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
-//                return
-//            }
-//            
-//            guard refreshTimer == nil else {
-//                return
-//            }
-//            
-//            @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-//            
-//            sdkSynchronizer.refreshExchangeRateUSD()
-//        }
+    }
+    
+    func coinMarketCapRateFailed() async {
+        refreshExchangeRateUSD(.sdk)
     }
     
     func resolveResult(_ result: FiatCurrencyResult?) {
@@ -134,7 +130,7 @@ class ExchangeRateProvider {
             nilValuesCounter += 1
             
             if nilValuesCounter == 2 {
-                refreshExchangeRateUSD()
+                refreshExchangeRateUSD(.coinMarketCap)
             } else if nilValuesCounter > 2 {
                 eventStream.send(.stale(latestRate))
             }

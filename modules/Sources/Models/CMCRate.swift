@@ -7,18 +7,18 @@
 
 import Foundation
 
-public struct PriceResponse: Codable {
-    public let data: [String: Asset]
+public struct CMCPrice: Codable {
+    public let data: [String: CMCAsset]
 }
 
-public struct Asset: Codable {
-    public let quote: Quote
+public struct CMCAsset: Codable {
+    public let quote: CMCQuote
 }
 
-public struct Quote: Codable {
-    public let USD: USDQuote
+public struct CMCQuote: Codable {
+    public let USD: CMCUSDQuote
 }
 
-public struct USDQuote: Codable {
+public struct CMCUSDQuote: Codable {
     public let price: Double
 }
