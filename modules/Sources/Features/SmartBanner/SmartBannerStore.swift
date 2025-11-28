@@ -62,6 +62,7 @@ public struct SmartBanner {
         public var isShieldingAcknowledged = false
         public var isShieldingAcknowledgedAtKeychain = false
         public var isSmartBannerSheetPresented = false
+        public var isSyncTimedOutSheetPresented = false
         public var isWalletBackupAcknowledged = false
         public var isWalletBackupAcknowledgedAtKeychain = false
         public var lastKnownErrorMessage = ""
@@ -134,6 +135,7 @@ public struct SmartBanner {
         case remindMeLaterTapped(State.PriorityContent)
         case reportPrepared
         case reportTapped
+        case sendSupportMailFinished
         case shareFinished
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
         case smartBannerContentTapped
@@ -146,7 +148,9 @@ public struct SmartBanner {
         case autoShieldingTapped
         case currencyConversionScreenRequested
         case currencyConversionTapped
+        case serverSwitchRequested
         case shieldFundsTapped
+        case torSettingsRequested
         case torSetupScreenRequested
         case torSetupTapped
         case walletBackupTapped
@@ -208,6 +212,10 @@ public struct SmartBanner {
             case .binding:
                 return .none
                 
+            case .sendSupportMailFinished:
+                state.supportData = nil
+                return .none
+                
             case .shieldingProcessorStateChanged(let shieldingProcessorState):
                 if shieldingProcessorState == .succeeded {
                     state.transparentBalance = .zero
@@ -238,6 +246,7 @@ public struct SmartBanner {
                 }
 
             case .reportTapped:
+                state.isSyncTimedOutSheetPresented = false
                 return .run { send in
                     await send(.closeSheetTapped)
                     try? await mainQueue.sleep(for: .seconds(1))
@@ -286,6 +295,9 @@ public struct SmartBanner {
                     return .send(.torSetupScreenRequested)
                 } else if state.priorityContent == .priority8 {
                     return .send(.currencyConversionScreenRequested)
+                } else if state.isSyncTimedOut {
+                    state.isSyncTimedOutSheetPresented = true
+                    return .none
                 }
                 state.isSmartBannerSheetPresented = true
                 return .none
@@ -562,9 +574,17 @@ public struct SmartBanner {
 
             case .torSetupScreenRequested:
                 return .none
+                
+            case .torSettingsRequested:
+                state.isSyncTimedOutSheetPresented = false
+                return .none
 
             case .torSetupTapped:
                 return .send(.smartBannerContentTapped)
+
+            case .serverSwitchRequested:
+                state.isSyncTimedOutSheetPresented = false
+                return .none
 
             case .shieldFundsTapped:
                 state.isSmartBannerSheetPresented = false
@@ -576,5 +596,12 @@ public struct SmartBanner {
                 return .none
             }
         }
+    }
+}
+
+extension SmartBanner.State {
+    var isSyncTimedOut: Bool {
+        lastKnownErrorMessage.lowercased().contains("504 gateway timeout")
+        || lastKnownErrorMessage.lowercased().contains("tor error: tor: operation timed out at exit")
     }
 }

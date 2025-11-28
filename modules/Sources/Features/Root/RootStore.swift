@@ -68,6 +68,7 @@ public struct Root {
             case requestZecCoordFlow
             case scanCoordFlow
             case sendCoordFlow
+            case serverSwitch
             case settings
             case swapAndPayCoordFlow
             case torSetup

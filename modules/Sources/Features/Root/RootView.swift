@@ -212,6 +212,15 @@ private extension RootView {
                                         action: \.torSetup)
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.serverSwitch)) {
+                            ServerSetupView(
+                                store:
+                                    store.scope(
+                                        state: \.serverSetupState,
+                                        action: \.serverSetup
+                                    )
+                            )
+                        }
                         .navigationLinkEmpty(isActive: store.bindingFor(.swapAndPayCoordFlow)) {
                             SwapAndPayCoordFlowView(
                                 store:
@@ -232,11 +241,6 @@ private extension RootView {
                         }
                         .zashiSheet(isPresented: store.bindingForSharedFlags(.insufficientFunds)) {
                             insufficientFundsSheetContent()
-                                .screenHorizontalPadding()
-                                .applyScreenBackground()
-                        }
-                        .zashiSheet(isPresented: store.bindingForSharedFlags(.syncTimedOut)) {
-                            syncTimedSheetContent()
                                 .screenHorizontalPadding()
                                 .applyScreenBackground()
                         }
@@ -357,46 +361,7 @@ private extension RootView {
             .padding(.bottom, 24)
         }
     }
-    
-    @ViewBuilder private func syncTimedSheetContent() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.infoOutline.image
-                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
-                .background {
-                    Circle()
-                        .fill(Design.Utility.ErrorRed._50.color(colorScheme))
-                        .frame(width: 44, height: 44)
-                }
-                .padding(.top, 48)
-                .padding(.leading, 12)
 
-            Text(L10n.Sheet.SyncTimeout.title)
-                .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                .padding(.top, 24)
-                .padding(.bottom, 12)
-            
-            Text(L10n.Sheet.SyncTimeout.desc)
-                .zFont(size: 14, style: Design.Text.tertiary)
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.leading)
-                .lineSpacing(2)
-                .padding(.bottom, 32)
-            
-            Button("Server Switch") {
-                
-            }
-            
-            Button("Tor Protection") {
-
-            }
-
-            ZashiButton(L10n.ErrorPage.Action.contactSupport) {
-                
-            }
-            .padding(.bottom, 24)
-        }
-    }
-    
     @ViewBuilder func shareLogsView(_ store: StoreOf<Root>) -> some View {
         if store.exportLogsState.isSharingLogs {
             UIShareDialogView(

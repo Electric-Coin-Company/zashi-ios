@@ -229,9 +229,6 @@ public struct SendForm {
         case validateAddress
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
-        
-        case testA
-        case testB
     }
     
     @Dependency(\.addressBook) var addressBook
@@ -261,14 +258,6 @@ public struct SendForm {
 
         Reduce { state, action in
             switch action {
-            case .testA:
-                state.$sharedFlags.withLock { $0 = .insufficientFunds }
-                return .none
-                
-            case .testB:
-                state.$sharedFlags.withLock { $0 = .syncTimedOut }
-                return .none
-
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 return .send(.exchangeRateSetupChanged)

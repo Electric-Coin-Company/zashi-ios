@@ -123,7 +123,7 @@ public struct Home {
         case swapWithNearTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
-        case torSetupTapped
+        case torSetupTapped(Bool)
         case updatePrivateUA(UnifiedAddress?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
@@ -380,7 +380,10 @@ public struct Home {
                 return .send(.currencyConversionSetupTapped)
 
             case .smartBanner(.torSetupScreenRequested):
-                return .send(.torSetupTapped)
+                return .send(.torSetupTapped(false))
+
+            case .smartBanner(.torSettingsRequested):
+                return .send(.torSetupTapped(true))
 
                 // More actions
                 

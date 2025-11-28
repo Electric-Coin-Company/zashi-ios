@@ -45,14 +45,6 @@ public struct SendFormView: View {
                             WithPerceptionTracking {
                                 VStack(alignment: .center) {
                                     WithPerceptionTracking {
-                                        Button("A") {
-                                            store.send(.testA)
-                                        }
-                                        
-                                        Button("B") {
-                                            store.send(.testB)
-                                        }
-
                                         WalletBalancesView(
                                             store: store.scope(
                                                 state: \.walletBalancesState,
