@@ -45,8 +45,8 @@ public struct UMAccountV1: Codable {
 }
 
 extension UserMetadata {
-    static func v1ToLatest(_ userMetadataV1: UserMetadataV1) throws -> UserMetadata {
-        return UserMetadata(
+    static func v1ToLatest(_ userMetadataV1: UserMetadataV1) -> UserMetadata {
+        UserMetadata(
             version: UserMetadata.Constants.version,
             lastUpdated: userMetadataV1.lastUpdated,
             accountMetadata:
@@ -61,16 +61,5 @@ extension UserMetadata {
                     )
                 )
         )
-    }
-    
-    static func userMetadataV1From(encryptedSubData: Data, subKey: SymmetricKey) throws -> UserMetadata? {
-        // Unseal the encrypted user metadata.
-        let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32 +  UserMetadataStorage.Constants.int64Size))
-        let data = try ChaChaPoly.open(sealed, using: subKey)
-        
-        // deserialize the json's data
-        let userMetadataV1 = try JSONDecoder().decode(UserMetadataV1.self, from: data)
-        
-        return try UserMetadata.v1ToLatest(userMetadataV1)
     }
 }

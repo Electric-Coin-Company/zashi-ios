@@ -89,7 +89,7 @@ extension UserMetadata {
     /// `toAsset` is a provider value in version 1, example: `near.btc.near` <provider>.<token>.<chain>
     /// `exactInput` we don't know from version 2 data if the swap was swap or crosspay, hardcoded all to swap
     /// `status` we don't know from version 2 data in what status the swap ended, hardcoded to completed
-    static func v2ToLatest(_ userMetadata: UserMetadataV2) throws -> UserMetadata {
+    static func v2ToLatest(_ userMetadata: UserMetadataV2) -> UserMetadata {
         let umSwaps = UMSwaps(
             swapIds: userMetadata.accountMetadata.swaps.swapIds.map {
                 UMSwapId(
@@ -120,16 +120,5 @@ extension UserMetadata {
                     swaps: umSwaps
                 )
         )
-    }
-    
-    static func userMetadataV2From(encryptedSubData: Data, subKey: SymmetricKey) throws -> UserMetadata? {
-        // Unseal the encrypted user metadata.
-        let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32 +  UserMetadataStorage.Constants.int64Size))
-        let data = try ChaChaPoly.open(sealed, using: subKey)
-        
-        // deserialize the json's data
-        let userMetadataV2 = try JSONDecoder().decode(UserMetadataV2.self, from: data)
-        
-        return try UserMetadata.v2ToLatest(userMetadataV2)
     }
 }
