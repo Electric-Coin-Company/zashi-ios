@@ -24,6 +24,9 @@ extension HomeView {
                 .zImage(size: 24, style: Design.Text.primary)
                 .padding(8)
                 .tint(Asset.Colors.primary.color)
+                .onTapGesture(count: 2) {
+                    store.send(.settingsTapped)
+                }
         }
     }
     

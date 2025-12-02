@@ -106,7 +106,7 @@ public class UserMetadataStorage {
         
         let encryptedUMData = try UserMetadata.encryptUserMetadata(metadata, account: account)
         
-        try encryptedUMData.write(to: fileURL)
+        try encryptedUMData.write(to: fileURL, options: .atomic)
 
         @Dependency(\.remoteStorage) var remoteStorage
 

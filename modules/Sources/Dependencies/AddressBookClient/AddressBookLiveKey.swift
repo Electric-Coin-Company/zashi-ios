@@ -308,7 +308,7 @@ extension AddressBookClient: DependencyKey {
         }
 
         let fileURL = documentsDirectory.appendingPathComponent(filenameForEncryptedFile)
-        try encryptedContacts.write(to: fileURL)
+        try encryptedContacts.write(to: fileURL, options: .atomic)
 
         // store encrypted data to the remote storage
         if remoteStore {

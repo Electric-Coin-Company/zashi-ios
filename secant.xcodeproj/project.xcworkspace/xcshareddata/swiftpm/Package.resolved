@@ -482,8 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "a9357852feebd0b0c991f146556373f6a18b4c63",
-        "version" : "0.19.0"
+        "branch" : "pre_release/0.19.1-no_cargo_update",
+        "revision" : "f0a0cc4c5cc3fccd25cd8df700b24ea5eb42b11b"
       }
     },
     {
@@ -501,7 +501,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "chain-tip-flags-enhancement",
-        "revision" : "a1990dc803add9a755e8673f3b7d086174a1af32"
+        "revision" : "bb35b19c12700f8fa00d008e9b1b57106446b5d0"
       }
     }
   ],
