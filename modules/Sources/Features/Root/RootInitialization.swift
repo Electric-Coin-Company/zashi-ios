@@ -324,6 +324,9 @@ extension Root {
                             )
 
                             await send(.fetchTransactionsForTheSelectedAccount)
+                            /// The TCA spins an async Task in `fetchTransactionsForTheSelectedAccount` and it's needed to run
+                            /// before next code here therefore Task is asleep for 0.01s. The purpose is also to not block the main thread
+                            /// so await of mainQueue is not used.
                             try? await Task.sleep(nanoseconds: 10_000_000)
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
