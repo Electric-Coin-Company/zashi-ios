@@ -966,16 +966,17 @@ public struct SwapAndPay {
                 guard let depositAddress = state.quote?.depositAddress else {
                     return .none
                 }
-                return .publisher {
-                    QRCodeGenerator.generate(
+                return .run { [state] send in
+                    for await image in QRCodeGenerator.generate(
                         from: depositAddress,
                         vendor: .zashi,
                         color: state.isQRCodeAppreanceFlipped
                         ? .black
                         : Asset.Colors.primary.systemColor,
                         overlayedWithZcashLogo: false
-                    )
-                    .map(Action.rememberQR)
+                    ).values {
+                        await send(.rememberQR(image))
+                    }
                 }
                 .cancellable(id: state.QRCancelId)
 

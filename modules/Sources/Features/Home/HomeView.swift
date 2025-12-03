@@ -108,11 +108,6 @@ public struct HomeView: View {
                     }
                 }
             }
-            .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
-                if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
-                    InAppBrowserView(url: url)
-                }
-            }
             .sheet(isPresented: $store.isInAppBrowserKeystoneOn) {
                 if let url = URL(string: store.inAppBrowserURLKeystone) {
                     InAppBrowserView(url: url)
@@ -249,21 +244,6 @@ public struct HomeView: View {
                     Text(L10n.TransactionHistory.nothingHere)
                         .zFont(.semiBold, size: 18, style: Design.Text.primary)
                         .padding(.bottom, 8)
-
-                    // FIXME: Temporarily unavailable
-                    if walletStatus != .restoring && false {
-                        Text(L10n.TransactionHistory.makeTransaction)
-                            .zFont(size: 14, style: Design.Text.tertiary)
-                            .padding(.bottom, 20)
-                        
-                        ZashiButton(
-                            L10n.TransactionHistory.getSomeZec,
-                            type: .tertiary,
-                            infinityWidth: false
-                        ) {
-                            store.send(.getSomeZecRequested)
-                        }
-                    }
                 }
                 .padding(.top, 40)
             }

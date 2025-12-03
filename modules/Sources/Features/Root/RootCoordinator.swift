@@ -100,9 +100,6 @@ extension Root {
                 state.path = .scanCoordFlow
                 return .none
 
-            case .home(.getSomeZecTapped):
-                return .send(.home(.coinbaseTapped))
-                
             case .home(.flexaTapped), .settings(.payWithFlexaTapped):
                 return .send(.flexaOpenRequest)
                 
