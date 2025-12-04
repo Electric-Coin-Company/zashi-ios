@@ -29,7 +29,7 @@ public struct SmartBanner {
         static let remindMe2days: TimeInterval = 86_400 * 2
         static let remindMe2weeks: TimeInterval = 86_400 * 14
         static let remindMeMonth: TimeInterval = 86_400 * 30
-        static let smartBannerSyncingThreahold = 0.98
+        static let smartBannerSyncingThreshold = 0.98
     }
     
     @ObservableState
@@ -399,7 +399,7 @@ public struct SmartBanner {
                     if isSyncing && state.priorityContent == nil {
                         if state.walletStatus == .restoring {
                             return .send(.triggerPriority(.priority3))
-                        } else if state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < Constants.smartBannerSyncingThreahold {
+                        } else if state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < Constants.smartBannerSyncingThreshold {
                             return .send(.triggerPriority(.priority4))
                         }
                     }
@@ -424,7 +424,7 @@ public struct SmartBanner {
 
                 // syncing
             case .evaluatePriority4:
-                if state.walletStatus != .restoring && state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < Constants.smartBannerSyncingThreahold {
+                if state.walletStatus != .restoring && state.lastKnownSyncPercentage >= 0 && state.lastKnownSyncPercentage < Constants.smartBannerSyncingThreshold {
                     return .send(.triggerPriority(.priority4))
                 }
                 return .send(.evaluatePriority5)

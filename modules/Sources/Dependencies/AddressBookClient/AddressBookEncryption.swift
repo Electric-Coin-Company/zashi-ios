@@ -46,7 +46,8 @@ extension AddressBookClient {
     static func encryptContacts(_ contacts: AddressBookContacts, account: Account) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
         
-        // TODO: - refactor
+        // TODO: [#1581] - Refactor encryption metadata terminology for keys
+        // https://github.com/Electric-Coin-Company/zashi-ios/issues/1581
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(),
               let addressBookKey = encryptionKeys.getCached(account: account) else {
             throw AddressBookClient.AddressBookClientError.missingEncryptionKey
