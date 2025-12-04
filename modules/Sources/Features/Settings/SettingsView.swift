@@ -83,7 +83,10 @@ public struct SettingsView: View {
                         .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
                         .padding(.bottom, 16)
                         .onLongPressGesture {
-                            store.send(.enableDebugMode)
+                            store.send(.enableRecoverFundsMode)
+                        }
+                        .onTapGesture(count: 3) {
+                            store.send(.enableEnhanceTransactionMode)
                         }
 
                     Text(L10n.Settings.version(store.appVersion, store.appBuild))
@@ -132,16 +135,21 @@ public struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .zashiBack()
             .navigationBarHidden(!store.path.isEmpty)
-            .screenTitle(L10n.Settings.title)
-            .zashiSheet(isPresented: $store.isInDebugMode) {
-                helpSheetContent()
+            .screenTitle(L10n.HomeScreen.more)
+            .zashiSheet(isPresented: $store.isInRecoverFundsMode) {
+                recoverFundsSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.isInEnhanceTransactionMode) {
+                enhanceTransactionSheetContent()
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
         }
     }
     
-    @ViewBuilder private func helpSheetContent() -> some View {
+    @ViewBuilder private func recoverFundsSheetContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(L10n.RecoverFunds.title)
                 .zFont(.semiBold, size: 24, style: Design.Text.primary)
@@ -178,6 +186,34 @@ public struct SettingsView: View {
                 store.send(.checkFundsForAddress(store.addressToRecoverFunds))
             }
             .disabled(store.addressToRecoverFunds.isEmpty || !store.isTorOn)
+            .padding(.bottom, 24)
+        }
+    }
+    
+    @ViewBuilder private func enhanceTransactionSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(L10n.EnhanceTransaction.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+
+            Text(L10n.EnhanceTransaction.msg)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, 24)
+            
+            ZashiTextField(
+                addressFont: true,
+                text: $store.txidToEnhance,
+                placeholder: L10n.EnhanceTransaction.placeholder,
+                title: L10n.EnhanceTransaction.fieldTitle
+            )
+            .padding(.bottom, 32)
+
+            ZashiButton(L10n.EnhanceTransaction.btn) {
+                store.send(.fetchDataForTxid(store.txidToEnhance))
+            }
+            .disabled(store.txidToEnhance.isEmpty)
             .padding(.bottom, 24)
         }
     }

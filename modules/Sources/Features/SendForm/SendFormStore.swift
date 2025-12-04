@@ -55,6 +55,7 @@ public struct SendForm {
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        @Shared(.inMemory(.sharedFlags)) public var sharedFlags: SharedFlags? = nil
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
@@ -348,6 +349,10 @@ public struct SendForm {
                 }
                 
             case let .sendFailed(error, confirmationType):
+                if error.isInsufficientBalance {
+                    state.$sharedFlags.withLock { $0 = .insufficientFunds }
+                    return .none
+                }
                 if confirmationType == .send {
                     state.alert = AlertState.sendFailure(error)
                 }

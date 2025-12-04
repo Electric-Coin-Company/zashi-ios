@@ -13,19 +13,6 @@ import UIComponents
 extension HomeView {
     @ViewBuilder func moreContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ActionRow(
-                icon: walletStatus == .restoring
-                ? Asset.Assets.Partners.payWithNearDisabled.image
-                : Asset.Assets.Partners.payWithNear.image,
-                title: L10n.SendSelect.swapWithNear,
-                desc: L10n.SendSelect.SwapWithNear.desc,
-                customIcon: store.featureFlags.flexa
-            ) {
-                store.send(.swapWithNearTapped)
-            }
-            .disabled(walletStatus == .restoring)
-            .padding(.top, 32)
-
             if !store.isKeystoneAccountActive {
                 ActionRow(
                     icon: walletStatus == .restoring
@@ -39,25 +26,8 @@ extension HomeView {
                     store.send(.flexaTapped)
                 }
                 .disabled(walletStatus == .restoring)
+                .padding(.top, 32)
                 .padding(.bottom, store.isKeystoneAccountActive ? 24 : 0)
-            }
-            
-            // FIXME: Temporarily disabled until we resolve the issue with Secure Init
-            // When done, revert to Asset.Assets.Partners.coinbase.image and remove .disabled(true)
-            // Desc revert to L10n.Settings.coinbaseDesc
-            if store.inAppBrowserURLCoinbase != nil {
-                ActionRow(
-                    icon: Asset.Assets.Partners.coinbaseDisabled.image,
-                    title: L10n.Settings.buyZecCB,
-                    desc: L10n.Coinbase.disabled,
-                    customIcon: true,
-                    divider: !store.isKeystoneConnected
-                ) {
-                    store.send(.coinbaseTapped)
-                }
-                .padding(.bottom, store.isKeystoneConnected ? 24 : 0)
-                .padding(.top, store.inAppBrowserURLCoinbase != nil ? 0 : 32)
-                .disabled(true)
             }
 
             if !store.isKeystoneConnected {
@@ -66,13 +36,22 @@ extension HomeView {
                     title: L10n.Settings.keystone,
                     desc: L10n.Settings.keystoneDesc,
                     customIcon: true,
-                    divider: false
+                    divider: true
                 ) {
                     store.send(.addKeystoneHWWalletTapped)
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, 12)
             }
             
+            ActionRow(
+                icon: Asset.Assets.Icons.settings.image,
+                title: L10n.HomeScreen.moreDotted,
+                divider: false
+            ) {
+                store.send(.moreInMoreTapped)
+            }
+            .padding(.bottom, 24)
+
             HStack(alignment: .top, spacing: 0) {
                 Asset.Assets.infoOutline.image
                     .zImage(size: 20, style: Design.Text.tertiary)

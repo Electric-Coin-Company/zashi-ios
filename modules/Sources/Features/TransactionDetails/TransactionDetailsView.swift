@@ -122,7 +122,7 @@ public struct TransactionDetailsView: View {
                 
                 Spacer()
                 
-                if let retryFailure = store.swapAssetFailedWithRetry {
+                if let retryFailure = store.swapAssetFailedWithRetry, store.transaction.isNonZcashActivity {
                     VStack(alignment: .center, spacing: 0) {
                         Asset.Assets.infoOutline.image
                             .zImage(size: 16, style: Design.Text.error)

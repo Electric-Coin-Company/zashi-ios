@@ -67,7 +67,7 @@ public struct NotEnoughFreeSpaceView: View {
     }
     
     func settingsButton() -> some View {
-        Asset.Assets.Icons.settings.image
+        Asset.Assets.Icons.dotsMenu.image
             .zImage(size: 24, style: Design.Text.primary)
             .padding(8)
             .tint(Asset.Colors.primary.color)

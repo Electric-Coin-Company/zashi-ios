@@ -68,6 +68,7 @@ public struct Root {
             case requestZecCoordFlow
             case scanCoordFlow
             case sendCoordFlow
+            case serverSwitch
             case settings
             case swapAndPayCoordFlow
             case torSetup
@@ -128,6 +129,9 @@ public struct Root {
         public var autoUpdateRefreshScheduled = false
         public var autoUpdateSwapCandidates: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.swapAssets)) public var swapAssets: IdentifiedArrayOf<SwapAsset> = []
+
+        // Shared Flags
+        @Shared(.inMemory(.sharedFlags)) public var sharedFlags: SharedFlags? = nil
 
         // Path
         public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
@@ -273,6 +277,10 @@ public struct Root {
         case checkFundsFoundSomething
         case checkFundsNothingFound
         case checkFundsTorRequired
+        
+        // Shared flags
+        case closeInsufficientFundsTapped
+        case updateSharedFlags(SharedFlags?)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -450,6 +458,14 @@ public struct Root {
 
             case .onboarding(.newWalletSuccessfulyCreated):
                 return .send(.initialization(.initializeSDK(.newWallet)))
+
+            case .closeInsufficientFundsTapped:
+                state.$sharedFlags.withLock { $0 = nil }
+                return .none
+                
+            case .updateSharedFlags(let newValue):
+                state.$sharedFlags.withLock { $0 = newValue }
+                return .none
 
             default: return .none
             }

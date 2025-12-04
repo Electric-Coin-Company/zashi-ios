@@ -315,8 +315,6 @@ extension Root {
                     
                     return .run { send in
                         do {
-                            exchangeRate.refreshExchangeRateUSD()
-                            
                             try await sdkSynchronizer.prepareWith(
                                 seedBytes,
                                 birthday,
@@ -324,6 +322,12 @@ extension Root {
                                 L10n.Accounts.zashi,
                                 L10n.Accounts.zashi.lowercased()
                             )
+
+                            await send(.fetchTransactionsForTheSelectedAccount)
+                            /// The TCA spins an async Task in `fetchTransactionsForTheSelectedAccount` and it's needed to run
+                            /// before next code here therefore Task is asleep for 0.01s. The purpose is also to not block the main thread
+                            /// so await of mainQueue is not used.
+                            try? await Task.sleep(nanoseconds: 10_000_000)
 
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
@@ -339,6 +343,8 @@ extension Root {
                                     selectedAccount = account
                                 }
                             }
+
+                            exchangeRate.refreshExchangeRateUSD()
 
                             if let account = selectedAccount {
                                 let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
@@ -445,6 +451,7 @@ extension Root {
                 let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
                 
                 return .run { send in
+                    // Delay the splash overlay dismissal
                     try await mainQueue.sleep(for: .seconds(0.5))
                     if !isAtDeeplinkWarningScreen {
                         await send(.destination(.updateDestination(Root.DestinationState.Destination.home)))

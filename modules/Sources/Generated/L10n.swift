@@ -227,12 +227,12 @@ public enum L10n {
     public static let cardTitle = L10n.tr("Localizable", "currencyConversion.cardTitle", fallback: "New Feature")
     /// Enable
     public static let enable = L10n.tr("Localizable", "currencyConversion.enable", fallback: "Enable")
-    /// Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.
-    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.")
+    /// If Tor Protection is enabled (Advanced Settings), Zashi protects your IP address.
+    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "If Tor Protection is enabled (Advanced Settings), Zashi protects your IP address.")
     /// IP Address Protection
     public static let ipTitle = L10n.tr("Localizable", "currencyConversion.ipTitle", fallback: "IP Address Protection")
-    /// View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
-    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
+    /// Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
+    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
     /// Disable
     public static let learnMoreOptionDisable = L10n.tr("Localizable", "currencyConversion.learnMoreOptionDisable", fallback: "Disable")
     /// Don’t show the currency conversion.
@@ -247,14 +247,16 @@ public enum L10n {
     public static let refreshDesc = L10n.tr("Localizable", "currencyConversion.refreshDesc", fallback: "The rate is refreshed automatically and can also be refreshed manually.")
     /// Save changes
     public static let saveBtn = L10n.tr("Localizable", "currencyConversion.saveBtn", fallback: "Save changes")
-    /// View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.
-    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.")
-    /// Check if Tor use is permitted in your region before enabling.
-    public static let settingsDesc2 = L10n.tr("Localizable", "currencyConversion.settingsDesc2", fallback: "Check if Tor use is permitted in your region before enabling.")
-    /// Skip
-    public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip")
+    /// Display your balance and payment amounts in USD.
+    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "Display your balance and payment amounts in USD.")
+    /// Skip for now
+    public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip for now")
     /// Currency Conversion
     public static let title = L10n.tr("Localizable", "currencyConversion.title", fallback: "Currency Conversion")
+    /// If you would like to protect your IP address, enable Tor Protection in Advanced Settings.
+    public static let torOffInfo = L10n.tr("Localizable", "currencyConversion.torOffInfo", fallback: "If you would like to protect your IP address, enable Tor Protection in Advanced Settings.")
+    /// Disabling Tor Protection will also disable the Currency Conversion feature until re-enabled.
+    public static let torOnInfo = L10n.tr("Localizable", "currencyConversion.torOnInfo", fallback: "Disabling Tor Protection will also disable the Currency Conversion feature until re-enabled.")
   }
   public enum DeeplinkWarning {
     /// Rescan in Zashi
@@ -293,6 +295,18 @@ public enum L10n {
       /// Are you sure?
       public static let title = L10n.tr("Localizable", "deleteWallet.sheet.title", fallback: "Are you sure?")
     }
+  }
+  public enum EnhanceTransaction {
+    /// Fetch data
+    public static let btn = L10n.tr("Localizable", "enhanceTransaction.btn", fallback: "Fetch data")
+    /// Transaction ID
+    public static let fieldTitle = L10n.tr("Localizable", "enhanceTransaction.fieldTitle", fallback: "Transaction ID")
+    /// If you confirm, Zashi will fetch transaction data for a transaction ID you provide.
+    public static let msg = L10n.tr("Localizable", "enhanceTransaction.msg", fallback: "If you confirm, Zashi will fetch transaction data for a transaction ID you provide.")
+    /// Enter or paste...
+    public static let placeholder = L10n.tr("Localizable", "enhanceTransaction.placeholder", fallback: "Enter or paste...")
+    /// Refresh Transaction Data
+    public static let title = L10n.tr("Localizable", "enhanceTransaction.title", fallback: "Refresh Transaction Data")
   }
   public enum ErrorPage {
     public enum Action {
@@ -445,6 +459,8 @@ public enum L10n {
     public static let buy = L10n.tr("Localizable", "homeScreen.buy", fallback: "Buy")
     /// More
     public static let more = L10n.tr("Localizable", "homeScreen.more", fallback: "More")
+    /// More...
+    public static let moreDotted = L10n.tr("Localizable", "homeScreen.moreDotted", fallback: "More...")
     /// Information shared with Zashi integrations is subject to their privacy policies.
     public static let moreWarning = L10n.tr("Localizable", "homeScreen.moreWarning", fallback: "Information shared with Zashi integrations is subject to their privacy policies.")
     /// Scan
@@ -1240,8 +1256,8 @@ public enum L10n {
     public static let flexaDesc = L10n.tr("Localizable", "settings.flexaDesc", fallback: "Pay with Flexa payment clips and explore a new way of spending Zcash.")
     /// Integrations
     public static let integrations = L10n.tr("Localizable", "settings.integrations", fallback: "Integrations")
-    /// Connect Keystone Device
-    public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
+    /// Connect Keystone
+    public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone")
     /// Pair your Keystone hardware wallet with Zashi to sign transactions.
     public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
     /// Beta: Tor Protection
@@ -1269,6 +1285,24 @@ public enum L10n {
         /// Oh, no!
         public static let title = L10n.tr("Localizable", "settings.alert.cantSendEmail.title", fallback: "Oh, no!")
       }
+    }
+  }
+  public enum Sheet {
+    public enum InsufficientBalance {
+      /// We couldn’t create this transaction for you. Your wallet doesn’t have enough balance to cover both the transaction amount and transaction fees. Please lower the transaction amount to account for the fees. 
+      public static let msg = L10n.tr("Localizable", "sheet.insufficientBalance.msg", fallback: "We couldn’t create this transaction for you. Your wallet doesn’t have enough balance to cover both the transaction amount and transaction fees. Please lower the transaction amount to account for the fees. ")
+      /// Insufficient Funds
+      public static let title = L10n.tr("Localizable", "sheet.insufficientBalance.title", fallback: "Insufficient Funds")
+    }
+    public enum SyncTimeout {
+      /// There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:
+      public static let desc = L10n.tr("Localizable", "sheet.syncTimeout.desc", fallback: "There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:")
+      /// Switch server
+      public static let server = L10n.tr("Localizable", "sheet.syncTimeout.server", fallback: "Switch server")
+      /// Something went wrong
+      public static let title = L10n.tr("Localizable", "sheet.syncTimeout.title", fallback: "Something went wrong")
+      /// Disable Tor protection
+      public static let tor = L10n.tr("Localizable", "sheet.syncTimeout.tor", fallback: "Disable Tor protection")
     }
   }
   public enum ShieldFunds {

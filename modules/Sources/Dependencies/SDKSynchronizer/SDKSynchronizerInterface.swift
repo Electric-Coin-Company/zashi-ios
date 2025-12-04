@@ -98,5 +98,6 @@ public struct SDKSynchronizerClient {
     public var checkSingleUseTransparentAddresses: (AccountUUID) async throws -> TransparentAddressCheckResult = { _ in .notFound }
     public var updateTransparentAddressTransactions: (String) async throws -> TransparentAddressCheckResult = { _ in .notFound }
     public var fetchUTXOsByAddress: (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
+    public var enhanceTransactionBy: (String) async throws -> Void
 }
 

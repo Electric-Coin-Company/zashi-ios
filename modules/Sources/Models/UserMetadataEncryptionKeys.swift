@@ -18,6 +18,8 @@ public struct UserMetadataEncryptionKeys: Codable, Equatable {
         public static let version = 1
     }
     
+    // FIXME: Integer is not enough information to uniquely identify the key
+    // FIXME: Don't hold keys in the memory when not necessary
     var keys: [Int: UserMetadataKeys]
 
     public mutating func cacheFor(seed: [UInt8], account: Account, network: NetworkType) throws {
@@ -34,12 +36,16 @@ public struct UserMetadataEncryptionKeys: Codable, Equatable {
             accountIndex: zip32AccountIndex,
             networkType: network
         )
+
+        // FIXME: is the seed fingerprint matches account's seed fingerprint
         
+        // FIXME: this will break when there are 2+ onloine seeds
         let privateMetadataKeys = try metadataKey.derivePrivateUseMetadataKey(
             ufvk: account.name?.lowercased() == "zashi" ? nil : account.ufvk,
             privateUseSubject: [UInt8](info)
         )
 
+        // FIXME: possible security issue - override
         keys[Int(zip32AccountIndex.index)] = UserMetadataKeys(privateKeys: privateMetadataKeys)
     }
 
@@ -126,7 +132,7 @@ public struct UserMetadataKeys: Codable, Equatable, Redactable {
         assert(salt.count == 32)
 
         guard let info = "metadata_key".data(using: .utf8) else {
-            fatalError("Unable to prepare `decryption_key` info")
+            fatalError("Unable to prepare `metadata_key` info")
         }
 
         var decryptionKeys: [SymmetricKey] = []

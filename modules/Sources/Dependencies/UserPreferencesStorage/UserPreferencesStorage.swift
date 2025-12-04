@@ -14,7 +14,11 @@ import ZcashLightClientKit
 /// the UserDefaults class is thread-safe.
 public struct UserPreferencesStorage {
     public enum Constants: String, CaseIterable {
+        /// 2.4.9 forced all users to re-enable exchange rate setup.
+        /// Previous key `ups_exchangeRate` is `legacy` one and present here only for purpose of removal.
         case ups_exchangeRate
+        /// The current key for exchange rate setup.
+        case ups_exchangeRate2
         case ups_server
     }
     
@@ -61,7 +65,12 @@ public struct UserPreferencesStorage {
 
     /// Exchange rate API in the SDK uses TOR and eventually fetches the data from rate providers. This has to be opted in by a user, by default it's off.
     public var exchangeRate: ExchangeRate? {
-        let contentData = getValue(forKey: Constants.ups_exchangeRate.rawValue, default: defaultExchangeRate)
+        /// Removal of `legacy` key, see the comment of `Constants.ups_exchangeRate`
+        if userDefaults.objectForKey(Constants.ups_exchangeRate.rawValue) != nil {
+            userDefaults.remove(Constants.ups_exchangeRate.rawValue)
+        }
+
+        let contentData = getValue(forKey: Constants.ups_exchangeRate2.rawValue, default: defaultExchangeRate)
 
         if let content = try? JSONDecoder().decode(ExchangeRate.self, from: contentData) {
             return content
@@ -73,7 +82,7 @@ public struct UserPreferencesStorage {
     public func setExchangeRate(_ newValue: ExchangeRate?) throws -> Void {
         do {
             let contentData = try JSONEncoder().encode(newValue)
-            setValue(contentData, forKey: Constants.ups_exchangeRate.rawValue)
+            setValue(contentData, forKey: Constants.ups_exchangeRate2.rawValue)
         } catch {
             throw UserPreferencesStorageError.exchangeRate
         }

@@ -27,18 +27,16 @@ public enum QRCodeGenerator {
         vendor: Vendor = .zashi,
         color: UIColor = Asset.Colors.primary.systemColor,
         overlayedWithZcashLogo: Bool = true
-    ) -> Future<CGImage, Never> {
-        Future<CGImage, Never> { promise in
+    ) -> Future<CGImage?, Never> {
+        Future<CGImage?, Never> { promise in
             DispatchQueue.global().async {
-                guard let image = generateCode(
+                let image = generateCode(
                     from: string,
                     maxPrivacy: maxPrivacy,
                     vendor: vendor,
                     color: color,
                     overlayedWithZcashLogo: overlayedWithZcashLogo
-                ) else {
-                    return
-                }
+                )
                 
                 return promise(.success(image))
             }

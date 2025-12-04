@@ -12,6 +12,7 @@ import SDKSynchronizer
 import Generated
 import WalletStorage
 import Models
+import UserPreferencesStorage
 
 @Reducer
 public struct TorSetup {
@@ -105,6 +106,7 @@ public struct TorSetup {
     }
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
 
     public init() { }
@@ -149,6 +151,9 @@ public struct TorSetup {
                 try? walletStorage.importTorSetupFlag(newFlag)
                 state.activeSettingsOption = state.currentSettingsOption
                 let currentSettingsOption = state.currentSettingsOption
+                if state.currentSettingsOption == .optOut {
+                    try? userStoredPreferences.setExchangeRate(.init(manual: false, automatic: false))
+                }
                 return .run { send in
                     await send(.settingsOptionChanged(currentSettingsOption))
                     if newFlag {

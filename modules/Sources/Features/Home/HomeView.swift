@@ -70,10 +70,10 @@ public struct HomeView: View {
                     Spacer(minLength: 8)
 
                     button(
-                        L10n.HomeScreen.more,
-                        icon: Asset.Assets.Icons.dotsMenu.image
+                        L10n.SwapAndPay.swap,
+                        icon: Asset.Assets.Icons.swap.image
                     ) {
-                        store.send(.moreTapped)
+                        store.send(.swapWithNearTapped)
                     }
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
@@ -106,11 +106,6 @@ public struct HomeView: View {
                             )
                         }
                     }
-                }
-            }
-            .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
-                if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
-                    InAppBrowserView(url: url)
                 }
             }
             .sheet(isPresented: $store.isInAppBrowserKeystoneOn) {
@@ -249,21 +244,6 @@ public struct HomeView: View {
                     Text(L10n.TransactionHistory.nothingHere)
                         .zFont(.semiBold, size: 18, style: Design.Text.primary)
                         .padding(.bottom, 8)
-
-                    // FIXME: Temporarily unavailable
-                    if walletStatus != .restoring && false {
-                        Text(L10n.TransactionHistory.makeTransaction)
-                            .zFont(size: 14, style: Design.Text.tertiary)
-                            .padding(.bottom, 20)
-                        
-                        ZashiButton(
-                            L10n.TransactionHistory.getSomeZec,
-                            type: .tertiary,
-                            infinityWidth: false
-                        ) {
-                            store.send(.getSomeZecRequested)
-                        }
-                    }
                 }
                 .padding(.top, 40)
             }

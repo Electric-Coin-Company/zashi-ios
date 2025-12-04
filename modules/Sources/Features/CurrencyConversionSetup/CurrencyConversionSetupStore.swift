@@ -74,6 +74,7 @@ public struct CurrencyConversionSetup {
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
+        public var isTorOn = false
         public var isTorSheetPresented = false
 
         public var isSaveButtonDisabled: Bool {
@@ -120,6 +121,7 @@ public struct CurrencyConversionSetup {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.isTorOn = walletStorage.exportTorSetupFlag() ?? false
                 if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
                     state.activeSettingsOption = .optIn
                     state.currentSettingsOption = .optIn

@@ -21,6 +21,8 @@ public class UserMetadataStorage {
     
     public enum UMError: Error {
         case documentsFolder
+        // structure of the encrypted data is either corrupted or version is not present
+        case encryptedDataStructuralCorruption
         case encryptionVersionNotSupported
         case fileIdentifier
         case localFileDoesntExist
@@ -104,7 +106,7 @@ public class UserMetadataStorage {
         
         let encryptedUMData = try UserMetadata.encryptUserMetadata(metadata, account: account)
         
-        try encryptedUMData.write(to: fileURL)
+        try encryptedUMData.write(to: fileURL, options: .atomic)
 
         @Dependency(\.remoteStorage) var remoteStorage
 

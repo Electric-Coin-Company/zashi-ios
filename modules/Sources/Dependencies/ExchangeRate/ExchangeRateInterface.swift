@@ -24,6 +24,11 @@ public struct ExchangeRateClient {
         case refreshEnable(FiatCurrencyResult?)
         case stale(FiatCurrencyResult?)
     }
+    
+    public enum RateSource: Equatable {
+        case coinMarketCap
+        case sdk
+    }
 
     public let exchangeRateEventStream: () -> AnyPublisher<EchangeRateEvent, Never>
     public var refreshExchangeRateUSD: () -> Void

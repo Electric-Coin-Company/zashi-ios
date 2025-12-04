@@ -28,7 +28,6 @@ public struct Home {
         public var appId: String?
         public var canRequestReview = false
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
-        public var isInAppBrowserCoinbaseOn = false
         public var isInAppBrowserKeystoneOn = false
         public var isRateEducationEnabled = false
         public var isRateTooltipEnabled = false
@@ -61,14 +60,6 @@ public struct Home {
             return false
         }
 
-        public var inAppBrowserURLCoinbase: String? {
-            if let address = selectedWalletAccount?.transparentAddress, let appId {
-                return L10n.Partners.coinbaseOnrampUrl(appId, address)
-            }
-            
-            return nil
-        }
-        
         public var inAppBrowserURLKeystone: String {
             "https://keyst.one/shop/products/keystone-3-pro?discount=Zashi"
         }
@@ -97,10 +88,9 @@ public struct Home {
         case currencyConversionCloseTapped
         case currencyConversionSetupTapped
         case foundTransactions
-        case getSomeZecRequested
-        case getSomeZecTapped
         case keystoneBannerTapped
         case moreTapped
+        case moreInMoreTapped
         case onAppear
         case onDisappear
         case payTapped
@@ -122,7 +112,7 @@ public struct Home {
         case swapWithNearTapped
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
-        case torSetupTapped
+        case torSetupTapped(Bool)
         case updatePrivateUA(UnifiedAddress?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
@@ -130,7 +120,6 @@ public struct Home {
         case walletBalances(WalletBalances.Action)
         
         // more actions
-        case coinbaseTapped
         case flexaTapped
     }
     
@@ -225,9 +214,13 @@ public struct Home {
             case .moreTapped:
                 state.moreRequest = true
                 return .none
-                
+
+            case .moreInMoreTapped:
+                state.moreRequest = false
+                return .send(.settingsTapped)
+
             case .buyTapped:
-                return .send(.coinbaseTapped)
+                return .none
                 
             case .payTapped:
                 state.payRequest = true
@@ -246,20 +239,6 @@ public struct Home {
                 state.canRequestReview = false
                 return .none
 
-            case .getSomeZecRequested:
-                let isKeystone = state.selectedWalletAccount?.vendor == .keystone
-                if let uuid = state.selectedWalletAccount?.id {
-                    return .run { send in
-                        let privateUA = try? await sdkSynchronizer.getCustomUnifiedAddress(uuid, isKeystone ? [.orchard] : [.sapling, .orchard])
-                        await send(.updatePrivateUA(privateUA))
-                        await send(.getSomeZecTapped)
-                    }
-                }
-                return .send(.getSomeZecTapped)
-
-            case .getSomeZecTapped:
-                return .none
-                
             case .seeAllTransactionsTapped:
                 return .none
                 
@@ -375,15 +354,13 @@ public struct Home {
                 return .send(.currencyConversionSetupTapped)
 
             case .smartBanner(.torSetupScreenRequested):
-                return .send(.torSetupTapped)
+                return .send(.torSetupTapped(false))
+
+            case .smartBanner(.torSettingsRequested):
+                return .send(.torSetupTapped(true))
 
                 // More actions
-                
-            case .coinbaseTapped:
-                state.moreRequest = false
-                state.isInAppBrowserCoinbaseOn = true
-                return .none
-                
+
             case .flexaTapped:
                 return .none
 

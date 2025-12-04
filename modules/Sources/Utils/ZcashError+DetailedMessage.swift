@@ -7,8 +7,17 @@
 
 import ZcashLightClientKit
 
-extension ZcashError {
-    public var detailedMessage: String {
+public extension ZcashError {
+    var detailedMessage: String {
         "[\(self.code.rawValue)] \(self.message)\n\(self)"
+    }
+    
+    var isInsufficientBalance: Bool {
+        detailedMessage.lowercased().contains("insufficient balance")
+        || detailedMessage.lowercased().contains("the transaction requires an additional change output of zatbalance")
+    }
+
+    var hasSyncTimedOut: Bool {
+        detailedMessage.lowercased().contains("504 gateway timeout")
     }
 }

@@ -43,7 +43,7 @@ public struct ReceiveView: View {
                                 addressBlock(
                                     prefixIcon: Asset.Assets.Partners.keystoneSeekLogo.image,
                                     title: L10n.Accounts.Keystone.shieldedAddress,
-                                    address: L10n.Receive.Ua.rotateInfo,
+                                    address: store.unifiedAddress,
                                     iconFg: Design.Utility.Indigo._800,
                                     iconBg: Design.Utility.Indigo._100,
                                     bcgColor: Design.Utility.Indigo._50.color(colorScheme),
@@ -86,7 +86,7 @@ public struct ReceiveView: View {
                                 addressBlock(
                                     prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
                                     title: L10n.Accounts.Zashi.shieldedAddress,
-                                    address: L10n.Receive.Ua.rotateInfo,
+                                    address: store.unifiedAddress,
                                     iconFg: Design.Utility.Purple._800,
                                     iconBg: Design.Utility.Purple._100,
                                     bcgColor: Design.Utility.Purple._50.color(colorScheme),
@@ -339,8 +339,8 @@ public struct ReceiveView: View {
                         .minimumScaleFactor(0.5)
                         .padding(.bottom, 4)
                     
-                    Text(shield ? address : address.zip316)
-                        .zFont(addressFont: !shield, size: 14, style: Design.Text.tertiary)
+                    Text(address.truncateMiddle10)
+                        .zFont(addressFont: true, size: 14, style: Design.Text.tertiary)
                         .padding(.bottom, expanded ? 10 : 0)
                 }
                 .lineLimit(1)

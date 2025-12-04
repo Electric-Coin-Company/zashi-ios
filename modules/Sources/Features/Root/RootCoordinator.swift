@@ -1,6 +1,6 @@
 //
 //  RootCoordinator.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 07.03.2025.
 //
@@ -100,10 +100,7 @@ extension Root {
                 state.path = .scanCoordFlow
                 return .none
 
-            case .home(.getSomeZecTapped):
-                return .send(.home(.coinbaseTapped))
-                
-            case .home(.flexaTapped):
+            case .home(.flexaTapped), .settings(.payWithFlexaTapped):
                 return .send(.flexaOpenRequest)
                 
             case .home(.addKeystoneHWWalletTapped):
@@ -147,14 +144,20 @@ extension Root {
                 state.path = .currencyConversionSetup
                 return .none
 
-            case .home(.torSetupTapped):
+            case .home(.torSetupTapped(let settingsView)):
                 state.torSetupState = .initial
+                state.torSetupState.isSettingsView = settingsView
                 state.path = .torSetup
                 return .none
 
             case .home(.smartBanner(.walletBackupTapped)):
                 state.walletBackupCoordFlowState = .initial
                 state.path = .walletBackup
+                return .none
+                
+            case .home(.smartBanner(.serverSwitchRequested)):
+                state.serverSetupState = .initial
+                state.path = .serverSwitch
                 return .none
 
                 // MARK: - Keystone

@@ -22,6 +22,7 @@ public enum SwapConstants {
 public struct UserMetadata: Codable {
     public enum Constants {
         public static let version = 3
+        public static let versionKey = "version"
     }
     
     public enum CodingKeys: CodingKey {

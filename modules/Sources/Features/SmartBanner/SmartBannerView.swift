@@ -57,10 +57,27 @@ public struct SmartBannerView: View {
                 }
                 .frame(minHeight: SBConstants.fixedHeight + SBConstants.shadowHeight)
                 
+                if let supportData = store.supportData {
+                    UIMailDialogView(
+                        supportData: supportData,
+                        completion: {
+                            store.send(.sendSupportMailFinished)
+                        }
+                    )
+                    // UIMailDialogView only wraps MFMailComposeViewController presentation
+                    // so frame is set to 0 to not break SwiftUIs layout
+                    .frame(width: 0, height: 0)
+                }
+                
                 shareMessageView()
             }
             .zashiSheet(isPresented: $store.isSmartBannerSheetPresented) {
                 helpSheetContent()
+                    .screenHorizontalPadding()
+                    .applyScreenBackground()
+            }
+            .zashiSheet(isPresented: $store.isSyncTimedOutSheetPresented) {
+                syncTimedSheetContent()
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
@@ -103,6 +120,67 @@ extension SmartBannerView {
             .frame(width: 0, height: 0)
         } else {
             EmptyView()
+        }
+    }
+    
+    @ViewBuilder private func syncTimedSheetContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Asset.Assets.infoOutline.image
+                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
+                .background {
+                    Circle()
+                        .fill(Design.Utility.ErrorRed._50.color(colorScheme))
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.top, 48)
+                .padding(.leading, 12)
+
+            Text(L10n.Sheet.SyncTimeout.title)
+                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 12)
+            
+            Text(L10n.Sheet.SyncTimeout.desc)
+                .zFont(size: 14, style: Design.Text.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
+                .lineSpacing(2)
+                .padding(.bottom, Design.Spacing._3xl)
+            
+            ActionRow(
+                icon: Asset.Assets.Icons.server.image,
+                title: L10n.Sheet.SyncTimeout.server,
+                divider: false,
+                horizontalPadding: Design.Spacing._xl
+            ) {
+                store.send(.serverSwitchRequested)
+            }
+            .padding(.bottom, Design.Spacing._lg)
+            .overlay {
+                RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+            }
+            .padding(.bottom, 8)
+
+            ActionRow(
+                icon: Asset.Assets.Icons.powerOff.image,
+                title: L10n.Sheet.SyncTimeout.tor,
+                divider: false,
+                horizontalPadding: Design.Spacing._xl
+            ) {
+                store.send(.torSettingsRequested)
+            }
+            .padding(.bottom, Design.Spacing._lg)
+            .overlay {
+                RoundedRectangle(cornerRadius: Design.Radius._xl)
+                    .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+            }
+            .padding(.bottom, 32)
+
+            ZashiButton(L10n.ErrorPage.Action.contactSupport) {
+                store.send(.reportTapped)
+            }
+            .padding(.bottom, 24)
         }
     }
 }

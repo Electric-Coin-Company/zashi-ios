@@ -95,7 +95,7 @@ public struct CurrencyConversionSetupView: View {
     
     private func settingsLayout() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header(L10n.CurrencyConversion.settingsDesc, desc2: L10n.CurrencyConversion.settingsDesc2)
+            header(L10n.CurrencyConversion.settingsDesc)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 20)
 
@@ -159,10 +159,26 @@ public struct CurrencyConversionSetupView: View {
     }
  
     private func settingsFooter() -> some View {
-        primaryButton(L10n.CurrencyConversion.saveBtn, disabled: store.isSaveButtonDisabled) {
-            store.send(.saveChangesTapped)
+        VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
+                Asset.Assets.infoOutline.image
+                    .zImage(size: 16, style: Design.Text.tertiary)
+                    .padding(.trailing, 12)
+                
+                Text(store.isTorOn
+                     ? L10n.CurrencyConversion.torOnInfo
+                     : L10n.CurrencyConversion.torOffInfo
+                )
+                .zFont(size: 12, style: Design.Text.tertiary)
+            }
+            .padding(.bottom, 20)
+            .screenHorizontalPadding()
+            
+            primaryButton(L10n.CurrencyConversion.saveBtn, disabled: store.isSaveButtonDisabled) {
+                store.send(.saveChangesTapped)
+            }
+            .padding(.bottom, 24)
         }
-        .padding(.bottom, 24)
     }
     
     private func learnMoreFooter() -> some View {

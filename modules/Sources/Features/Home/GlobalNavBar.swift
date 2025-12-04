@@ -14,12 +14,19 @@ import Settings
 extension HomeView {
     func settingsButton() -> some View {
         Button {
-            store.send(.settingsTapped)
+            if store.selectedWalletAccount?.vendor == .keystone {
+                store.send(.settingsTapped)
+            } else {
+                store.send(.moreTapped)
+            }
         } label: {
-            Asset.Assets.Icons.settings.image
+            Asset.Assets.Icons.dotsMenu.image
                 .zImage(size: 24, style: Design.Text.primary)
                 .padding(8)
                 .tint(Asset.Colors.primary.color)
+                .onTapGesture(count: 2) {
+                    store.send(.settingsTapped)
+                }
         }
     }
     
@@ -36,7 +43,9 @@ extension HomeView {
     
     @ViewBuilder func walletAccountSwitcher() -> some View {
         Button {
-            store.send(.accountSwitchTapped)
+            if store.walletAccounts.count >= 2 {
+                store.send(.accountSwitchTapped)
+            }
         } label: {
             HStack(spacing: 0) {
                 if let selectedWalletAccount = store.selectedWalletAccount {
@@ -54,10 +63,13 @@ extension HomeView {
                         .padding(.leading, 8)
                 }
 
-                Asset.Assets.chevronDown.image
-                    .zImage(size: 24, style: Design.Text.primary)
-                    .padding(8)
+                if store.walletAccounts.count >= 2 {
+                    Asset.Assets.chevronDown.image
+                        .zImage(size: 24, style: Design.Text.primary)
+                        .padding(8)
+                }
             }
         }
+        .disabled(store.walletAccounts.count <= 1)
     }
 }

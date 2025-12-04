@@ -130,6 +130,7 @@ public enum Asset {
       public static let pay = ImageAsset(name: "pay")
       public static let pencil = ImageAsset(name: "pencil")
       public static let plus = ImageAsset(name: "plus")
+      public static let powerOff = ImageAsset(name: "powerOff")
       public static let qr = ImageAsset(name: "qr")
       public static let received = ImageAsset(name: "received")
       public static let refreshSingleCCW = ImageAsset(name: "refreshSingleCCW")

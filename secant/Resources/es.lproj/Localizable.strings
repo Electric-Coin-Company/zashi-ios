@@ -384,24 +384,6 @@
 "addressBook.addNewContact" = "Agregar nuevo contacto";
 "addressBook.savedAddress" = "Dirección guardada";
 
-// MARK: Currency Conversion
-"currencyConversion.title" = "Conversión de Moneda";
-"currencyConversion.cardTitle" = "Nueva Función";
-"currencyConversion.cardButton" = "Revisar";
-"currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
-"currencyConversion.settingsDesc" = "Mira tu saldo y pagos en USD con mayor seguridad. Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP.";
-"currencyConversion.settingsDesc2" = "Verifica si Tor está permitido en tu región antes de habilitarlo.";
-"currencyConversion.enable" = "Habilitar";
-"currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
-"currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
-"currencyConversion.learnMoreOptionDisableDesc" = "No mostrar la conversión de moneda.";
-"currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
-"currencyConversion.saveBtn" = "Guardar cambios";
-"currencyConversion.ipTitle" = "Protección de Dirección IP";
-"currencyConversion.ipDesc" = "Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP. Verifica si el uso de Tor esta permitido en tu region.";
-"currencyConversion.refresh" = "Actualizar tasa";
-"currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
-
 // MARK: - Deeplink Warning
 "deeplinkWarning.title" = "Parece que utilizaste una aplicación de terceros para escanear un pago.";
 "deeplinkWarning.desc" = "Para mayor seguridad y protección, vuelve a escanear el código QR con Zashi.";
@@ -523,7 +505,7 @@
 "filter.weTried" = "Lo intentamos, pero no pudimos encontrar nada.";
 "filter.at" = "a las"; // ejemplo: 29 de nov a las 4:15 p. m.
 "filter.daysAgo" = "Hace %@ días";
-"settings.keystone" = "Conectar dispositivo Keystone";
+"settings.keystone" = "Conectar Keystone";
 "settings.keystoneDesc" = "Empareja tu billetera de hardware Keystone con Zashi para firmar transacciones.";
 
 // More actions
@@ -628,8 +610,6 @@
 "smartBanner.content.autoShielding.title" = "Auto-Protección";
 "smartBanner.content.autoShielding.info" = "Activa la protección automática";
 "smartBanner.content.autoShielding.button" = "Iniciar";
-
-"currencyConversion.skipBtn" = "Omitir";
 
 "balance.availableTitle" = "Gastable:";
 "balances.pending" = "Pendiente";
@@ -915,3 +895,61 @@
 
 "deleteWallet.sheet.title" = "¿Estás seguro?";
 "deleteWallet.sheet.msg" = "Restablecer la app no se puede deshacer. Necesitarás restaurar tu billetera usando tu frase secreta de recuperación.";
+
+"recoverFunds.title" = "Descubrir fondos";
+"recoverFunds.msg" = "Si confirmas, Zashi escaneará la dirección transparente que proporciones y descubrirá sus fondos. Esto puede tardar unos minutos.";
+"recoverFunds.fieldTitle" = "Dirección transparente";
+"recoverFunds.placeholder" = "Ingresa o pega...";
+"recoverFunds.btn" = "Escanear dirección";
+"recoverFunds.tor" = "Esta operación requiere Protección Tor. Por favor, habilítala en la Configuración Avanzada.";
+
+"torSettingsSheet.title" = "Habilitar Protección Tor";
+"torSettingsSheet.msg" = "Si Tor está disponible en tu región, recomendamos habilitarlo para una mayor privacidad durante la restauración de la billetera. Este paso es completamente opcional.";
+"torSettingsSheet.desc" = "Redirige tu conexión a través de la red Tor para mayor anonimato y protección de privacidad.";
+
+"texKeystone.title" = "Tipo de dirección no compatible";
+"texKeystone.warn1" = "Actualmente, Keystone no es compatible con transferencias a direcciones Binance TEX.";
+"texKeystone.warn2" = "Por favor, utiliza los pasos a continuación para completar tu transacción.";
+"texKeystone.workaround" = "Pasos alternativos";
+"texKeystone.step" = "Paso %@";
+"texKeystone.step1.title" = "Envía primero a Zashi";
+"texKeystone.step1.desc" = "Transfiere ZEC a tu dirección protegida de Zashi";
+"texKeystone.step2.title" = "Envía desde Zashi a la dirección TEX";
+"texKeystone.step2.desc" = "Una vez recibido en Zashi, envía los tokens a tu dirección TEX de destino final";
+"texKeystone.gotIt" = "Entendido";
+
+"homeScreen.moreDotted" = "Más...";
+
+"enhanceTransaction.title" = "Actualizar datos de la transacción";
+"enhanceTransaction.msg" = "Si confirmas, Zashi obtendrá datos de una transacción usando el ID que proporciones.";
+"enhanceTransaction.fieldTitle" = "ID de transacción";
+"enhanceTransaction.placeholder" = "Ingresa o pega...";
+"enhanceTransaction.btn" = "Obtener datos";
+
+"sheet.insufficientBalance.title" = "Fondos insuficientes";
+"sheet.insufficientBalance.msg" = "No pudimos crear esta transacción. Tu billetera no tiene suficiente saldo para cubrir tanto el monto de la transacción como las comisiones. Por favor, reduce el monto para considerar las comisiones.";
+
+"sheet.syncTimeout.title" = "Algo salió mal";
+"sheet.syncTimeout.desc" = "Ocurrió un error al intentar ejecutar la última operación. Revisa tu conexión, la configuración de VPN, reinicia la app o prueba una de las siguientes opciones:";
+"sheet.syncTimeout.server" = "Cambiar servidor";
+"sheet.syncTimeout.tor" = "Deshabilitar protección Tor";
+
+// MARK: Currency Conversion
+"currencyConversion.title" = "Conversión de Moneda";
+"currencyConversion.cardTitle" = "Nueva Función";
+"currencyConversion.cardButton" = "Revisar";
+"currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
+"currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD.";
+"currencyConversion.enable" = "Habilitar";
+"currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
+"currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
+"currencyConversion.learnMoreOptionDisableDesc" = "No mostrar la conversión de moneda.";
+"currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
+"currencyConversion.saveBtn" = "Guardar cambios";
+"currencyConversion.ipTitle" = "Protección de Dirección IP";
+"currencyConversion.ipDesc" = "Si la Protección Tor está activada (Configuración Avanzada), Zashi protege tu dirección IP.";
+"currencyConversion.refresh" = "Actualizar tasa";
+"currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
+"currencyConversion.skipBtn" = "Omitir";
+"currencyConversion.torOnInfo" = "Desactivar la Protección Tor también desactivará la función de Conversión de Moneda hasta que se vuelva a activar.";
+"currencyConversion.torOffInfo" = "Si deseas proteger tu dirección IP, activa la Protección Tor en la Configuración Avanzada.";
