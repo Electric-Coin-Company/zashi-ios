@@ -6,11 +6,24 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
-### Changed
-- Near swaps updated to use unified addresses.
-
 ### Added
 - A new sheet with option to turn on Tor prior to restoring their wallet.
+- Error handling improvements for the most frequent Zashi errors to help you understand and troubleshoot.
+
+### Changed
+- A Swap button leading directly to swaps.
+- Improved Currency Conversion performance.
+- Moved Pay with Flexa feature to More options.
+- Removed Coinbase Onramp integration.
+
+### Fixed
+- Caught and fixed a number of user-reported issues.
+- A feature to allow you to fetch transaction data
+
+## 2.4.8 build 1 (2025-11-17)
+
+### Changed
+- Near swaps updated to use unified addresses.
 
 ## 2.4.7 build 1 (2025-11-05)
 
