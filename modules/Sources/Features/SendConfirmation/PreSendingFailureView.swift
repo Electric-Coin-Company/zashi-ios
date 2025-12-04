@@ -65,7 +65,7 @@ public struct PreSendingFailureView: View {
                         }
                     )
                     // UIMailDialogView only wraps MFMailComposeViewController presentation
-                    // so frame is set to 0 to not break SwiftUIs layout
+                    // so frame is set to 0 to not break SwiftUI's layout
                     .frame(width: 0, height: 0)
                 }
                 
@@ -86,7 +86,7 @@ extension PreSendingFailureView {
                 store.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
-            // so frame is set to 0 to not break SwiftUIs layout
+            // so frame is set to 0 to not break SwiftUI's layout
             .frame(width: 0, height: 0)
         } else {
             EmptyView()
