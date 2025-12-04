@@ -384,24 +384,6 @@
 "addressBook.addNewContact" = "Add New Contact";
 "addressBook.savedAddress" = "Saved Address";
 
-// MARK: Currency Conversion
-"currencyConversion.title" = "Currency Conversion";
-"currencyConversion.cardTitle" = "New Feature";
-"currencyConversion.cardButton" = "Review";
-"currencyConversion.learnMoreDesc" = "View your balance and payment amounts in USD. You can manage this feature in Advanced Settings.";
-"currencyConversion.settingsDesc" = "View your balance and payment amounts in USD with added privacy. Exchange rates are fetched over Tor to protect your IP address.";
-"currencyConversion.settingsDesc2" = "Check if Tor use is permitted in your region before enabling.";
-"currencyConversion.enable" = "Enable";
-"currencyConversion.learnMoreOptionEnableDesc" = "Show me the currency conversion.";
-"currencyConversion.learnMoreOptionDisable" = "Disable";
-"currencyConversion.learnMoreOptionDisableDesc" = "Don’t show the currency conversion.";
-"currencyConversion.note" = "Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.";
-"currencyConversion.saveBtn" = "Save changes";
-"currencyConversion.ipTitle" = "IP Address Protection";
-"currencyConversion.ipDesc" = "Exchange rates are fetched over Tor to protect your IP address. Ensure Tor use is allowed in your region.";
-"currencyConversion.refresh" = "Rate Refresh";
-"currencyConversion.refreshDesc" = "The rate is refreshed automatically and can also be refreshed manually.";
-
 // MARK: - Deeplink Warning
 "deeplinkWarning.title" = "Looks like you used a third-party app to scan for payment.";
 "deeplinkWarning.desc" = "For better safety and security, rescan the QR code with Zashi.";
@@ -628,8 +610,6 @@
 "smartBanner.content.autoShielding.title" = "Auto-Shielding";
 "smartBanner.content.autoShielding.info" = "Enable automatic shielding";
 "smartBanner.content.autoShielding.button" = "Start";
-
-"currencyConversion.skipBtn" = "Skip";
 
 "balance.availableTitle" = "Spendable:";
 "balances.pending" = "Pending";
@@ -953,3 +933,23 @@
 "sheet.syncTimeout.desc" = "There was an error trying to execute the last operation. Check your connection, VPN setting, restart the app, or try one of the following:";
 "sheet.syncTimeout.server" = "Switch server";
 "sheet.syncTimeout.tor" = "Disable Tor protection";
+
+// MARK: Currency Conversion
+"currencyConversion.title" = "Currency Conversion";
+"currencyConversion.cardTitle" = "New Feature";
+"currencyConversion.cardButton" = "Review";
+"currencyConversion.learnMoreDesc" = "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.";
+"currencyConversion.settingsDesc" = "Display your balance and payment amounts in USD.";
+"currencyConversion.enable" = "Enable";
+"currencyConversion.learnMoreOptionEnableDesc" = "Show me the currency conversion.";
+"currencyConversion.learnMoreOptionDisable" = "Disable";
+"currencyConversion.learnMoreOptionDisableDesc" = "Don’t show the currency conversion.";
+"currencyConversion.note" = "Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.";
+"currencyConversion.saveBtn" = "Save changes";
+"currencyConversion.ipTitle" = "IP Address Protection";
+"currencyConversion.ipDesc" = "If Tor Protection is enabled (Advanced Settings), Zashi protects your IP address.";
+"currencyConversion.refresh" = "Rate Refresh";
+"currencyConversion.refreshDesc" = "The rate is refreshed automatically and can also be refreshed manually.";
+"currencyConversion.skipBtn" = "Skip for now";
+"currencyConversion.torOnInfo" = "Disabling Tor Protection will also disable the Currency Conversion feature until re-enabled.";
+"currencyConversion.torOffInfo" = "If you would like to protect your IP address, enable Tor Protection in Advanced Settings.";

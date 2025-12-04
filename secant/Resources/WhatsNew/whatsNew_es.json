@@ -1,6 +1,36 @@
 {
     "releases": [
         {
+            "version": "2.4.9",
+            "date": "03-12-2025",
+            "timestamp": 1764790914,
+            "sections": [
+                {
+                    "title": "Añadido:",
+                    "bulletpoints": [
+                        "Mejoramos el manejo de errores, facilitando su comprensión y resolución.",
+                        "Añadimos una opción para activar la protección de Tor en el proceso de Restauración."
+                    ]
+                },
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Añadimos un botón de swap que te lleva a los swaps.",
+                        "Mejoramos el rendimiento de Conversión de Moneda.",
+                        "Movimos la función Pagar con Flexa a Más opciones.",
+                        "Eliminamos la integración de Coinbase Onramp."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Solucionamos problemas reportados por los usuarios.",
+                        "Implementamos una función para recuperar los datos de las transacciones."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.8",
             "date": "11-17-2025",
             "timestamp": 1763124135,

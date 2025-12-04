@@ -384,24 +384,6 @@
 "addressBook.addNewContact" = "Agregar nuevo contacto";
 "addressBook.savedAddress" = "Dirección guardada";
 
-// MARK: Currency Conversion
-"currencyConversion.title" = "Conversión de Moneda";
-"currencyConversion.cardTitle" = "Nueva Función";
-"currencyConversion.cardButton" = "Revisar";
-"currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
-"currencyConversion.settingsDesc" = "Mira tu saldo y pagos en USD con mayor seguridad. Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP.";
-"currencyConversion.settingsDesc2" = "Verifica si Tor está permitido en tu región antes de habilitarlo.";
-"currencyConversion.enable" = "Habilitar";
-"currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
-"currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
-"currencyConversion.learnMoreOptionDisableDesc" = "No mostrar la conversión de moneda.";
-"currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
-"currencyConversion.saveBtn" = "Guardar cambios";
-"currencyConversion.ipTitle" = "Protección de Dirección IP";
-"currencyConversion.ipDesc" = "Las tasas de cambio son obtenidas a travez de Tor para proteger tu dirección IP. Verifica si el uso de Tor esta permitido en tu region.";
-"currencyConversion.refresh" = "Actualizar tasa";
-"currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
-
 // MARK: - Deeplink Warning
 "deeplinkWarning.title" = "Parece que utilizaste una aplicación de terceros para escanear un pago.";
 "deeplinkWarning.desc" = "Para mayor seguridad y protección, vuelve a escanear el código QR con Zashi.";
@@ -628,8 +610,6 @@
 "smartBanner.content.autoShielding.title" = "Auto-Protección";
 "smartBanner.content.autoShielding.info" = "Activa la protección automática";
 "smartBanner.content.autoShielding.button" = "Iniciar";
-
-"currencyConversion.skipBtn" = "Omitir";
 
 "balance.availableTitle" = "Gastable:";
 "balances.pending" = "Pendiente";
@@ -953,3 +933,23 @@
 "sheet.syncTimeout.desc" = "Ocurrió un error al intentar ejecutar la última operación. Revisa tu conexión, la configuración de VPN, reinicia la app o prueba una de las siguientes opciones:";
 "sheet.syncTimeout.server" = "Cambiar servidor";
 "sheet.syncTimeout.tor" = "Deshabilitar protección Tor";
+
+// MARK: Currency Conversion
+"currencyConversion.title" = "Conversión de Moneda";
+"currencyConversion.cardTitle" = "Nueva Función";
+"currencyConversion.cardButton" = "Revisar";
+"currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
+"currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD.";
+"currencyConversion.enable" = "Habilitar";
+"currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
+"currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
+"currencyConversion.learnMoreOptionDisableDesc" = "No mostrar la conversión de moneda.";
+"currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
+"currencyConversion.saveBtn" = "Guardar cambios";
+"currencyConversion.ipTitle" = "Protección de Dirección IP";
+"currencyConversion.ipDesc" = "Si la Protección Tor está activada (Configuración Avanzada), Zashi protege tu dirección IP.";
+"currencyConversion.refresh" = "Actualizar tasa";
+"currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
+"currencyConversion.skipBtn" = "Omitir";
+"currencyConversion.torOnInfo" = "Desactivar la Protección Tor también desactivará la función de Conversión de Moneda hasta que se vuelva a activar.";
+"currencyConversion.torOffInfo" = "Si deseas proteger tu dirección IP, activa la Protección Tor en la Configuración Avanzada.";

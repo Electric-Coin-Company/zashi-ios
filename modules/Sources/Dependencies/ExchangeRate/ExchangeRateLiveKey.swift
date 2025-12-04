@@ -49,6 +49,7 @@ class ExchangeRateProvider {
         }
 
         @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+        @Shared(.inMemory(.swapAPIAccess)) var swapAPIAccess: WalletStorage.SwapAPIAccess = .direct
 
         guard let url = URL(string: Constants.cmcRateURL) else {
             throw URLError(.badURL)
@@ -59,23 +60,23 @@ class ExchangeRateProvider {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue(cmcKey, forHTTPHeaderField: "X-CMC_PRO_API_KEY")
 
-        do {
-            let (data, response) = try await sdkSynchronizer.httpRequestOverTor(request)
-            
-            guard (200..<300).contains(response.statusCode) else {
-                throw "httpStatus \(response.statusCode)"
-            }
-            
-            if let result = try? JSONDecoder().decode(CMCPrice.self, from: data) {
-                if let zec = result.data[Constants.zecKey] {
-                    return zec.quote.USD.price
-                }
-            }
-            
-            throw "decode CMCPrice.self failed"
-        } catch {
-            throw error
+        let (data, response) = swapAPIAccess == .direct
+        ? try await URLSession.shared.data(for: request)
+        : try await sdkSynchronizer.httpRequestOverTor(request)
+        
+        guard let http = response as? HTTPURLResponse,
+              (200..<300).contains(http.statusCode) else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw "httpStatus \(code)"
         }
+        
+        if let result = try? JSONDecoder().decode(CMCPrice.self, from: data) {
+            if let zec = result.data[Constants.zecKey] {
+                return zec.quote.USD.price
+            }
+        }
+        
+        throw "Decode CMCPrice.self failed"
     }
 
     func refreshExchangeRateUSD(_ rateSource: ExchangeRateClient.RateSource = .coinMarketCap) {
