@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.9 build 1 (2025-12-04)
+
 ### Added
 - A new sheet with option to turn on Tor prior to restoring their wallet.
 - Error handling improvements for the most frequent Zashi errors to help you understand and troubleshoot.
