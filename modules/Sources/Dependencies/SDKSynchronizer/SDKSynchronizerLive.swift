@@ -317,6 +317,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             enhanceTransactionBy: { txId in
                 try await synchronizer.enhanceTransactionBy(txId: TxId(txId))
+            },
+            deleteAccount: { accountUUID in
+                try await synchronizer.deleteAccount(accountUUID)
             }
         )
     }

@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Disconnect Hardware Wallet in the Advanced Settings.
+
 ## 2.4.9 build 1 (2025-12-04)
 
 ### Added

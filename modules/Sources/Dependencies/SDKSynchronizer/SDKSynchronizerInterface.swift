@@ -99,5 +99,7 @@ public struct SDKSynchronizerClient {
     public var updateTransparentAddressTransactions: (String) async throws -> TransparentAddressCheckResult = { _ in .notFound }
     public var fetchUTXOsByAddress: (String, AccountUUID) async throws -> TransparentAddressCheckResult = { _, _ in .notFound }
     public var enhanceTransactionBy: (String) async throws -> Void
+    
+    public var deleteAccount: (AccountUUID) async throws -> Void
 }
 

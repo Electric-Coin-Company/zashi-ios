@@ -953,3 +953,13 @@
 "currencyConversion.skipBtn" = "Skip for now";
 "currencyConversion.torOnInfo" = "Disabling Tor Protection will also disable the Currency Conversion feature until re-enabled.";
 "currencyConversion.torOffInfo" = "If you would like to protect your IP address, enable Tor Protection in Advanced Settings.";
+
+// MARK: Disconnect HW Wallet
+"disconnectHWWallet.disconnectHW" = "Disconnect Hardware";
+"disconnectHWWallet.title" = "Disconnect Keystone";
+"disconnectHWWallet.disconnect" = "Disconnect";
+"disconnectHWWallet.desc1" = "If you disconnect now, your Keystone will no longer be paired with your Zashi wallet.";
+"disconnectHWWallet.desc2" = "If you decide to reconnect your Keystone later, you will need to resync your wallet to display your balances and transaction history correctly.";
+"disconnectHWWallet.kyestonePro" = "Keystone Pro";
+"disconnectHWWallet.currentlyConnected" = "Currently connected";
+"disconnectHWWallet.areYouSureDesc" = "Disconnecting the hardware wallet cannot be undone.";

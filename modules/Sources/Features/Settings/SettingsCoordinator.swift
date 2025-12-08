@@ -21,6 +21,7 @@ import ServerSetup
 import SendFeedback
 import WhatsNew
 import TorSetup
+import DisconnectHWWallet
 
 extension Settings {
     public func coordinatorReduce() -> Reduce<Settings.State, Settings.Action> {
@@ -93,6 +94,8 @@ extension Settings {
                     var currencyConversionSetupState = CurrencyConversionSetup.State.initial
                     currencyConversionSetupState.isSettingsView = true
                     state.path.append(.currencyConversionSetup(currencyConversionSetupState))
+                case .disconnectHWWallet:
+                    state.path.append(.disconnectHWWallet(DisconnectHWWallet.State.initial))
                 case .torSetup:
                     var torSetupState = TorSetup.State.initial
                     torSetupState.isSettingsView = true
