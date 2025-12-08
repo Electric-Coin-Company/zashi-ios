@@ -184,6 +184,11 @@ extension Root {
             case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped(let areMetadataPreserved))))):
                 return .send(.initialization(.resetZashiRequest(areMetadataPreserved)))
 
+            case .settings(.path(.element(id: _, action: .disconnectHWWallet(.disconnectSucceeded(let walletAccounts))))):
+                state.path = nil
+                state.$selectedWalletAccount.withLock { $0 = nil }
+                return .send(.initialization(.loadedWalletAccounts(walletAccounts)))
+
                 // MARK: - Restore Wallet Coord Flow from Onboarding
 
             case .onboarding(.restoreWalletCoordFlow(.path(.element(id: _, action: .restoreInfo(.gotItTapped))))):

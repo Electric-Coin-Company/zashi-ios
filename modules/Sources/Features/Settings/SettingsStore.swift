@@ -23,6 +23,7 @@ import ServerSetup
 import SendFeedback
 import WhatsNew
 import TorSetup
+import DisconnectHWWallet
 
 @Reducer
 public struct Settings {
@@ -36,6 +37,7 @@ public struct Settings {
         case advancedSettings(AdvancedSettings)
         case chooseServerSetup(ServerSetup)
         case currencyConversionSetup(CurrencyConversionSetup)
+        case disconnectHWWallet(DisconnectHWWallet)
         case exportPrivateData(PrivateDataConsent)
         case exportTransactionHistory(ExportTransactionHistory)
         case recoveryPhrase(RecoveryPhraseDisplay)

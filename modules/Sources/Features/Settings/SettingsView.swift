@@ -17,6 +17,7 @@ import ServerSetup
 import SendFeedback
 import WhatsNew
 import TorSetup
+import DisconnectHWWallet
 
 public struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -85,7 +86,7 @@ public struct SettingsView: View {
                         .onLongPressGesture {
                             store.send(.enableRecoverFundsMode)
                         }
-                        .onTapGesture(count: 3) {
+                        .onTapGesture(count: 2) {
                             store.send(.enableEnhanceTransactionMode)
                         }
 
@@ -113,6 +114,8 @@ public struct SettingsView: View {
                     ServerSetupView(store: store)
                 case let .currencyConversionSetup(store):
                     CurrencyConversionSetupView(store: store)
+                case let .disconnectHWWallet(store):
+                    DisconnectHWWalletView(store: store)
                 case let .exportPrivateData(store):
                     PrivateDataConsentView(store: store)
                 case let .exportTransactionHistory(store):

@@ -296,6 +296,24 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "deleteWallet.sheet.title", fallback: "Are you sure?")
     }
   }
+  public enum DisconnectHWWallet {
+    /// Disconnecting the hardware wallet cannot be undone.
+    public static let areYouSureDesc = L10n.tr("Localizable", "disconnectHWWallet.areYouSureDesc", fallback: "Disconnecting the hardware wallet cannot be undone.")
+    /// Currently connected
+    public static let currentlyConnected = L10n.tr("Localizable", "disconnectHWWallet.currentlyConnected", fallback: "Currently connected")
+    /// If you disconnect now, your Keystone will no longer be paired with your Zashi wallet.
+    public static let desc1 = L10n.tr("Localizable", "disconnectHWWallet.desc1", fallback: "If you disconnect now, your Keystone will no longer be paired with your Zashi wallet.")
+    /// If you decide to reconnect your Keystone later, you will need to resync your wallet to display your balances and transaction history correctly.
+    public static let desc2 = L10n.tr("Localizable", "disconnectHWWallet.desc2", fallback: "If you decide to reconnect your Keystone later, you will need to resync your wallet to display your balances and transaction history correctly.")
+    /// Disconnect
+    public static let disconnect = L10n.tr("Localizable", "disconnectHWWallet.disconnect", fallback: "Disconnect")
+    /// Disconnect Hardware
+    public static let disconnectHW = L10n.tr("Localizable", "disconnectHWWallet.disconnectHW", fallback: "Disconnect Hardware")
+    /// Keystone Pro
+    public static let kyestonePro = L10n.tr("Localizable", "disconnectHWWallet.kyestonePro", fallback: "Keystone Pro")
+    /// Disconnect Keystone
+    public static let title = L10n.tr("Localizable", "disconnectHWWallet.title", fallback: "Disconnect Keystone")
+  }
   public enum EnhanceTransaction {
     /// Fetch data
     public static let btn = L10n.tr("Localizable", "enhanceTransaction.btn", fallback: "Fetch data")

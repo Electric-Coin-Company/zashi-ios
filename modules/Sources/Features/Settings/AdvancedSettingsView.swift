@@ -60,7 +60,7 @@ public struct AdvancedSettingsView: View {
                         ActionRow(
                             icon: Asset.Assets.Icons.shieldZap.image,
                             title: L10n.Settings.private,
-                            divider: store.isEnoughFreeSpaceMode
+                            divider: store.isEnoughFreeSpaceMode || store.isKeystoneConnected
                         ) {
                             store.send(.operationAccessCheck(.torSetup))
                         }
@@ -69,9 +69,19 @@ public struct AdvancedSettingsView: View {
                             ActionRow(
                                 icon: Asset.Assets.Icons.currencyDollar.image,
                                 title: L10n.CurrencyConversion.title,
-                                divider: false
+                                divider: store.isKeystoneConnected
                             ) {
                                 store.send(.operationAccessCheck(.currencyConversion))
+                            }
+                        }
+                        
+                        if store.isKeystoneConnected {
+                            ActionRow(
+                                icon: Asset.Assets.Icons.hardDrive.image,
+                                title: L10n.DisconnectHWWallet.disconnectHW,
+                                divider: false
+                            ) {
+                                store.send(.operationAccessCheck(.disconnectHWWallet))
                             }
                         }
                     }
