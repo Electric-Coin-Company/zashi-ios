@@ -12,7 +12,6 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
-import PartialProposalError
 import AddressBook
 import TransactionDetails
 
@@ -42,6 +41,7 @@ public struct SuccessView: View {
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)
+                    .padding(.top, 8)
                     .screenHorizontalPadding()
 
                 if !store.isShielding && store.type == .regular {

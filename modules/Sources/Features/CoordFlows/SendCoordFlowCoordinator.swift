@@ -12,7 +12,6 @@ import Generated
 import AudioServices
 
 import AddressBook
-import PartialProposalError
 import Scan
 import SendConfirmation
 import SendForm
@@ -280,17 +279,12 @@ extension SendCoordFlow {
                 }
                 return .none
 
-            case .path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped))):
-                state.path.removeAll()
-                return .none
-
             case .path(.element(id: _, action: .preSendingFailure(.backFromPCZTFailureTapped))):
                 state.path.removeAll()
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
+                    .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 for element in state.path.reversed() {
                     if case .sendConfirmation(let sendConfirmationState) = element {
                         return .send(.viewTransactionRequested(sendConfirmationState))
@@ -309,20 +303,10 @@ extension SendCoordFlow {
 
             case let .resolveSendResult(result, sendConfirmationState):
                 switch result {
-                case .failure:
-                    state.path.append(.sendResultFailure(sendConfirmationState))
-                    break
-                case .partial:
-                    var partialProposalErrorState = PartialProposalError.State.initial
-                    partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
-                    partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
-                    state.path.append(.sendResultPartial(partialProposalErrorState))
-                    break
-                case .resubmission:
-                    state.path.append(.sendResultResubmission(sendConfirmationState))
-                    break
                 case .success:
                     state.path.append(.sendResultSuccess(sendConfirmationState))
+                case .pending:
+                    state.path.append(.sendResultPending(sendConfirmationState))
                 default: break
                 }
                 return .none

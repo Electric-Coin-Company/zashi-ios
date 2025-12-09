@@ -40,13 +40,8 @@ extension SignWithKeystoneCoordFlow {
 
             case .sendConfirmation(.updateResult(let result)):
                 switch result {
-                case .failure:
-                    state.path.append(.sendResultFailure(state.sendConfirmationState))
-                    break
-                case .partial:
-                    break
-                case .resubmission:
-                    state.path.append(.sendResultResubmission(state.sendConfirmationState))
+                case .pending:
+                    state.path.append(.sendResultPending(state.sendConfirmationState))
                     break
                 case .success:
                     if state.sendConfirmationState.isShielding {
@@ -58,8 +53,7 @@ extension SignWithKeystoneCoordFlow {
                 return .none
                 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
+                    .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 if let txid = state.sendConfirmationState.txIdToExpand {
                     if let index = state.transactions.index(id: txid) {
                         var transactionDetailsState = TransactionDetails.State.initial

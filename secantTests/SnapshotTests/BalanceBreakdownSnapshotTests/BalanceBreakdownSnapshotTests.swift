@@ -10,7 +10,6 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import SwiftUI
 import BalanceBreakdown
-import PartialProposalError
 @testable import secant_testnet
 
 class BalanceBreakdownSnapshotTests: XCTestCase {
@@ -20,7 +19,6 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: false,
-                partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
                 syncProgressState: .initial,
                 walletBalancesState: .initial
@@ -43,7 +41,6 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 changePending: .zero,
                 isShieldingFunds: false,
                 isHintBoxVisible: true,
-                partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
                 syncProgressState: .initial,
                 walletBalancesState: .initial

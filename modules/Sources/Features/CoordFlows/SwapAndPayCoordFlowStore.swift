@@ -37,8 +37,7 @@ public struct SwapAndPayCoordFlow {
         case preSendingFailure(SendConfirmation)
         case scan(Scan)
         case sending(SendConfirmation)
-        case sendResultFailure(SendConfirmation)
-        case sendResultResubmission(SendConfirmation)
+        case sendResultPending(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case swapAndPayForm(SwapAndPay)
         case swapAndPayOptInForced(SwapAndPay)
@@ -49,8 +48,7 @@ public struct SwapAndPayCoordFlow {
     @ObservableState
     public struct State {
         public enum Result: Equatable {
-            case failure
-            case resubmission
+            case pending
             case success
         }
         

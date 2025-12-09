@@ -12,7 +12,6 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
-import PartialProposalError
 
 public struct PreSendingFailureView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -96,7 +95,7 @@ extension PreSendingFailureView {
 
 #Preview {
     NavigationView {
-        FailureView(
+        PreSendingFailureView(
             store: SendConfirmation.initial,
             tokenName: "ZEC"
         )

@@ -43,7 +43,6 @@ class SendSnapshotTests: XCTestCase {
                 amount: .zero,
                 feeRequired: .zero,
                 message: "Testing memo",
-                partialProposalErrorState: .initial,
                 proposal: nil
             )
         ) {
@@ -67,7 +66,6 @@ class SendSnapshotTests: XCTestCase {
                 amount: .zero,
                 feeRequired: .zero,
                 message: "",
-                partialProposalErrorState: .initial,
                 proposal: nil
             )
         ) {

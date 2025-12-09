@@ -48,7 +48,6 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "OSStatusError", targets: ["OSStatusError"]),
-        .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
         .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
@@ -209,7 +208,6 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "SDKSynchronizer",
                 "ShieldingProcessor",
                 "UIComponents",
@@ -248,7 +246,6 @@ let package = Package(
                 "MnemonicSwift",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "Pasteboard",
                 "RecoveryPhraseDisplay",
                 "RequestZec",
@@ -539,18 +536,6 @@ let package = Package(
             path: "Sources/Features/OSStatusError"
         ),
         .target(
-            name: "PartialProposalError",
-            dependencies: [
-                "Generated",
-                "Pasteboard",
-                "SupportDataGenerator",
-                "UIComponents",
-                "Utils",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Features/PartialProposalError"
-        ),
-        .target(
             name: "PartnerKeys",
             path: "Sources/Dependencies/PartnerKeys"
         ),
@@ -686,7 +671,6 @@ let package = Package(
                 "NumberFormatter",
                 "OnboardingFlow",
                 "OSStatusError",
-                "PartialProposalError",
                 "Pasteboard",
                 "PrivateDataConsent",
                 "ReadTransactionsStorage",
@@ -776,7 +760,6 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "Scan",
                 "SDKSynchronizer",
                 "SupportDataGenerator",

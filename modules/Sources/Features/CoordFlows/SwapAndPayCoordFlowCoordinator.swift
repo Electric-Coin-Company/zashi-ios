@@ -134,10 +134,8 @@ extension SwapAndPayCoordFlow {
                             switch result {
                             case .success:
                                 await send(.updateResult(.success))
-                            case .failure:
-                                await send(.updateResult(.failure))
-                            case .resubmission:
-                                await send(.updateResult(.resubmission))
+                            case .pending:
+                                await send(.updateResult(.pending))
                             default: return
                             }
                         }
@@ -195,8 +193,7 @@ extension SwapAndPayCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.checkStatusTapped))),
-                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
+                    .path(.element(id: _, action: .sendResultPending(.checkStatusTapped))):
                 if let txid = state.txIdToExpand {
                     if let index = state.transactions.index(id: txid) {
                         var transactionDetailsState = TransactionDetails.State.initial
@@ -356,13 +353,13 @@ extension SwapAndPayCoordFlow {
                     await send(.updateResult(.success))
                 }
                 
-            case let .sendFailed(error, isFatal):
+            case let .sendFailed(error, _):
                 state.failedDescription = error?.localizedDescription ?? ""
                 let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
                 let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
                 return .run { send in
                     try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
-                    await send(.updateResult(isFatal ? .failure : .resubmission))
+                    await send(.updateResult(.pending))
                 }
                 
             case let .updateResult(result):
@@ -371,12 +368,9 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.type = state.swapAndPayState.isSwapExperienceEnabled ? .swap : .pay
                 switch result {
-                case .failure:
-                    state.path.append(.sendResultFailure(sendConfirmationState))
-                    break
-                case .resubmission:
-                    state.path.append(.sendResultResubmission(sendConfirmationState))
-                    break
+                case .pending:
+                    state.path.append(.sendResultPending(sendConfirmationState))
+                    return .send(.storeLastUsedAsset)
                 case .success:
                     state.path.append(.sendResultSuccess(sendConfirmationState))
                     return .send(.storeLastUsedAsset)

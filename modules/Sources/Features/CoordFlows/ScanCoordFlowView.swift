@@ -13,7 +13,6 @@ import Generated
 
 // Path
 import AddressBook
-import PartialProposalError
 import Scan
 import SendConfirmation
 import SendForm
@@ -59,14 +58,10 @@ public struct ScanCoordFlowView: View {
                     SendFormView(store: store, tokenName: tokenName)
                 case let .sending(store):
                     SendingView(store: store, tokenName: tokenName)
-                case let .sendResultFailure(store):
-                    FailureView(store: store, tokenName: tokenName)
-                case let .sendResultPartial(store):
-                    PartialProposalErrorView(store: store)
                 case let .requestZecConfirmation(store):
                     RequestPaymentConfirmationView(store: store, tokenName: tokenName)
-                case let .sendResultResubmission(store):
-                    ResubmissionView(store: store, tokenName: tokenName)
+                case let .sendResultPending(store):
+                    PendingView(store: store, tokenName: tokenName)
                 case let .sendResultSuccess(store):
                     SuccessView(store: store, tokenName: tokenName)
                 case let .transactionDetails(store):
