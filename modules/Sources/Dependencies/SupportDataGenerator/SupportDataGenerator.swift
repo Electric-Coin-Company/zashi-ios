@@ -50,31 +50,7 @@ public enum SupportDataGenerator {
             return SupportData(toAddress: Constants.email, subject: Constants.subject, message: message)
         }
     }
-    
-    public static func generatePartialProposalError(txIds: [String], statuses: [String]) -> SupportData {
-        let data = SupportDataGenerator.generate()
-        
-        let statusStrings = statuses
-            .map { "- \($0)" }
-            .joined(separator: "\n")
-        
-        let message =
-        """
-        \(L10n.ProposalPartial.mailPart1)
 
-        \(L10n.ProposalPartial.mailPart2)
-
-        \(L10n.ProposalPartial.mailPart3)
-
-        \(data.message)
-        
-        \(L10n.ProposalPartial.transactionStatuses)
-        \(statusStrings)
-        """
-        
-        return SupportData(toAddress: Constants.email, subject: Constants.subjectPPE, message: message)
-    }
-    
     public static func generateOSStatusError(osStatus: OSStatus) -> SupportData {
         let data = SupportDataGenerator.generate()
         

@@ -12,7 +12,6 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
-import PartialProposalError
 import Lottie
 
 public struct SendingView: View {

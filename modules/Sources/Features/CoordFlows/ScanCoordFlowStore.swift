@@ -18,7 +18,6 @@ import SDKSynchronizer
 
 // Path
 import AddressBook
-import PartialProposalError
 import Scan
 import SendConfirmation
 import SendForm
@@ -37,9 +36,7 @@ public struct ScanCoordFlow {
         case sendConfirmation(SendConfirmation)
         case sendForm(SendForm)
         case sending(SendConfirmation)
-        case sendResultFailure(SendConfirmation)
-        case sendResultPartial(PartialProposalError)
-        case sendResultResubmission(SendConfirmation)
+        case sendResultPending(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case transactionDetails(TransactionDetails)
     }
