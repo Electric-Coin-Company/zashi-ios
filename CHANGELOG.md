@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Changed
 - Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
 
+### Fixed
+- ZEC on other chains is no longer filtered out in swap flows.
+
 ## 2.4.9 build 1 (2025-12-04)
 
 ### Added

@@ -29,6 +29,10 @@ import Generated
 
 @Reducer
 public struct SwapAndPay {
+    enum Constants {
+        static let zecAsset = "zec.zec"
+    }
+    
     @ObservableState
     public struct State {
         public var SwapAssetsCancelId = UUID()
@@ -474,7 +478,7 @@ public struct SwapAndPay {
                     swapAssets = filteredSwapAssets
                 }
                 guard !state.searchTerm.isEmpty else {
-                    let swapAssetsWithoutZec = swapAssets.filter { $0.token.lowercased() != "zec" }
+                    let swapAssetsWithoutZec = swapAssets.filter { $0.idWithoutProvider != Constants.zecAsset }
                     state.swapAssetsToPresent = swapAssetsWithoutZec
                     return .none
                 }
@@ -487,7 +491,7 @@ public struct SwapAndPay {
                 state.swapAssetsToPresent.append(contentsOf: tokenMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainNameMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainMatch)
-                let swapAssetsWithoutZec = state.swapAssetsToPresent.filter { $0.token.lowercased() != "zec" }
+                let swapAssetsWithoutZec = state.swapAssetsToPresent.filter { $0.idWithoutProvider != Constants.zecAsset }
                 state.swapAssetsToPresent = swapAssetsWithoutZec
                 return .none
 
@@ -840,12 +844,12 @@ public struct SwapAndPay {
                 
             case .selectedContactUpdated:
                 guard let chainId = state.selectedContact?.chainId else {
-                    let swapAssetsWithoutZec = state.swapAssets.filter { $0.token.lowercased() != "zec" }
+                    let swapAssetsWithoutZec = state.swapAssets.filter { $0.idWithoutProvider != Constants.zecAsset }
                     state.swapAssetsToPresent = swapAssetsWithoutZec
                     return .none
                 }
                 let filteredSwapAssets = state.swapAssets.filter { $0.chain.lowercased() == chainId.lowercased() }
-                let filteredSwapAssetsWithoutZec = filteredSwapAssets.filter { $0.token.lowercased() != "zec" }
+                let filteredSwapAssetsWithoutZec = filteredSwapAssets.filter { $0.idWithoutProvider != Constants.zecAsset }
                 state.swapAssetsToPresent = filteredSwapAssetsWithoutZec
                 if filteredSwapAssets.count == 1 {
                     state.selectedAsset = filteredSwapAssets.first

@@ -16,6 +16,10 @@ public struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         "\(provider).\(chain).\(token)".lowercased()
     }
 
+    public var idWithoutProvider: String {
+        "\(chain).\(token)".lowercased()
+    }
+
     public var chainName: String {
         switch chain.lowercased() {
         case "arb": return "Arbitrum"
