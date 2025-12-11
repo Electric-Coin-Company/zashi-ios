@@ -251,46 +251,17 @@ extension TransactionDetailsView {
                             .frame(width: 34, height: 34)
                             .foregroundColor(Asset.Colors.secondary.color)
                     }
-
-                if store.transaction.isShieldingTransaction {
-                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
-                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                        .frame(width: 48, height: 48)
-                        .overlay {
-                            Circle()
-                                .frame(width: 51, height: 51)
-                                .offset(x: 42)
-                                .blendMode(.destinationOut)
-                        }
-                        .compositingGroup()
-                        .overlay {
-                            store.transaction.transationIcon
-                                .zImage(size: 24, style: Design.Text.primary)
-                        }
-                        .offset(x: -4)
-                } else {
-                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
-                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
-                        .frame(width: 48, height: 48)
-                        .overlay {
-                            transationIcon()
-                                .zImage(size: 24, style: Design.Text.primary)
-                        }
-                        .offset(x: store.transaction.isShieldingTransaction ? -8 : -4)
-                }
                 
-                if store.transaction.isShieldingTransaction {
-                    RoundedRectangle(cornerRadius: Design.Radius._4xl)
-                        .fill(Design.Utility.Purple._500.color(colorScheme))
-                        .frame(width: 48, height: 48)
-                        .overlay {
-                            Asset.Assets.Icons.shieldTickFilled.image
-                                .zImage(size: 24, color: Asset.Colors.ZDesign.purple50.color)
-                        }
-                        .offset(x: -8)
-                }
+                RoundedRectangle(cornerRadius: Design.Radius._4xl)
+                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                    .frame(width: 48, height: 48)
+                    .overlay {
+                        transationIcon()
+                            .zImage(size: 24, style: Design.Text.primary)
+                    }
+                    .offset(x: -4)
             }
-            .offset(x: store.transaction.isShieldingTransaction ? 4 : 2)
+            .offset(x: 2)
             .padding(.top, 24)
 
             Text(store.transaction.title)
