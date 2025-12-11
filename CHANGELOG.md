@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Changed
 - Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
 
+### Added
+- Set of icons for assets and chains updated. Updated hardcoded list of chain names.
+
 ## 2.4.9 build 1 (2025-12-04)
 
 ### Added
