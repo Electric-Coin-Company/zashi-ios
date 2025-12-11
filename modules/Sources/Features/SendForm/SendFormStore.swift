@@ -45,6 +45,7 @@ public struct SendForm {
         public var currencyText: RedactableString = .empty
         public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
+        public var isInsufficientBalance = false
         public var isLatestInputFiat = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
@@ -55,7 +56,6 @@ public struct SendForm {
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        @Shared(.inMemory(.sharedFlags)) public var sharedFlags: SharedFlags? = nil
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
@@ -350,7 +350,7 @@ public struct SendForm {
                 
             case let .sendFailed(error, confirmationType):
                 if error.isInsufficientBalance {
-                    state.$sharedFlags.withLock { $0 = .insufficientFunds }
+                    state.isInsufficientBalance = error.isInsufficientBalance
                     return .none
                 }
                 if confirmationType == .send {

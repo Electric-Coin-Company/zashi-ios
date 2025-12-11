@@ -6,9 +6,20 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Insufficient funds sheet in swaps.
+
 ### Changed
 - Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
 - Reset Zashi confirmation bottom sheet icon.
+- Shielding icon updated in the transaction history and the detail screen.
+
+### Fixed
+- ZEC on other chains is no longer filtered out in swap flows.
+- Insufficient funds sheet layout.
+
+### Added
+- Set of icons for assets and chains updated. Updated hardcoded list of chain names.
 
 ## 2.4.9 build 1 (2025-12-04)
 

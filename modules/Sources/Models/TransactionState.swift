@@ -269,7 +269,7 @@ public struct TransactionState: Equatable, Identifiable {
         } else if isSwapToZec {
             return Asset.Assets.Icons.trIn.image
         } else if isShieldingTransaction {
-            return Asset.Assets.Icons.switchHorizontal.image
+            return Asset.Assets.shieldTick.image
         } else if isSentTransaction {
             return Asset.Assets.Icons.trOut.image
         } else {

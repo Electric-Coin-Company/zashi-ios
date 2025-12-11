@@ -176,7 +176,6 @@ public enum Asset {
     public static let send = ImageAsset(name: "send")
     public static let shield = ImageAsset(name: "shield")
     public static let shieldTick = ImageAsset(name: "shieldTick")
-    public static let shieldedFunds = ImageAsset(name: "shieldedFunds")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let tooltip = ImageAsset(name: "tooltip")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
