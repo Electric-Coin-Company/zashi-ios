@@ -11,6 +11,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Changed
 - Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
+- Reset Zashi confirmation bottom sheet icon.
 - Shielding icon updated in the transaction history and the detail screen.
 
 ### Fixed
