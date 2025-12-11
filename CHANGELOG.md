@@ -6,8 +6,14 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Insufficient funds sheet in swaps.
+
 ### Changed
 - Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
+
+### Fixed
+- Insufficient funds sheet layout.
 
 ## 2.4.9 build 1 (2025-12-04)
 

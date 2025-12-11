@@ -239,11 +239,6 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
-                        .zashiSheet(isPresented: store.bindingForSharedFlags(.insufficientFunds)) {
-                            insufficientFundsSheetContent()
-                                .screenHorizontalPadding()
-                                .applyScreenBackground()
-                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {
@@ -331,37 +326,6 @@ private extension RootView {
 }
 
 private extension RootView {
-    @ViewBuilder private func insufficientFundsSheetContent() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Asset.Assets.infoOutline.image
-                .zImage(size: 20, style: Design.Utility.ErrorRed._500)
-                .background {
-                    Circle()
-                        .fill(Design.Utility.ErrorRed._50.color(colorScheme))
-                        .frame(width: 44, height: 44)
-                }
-                .padding(.top, 48)
-                .padding(.leading, 12)
-
-            Text(L10n.Sheet.InsufficientBalance.title)
-                .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                .padding(.top, 24)
-                .padding(.bottom, 12)
-            
-            Text(L10n.Sheet.InsufficientBalance.msg)
-                .zFont(size: 14, style: Design.Text.tertiary)
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.leading)
-                .lineSpacing(2)
-                .padding(.bottom, 32)
-
-            ZashiButton(L10n.General.ok.uppercased()) {
-                store.send(.closeInsufficientFundsTapped)
-            }
-            .padding(.bottom, 24)
-        }
-    }
-
     @ViewBuilder func shareLogsView(_ store: StoreOf<Root>) -> some View {
         if store.exportLogsState.isSharingLogs {
             UIShareDialogView(
@@ -469,13 +433,6 @@ extension StoreOf<Root> {
         Binding<Bool>(
             get: { self.path == path },
             set: { self.path = $0 ? path : nil }
-        )
-    }
-    
-    func bindingForSharedFlags(_ flag: SharedFlags) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.sharedFlags == flag },
-            set: { self.send(.updateSharedFlags($0 ? flag : nil)) }
         )
     }
 }
