@@ -98,7 +98,7 @@ public struct DeleteWalletView: View {
     
     @ViewBuilder private func helpSheetContent() -> some View {
         VStack(spacing: 0) {
-            Asset.Assets.Icons.arrowUp.image
+            Asset.Assets.Icons.alertOutline.image
                 .zImage(size: 20, style: Design.Utility.ErrorRed._500)
                 .background {
                     Circle()
