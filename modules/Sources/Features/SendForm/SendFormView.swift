@@ -215,6 +215,7 @@ public struct SendFormView: View {
                     .screenHorizontalPadding()
                     .applyScreenBackground()
             }
+            .insufficientFundsSheet(isPresented: $store.isInsufficientBalance)
             .alert(store: store.scope(
                 state: \.$alert,
                 action: \.alert

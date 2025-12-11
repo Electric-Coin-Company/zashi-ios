@@ -50,6 +50,7 @@ public struct SwapAndPay {
         public var isCancelSheetVisible = false
         public var isCurrencyConversionEnabled = false
         public var isInputInUsd = false
+        public var isInsufficientBalance = false
         public var isNotAddressInAddressBook = false
         public var isPopToRootBack = false
         public var isQuoteRequestInFlight = false
@@ -707,6 +708,11 @@ public struct SwapAndPay {
                 return .none
                 
             case .sendFailed(let error):
+                state.isQuoteRequestInFlight = false
+                if error.isInsufficientBalance {
+                    state.isInsufficientBalance = true
+                    return .none
+                }
                 state.quoteUnavailableErrorMsg = error.localizedDescription
                 state.isQuoteUnavailablePresented = true
                 return .none
