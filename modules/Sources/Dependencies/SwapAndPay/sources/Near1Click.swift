@@ -100,6 +100,8 @@ struct Near1Click {
             return (data, response)
         } catch let urlError as URLError {
             throw NetworkError.transport(urlError)
+        } catch let error as NetworkError {
+            throw error
         } catch {
             throw NetworkError.unknown(error)
         }
