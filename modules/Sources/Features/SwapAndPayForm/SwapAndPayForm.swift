@@ -44,8 +44,10 @@ public struct SwapAndPayForm: View {
         WithPerceptionTracking {
             if store.isSwapExperienceEnabled || store.isSwapToZecExperienceEnabled {
                 swapFormView(colorScheme)
+                    .insufficientFundsSheet(isPresented: $store.isInsufficientBalance)
             } else {
                 crossPayFormView(colorScheme)
+                    .insufficientFundsSheet(isPresented: $store.isInsufficientBalance)
             }
         }
     }
