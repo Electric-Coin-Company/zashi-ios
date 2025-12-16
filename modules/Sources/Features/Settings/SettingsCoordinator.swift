@@ -89,10 +89,6 @@ extension Settings {
                     state.path.append(.exportTransactionHistory(ExportTransactionHistory.State.initial))
                 case .chooseServer:
                     state.path.append(.chooseServerSetup(ServerSetup.State.initial))
-                case .currencyConversion:
-                    var currencyConversionSetupState = CurrencyConversionSetup.State.initial
-                    currencyConversionSetupState.isSettingsView = true
-                    state.path.append(.currencyConversionSetup(currencyConversionSetupState))
                 case .torSetup:
                     var torSetupState = TorSetup.State.initial
                     torSetupState.isSettingsView = true
@@ -179,6 +175,14 @@ extension Settings {
                 state.path.append(.sendUsFeedback(SendFeedback.State.initial))
                 return .none
                 
+                // MARK: - Self
+                
+            case .currencyConversionGranted:
+                var currencyConversionSetupState = CurrencyConversionSetup.State.initial
+                currencyConversionSetupState.isSettingsView = true
+                state.path.append(.currencyConversionSetup(currencyConversionSetupState))
+                return .none
+
             default: return .none
             }
         }

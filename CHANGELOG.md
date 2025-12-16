@@ -15,6 +15,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Reset Zashi confirmation bottom sheet icon.
 - Shielding icon updated in the transaction history and the detail screen.
 - Timed out errors now auto-appear on the Home screen.
+- Currency Conversion setup moved from the Advanced Settings to the More options screen.
 
 ### Fixed
 - ZEC on other chains is no longer filtered out in swap flows.
