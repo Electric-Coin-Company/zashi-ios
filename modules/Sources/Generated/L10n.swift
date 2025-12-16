@@ -2017,8 +2017,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "torSetup.option3.title", fallback: "Integrations")
     }
     public enum Settings {
-      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).
-      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).")
+      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs.
+      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs.")
       /// As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.
       public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.")
     }
