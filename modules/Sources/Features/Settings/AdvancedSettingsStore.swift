@@ -12,7 +12,6 @@ public struct AdvancedSettings {
     public struct State: Equatable {
         public enum Operation: Equatable {
             case chooseServer
-            case currencyConversion
             case exportPrivateData
             case exportTaxFile
             case recoveryPhrase
@@ -40,7 +39,7 @@ public struct AdvancedSettings {
             switch action {
             case .operationAccessCheck(let operation):
                 switch operation {
-                case .chooseServer, .currencyConversion, .torSetup:
+                case .chooseServer, .torSetup:
                     return .send(.operationAccessGranted(operation))
                 case .recoveryPhrase, .exportPrivateData, .exportTaxFile, .resetZashi:
                     return .run { send in

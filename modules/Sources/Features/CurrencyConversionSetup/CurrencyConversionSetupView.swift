@@ -40,7 +40,7 @@ public struct CurrencyConversionSetupView: View {
             }
             .onAppear { store.send(.onAppear) }
             .navigationBarBackButtonHidden(!store.isSettingsView)
-            .zashiBackV2()
+            .zashiBack()
             .zashiSheet(isPresented: $store.isTorSheetPresented) {
                 torSheetContent()
                     .screenHorizontalPadding()

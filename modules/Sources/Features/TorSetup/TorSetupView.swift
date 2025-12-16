@@ -40,7 +40,7 @@ public struct TorSetupView: View {
             }
             .onAppear { store.send(.onAppear) }
             .navigationBarBackButtonHidden(!store.isSettingsView)
-            .zashiBackV2()
+            .zashiBack()
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
