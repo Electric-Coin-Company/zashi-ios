@@ -6,7 +6,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
-## 2.4.10 build 1 (2025-12-16)
+## 2.4.10 build 2 (2025-12-16)
 
 ### Added
 - Insufficient funds sheet in swaps.
