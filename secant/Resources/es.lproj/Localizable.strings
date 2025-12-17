@@ -953,3 +953,12 @@
 "currencyConversion.skipBtn" = "Omitir";
 "currencyConversion.torOnInfo" = "Desactivar la Protección Tor también desactivará la función de Conversión de Moneda hasta que se vuelva a activar.";
 "currencyConversion.torOffInfo" = "Si deseas proteger tu dirección IP, activa la Protección Tor en la Configuración Avanzada.";
+
+"send.pendingShieldingInfo" = "Tus Fondos Protegidos se están procesando.";
+"send.pendingInfo" = "Tu transacción se está procesando.";
+"swapAndPay.pendingSwapInfo" = "Tu swap se está procesando. Siga el estado en la pantalla de transacción.";
+"swapAndPay.pendingPayInfo" = "Tu cross-chain pago se está procesando. Siga el estado en la pantalla de transacción.";
+"send.pendingShieldingTitle" = "Fondos Protegidos Pendiente";
+"send.pendingTitle" = "Transacción Pendiente";
+"swapAndPay.pendingSwapTitle" = "Swap Pendiente";
+"swapAndPay.pendingPayTitle" = "Pago Pendiente";
