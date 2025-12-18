@@ -177,7 +177,7 @@ extension Settings {
                 
                 // MARK: - Self
                 
-            case .currencyConversionGranted:
+            case .currencyConversionTapped:
                 var currencyConversionSetupState = CurrencyConversionSetup.State.initial
                 currencyConversionSetupState.isSettingsView = true
                 state.path.append(.currencyConversionSetup(currencyConversionSetupState))

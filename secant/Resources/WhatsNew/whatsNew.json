@@ -1,6 +1,36 @@
 {
     "releases": [
         {
+            "version": "2.4.11",
+            "date": "18-12-2025",
+            "timestamp": 1766045724,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We updated icons for new Swap/Pay assets and chains."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We introduced a new Pending state for transaction flows which replaced our Error states.",
+                        "We made icon and copy updates.",
+                        "We improved our error handling.",
+                        "We moved Currency Conversion from Advanced Settings to More options."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We added ZEC on other chains into the Swap/Pay flows.",
+                        "We improved our error handling UI/UX.",
+                        "We improved Sapling parameters download experience."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.10",
             "date": "16-12-2025",
             "timestamp": 1765883822,

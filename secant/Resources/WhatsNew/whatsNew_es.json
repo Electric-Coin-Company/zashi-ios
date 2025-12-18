@@ -1,6 +1,36 @@
 {
     "releases": [
         {
+            "version": "2.4.11",
+            "date": "18-12-2025",
+            "timestamp": 1766045724,
+            "sections": [
+                {
+                    "title": "Añadido:",
+                    "bulletpoints": [
+                        "Actualizamos los íconos para los nuevos activos y cadenas de Swap/Pay."
+                    ]
+                },
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Introdujimos un nuevo estado \"Pendiente\" para los flujos de transacciones, que reemplazó nuestros estados de Error.",
+                        "Actualizamos los íconos y las copias.",
+                        "Mejoramos la gestión de errores.",
+                        "Movimos la Conversión de Moneda de la Configuración Avanzada a Más opciones."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Añadimos ZEC en otras cadenas a los flujos de Swap/Pay.",
+                        "Mejoramos la interfaz de usuario/experiencia de gestión de errores.",
+                        "Mejoramos la experiencia de descarga de parámetros de Sapling."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.10",
             "date": "16-12-2025",
             "timestamp": 1765883822,

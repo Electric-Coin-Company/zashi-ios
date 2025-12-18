@@ -85,7 +85,6 @@ public struct Settings {
         case advancedSettingsTapped
         case binding(BindingAction<Settings.State>)
         case checkFundsForAddress(String)
-        case currencyConversionGranted
         case currencyConversionTapped
         case enableEnhanceTransactionMode
         case enableRecoverFundsMode
@@ -135,13 +134,6 @@ public struct Settings {
                 }
 
             case .currencyConversionTapped:
-                return .run { send in
-                    if await localAuthentication.authenticate() {
-                        await send(.currencyConversionGranted)
-                    }
-                }
-                
-            case .currencyConversionGranted:
                 return .none
 
             case .addressBookTapped:
