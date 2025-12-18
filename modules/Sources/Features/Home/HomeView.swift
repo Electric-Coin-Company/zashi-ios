@@ -267,7 +267,7 @@ public struct HomeView: View {
                     
                     Text(title)
                 }
-                .frame(minWidth: 76, maxWidth: 84, minHeight: 76, maxHeight: 84, alignment: .center)
+                .frame(minWidth: 64, maxWidth: 84, minHeight: 64, maxHeight: 84, alignment: .center)
                 .aspectRatio(1, contentMode: .fit)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._3xl)
@@ -293,7 +293,7 @@ public struct HomeView: View {
                     
                     Text(title)
                 }
-                .frame(minWidth: 76, maxWidth: 84, minHeight: 76, maxHeight: 84, alignment: .center)
+                .frame(minWidth: 64, maxWidth: 84, minHeight: 64, maxHeight: 84, alignment: .center)
                 .aspectRatio(1, contentMode: .fit)
                 .background {
                     RoundedRectangle(cornerRadius: Design.Radius._3xl)
