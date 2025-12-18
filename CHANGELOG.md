@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.11 build 1 (2025-12-18)
+
+### Fixed
+- Currency Conversion screen authorization removed.
+
 ## 2.4.10 build 2 (2025-12-16)
 
 ### Added

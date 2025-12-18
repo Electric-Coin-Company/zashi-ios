@@ -37,13 +37,12 @@
 
 // MARK: - Restore Info
 "restoreInfo.title" = "¡Mantén Zashi abierto!";
-"restoreInfo.subTitle" = "Tu billetera ha sido restaurada con éxito y ahora se está sincronizando";
-"restoreInfo.tips" = "Consejos de sincronización:";
-"restoreInfo.tip1" = "Zashi debe permanecer abierto para continuar sincronizando.";
-"restoreInfo.tip2" = "Para evitar interrupciones, conecta tu teléfono encendido a una fuente de energía.";
-"restoreInfo.tip3" = "Mantén tu teléfono encendido en un lugar seguro.";
+"restoreInfo.subTitle" = "Tu billetera se está restaurando.";
+"restoreInfo.tips" = "Zashi está escaneando la cadena de bloques para recuperar tus transacciones. Las billeteras más antiguas pueden tardar horas en restaurarse. Sigue estos pasos para evitar interrupciones:";
+"restoreInfo.tip1" = "Mantén la app de Zashi abierta con la pantalla del teléfono activa.";
+"restoreInfo.tip2" = "Para evitar que la pantalla se apague, desactiva el modo de ahorro de energía y mantén el teléfono conectado a la corriente.";
 "restoreInfo.note" = "Nota: ";
-"restoreInfo.noteInfo" = "Durante la sincronización inicial, tus fondos no se pueden enviar ni gastar. Dependiendo de la antigüedad de tu billetera, puede tomar algunas horas sincronizar completamente.";
+"restoreInfo.noteInfo" = "No podrás usar tus fondos en Zashi hasta que la restauración de la billetera se complete por completo.";
 "restoreInfo.gotIt" = "¡Entendido!";
 
 // MARK: - Tabs
@@ -533,7 +532,7 @@
 "restoreWallet.birthday.estimateDate.warning" = "Si no estás seguro, elige una fecha anterior.";
 "restoreWallet.birthday.estimated.title" = "Altura de Bloque Estimada";
 "restoreWallet.birthday.estimated.info" = "Zashi escaneará y recuperará todas las transacciones realizadas después del siguiente número de bloque.";
-"restoreInfo.checkbox" = "Mantener la pantalla encendida mientras se restaura";
+"restoreInfo.checkbox" = "Mantener la pantalla encendida mientras se restaura.";
 "restoreWallet.dateTip" = "Si no estás seguro, elige una fecha anterior.";
 
 // Smart Banner
