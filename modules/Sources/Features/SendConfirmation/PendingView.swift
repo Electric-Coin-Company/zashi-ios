@@ -58,7 +58,7 @@ public struct PendingView: View {
                     .padding(.top, 8)
                     .screenHorizontalPadding()
 
-                if store.txIdToExpand != nil || store.type == .regular {
+                if store.txIdToExpand != nil {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,

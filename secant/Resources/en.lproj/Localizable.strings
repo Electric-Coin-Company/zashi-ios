@@ -41,7 +41,6 @@
 "restoreInfo.tips" = "Zashi is scanning the blockchain to retrieve your transactions. Older wallets can take hours to restore. Follow these steps to prevent interruption:";
 "restoreInfo.tip1" = "Keep the Zashi app open on an active phone screen.";
 "restoreInfo.tip2" = "To prevent your phone screen from going dark, turn off power-saving mode and keep your phone plugged in.";
-//"restoreInfo.tip3" = "Keep your open phone in a secure place.";
 "restoreInfo.note" = "Note: ";
 "restoreInfo.noteInfo" = "Your funds cannot be spent with Zashi until your wallet is fully restored.";
 "restoreInfo.gotIt" = "Got it!";
