@@ -26,16 +26,7 @@ public enum NetworkError: Error {
             }
 
         case .httpStatus(let code):
-            switch code {
-            case 500, 502, 504:
-                return true
-            case 429:
-                return false
-            case 503:
-                return false
-            default:
-                return false
-            }
+            return !(501...504).contains(code)
 
         case .unknown:
             return false

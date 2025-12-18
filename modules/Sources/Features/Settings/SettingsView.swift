@@ -39,6 +39,15 @@ public struct SettingsView: View {
                             ) {
                                 store.send(.addressBookAccessCheck)
                             }
+                            
+                            if store.isEnoughFreeSpaceMode {
+                                ActionRow(
+                                    icon: Asset.Assets.Icons.currencyDollar.image,
+                                    title: L10n.CurrencyConversion.title,
+                                ) {
+                                    store.send(.currencyConversionTapped)
+                                }
+                            }
 
                             ActionRow(
                                 icon: Asset.Assets.Icons.settings.image,

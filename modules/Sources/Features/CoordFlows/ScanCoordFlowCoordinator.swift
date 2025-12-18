@@ -15,7 +15,6 @@ import AudioServices
 
 // Path
 import AddressBook
-import PartialProposalError
 import Scan
 import SendConfirmation
 import SendForm
@@ -28,7 +27,7 @@ extension ScanCoordFlow {
 
                 // MARK: - Address Book
                 
-            case let .path(.element(id: _, action: .addressBook(.editId(address, id)))):
+            case let .path(.element(id: _, action: .addressBook(.editId(address, _)))):
                 let _ = state.path.removeLast()
                 audioServices.systemSoundVibrate()
                 if let first = state.path.ids.first {
@@ -383,18 +382,8 @@ extension ScanCoordFlow {
 
             case let .resolveSendResult(result, sendConfirmationState):
                 switch result {
-                case .failure:
-                    state.path.append(.sendResultFailure(sendConfirmationState))
-                    break
-                case .partial:
-                    var partialProposalErrorState = PartialProposalError.State.initial
-                    partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
-                    partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
-                    state.path.append(.sendResultPartial(partialProposalErrorState))
-                    break
-                case .resubmission:
-                    state.path.append(.sendResultResubmission(sendConfirmationState))
-                    break
+                case .pending:
+                    state.path.append(.sendResultPending(sendConfirmationState))
                 case .success:
                     state.path.append(.sendResultSuccess(sendConfirmationState))
                 default: break
@@ -478,8 +467,7 @@ extension ScanCoordFlow {
                 }
                 return .none
 
-            case .path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped))),
-                    .path(.element(id: _, action: .preSendingFailure(.backFromPCZTFailureTapped))):
+            case .path(.element(id: _, action: .preSendingFailure(.backFromPCZTFailureTapped))):
                 for (id, element) in zip(state.path.ids, state.path) {
                     if element.is(\.sendForm) {
                         state.path.pop(to: id)
@@ -488,8 +476,7 @@ extension ScanCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
-                    .path(.element(id: _, action: .sendResultResubmission(.viewTransactionTapped))):
+                    .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 for element in state.path.reversed() {
                     if case .sendConfirmation(let sendConfirmationState) = element {
                         return .send(.viewTransactionRequested(sendConfirmationState))

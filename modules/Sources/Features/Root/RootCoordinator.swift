@@ -112,8 +112,6 @@ extension Root {
                 state.swapAndPayCoordFlowState = .initial
                 state.swapAndPayCoordFlowState.isSwapExperience = true
                 state.swapAndPayCoordFlowState.swapAndPayState.isSwapExperienceEnabled = true
-//                state.swapAndPayCoordFlowState.isSwapToZecExperience = true
-//                state.swapAndPayCoordFlowState.swapAndPayState.isSwapToZecExperienceEnabled = true
                 state.path = .swapAndPayCoordFlow
                 // whether to start on SwapToZEC or fromZEC
                 return .send(.swapAndPayCoordFlow(.swapAndPay(.enableSwapToZecExperience)))
@@ -169,7 +167,6 @@ extension Root {
                 return .none
 
             case .signWithKeystoneRequested:
-                //state.path = .signWithKeystoneCoordFlow
                 state.signWithKeystoneCoordFlowBinding = true
                 return .send(.signWithKeystoneCoordFlow(.sendConfirmation(.resolvePCZT)))
                 
@@ -218,8 +215,7 @@ extension Root {
                 return .none
 
             case .scanCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
-                    .scanCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))),
-                    .scanCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss)))):
+                    .scanCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none
 
@@ -245,8 +241,7 @@ extension Root {
                 // MARK: - Send Coord Flow
                 
             case .sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
-                    .sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))),
-                    .sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss)))):
+                    .sendCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none
 
@@ -261,7 +256,7 @@ extension Root {
                 // MARK: - Sign with Keystone Coord Flow
 
             case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
-                    .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
+                    .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.signWithKeystoneCoordFlowBinding = false
                 return .none
 
@@ -298,8 +293,7 @@ extension Root {
                 return .none
                 
             case .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
-                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.backFromFailureTapped)))),
-                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))):
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none
 

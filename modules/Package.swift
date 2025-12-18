@@ -48,7 +48,6 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "OSStatusError", targets: ["OSStatusError"]),
-        .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
         .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
@@ -101,7 +100,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.6"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.5"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.4.1"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.4.2"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.1"),
@@ -209,7 +208,6 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "SDKSynchronizer",
                 "ShieldingProcessor",
                 "UIComponents",
@@ -248,7 +246,6 @@ let package = Package(
                 "MnemonicSwift",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "Pasteboard",
                 "RecoveryPhraseDisplay",
                 "RequestZec",
@@ -539,18 +536,6 @@ let package = Package(
             path: "Sources/Features/OSStatusError"
         ),
         .target(
-            name: "PartialProposalError",
-            dependencies: [
-                "Generated",
-                "Pasteboard",
-                "SupportDataGenerator",
-                "UIComponents",
-                "Utils",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Features/PartialProposalError"
-        ),
-        .target(
             name: "PartnerKeys",
             path: "Sources/Dependencies/PartnerKeys"
         ),
@@ -686,7 +671,6 @@ let package = Package(
                 "NumberFormatter",
                 "OnboardingFlow",
                 "OSStatusError",
-                "PartialProposalError",
                 "Pasteboard",
                 "PrivateDataConsent",
                 "ReadTransactionsStorage",
@@ -776,7 +760,6 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
-                "PartialProposalError",
                 "Scan",
                 "SDKSynchronizer",
                 "SupportDataGenerator",

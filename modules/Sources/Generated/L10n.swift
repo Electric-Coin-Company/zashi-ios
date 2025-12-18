@@ -1082,6 +1082,14 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write encrypted message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Your transaction is being processed.
+    public static let pendingInfo = L10n.tr("Localizable", "send.pendingInfo", fallback: "Your transaction is being processed.")
+    /// Your shielding transaction is being processed.
+    public static let pendingShieldingInfo = L10n.tr("Localizable", "send.pendingShieldingInfo", fallback: "Your shielding transaction is being processed.")
+    /// Shielding Pending
+    public static let pendingShieldingTitle = L10n.tr("Localizable", "send.pendingShieldingTitle", fallback: "Shielding Pending")
+    /// Transaction Pending
+    public static let pendingTitle = L10n.tr("Localizable", "send.pendingTitle", fallback: "Transaction Pending")
     /// Report
     public static let report = L10n.tr("Localizable", "send.report", fallback: "Report")
     /// Connection Issue
@@ -1612,6 +1620,14 @@ public enum L10n {
     public static let payNow = L10n.tr("Localizable", "swapAndPay.payNow", fallback: "Pay Now")
     /// Pay to
     public static let payTo = L10n.tr("Localizable", "swapAndPay.payTo", fallback: "Pay to")
+    /// Your cross-chain payment is being processed. Follow its status on the transaction screen.
+    public static let pendingPayInfo = L10n.tr("Localizable", "swapAndPay.pendingPayInfo", fallback: "Your cross-chain payment is being processed. Follow its status on the transaction screen.")
+    /// Payment Pending
+    public static let pendingPayTitle = L10n.tr("Localizable", "swapAndPay.pendingPayTitle", fallback: "Payment Pending")
+    /// Your swap is being processed. Follow its status on the transaction screen.
+    public static let pendingSwapInfo = L10n.tr("Localizable", "swapAndPay.pendingSwapInfo", fallback: "Your swap is being processed. Follow its status on the transaction screen.")
+    /// Swap Pending
+    public static let pendingSwapTitle = L10n.tr("Localizable", "swapAndPay.pendingSwapTitle", fallback: "Swap Pending")
     /// Quote Unavailable
     public static let quoteUnavailable = L10n.tr("Localizable", "swapAndPay.quoteUnavailable", fallback: "Quote Unavailable")
     /// Rate
@@ -2001,8 +2017,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "torSetup.option3.title", fallback: "Integrations")
     }
     public enum Settings {
-      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).
-      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).")
+      /// Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs.
+      public static let desc1 = L10n.tr("Localizable", "torSetup.settings.desc1", fallback: "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs.")
       /// As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.
       public static let desc2 = L10n.tr("Localizable", "torSetup.settings.desc2", fallback: "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.")
     }

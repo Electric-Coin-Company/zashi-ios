@@ -25,8 +25,7 @@ public struct SignWithKeystoneCoordFlow {
         case preSendingFailure(SendConfirmation)
         case scan(Scan)
         case sending(SendConfirmation)
-        case sendResultFailure(SendConfirmation)
-        case sendResultResubmission(SendConfirmation)
+        case sendResultPending(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case transactionDetails(TransactionDetails)
     }

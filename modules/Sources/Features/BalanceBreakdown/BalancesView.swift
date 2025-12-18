@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import Generated
-import PartialProposalError
 import UIComponents
 import Utils
 import Models

@@ -36,9 +36,7 @@ public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public enum Result: Equatable {
-            case failure
-            case partial
-            case resubmission
+            case pending
             case success
         }
         
@@ -338,7 +336,7 @@ public struct SendConfirmation {
                     return .none
                 }
 
-            case let .sendFailed(error, isFatal):
+            case let .sendFailed(error, _):
                 state.failedDescription = error?.localizedDescription ?? ""
                 state.isSending = false
                 if state.featureFlags.sendingScreen {
@@ -346,7 +344,7 @@ public struct SendConfirmation {
                     let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
                     return .run { send in
                         try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
-                        await send(.updateResult(isFatal ? .failure : .resubmission))
+                        await send(.updateResult(.pending))
                     }
                 } else {
                     if let error {
@@ -359,7 +357,7 @@ public struct SendConfirmation {
                 state.isSending = false
                 state.partialFailureTxIds = txIds
                 state.partialFailureStatuses = statuses
-                return .send(.updateResult(.partial))
+                return .send(.updateResult(.pending))
 
             case .updateTxIdToExpand(let txId):
                 state.txIdToExpand = txId
@@ -629,15 +627,25 @@ extension SendConfirmation.State {
         ? L10n.SwapAndPay.successSwapInfo
         : L10n.SwapAndPay.successPayInfo
     }
-
-    public var failureInfo: String {
+    
+    public var pendingInfo: String {
         isShielding
-        ? L10n.Send.failureShieldingInfo
+        ? L10n.Send.pendingShieldingInfo
         : type == .regular
-        ? L10n.Send.failureInfo
+        ? L10n.Send.pendingInfo
         : type == .swap
-        ? L10n.SwapAndPay.failureSwapInfo
-        : L10n.SwapAndPay.failurePayInfo
+        ? L10n.SwapAndPay.pendingSwapInfo
+        : L10n.SwapAndPay.pendingPayInfo
+    }
+    
+    public var pendingTitle: String {
+        isShielding
+        ? L10n.Send.pendingShieldingTitle
+        : type == .regular
+        ? L10n.Send.pendingTitle
+        : type == .swap
+        ? L10n.SwapAndPay.pendingSwapTitle
+        : L10n.SwapAndPay.pendingPayTitle
     }
 }
 

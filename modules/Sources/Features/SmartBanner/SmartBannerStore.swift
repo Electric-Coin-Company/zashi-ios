@@ -63,6 +63,7 @@ public struct SmartBanner {
         public var isShieldingAcknowledgedAtKeychain = false
         public var isSmartBannerSheetPresented = false
         public var isSyncTimedOutSheetPresented = false
+        public var isSyncTimedOutAutoAppeareDisabled = false
         public var isWalletBackupAcknowledged = false
         public var isWalletBackupAcknowledgedAtKeychain = false
         public var lastKnownErrorMessage = ""
@@ -177,6 +178,10 @@ public struct SmartBanner {
                 state.isWalletBackupAcknowledged = state.isWalletBackupAcknowledgedAtKeychain
                 state.isShieldingAcknowledgedAtKeychain = walletStorage.exportShieldingAcknowledged()
                 state.isShieldingAcknowledged = state.isShieldingAcknowledgedAtKeychain
+                if !state.isSyncTimedOutAutoAppeareDisabled {
+                    state.isSyncTimedOutSheetPresented = state.isSyncTimedOut
+                    state.isSyncTimedOutAutoAppeareDisabled = state.isSyncTimedOutSheetPresented
+                }
                 return .merge(
                     .publisher {
                         networkMonitor.networkMonitorStream()
@@ -366,6 +371,7 @@ public struct SmartBanner {
                     // error syncing check
                     switch snapshot.syncStatus {
                     case .upToDate:
+                        state.isSyncTimedOutAutoAppeareDisabled = false
                         if state.priorityContent == .priority3 || state.priorityContent == .priority4 {
                             return .send(.closeAndCleanupBanner)
                         }

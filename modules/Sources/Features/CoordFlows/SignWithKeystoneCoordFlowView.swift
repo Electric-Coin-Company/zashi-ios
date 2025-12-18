@@ -47,10 +47,8 @@ public struct SignWithKeystoneCoordFlowView: View {
                     ScanView(store: store, popoverRatio: 1.075)
                 case let .sending(store):
                     SendingView(store: store, tokenName: tokenName)
-                case let .sendResultFailure(store):
-                    FailureView(store: store, tokenName: tokenName)
-                case let .sendResultResubmission(store):
-                    ResubmissionView(store: store, tokenName: tokenName)
+                case let .sendResultPending(store):
+                    PendingView(store: store, tokenName: tokenName)
                 case let .sendResultSuccess(store):
                     SuccessView(store: store, tokenName: tokenName)
                 case let .transactionDetails(store):

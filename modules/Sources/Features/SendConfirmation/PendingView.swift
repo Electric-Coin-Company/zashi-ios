@@ -1,22 +1,29 @@
 //
-//  ResubmissionView.swift
+//  PendingView.swift
 //  Zashi
 //
-//  Created by Lukáš Korba on 10-28-2024.
+//  Created by Lukáš Korba on 12-09-2025.
 //
 
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
+import Lottie
 
 import Generated
 import UIComponents
 import Utils
-import PartialProposalError
 import AddressBook
 import TransactionDetails
 
-public struct ResubmissionView: View {
+public struct PendingView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    private enum Constants {
+        static let lottieNameLight = "sending"
+        static let lottieNameDark = "sending-dark"
+    }
+    
     @Perception.Bindable var store: StoreOf<SendConfirmation>
     let tokenName: String
     
@@ -29,22 +36,29 @@ public struct ResubmissionView: View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
                 Spacer()
+                
+                LottieView(
+                    animation:
+                            .named(
+                                colorScheme == .light ? Constants.lottieNameLight : Constants.lottieNameDark
+                            )
+                )
+                .resizable()
+                .looping()
+                .frame(width: 170, height: 170)
 
-                store.resubmissionIlustration
-                    .resizable()
-                    .frame(width: 148, height: 148)
-
-                Text(L10n.Send.resubmission)
+                Text(store.pendingTitle)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(L10n.Send.resubmissionInfo)
+                Text(store.pendingInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)
+                    .padding(.top, 8)
                     .screenHorizontalPadding()
 
-                if store.txIdToExpand != nil || store.type != .regular {
+                if store.txIdToExpand != nil || store.type == .regular {
                     ZashiButton(
                         L10n.Send.viewTransaction,
                         type: .tertiary,
@@ -56,23 +70,33 @@ public struct ResubmissionView: View {
                 }
 
                 Spacer()
-
-                ZashiButton(L10n.General.close) {
+                
+                ZashiButton(
+                    L10n.General.close,
+                    type: store.type != .regular ? .ghost : .primary
+                ) {
                     store.send(.closeTapped)
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, store.type != .regular ? 12 : 24)
+
+                if store.type != .regular {
+                    ZashiButton(L10n.SwapAndPay.checkStatus) {
+                        store.send(.checkStatusTapped)
+                    }
+                    .padding(.bottom, 24)
+                }
             }
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
         .screenHorizontalPadding()
-        .applyWarnScreenBackground()
+        .applyIndigoScreenBackground()
     }
 }
 
 #Preview {
     NavigationView {
-        ResubmissionView(
+        SuccessView(
             store: SendConfirmation.initial,
             tokenName: "ZEC"
         )

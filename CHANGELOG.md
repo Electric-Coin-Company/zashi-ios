@@ -6,6 +6,26 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.10 build 2 (2025-12-16)
+
+### Added
+- Insufficient funds sheet in swaps.
+- Set of icons for assets and chains updated. Updated hardcoded list of chain names.
+
+### Changed
+- Sending flow states have been simplified. We no longer show failure, resubmission, or partial statuses. Everything has been consolidated and is now represented by a single Pending state.
+- Reset Zashi confirmation bottom sheet icon.
+- Shielding icon updated in the transaction history and the detail screen.
+- Timed out errors now auto-appear on the Home screen.
+- Currency Conversion setup moved from the Advanced Settings to the More options screen.
+
+### Fixed
+- ZEC on other chains is no longer filtered out in swap flows.
+- Insufficient funds sheet layout.
+
+### Fixed
+- Handling of 5xx errors in NEAR swaps.
+
 ## 2.4.9 build 1 (2025-12-04)
 
 ### Added

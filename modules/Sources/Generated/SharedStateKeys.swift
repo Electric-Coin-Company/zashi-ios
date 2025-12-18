@@ -23,5 +23,4 @@ public extension String {
     static let transactionMemos = "sharedStateKey_transactionMemos"
     static let swapAssets = "sharedStateKey_swapAssets"
     static let swapAPIAccess = "sharedStateKey_swapAPIAccess"
-    static let sharedFlags = "sharedStateKey_sharedFlags"
 }

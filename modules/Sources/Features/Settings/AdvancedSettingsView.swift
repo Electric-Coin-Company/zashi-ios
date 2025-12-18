@@ -60,19 +60,9 @@ public struct AdvancedSettingsView: View {
                         ActionRow(
                             icon: Asset.Assets.Icons.shieldZap.image,
                             title: L10n.Settings.private,
-                            divider: store.isEnoughFreeSpaceMode
+                            divider: false
                         ) {
                             store.send(.operationAccessCheck(.torSetup))
-                        }
-
-                        if store.isEnoughFreeSpaceMode {
-                            ActionRow(
-                                icon: Asset.Assets.Icons.currencyDollar.image,
-                                title: L10n.CurrencyConversion.title,
-                                divider: false
-                            ) {
-                                store.send(.operationAccessCheck(.currencyConversion))
-                            }
                         }
                     }
                     .listRowInsets(EdgeInsets())

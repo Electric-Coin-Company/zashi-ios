@@ -660,7 +660,7 @@
 "torSetup.title" = "Beta: Tor Protection";
 "torSetup.learn.desc" = "This beta feature provides additional protections for your IP address. If Tor is permitted in your region, we recommend enabling it. You can manage this in Advanced Settings.";
 
-"torSetup.settings.desc1" = "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs (e.g. NEAR coming soon).";
+"torSetup.settings.desc1" = "Tor provides additional protections for your IP address. This feature uses Tor network to fetch exchange rates, send transactions, retrieve transaction data, and connect to third party APIs.";
 "torSetup.settings.desc2" = "As a beta feature, it may affect performance. If Tor is permitted in your region, we recommend enabling it.";
 "torSetup.option1.title" = "Currency Conversion";
 "torSetup.option1.desc" = "Fetch exchange rates from third-party servers without revealing your IP address. (Only available with Tor enabled.)";
@@ -953,3 +953,12 @@
 "currencyConversion.skipBtn" = "Skip for now";
 "currencyConversion.torOnInfo" = "Disabling Tor Protection will also disable the Currency Conversion feature until re-enabled.";
 "currencyConversion.torOffInfo" = "If you would like to protect your IP address, enable Tor Protection in Advanced Settings.";
+
+"send.pendingShieldingInfo" = "Your shielding transaction is being processed.";
+"send.pendingInfo" = "Your transaction is being processed.";
+"swapAndPay.pendingSwapInfo" = "Your swap is being processed. Follow its status on the transaction screen.";
+"swapAndPay.pendingPayInfo" = "Your cross-chain payment is being processed. Follow its status on the transaction screen.";
+"send.pendingShieldingTitle" = "Shielding Pending";
+"send.pendingTitle" = "Transaction Pending";
+"swapAndPay.pendingSwapTitle" = "Swap Pending";
+"swapAndPay.pendingPayTitle" = "Payment Pending";

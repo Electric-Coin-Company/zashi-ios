@@ -15,7 +15,6 @@ import NumberFormatter
 
 // Path
 import AddressBook
-import PartialProposalError
 import Scan
 import SendConfirmation
 import SendForm
@@ -33,9 +32,7 @@ public struct SendCoordFlow {
         case scan(Scan)
         case sendConfirmation(SendConfirmation)
         case sending(SendConfirmation)
-        case sendResultFailure(SendConfirmation)
-        case sendResultPartial(PartialProposalError)
-        case sendResultResubmission(SendConfirmation)
+        case sendResultPending(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case transactionDetails(TransactionDetails)
     }

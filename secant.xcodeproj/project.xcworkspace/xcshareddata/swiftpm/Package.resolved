@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "f857994e146f5146d702e9c31ac6f3c27d55d18a",
-        "version" : "1.27.0"
+        "revision" : "8f57f68b9d247fe3759fa9f18e1fe919911e6031",
+        "version" : "1.27.1"
       }
     },
     {
@@ -275,8 +275,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "ca538143e2dc2b5996c34b9322a1ed9def1d7747",
-        "version" : "1.7.0"
+        "revision" : "bc386b95f2a16ccd0150a8235e7c69eab2b866ca",
+        "version" : "1.8.0"
       }
     },
     {
@@ -500,8 +500,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "0bd788c333fb45334e25515f14b420322d72a38e",
-        "version" : "2.4.1"
+        "revision" : "248240565a3599b79afd66cdb5e4de647ea3d0bc",
+        "version" : "2.4.2"
       }
     }
   ],
