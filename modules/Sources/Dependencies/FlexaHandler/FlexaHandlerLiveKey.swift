@@ -140,7 +140,8 @@ extension FlexaHandlerClient: DependencyKey {
                 }
             },
             signOut: {
-                Flexa.buildIdentity().build().close()
+                // FIXME: Flexa close
+                //Flexa.buildIdentity().build().close()
             }
         )
     }
