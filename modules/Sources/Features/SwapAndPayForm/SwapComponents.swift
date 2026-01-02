@@ -290,7 +290,7 @@ extension SwapAndPayForm {
                 ZashiButton(L10n.General.confirm) {
                     store.send(.slippageSetConfirmTapped)
                 }
-                .padding(.bottom, keyboardVisible ? 74 : 36)
+                .padding(.bottom, keyboardVisible ? 74 : Design.Spacing.sheetBottomSpace)
                 .disabled(store.slippageInSheet > 30.0)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -366,7 +366,7 @@ extension SwapAndPayForm {
                 ) {
                     store.send(.editPaymentTapped)
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, Design.Spacing.sheetBottomSpace)
             }
         }
     }
@@ -514,12 +514,12 @@ extension SwapAndPayForm {
                     ZashiButton(L10n.Keystone.confirmSwap) {
                         store.send(.confirmWithKeystoneTapped)
                     }
-                    .padding(.bottom, 24)
+                    .padding(.bottom, Design.Spacing.sheetBottomSpace)
                 } else {
                     ZashiButton(L10n.General.confirm) {
                         store.send(.confirmButtonTapped)
                     }
-                    .padding(.bottom, 24)
+                    .padding(.bottom, Design.Spacing.sheetBottomSpace)
                 }
             }
         }
@@ -620,7 +620,7 @@ extension SwapAndPayForm {
                 ZashiButton(L10n.General.confirm) {
                     store.send(.confirmToZecButtonTapped)
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, Design.Spacing.sheetBottomSpace)
             }
         }
     }
@@ -673,7 +673,7 @@ extension SwapAndPayForm {
             ZashiButton(L10n.SwapAndPay.cancelDont) {
                 store.send(.dontCancelTapped)
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, Design.Spacing.sheetBottomSpace)
         }
     }
     
@@ -698,7 +698,7 @@ extension SwapAndPayForm {
             ZashiButton(L10n.General.ok) {
                 store.send(.refundAddressCloseTapped)
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, Design.Spacing.sheetBottomSpace)
         }
     }
 }
