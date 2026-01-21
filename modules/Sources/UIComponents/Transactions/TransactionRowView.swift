@@ -109,6 +109,7 @@ public struct TransactionRowView: View {
         Group {
             if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMost)
+                    .foregroundColor(Design.Text.primary.color(colorScheme))
             } else if let swapToZecAmount = transaction.swapToZecAmount {
                 if !swapToZecAmount.isEmpty {
                     Text(swapToZecAmount)

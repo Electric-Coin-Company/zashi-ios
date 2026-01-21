@@ -91,14 +91,7 @@ public struct RestoreWalletCoordFlowView: View {
                                                     )
                                                     .background {
                                                         RoundedRectangle(cornerRadius: Design.Radius._xl)
-                                                            .stroke(
-                                                                !store.wordsValidity[j * 3 + i]
-                                                                ? Design.Inputs.ErrorFilled.stroke.color(colorScheme)
-                                                                : focusedField == .field(j * 3 + i)
-                                                                ? Design.Text.primary.color(colorScheme)
-                                                                : Design.Surfaces.bgSecondary.color(colorScheme),
-                                                                lineWidth: 2
-                                                            )
+                                                            .stroke(strokeColor(index: j * 3 + i), lineWidth: 2)
                                                     }
                                             }
                                             .padding(2)
@@ -261,6 +254,14 @@ public struct RestoreWalletCoordFlowView: View {
                 store.send(.updateKeyboardFlag(false))
             }
         }
+    }
+    
+    private func strokeColor(index: Int) -> Color {
+        !store.wordsValidity[index]
+        ? Design.Inputs.ErrorFilled.stroke.color(colorScheme)
+        : focusedField == .field(index)
+        ? Design.Text.primary.color(colorScheme)
+        : Design.Surfaces.bgSecondary.color(colorScheme)
     }
     
     @ViewBuilder private func helpSheetContent() -> some View {
