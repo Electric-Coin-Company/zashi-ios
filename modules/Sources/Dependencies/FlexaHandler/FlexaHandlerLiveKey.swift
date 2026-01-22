@@ -140,7 +140,7 @@ extension FlexaHandlerClient: DependencyKey {
                 }
             },
             signOut: {
-                Flexa.buildIdentity().build().close()
+                Flexa.close()
             }
         )
     }
