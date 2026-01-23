@@ -40,6 +40,9 @@ extension SignWithKeystoneCoordFlow {
 
             case .sendConfirmation(.updateResult(let result)):
                 switch result {
+                case .failure:
+                    state.path.append(.sendResultFailure(state.sendConfirmationState))
+                    break
                 case .pending:
                     state.path.append(.sendResultPending(state.sendConfirmationState))
                     break
@@ -53,6 +56,7 @@ extension SignWithKeystoneCoordFlow {
                 return .none
                 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
                     .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 if let txid = state.sendConfirmationState.txIdToExpand {
                     if let index = state.transactions.index(id: txid) {

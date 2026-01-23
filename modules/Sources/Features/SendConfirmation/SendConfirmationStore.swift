@@ -36,6 +36,7 @@ public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public enum Result: Equatable {
+            case failure
             case pending
             case success
         }
@@ -274,17 +275,13 @@ public struct SendConfirmation {
                 }
 
             case .sendRequested:
-                if state.featureFlags.sendingScreen {
-                    return .run { send in
-                        // delay here is necessary because we've just pushed the sending screen
-                        // and we need it to finish the presentation on screen before the send logic is triggered.
-                        // If the logic fails immediately, failed screen would try to be presented while
-                        // sending screen is still presenting, resulting in a navigational bug.
-                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
-                        await send(.sendTriggered)
-                    }
-                } else {
-                    return .send(.sendTriggered)
+                return .run { send in
+                    // delay here is necessary because we've just pushed the sending screen
+                    // and we need it to finish the presentation on screen before the send logic is triggered.
+                    // If the logic fails immediately, failed screen would try to be presented while
+                    // sending screen is still presenting, resulting in a navigational bug.
+                    try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                    await send(.sendTriggered)
                 }
                 
             case .sendTriggered:
@@ -306,11 +303,13 @@ public struct SendConfirmation {
                         switch result {
                         case .grpcFailure(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError(), false))
+                            let isTxIdPresentInTheDB = try await sdkSynchronizer.txIdExists(txIds.last)
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError(), isTxIdPresentInTheDB))
                         case let .failure(txIds, code, description):
                             await send(.updateFailedData(code, description, ""))
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError(), true))
+                            let isTxIdPresentInTheDB = try await sdkSynchronizer.txIdExists(txIds.last)
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError(), isTxIdPresentInTheDB))
                         case let .partial(txIds: txIds, statuses: statuses):
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendPartial(txIds, statuses))
@@ -319,38 +318,27 @@ public struct SendConfirmation {
                             await send(.sendDone)
                         }
                     } catch {
-                        await send(.sendFailed(error.toZcashError(), true))
+                        await send(.sendFailed(error.toZcashError(), false))
                     }
                 }
 
             case .sendDone:
                 state.isSending = false
-                if state.featureFlags.sendingScreen {
-                    let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
-                    let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
-                    return .run { send in
-                        try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
-                        await send(.updateResult(.success))
-                    }
-                } else {
-                    return .none
+                let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
+                let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
+                return .run { send in
+                    try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
+                    await send(.updateResult(.success))
                 }
 
-            case let .sendFailed(error, _):
+            case let .sendFailed(error, isTxIdPresentInTheDB):
                 state.failedDescription = error?.localizedDescription ?? ""
                 state.isSending = false
-                if state.featureFlags.sendingScreen {
-                    let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
-                    let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
-                    return .run { send in
-                        try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
-                        await send(.updateResult(.pending))
-                    }
-                } else {
-                    if let error {
-                        state.alert = AlertState.sendFailure(error)
-                    }
-                    return .none
+                let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
+                let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
+                return .run { send in
+                    try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
+                    await send(.updateResult(isTxIdPresentInTheDB ? .pending : .failure))
                 }
 
             case let .sendPartial(txIds, statuses):
@@ -646,6 +634,16 @@ extension SendConfirmation.State {
         : type == .swap
         ? L10n.SwapAndPay.pendingSwapTitle
         : L10n.SwapAndPay.pendingPayTitle
+    }
+    
+    public var failureInfo: String {
+        isShielding
+        ? L10n.Send.failureShieldingInfo
+        : type == .regular
+        ? L10n.Send.failureInfo
+        : type == .swap
+        ? L10n.SwapAndPay.failureSwapInfo
+        : L10n.SwapAndPay.failurePayInfo
     }
 }
 

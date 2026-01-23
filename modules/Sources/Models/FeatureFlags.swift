@@ -10,20 +10,17 @@ public struct FeatureFlags: Equatable {
     public let appLaunchBiometric: Bool
     public let flexa: Bool
     public let selectText: Bool
-    public let sendingScreen: Bool
 
     public init(
         addUAtoMemo: Bool = false,
         appLaunchBiometric: Bool = true,
         flexa: Bool = true,
-        selectText: Bool = true,
-        sendingScreen: Bool = true
+        selectText: Bool = true
     ) {
         self.addUAtoMemo = addUAtoMemo
         self.appLaunchBiometric = appLaunchBiometric
         self.flexa = flexa
         self.selectText = selectText
-        self.sendingScreen = sendingScreen
     }
 }
 

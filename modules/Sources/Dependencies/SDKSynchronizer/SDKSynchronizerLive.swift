@@ -105,6 +105,15 @@ extension SDKSynchronizerClient: DependencyKey {
                 )
             },
             getMemos: { try await synchronizer.getMemos(for: $0) },
+            txIdExists: { txId in
+                guard let txId else {
+                    return false
+                }
+                
+                let allTransactions = try await synchronizer.allTransactions()
+
+                return allTransactions.contains(where: { $0.rawID.toHexStringTxId() == txId })
+            },
             getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountUUID: $0) },
             getTransparentAddress: { try await synchronizer.getTransparentAddress(accountUUID: $0) },
             getSaplingAddress: { try await synchronizer.getSaplingAddress(accountUUID: $0) },
