@@ -45,6 +45,7 @@ public struct SDKSynchronizerClient {
     public var getAllTransactions: (AccountUUID?) async throws -> IdentifiedArrayOf<TransactionState>
     public var transactionStatesFromZcashTransactions: (AccountUUID?, [ZcashTransaction.Overview]) async throws -> IdentifiedArrayOf<TransactionState>
     public var getMemos: (Data) async throws -> [Memo]
+    public var txIdExists: (String?) async throws -> Bool
     
     public let getUnifiedAddress: (_ account: AccountUUID) async throws -> UnifiedAddress?
     public let getTransparentAddress: (_ account: AccountUUID) async throws -> TransparentAddress?

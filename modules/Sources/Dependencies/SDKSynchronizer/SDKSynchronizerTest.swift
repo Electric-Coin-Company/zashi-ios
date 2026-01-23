@@ -41,6 +41,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         getAllTransactions: unimplemented("\(Self.self).getAllTransactions", placeholder: []),
         transactionStatesFromZcashTransactions: unimplemented("\(Self.self).transactionStatesFromZcashTransactions", placeholder: []),
         getMemos: unimplemented("\(Self.self).getMemos", placeholder: []),
+        txIdExists: unimplemented("\(Self.self).txIdExists", placeholder: false),
         getUnifiedAddress: unimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: unimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: unimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
@@ -94,6 +95,7 @@ extension SDKSynchronizerClient {
         getAllTransactions: { _ in [] },
         transactionStatesFromZcashTransactions: { _, _ in [] },
         getMemos: { _ in [] },
+        txIdExists: { _ in false },
         getUnifiedAddress: { _ in nil },
         getTransparentAddress: { _ in nil },
         getSaplingAddress: { _ in nil },
@@ -199,6 +201,7 @@ extension SDKSynchronizerClient {
         },
         transactionStatesFromZcashTransactions: @escaping (AccountUUID?, [ZcashTransaction.Overview]) async throws -> IdentifiedArrayOf<TransactionState> = { _, _ in IdentifiedArrayOf<TransactionState>(uniqueElements: []) },
         getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
+        txIdExists: @escaping (String?) -> Bool = { _ in false },
         getUnifiedAddress: @escaping (_ account: AccountUUID) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try
             try! UnifiedAddress(
@@ -266,6 +269,7 @@ extension SDKSynchronizerClient {
             getAllTransactions: getAllTransactions,
             transactionStatesFromZcashTransactions: transactionStatesFromZcashTransactions,
             getMemos: getMemos,
+            txIdExists: txIdExists,
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,
             getSaplingAddress: getSaplingAddress,

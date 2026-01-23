@@ -32,6 +32,7 @@ public struct SendCoordFlow {
         case scan(Scan)
         case sendConfirmation(SendConfirmation)
         case sending(SendConfirmation)
+        case sendResultFailure(SendConfirmation)
         case sendResultPending(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
         case transactionDetails(TransactionDetails)

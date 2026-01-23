@@ -215,6 +215,7 @@ extension Root {
                 return .none
 
             case .scanCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .scanCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
                     .scanCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none
@@ -241,6 +242,7 @@ extension Root {
                 // MARK: - Send Coord Flow
                 
             case .sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .sendCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
                     .sendCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none
@@ -256,6 +258,7 @@ extension Root {
                 // MARK: - Sign with Keystone Coord Flow
 
             case .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
                     .signWithKeystoneCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.signWithKeystoneCoordFlowBinding = false
                 return .none
@@ -293,6 +296,7 @@ extension Root {
                 return .none
                 
             case .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultFailure(.closeTapped)))),
                     .swapAndPayCoordFlow(.path(.element(id: _, action: .sendResultPending(.closeTapped)))):
                 state.path = nil
                 return .none

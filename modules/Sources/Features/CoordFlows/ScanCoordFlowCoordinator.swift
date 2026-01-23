@@ -382,6 +382,8 @@ extension ScanCoordFlow {
 
             case let .resolveSendResult(result, sendConfirmationState):
                 switch result {
+                case .failure:
+                    state.path.append(.sendResultFailure(sendConfirmationState))
                 case .pending:
                     state.path.append(.sendResultPending(sendConfirmationState))
                 case .success:
@@ -476,6 +478,7 @@ extension ScanCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
                     .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 for element in state.path.reversed() {
                     if case .sendConfirmation(let sendConfirmationState) = element {
