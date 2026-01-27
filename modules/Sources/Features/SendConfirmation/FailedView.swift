@@ -62,7 +62,7 @@ public struct FailureView: View {
                     ? .ghost
                     : .primary
                 ) {
-                    store.send(.backFromFailureTapped)
+                    store.send(.closeTapped)
                 }
                 .padding(.bottom, 8)
 

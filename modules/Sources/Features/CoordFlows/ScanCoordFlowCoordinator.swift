@@ -237,6 +237,9 @@ extension ScanCoordFlow {
                 if case .legacy(let address) = requestPayment {
                     return .send(.scan(.foundAddress(address.value.redacted)))
                 } else if case .request(let paymentRequest) = requestPayment {
+                    if let payment = paymentRequest.payments.first, payment.amount == nil {
+                        return .send(.scan(.foundAddress(payment.recipientAddress.value.redacted)))
+                    }
                     return .send(.getProposal(paymentRequest))
                 }
                 return .none

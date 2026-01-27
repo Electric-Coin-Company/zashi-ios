@@ -491,17 +491,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pacu/zcash-swift-payment-uri",
       "state" : {
-        "revision" : "1427a6507033b66a2fc2a13692c7794334b6d582",
-        "version" : "1.0.0"
+        "revision" : "798053ba8a2d80560b5e3f4899a8b35ac0c348bb",
+        "version" : "1.0.1"
       }
     },
     {
-      "identity" : "zcash-swift-wallet-sdk",
+      "identity" : "zcashlightclientkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
+      "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "revision" : "248240565a3599b79afd66cdb5e4de647ea3d0bc",
-        "version" : "2.4.2"
+        "branch" : "error-handling-of-tor",
+        "revision" : "67ec63793a20563360874aae2efa7b7780650726"
       }
     }
   ],
