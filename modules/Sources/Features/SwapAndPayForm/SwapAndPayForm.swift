@@ -306,7 +306,7 @@ extension View {
                         Text(asset.token)
                             .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         
-                        Text("on")
+                        Text(L10n.tokenOnChain)
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
 
                         Text(asset.chainName)
