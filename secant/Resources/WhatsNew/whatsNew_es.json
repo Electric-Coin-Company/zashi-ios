@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "2.4.12",
+            "date": "28-01-2026",
+            "timestamp": 1769605663,
+            "sections": [
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Para solucionar los problemas de los usuarios causados ​​por la selección incorrecta de activos de swap, mejoramos la interfaz de usuario de Swap y CrossPay mostrando explícitamente el token y la cadena seleccionados.",
+                        "Optimizamos la lista de activos para evitar los errores más frecuentes de los usuarios."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Solucionamos varios problemas con el análisis del código QR ZIP321.",
+                        "Corregimos la gestión de transacciones fallidas."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.11",
             "date": "18-12-2025",
             "timestamp": 1766045724,

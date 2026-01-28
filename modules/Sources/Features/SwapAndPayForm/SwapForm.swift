@@ -438,7 +438,7 @@ public extension SwapAndPayForm {
                     Button {
                         store.send(.assetSelectRequested)
                     } label: {
-                        ticker(asset: store.selectedAsset, colorScheme)
+                        ticker(asset: store.selectedAsset, crosspay: false, colorScheme)
                     }
 
                     Spacer()

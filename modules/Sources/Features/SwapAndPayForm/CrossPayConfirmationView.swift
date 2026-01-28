@@ -12,6 +12,7 @@ import SwapAndPay
 
 import UIComponents
 
+// FIXME: Candidate for removal from the project
 public struct CrossPayConfirmationView: View {
     @Environment(\.colorScheme) private var colorScheme
     

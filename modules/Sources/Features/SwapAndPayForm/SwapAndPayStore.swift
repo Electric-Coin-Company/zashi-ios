@@ -493,7 +493,44 @@ public struct SwapAndPay {
                 state.swapAssetsToPresent.append(contentsOf: chainNameMatch)
                 state.swapAssetsToPresent.append(contentsOf: chainMatch)
                 let swapAssetsWithoutZec = state.swapAssetsToPresent.filter { $0.idWithoutProvider != Constants.zecAsset }
-                state.swapAssetsToPresent = swapAssetsWithoutZec
+                
+                // sort start with
+                var sortedResults = swapAssetsWithoutZec.sorted {
+                    let aStarts = $0.tokenName.lowercased().hasPrefix(state.searchTerm)
+                    let bStarts = $1.tokenName.lowercased().hasPrefix(state.searchTerm)
+
+                    if aStarts != bStarts {
+                        return aStarts && !bStarts
+                    }
+                    
+                    return $0.tokenName.lowercased() < $1.tokenName.lowercased()
+                }
+                
+                // sort according to curated list
+                var curatedAssets: IdentifiedArrayOf<SwapAsset> = []
+                
+                SwapAndPay.State.curatedAssetIds.forEach { curatedAsset in
+                    let asset = swapAssets.filter {
+                        $0.idWithoutProvider == curatedAsset
+                    }
+                    curatedAssets.append(contentsOf: asset)
+                }
+
+                var curatedMatch: IdentifiedArrayOf<SwapAsset> = []
+                sortedResults.removeAll {
+                    let res = curatedAssets.contains($0)
+                    
+                    if res {
+                        curatedMatch.append(contentsOf: [$0])
+                    }
+                    
+                    return res
+                }
+
+                var swapAssetsCuratedList = curatedMatch
+                swapAssetsCuratedList.append(contentsOf: sortedResults)
+
+                state.swapAssetsToPresent = swapAssetsCuratedList
                 return .none
 
             case .assetTapped(let asset):
@@ -768,6 +805,16 @@ public struct SwapAndPay {
                 // exclude all tokens with price == 0
                 var filteredSwapAssets = swapAssets.filter { $0.usdPrice != 0 }
 
+                // curated list
+                var curatedAssets: IdentifiedArrayOf<SwapAsset> = []
+                
+                SwapAndPay.State.curatedAssetIds.forEach { curatedAsset in
+                    let asset = swapAssets.filter {
+                        $0.idWithoutProvider == curatedAsset
+                    }
+                    curatedAssets.append(contentsOf: asset)
+                }
+
                 // history assets
                 let historyAssetIds = userMetadataProvider.lastUsedAssetHistory()
                 var historyAssets: IdentifiedArrayOf<SwapAsset> = []
@@ -777,10 +824,18 @@ public struct SwapAndPay {
                     }
                 }
                 filteredSwapAssets.removeAll { historyAssetIds.contains($0.id) }
-                var swapAssetsWithHistory = historyAssets
-                swapAssetsWithHistory.append(contentsOf: filteredSwapAssets)
+                
+                // curated minus history
+                curatedAssets.removeAll { historyAssetIds.contains($0.id) }
 
-                state.$swapAssets.withLock { $0 = swapAssetsWithHistory }
+                // rest minus curated
+                filteredSwapAssets.removeAll { curatedAssets.contains($0) }
+
+                var swapAssetsWithHistoryAndCuratedList = historyAssets
+                swapAssetsWithHistoryAndCuratedList.append(contentsOf: curatedAssets)
+                swapAssetsWithHistoryAndCuratedList.append(contentsOf: filteredSwapAssets)
+
+                state.$swapAssets.withLock { $0 = swapAssetsWithHistoryAndCuratedList }
 
                 if let selectedContactChainId = state.selectedContact?.chainId,
                     let selectedAssetChainId = state.selectedAsset?.chain, selectedContactChainId != selectedAssetChainId {
@@ -1247,7 +1302,7 @@ extension SwapAndPay.State {
         
         let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
             .precision(.fractionLength(4))
-
+        
         return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted(formatter)
     }
     
@@ -1276,7 +1331,7 @@ extension SwapAndPay.State {
         guard let zecAsset else {
             return "0"
         }
-
+        
         let totalAmount = (quote.amountIn + Decimal(proposal.totalFeeRequired().amount)) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
         let totalAmountUsd = totalAmount * zecAsset.usdPrice
         return totalAmountUsd.formatted(.currency(code: CurrencyISO4217.usd.code))
@@ -1290,7 +1345,7 @@ extension SwapAndPay.State {
         let zashiFeeCoeff = (Decimal(SwapAndPayClient.Constants.zashiFeeBps) / Decimal(10_000))
         let zashiFee = quote.amountIn * zashiFeeCoeff
         let zatoshi = Zatoshi(Int64(truncating: NSDecimalNumber(decimal: zashiFee)))
-
+        
         return zatoshi.decimalString()
     }
     
@@ -1302,10 +1357,10 @@ extension SwapAndPay.State {
         guard let zecAsset else {
             return "0"
         }
-
+        
         let zashiFeeCoeff = (Decimal(SwapAndPayClient.Constants.zashiFeeBps) / Decimal(10_000))
         let zashiFee = ((quote.amountIn * zashiFeeCoeff) / Decimal(100_000_000)) * zecAsset.usdPrice
-
+        
         if zashiFee < 0.01 {
             let formatter = FloatingPointFormatStyle<Double>.Currency(code: "USD")
                 .precision(.fractionLength(4))
@@ -1324,16 +1379,16 @@ extension SwapAndPay.State {
         guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
             return "0"
         }
-
+        
         guard let zecAsset else {
             return "0"
         }
-
+        
         let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
         let slippageDecimal = amountInUsdDecimal * slippage * 0.01 * swapCoeff
         let zatoshiDecimal = NSDecimalNumber(decimal: (slippageDecimal / zecAsset.usdPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi))
         let zatoshi = Zatoshi(Int64(zatoshiDecimal.doubleValue))
-
+        
         return zatoshi.decimalString()
     }
     
@@ -1345,7 +1400,7 @@ extension SwapAndPay.State {
         guard let amountInUsdDecimal = quote.amountInUsd.localeUsdDecimal else {
             return "0"
         }
-
+        
         let swapCoeff: Decimal = isSwapExperienceEnabled ? 0.0 : 1.0
         let slippageDecimal = amountInUsdDecimal * slippage * 0.01 * swapCoeff
         
@@ -1363,11 +1418,11 @@ extension SwapAndPay.State {
         guard let quote else {
             return "0"
         }
-
+        
         guard let selectedAsset else {
             return "0"
         }
-
+        
         let slippageAmount = quote.amountOut * slippage * 0.01 * selectedAsset.usdPrice
         
         if slippageAmount < 0.01 {
@@ -1384,36 +1439,36 @@ extension SwapAndPay.State {
         guard let proposal, let quote else {
             return 0
         }
-
+        
         // transaction fee
         let transactionFee = proposal.totalFeeRequired().amount
         
         // zashi fee
         let zashiFee = quote.amountIn * 0.005
         let zatoshiZashiFee = Int64(truncating: NSDecimalNumber(decimal: zashiFee))
-
+        
         return transactionFee + zatoshiZashiFee
     }
-
+    
     public var totalUSDFees: String {
         guard let zecAsset else {
             return "0.0"
         }
-
+        
         let feeIdUsd = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
-
+        
         return NSDecimalNumber(decimal: feeIdUsd).doubleValue.formatted(.number.locale(Locale(identifier: "en_US")))
     }
     
     public var totalFeesStr: String {
         Zatoshi(totalFees).decimalString()
     }
-
+    
     public var totalFeesUsdStr: String {
         guard let zecAsset else {
             return "0"
         }
-
+        
         let totalFee = (Decimal(totalFees) / Decimal(Zatoshi.Constants.oneZecInZatoshi)) * zecAsset.usdPrice
         
         if totalFee < 0.01 {
@@ -1424,6 +1479,22 @@ extension SwapAndPay.State {
         } else {
             return totalFee.formatted(.currency(code: CurrencyISO4217.usd.code))
         }
+    }
+    
+    public var zcashNameInQuote: String {
+        guard let zecAsset else {
+            return "Zcash"
+        }
+        
+        return zecAsset.chainName
+    }
+    
+    public var assetNameInQuote: String {
+        guard let selectedAsset else {
+            return ""
+        }
+
+        return selectedAsset.chainName
     }
 }
 
@@ -1630,6 +1701,25 @@ extension SwapAndPay.State {
             return slippageAmount.formatted(.currency(code: CurrencyISO4217.usd.code))
         }
     }
+}
+
+// MARK: - Curated Assets List
+
+extension SwapAndPay.State {
+    static let curatedAssetIds = [
+        "btc.btc",
+        "eth.eth",
+        "sol.sol",
+        "eth.usdc",
+        "eth.usdt",
+        "arb.usdc",
+        "sol.usdc",
+        "sol.usdt",
+        "bsc.usdt",
+        "tron.usdt",
+        "sui.usdc",
+        "base.usdc"
+    ]
 }
 
 // MARK: - Formatters

@@ -385,42 +385,52 @@ extension SwapAndPayForm {
                 ZStack {
                     HStack(spacing: 8) {
                         VStack(spacing: 0) {
-                            zecTickerLogo(colorScheme)
-                                .scaleEffect(0.8)
+                            zecTickerBadge(colorScheme)
+
+                            Text(store.zcashNameInQuote)
+                                .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                                .padding(.vertical, 4)
 
                             Text(store.zecToBeSpendInQuote)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
 
                             Text(store.zecUsdToBeSpendInQuote)
-                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                .zFont(.medium, size: 12, style: Design.Text.tertiary)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 94)
+                        .frame(height: 122)
                         .background {
                             RoundedRectangle(cornerRadius: Design.Radius._3xl)
                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                         
                         VStack(spacing: 0) {
-                            tokenTicker(asset: store.selectedAsset, colorScheme)
-                                .scaleEffect(0.8)
+                            tokenTickerSelector(asset: store.selectedAsset, colorScheme)
+
+                            Text(store.assetNameInQuote)
+                                .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                                .padding(.vertical, 4)
 
                             Text(store.tokenToBeReceivedInQuote)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
                             
                             Text(store.tokenUsdToBeReceivedInQuote)
-                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                .zFont(.medium, size: 12, style: Design.Text.tertiary)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 94)
+                        .frame(height: 122)
                         .background {
                             RoundedRectangle(cornerRadius: Design.Radius._3xl)
                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
@@ -535,42 +545,52 @@ extension SwapAndPayForm {
                 ZStack {
                     HStack(spacing: 8) {
                         VStack(spacing: 0) {
-                            tokenTicker(asset: store.selectedAsset, colorScheme)
-                                .scaleEffect(0.8)
+                            tokenTickerSelector(asset: store.selectedAsset, colorScheme)
+
+                            Text(store.assetNameInQuote)
+                                .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                                .padding(.vertical, 4)
 
                             Text(store.swapToZecAmountInQuote)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
                             
                             Text(store.zecUsdToBeSpendInQuote)
-                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                .zFont(.medium, size: 12, style: Design.Text.tertiary)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 94)
+                        .frame(height: 122)
                         .background {
                             RoundedRectangle(cornerRadius: Design.Radius._3xl)
                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                         
                         VStack(spacing: 0) {
-                            zecTickerLogo(colorScheme)
-                                .scaleEffect(0.8)
+                            zecTickerBadge(colorScheme)
+
+                            Text(store.zcashNameInQuote)
+                                .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                                .padding(.vertical, 4)
 
                             Text(store.tokenToBeReceivedInQuote)
-                                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.1)
 
                             Text(store.tokenUsdToBeReceivedInQuote)
-                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                .zFont(.medium, size: 12, style: Design.Text.tertiary)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 94)
+                        .frame(height: 122)
                         .background {
                             RoundedRectangle(cornerRadius: Design.Radius._3xl)
                                 .fill(Design.Surfaces.bgSecondary.color(colorScheme))
