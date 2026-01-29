@@ -391,7 +391,7 @@ extension SwapAndPayForm {
                                 .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 6)
 
                             Text(store.zecToBeSpendInQuote)
                                 .zFont(.semiBold, size: 16, style: Design.Text.primary)
@@ -417,7 +417,7 @@ extension SwapAndPayForm {
                                 .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 6)
 
                             Text(store.tokenToBeReceivedInQuote)
                                 .zFont(.semiBold, size: 16, style: Design.Text.primary)
@@ -551,7 +551,7 @@ extension SwapAndPayForm {
                                 .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 6)
 
                             Text(store.swapToZecAmountInQuote)
                                 .zFont(.semiBold, size: 16, style: Design.Text.primary)
@@ -577,7 +577,7 @@ extension SwapAndPayForm {
                                 .zFont(.semiBold, size: 12, style: Design.Text.tertiary)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 6)
 
                             Text(store.tokenToBeReceivedInQuote)
                                 .zFont(.semiBold, size: 16, style: Design.Text.primary)

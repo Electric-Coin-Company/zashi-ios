@@ -390,7 +390,7 @@ extension View {
                     }
                     .scaleEffect(0.8)
 
-                Text(asset.tokenName.uppercased())
+                Text(asset.token.uppercased())
                     .zFont(.semiBold, size: 14, style: Design.Text.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
