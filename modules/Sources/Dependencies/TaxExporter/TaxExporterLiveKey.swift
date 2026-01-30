@@ -65,14 +65,14 @@ extension TaxExporterClient: DependencyKey {
                 row = "\(row)\(transaction.isSentTransaction ? "" : "ZEC"),"
 
                 // Sent Quantity
-                row = "\(row)\(transaction.isSentTransaction ? transaction.zecAmount.decimalZashiUSFormatted() : ""),"
+                row = "\(row)\(transaction.isSentTransaction ? transaction.zecAmount.decimalZashiTaxUSFormatted() : ""),"
 
                 // Sent Currency
                 row = "\(row)\(transaction.isSentTransaction ? "ZEC" : ""),"
 
                 // Fee Amount
                 if let fee = transaction.fee {
-                    row = "\(row)\(fee.decimalZashiUSFormatted()),"
+                    row = "\(row)\(fee.decimalZashiTaxUSFormatted()),"
                 } else {
                     row = "\(row),"
                 }
