@@ -6,6 +6,16 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 2.4.12 build 3 (2026-01-29)
+
+### Changed
+- To address user issues caused by selecting wrong swap assets, we improved the Swap and CrossPay UI by explicitly displaying the token and chain selected.
+- Optimized the list of assets to help avoid the most frequent user errors.
+
+### Fixed
+- Several issues with ZIP321 QR code parsing.
+- Handling of unsuccessful transactions.
+
 ## 2.4.11 build 1 (2025-12-18)
 
 ### Fixed
