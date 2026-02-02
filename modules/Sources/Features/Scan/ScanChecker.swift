@@ -101,14 +101,7 @@ public struct SwapStringScanChecker: ScanChecker, Equatable {
     public let id = 4
     
     public func checkQRCode(_ qrCode: String) -> Scan.Action? {
-        var stringFound = qrCode
-        
-        // cut ethereum:
-        if stringFound.hasPrefix("ethereum:") {
-            stringFound.removeSubrange(stringFound.startIndex..<stringFound.index(stringFound.startIndex, offsetBy: 9))
-        }
-        
-        return .foundString(stringFound)
+        .foundString(qrCode)
     }
 }
 

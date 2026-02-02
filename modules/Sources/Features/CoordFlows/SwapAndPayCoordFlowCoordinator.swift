@@ -193,6 +193,7 @@ extension SwapAndPayCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.checkStatusTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.checkStatusTapped))),
                     .path(.element(id: _, action: .sendResultPending(.checkStatusTapped))):
                 if let txid = state.txIdToExpand {
                     if let index = state.transactions.index(id: txid) {
@@ -325,11 +326,13 @@ extension SwapAndPayCoordFlow {
                         switch result {
                         case .grpcFailure(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError(), false))
+                            let isTxIdPresentInTheDB = try await sdkSynchronizer.txIdExists(txIds.last)
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-grpcFailure".toZcashError(), isTxIdPresentInTheDB))
                         case let .failure(txIds, code, description):
                             await send(.updateFailedData(code, description, ""))
                             await send(.updateTxIdToExpand(txIds.last))
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError(), true))
+                            let isTxIdPresentInTheDB = try await sdkSynchronizer.txIdExists(txIds.last)
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions-failure \(code) \(description)".toZcashError(), isTxIdPresentInTheDB))
                         case let .partial(txIds: txIds, _):
                             await send(.updateTxIdToExpand(txIds.last))
                         case .success(let txIds):
@@ -341,7 +344,7 @@ extension SwapAndPayCoordFlow {
                             }
                         }
                     } catch {
-                        await send(.sendFailed(error.toZcashError(), true))
+                        await send(.sendFailed(error.toZcashError(), false))
                     }
                 }
 
@@ -353,13 +356,13 @@ extension SwapAndPayCoordFlow {
                     await send(.updateResult(.success))
                 }
                 
-            case let .sendFailed(error, _):
+            case let .sendFailed(error, isTxIdPresentInTheDB):
                 state.failedDescription = error?.localizedDescription ?? ""
                 let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
                 let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
                 return .run { send in
                     try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
-                    await send(.updateResult(.pending))
+                    await send(.updateResult(isTxIdPresentInTheDB ? .pending : .failure))
                 }
                 
             case let .updateResult(result):
@@ -368,15 +371,15 @@ extension SwapAndPayCoordFlow {
                 sendConfirmationState.proposal = state.swapAndPayState.proposal
                 sendConfirmationState.type = state.swapAndPayState.isSwapExperienceEnabled ? .swap : .pay
                 switch result {
+                case .failure:
+                    state.path.append(.sendResultFailure(sendConfirmationState))
                 case .pending:
                     state.path.append(.sendResultPending(sendConfirmationState))
-                    return .send(.storeLastUsedAsset)
                 case .success:
                     state.path.append(.sendResultSuccess(sendConfirmationState))
-                    return .send(.storeLastUsedAsset)
                 default: break
                 }
-                return .none
+                return .send(.storeLastUsedAsset)
 
             // MARK: - Self Opt-in
                 

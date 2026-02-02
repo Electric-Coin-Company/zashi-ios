@@ -58,4 +58,15 @@ extension NumberFormatter {
         formatter.locale = Locale(identifier: "en_US")
         return formatter
     }()
+    
+    public static let zcashUSTaxNumberFormatter: NumberFormatter = {
+        var formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 8
+        formatter.maximumIntegerDigits = 8
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = false
+        formatter.roundingMode = .halfUp
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
 }

@@ -122,10 +122,10 @@ extension Root {
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
                         switch result {
-                        case .partial, .failure:
+                        case .partial:
                             await send(.flexaTransactionFailed(L10n.Partners.Flexa.transactionFailedMessage))
-                        case .success(let txIds), .grpcFailure(let txIds):
-                            if let txId = txIds.first {
+                        case .success(let txIds), .grpcFailure(let txIds), .failure(let txIds, _, _):
+                            if let txId = txIds.last, try await sdkSynchronizer.txIdExists(txId) {
                                 flexaHandler.transactionSent(transaction.commerceSessionId, txId)
                             }
                         }

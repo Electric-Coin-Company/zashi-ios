@@ -14,6 +14,8 @@ public enum L10n {
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
+  /// on
+  public static let tokenOnChain = L10n.tr("Localizable", "tokenOnChain", fallback: "on")
   public enum About {
     /// Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.
     public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Developed by the team that continues to set the industry standard for blockchain privacy, the original developers of the Zcash protocol at Electric Coin Company.")

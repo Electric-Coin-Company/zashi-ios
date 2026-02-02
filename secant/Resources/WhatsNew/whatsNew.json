@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "2.4.12",
+            "date": "28-01-2026",
+            "timestamp": 1769605663,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "To address user issues caused by selecting wrong swap assets, we improved the Swap and CrossPay UI by explicitly displaying the token and chain selected.",
+                        "We optimized the list of assets to help avoid the most frequent user errors."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed several issues with ZIP321 QR code parsing.",
+                        "We fixed handling of unsuccessful transactions."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "2.4.11",
             "date": "18-12-2025",
             "timestamp": 1766045724,

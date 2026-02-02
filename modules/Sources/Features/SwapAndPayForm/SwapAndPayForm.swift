@@ -243,6 +243,37 @@ public struct SwapAndPayForm: View {
             }
     }
     
+    @ViewBuilder func zecTickerBadge(_ colorScheme: ColorScheme, shield: Bool = true) -> some View {
+        HStack(spacing: 0) {
+            Asset.Assets.Brandmarks.brandmarkMax.image
+                .zImage(size: 24, style: Design.Text.primary)
+                .padding(.trailing, 6)
+                .overlay {
+                    if shield {
+                        Asset.Assets.Icons.shieldBcg.image
+                            .zImage(size: 15, color: Design.screenBackground.color(colorScheme))
+                            .offset(x: 4, y: 8)
+                            .overlay {
+                                Asset.Assets.Icons.shieldTickFilled.image
+                                    .zImage(size: 13, color: Design.Text.primary.color(colorScheme))
+                                    .offset(x: 4, y: 8)
+                            }
+                    } else {
+                        Asset.Assets.Icons.shieldOffSolid.image
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .offset(x: 4, y: 8)
+                    }
+                }
+                .scaleEffect(0.8)
+
+            Text(tokenName.uppercased())
+                .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+    }
+    
     public func slippageWarnBcgColor(_ colorScheme: ColorScheme) -> Color {
         if store.slippageInSheet <= 1.0 {
             return Design.Utility.Gray._50.color(colorScheme)
@@ -265,16 +296,35 @@ public struct SwapAndPayForm: View {
 }
 
 extension View {
-    @ViewBuilder func noBcgTicker(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {
+    @ViewBuilder func noBcgTicker(asset: SwapAsset?, crosspay: Bool, _ colorScheme: ColorScheme) -> some View {
         HStack(spacing: 0) {
             if let asset {
                 tokenTicker(asset: asset, colorScheme)
                 
-                Text(asset.token)
-                    .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                if crosspay {
+                    HStack(spacing: 4) {
+                        Text(asset.token)
+                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                        
+                        Text(L10n.tokenOnChain)
+                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+
+                        Text(asset.chainName)
+                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                    }
+                    .padding(.horizontal, 4)
+                } else {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(asset.token)
+                            .zFont(.semiBold, size: 12, style: Design.Text.primary)
+                        
+                        Text(asset.chainName)
+                            .zFont(.medium, size: 12, style: Design.Text.tertiary)
+                    }
                     .padding(.horizontal, 4)
                     .fixedSize()
                     .minimumScaleFactor(0.7)
+                }
             } else {
                 Circle()
                     .shimmer(true).clipShape(Circle())
@@ -318,8 +368,38 @@ extension View {
         }
     }
     
-    @ViewBuilder func ticker(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {
-        noBcgTicker(asset: asset, colorScheme)
+    @ViewBuilder func tokenTickerSelector(asset: SwapAsset?, _ colorScheme: ColorScheme) -> some View {
+        if let asset {
+            HStack(spacing: 0) {
+                asset.tokenIcon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.trailing, 8)
+                    .overlay {
+                        ZStack {
+                            Circle()
+                                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                                .frame(width: 16, height: 16)
+                                .offset(x: 6, y: 6)
+                            
+                            asset.chainIcon
+                                .resizable()
+                                .frame(width: 14, height: 14)
+                                .offset(x: 6, y: 6)
+                        }
+                    }
+                    .scaleEffect(0.8)
+
+                Text(asset.token.uppercased())
+                    .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+        }
+    }
+    
+    @ViewBuilder func ticker(asset: SwapAsset?, crosspay: Bool, _ colorScheme: ColorScheme) -> some View {
+        noBcgTicker(asset: asset, crosspay: crosspay, colorScheme)
             .background {
                 RoundedRectangle(cornerRadius: Design.Radius._full)
                     .fill(Design.Surfaces.bgPrimary.color(colorScheme))

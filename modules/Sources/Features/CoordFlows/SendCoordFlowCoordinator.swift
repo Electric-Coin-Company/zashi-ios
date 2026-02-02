@@ -284,6 +284,7 @@ extension SendCoordFlow {
                 return .none
 
             case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))),
+                    .path(.element(id: _, action: .sendResultFailure(.viewTransactionTapped))),
                     .path(.element(id: _, action: .sendResultPending(.viewTransactionTapped))):
                 for element in state.path.reversed() {
                     if case .sendConfirmation(let sendConfirmationState) = element {
@@ -303,10 +304,12 @@ extension SendCoordFlow {
 
             case let .resolveSendResult(result, sendConfirmationState):
                 switch result {
-                case .success:
-                    state.path.append(.sendResultSuccess(sendConfirmationState))
+                case .failure:
+                    state.path.append(.sendResultFailure(sendConfirmationState))
                 case .pending:
                     state.path.append(.sendResultPending(sendConfirmationState))
+                case .success:
+                    state.path.append(.sendResultSuccess(sendConfirmationState))
                 default: break
                 }
                 return .none

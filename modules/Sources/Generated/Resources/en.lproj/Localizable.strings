@@ -961,3 +961,5 @@
 "send.pendingTitle" = "Transaction Pending";
 "swapAndPay.pendingSwapTitle" = "Swap Pending";
 "swapAndPay.pendingPayTitle" = "Payment Pending";
+
+"tokenOnChain" = "on";

@@ -20,7 +20,11 @@ extension Zatoshi {
     public func decimalZashiUSFormatted() -> String {
         NumberFormatter.zashiUSBalanceFormatter.string(from: decimalValue.roundedZec) ?? ""
     }
-    
+
+    public func decimalZashiTaxUSFormatted() -> String {
+        NumberFormatter.zcashUSTaxNumberFormatter.string(from: decimalValue.roundedZec) ?? ""
+    }
+
     public func threeDecimalsZashiFormatted() -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 8

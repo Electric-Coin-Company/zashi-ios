@@ -60,6 +60,8 @@ public struct ScanCoordFlowView: View {
                     SendingView(store: store, tokenName: tokenName)
                 case let .requestZecConfirmation(store):
                     RequestPaymentConfirmationView(store: store, tokenName: tokenName)
+                case let .sendResultFailure(store):
+                    FailureView(store: store, tokenName: tokenName)
                 case let .sendResultPending(store):
                     PendingView(store: store, tokenName: tokenName)
                 case let .sendResultSuccess(store):
