@@ -92,6 +92,9 @@ struct Root {
         /// Audit 2026-08-03 (#7): the one-shot delayed `.retryStart` a failed `start()` schedules —
         /// cancelled at background, re-armed (the one-shot latch below resets) each foreground.
         var startFailureRetryCancelId = UUID()
+        /// MOB-1854: cancels the whole `.retryStart` pipeline at background, so a pipeline parked
+        /// in migration work cannot start sync for a foreground that has ended.
+        var retryStartCancelId = UUID()
         /// MOB-1859: the background `PrivateUAStash.refill` dispatched from
         /// `.initialization(.loadedWalletAccounts)` for accounts whose rotation stash is still
         /// nil after merging in the previous in-memory accounts. A newer load's refill supersedes
