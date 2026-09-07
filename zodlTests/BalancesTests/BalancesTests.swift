@@ -365,6 +365,66 @@ import ComposableArchitecture
         }
     }
 
+    // MARK: - A stream relay retires any instant read still in flight for the same account
+
+    /// A `.updateBalances` stream relay for the account currently being read is fresher than that
+    /// read, no matter which one lands first -- releasing the parked read afterward must not roll
+    /// the display back to what it answered with.
+    @MainActor @Test func aDelayedInstantReadCannotOverwriteANewerStreamBalance() async throws {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let balanceA = AccountBalance(
+                saplingBalance: .zero,
+                orchardBalance: PoolBalance(spendableValue: Zatoshi(1_000), changePendingConfirmation: .zero, valuePendingSpendability: Zatoshi(1)),
+                ironwoodBalance: .zero,
+                unshielded: .zero,
+                awaitingResolution: .zero
+            )
+            let balanceB = AccountBalance(
+                saplingBalance: .zero,
+                orchardBalance: PoolBalance(spendableValue: Zatoshi(700), changePendingConfirmation: .zero, valuePendingSpendability: Zatoshi(1)),
+                ironwoodBalance: .zero,
+                unshielded: .zero,
+                awaitingResolution: .zero
+            )
+            let gate = ResumableGate()
+
+            var initialState = state()
+            initialState.$selectedWalletAccount.withLock { $0 = testWalletAccount }
+            let store = TestStore(initialState: initialState) {
+                Balances()
+            } withDependencies: {
+                $0.zcashSDKEnvironment.shieldingThreshold = { Zatoshi(1_000_000) }
+                $0.sdkSynchronizer = .mocked(
+                    getLocalAccountBalances: {
+                        await gate.wait()
+                        return [testWalletAccount.id: balanceA]
+                    }
+                )
+            }
+            store.exhaustivity = .off
+
+            let read = await store.send(.updateBalancesOnAppear)
+
+            // A newer synchronizer relay for the same account lands while the read is parked. B is
+            // deliberately LOWER than A, so this also shows a legitimately lower newer value is
+            // accepted rather than treated as suspect.
+            await store.send(.updateBalances([testWalletAccount.id: balanceB]))
+            await store.receive(\.updateBalance)
+            #expect(store.state.shieldedBalance == balanceB.shieldedSpendableValue)
+
+            gate.open()
+            await store.receive(\.updateBalance)
+            await read.finish()
+
+            #expect(
+                store.state.shieldedBalance == balanceB.shieldedSpendableValue,
+                "the delayed read must not roll the display back to A"
+            )
+        }
+    }
+
     // MARK: - Funds pending confirmation are something to spend later, not nothing at all
 
     /// A self-shield waiting for confirmations: the shielded total exceeds the spendable value and
