@@ -172,7 +172,7 @@ import Testing
         }
     }
 
-    /// MOB-1853 review fix: `isSyncTimedOut` latches on `lastKnownErrorMessage`, which is never
+    /// MOB-1853: `isSyncTimedOut` latches on `lastKnownErrorMessage`, which is never
     /// cleared for the session — checking it before the priority-specific sheets would send a
     /// wallet that saw a 504 earlier and has since stalled to the stale timed-out sheet instead of
     /// the stalled help it actually needs.
@@ -382,6 +382,121 @@ import Testing
             #expect(store.state.priorityContent != .priority2, "a user-initiated retry must not swap the stalled banner for the error banner while the fresh rebuild attempt is in flight")
             #expect(store.state.priorityContent == nil, "a user-initiated retry must simply close the stalled banner")
             #expect(store.state.isLatestSyncStatusError, "the error itself is still current -- only the RE-SEATING is suppressed, not the recorded fact of the error")
+        }
+    }
+
+    /// MOB-1853: Root clears the terminal-stall flag at `.didEnterBackground` right after it stops
+    /// the synchronizer, a moment before the SDK's own `.stopped` tick arrives -- that clear can hand
+    /// the (Retry-less) error banner its seat back while `isLatestSyncStatusError` is still true, and
+    /// nothing later would close it if the wallet came back straight to `.upToDate`. The `.stopped`
+    /// tick itself must close a seated error banner, not just clear the flag.
+    ///
+    /// The `.stopped` send below is wrapped in `withKnownIssue` -- see this file's header comment
+    /// for why: `SyncStatus.==` (`Synchronizer.swift`) has no `(.stopped, .stopped)` case, so it
+    /// falls to `default: return false`, and that poisons `SmartBanner.State`'s own (synthesized,
+    /// through `SyncStatusSnapshot`) `Equatable` the instant `synchronizerStatusSnapshot.syncStatus`
+    /// becomes `.stopped` -- `TestStore.send`'s own before/after diff then reports a mismatch no
+    /// matter what the trailing closure predicts, purely because comparing two `.stopped` snapshots
+    /// (even byte-identical ones) always answers "different". The real assertions below, on
+    /// `priorityContent`/`isLatestSyncStatusError` -- plain `Equatable` types the bug never touches
+    /// -- still verify the actual production behaviour; `.finish()`/`.skipReceivedActions` (rather
+    /// than explicit `.receive`s) settle the resulting chain because skipping applies state directly
+    /// without re-running the poisoned struct comparison.
+    @Test func aStopClosesTheSeatedErrorBanner() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore()
+
+            await store.send(.synchronizerStateChanged(Self.syncState(.error(ZcashError.compactBlockProcessorCritical))))
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priority2)
+            #expect(store.state.isLatestSyncStatusError)
+
+            await withKnownIssue {
+                await store.send(.synchronizerStateChanged(Self.syncState(.stopped))) {
+                    $0.isLatestSyncStatusError = false
+                }
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+
+            #expect(store.state.priorityContent == nil, "a stop must close a seated error banner instead of leaving it stranded with no Retry action")
+            #expect(store.state.isLatestSyncStatusError == false)
+        }
+    }
+
+    /// The `.stopped` arm only closes the error lane's OWN seat -- a banner seated by any other lane
+    /// (here, the stalled banner) must keep its seat untouched. This guard already holds before A1's
+    /// fix and must keep holding after it. See `aStopClosesTheSeatedErrorBanner`'s doc comment for
+    /// why the `.stopped` send is wrapped in `withKnownIssue`.
+    @Test func aStopLeavesAnyOtherSeatedBannerAlone() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore()
+
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.receive(\.triggerPriority)
+            await store.receive(\.openBannerRequest)
+            #expect(store.state.priorityContent == .priorityStalled)
+
+            await withKnownIssue {
+                await store.send(.synchronizerStateChanged(Self.syncState(.stopped)))
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+
+            #expect(store.state.priorityContent == .priorityStalled, "a stop must not touch a banner seated by a different lane")
+        }
+    }
+
+    /// MOB-1853: the end-to-end reproduction -- a persistent sync error is showing, the stalled
+    /// banner outranks it and takes the seat, Root's `.didEnterBackground` clear re-seats the error
+    /// banner while it is still current (the same hop
+    /// `clearingTheTerminalFlagWhileTheErrorPersistsBringsTheErrorBannerBack` above covers on its
+    /// own), and the synchronizer's own `.stopped` tick then arrives a moment later. Without A1's fix
+    /// the re-seated error banner is stranded on screen with no Retry action and nothing left to
+    /// close it. See `aStopClosesTheSeatedErrorBanner`'s doc comment for why the `.stopped` send is
+    /// wrapped in `withKnownIssue`.
+    @Test func backgroundingOverAPersistentErrorEndsWithNoStaleErrorBanner() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore()
+
+            await store.send(.synchronizerStateChanged(Self.syncState(.error(ZcashError.compactBlockProcessorCritical))))
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priority2)
+
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priorityStalled)
+
+            await store.send(.syncStalledTerminally(false, retriedByUser: false)) {
+                $0.isSyncStalledTerminally = false
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priority2, "Root's background clear must bring the error banner back while the error is still current")
+
+            await withKnownIssue {
+                await store.send(.synchronizerStateChanged(Self.syncState(.stopped))) {
+                    $0.isLatestSyncStatusError = false
+                }
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+
+            #expect(store.state.priorityContent == nil, "backgrounding over a persistent error must not leave a stale sync-error banner after the synchronizer stops")
+            #expect(store.state.isLatestSyncStatusError == false)
         }
     }
 }
