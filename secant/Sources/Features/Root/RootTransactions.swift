@@ -120,9 +120,12 @@ extension Root {
                 // SDK-initiated. Clearing (and notifying) here is what lets the banner close
                 // immediately rather than sitting on a stale "stalled" reading while this attempt is
                 // still in flight; a fresh failure re-raises it through the same guarded transition
-                // above.
+                // above. `retriedByUser: true` is what tells the SmartBanner this is an optimistic
+                // dismiss rather than a genuine clear, so it must not re-seat the error banner even
+                // if the wallet is still reporting the same persistent error underneath -- otherwise
+                // tapping Retry would flash the Retry-less error banner in until this attempt answers.
                 state.terminalStallRebuildsThisForeground = 0
-                let clearedEffect = clearSyncStalledTerminally(state: &state)
+                let clearedEffect = clearSyncStalledTerminally(state: &state, retriedByUser: true)
                 // MOB-1853 review fix: `startTerminalRebuild`'s own doc comment leaves the
                 // `bgTask`/server-setup guard to its callers -- the give-up path above applies it,
                 // and Retry must too, or it would tear down the synchronizer while Server Setup
@@ -503,7 +506,7 @@ extension Root {
     private func markSyncStalledTerminally(state: inout Root.State) -> Effect<Root.Action> {
         guard !state.isSyncStalledTerminally else { return .none }
         state.isSyncStalledTerminally = true
-        return .send(.home(.smartBanner(.syncStalledTerminally(true))))
+        return .send(.home(.smartBanner(.syncStalledTerminally(true, retriedByUser: false))))
     }
 
     /// MOB-1853: the inverse of `markSyncStalledTerminally` -- clears `Root.State.isSyncStalledTerminally`
@@ -515,9 +518,14 @@ extension Root {
     /// `.synchronizerStateChanged`, and `.didEnterBackground` (same file) -- every place that already
     /// clears `isSyncStalledSinceLastProgress`. Deliberately not `private`: those last two live in a
     /// different file's extension of this same `Root` type.
-    func clearSyncStalledTerminally(state: inout Root.State) -> Effect<Root.Action> {
+    ///
+    /// `retriedByUser` defaults to `false` (a genuine clear, letting the SmartBanner re-seat the
+    /// error banner if the error is still current) -- only `.retryTerminalStallRebuild` passes
+    /// `true`, since its clear is an optimistic dismiss of the user's own Retry tap, not evidence
+    /// the wallet has actually recovered.
+    func clearSyncStalledTerminally(state: inout Root.State, retriedByUser: Bool = false) -> Effect<Root.Action> {
         guard state.isSyncStalledTerminally else { return .none }
         state.isSyncStalledTerminally = false
-        return .send(.home(.smartBanner(.syncStalledTerminally(false))))
+        return .send(.home(.smartBanner(.syncStalledTerminally(false, retriedByUser: retriedByUser))))
     }
 }

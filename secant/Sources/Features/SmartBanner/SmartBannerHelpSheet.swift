@@ -123,6 +123,16 @@ extension SmartBannerView {
                 .padding(.bottom, 32)
                 .fixedSize(horizontal: false, vertical: true)
 
+            // MOB-1853: the stalled banner can outrank a persistent sync error and take its seat,
+            // but the error itself is still current -- surface it here so the detail is not lost,
+            // the way `syncingErrorHelpContent()` shows it for its own banner.
+            if !store.lastKnownErrorMessage.isEmpty {
+                Text(store.lastKnownErrorMessage)
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .padding(.bottom, 32)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             ZashiButton(String(localizable: .generalOk).uppercased()) {
                 store.send(.closeSheetTapped)
             }
