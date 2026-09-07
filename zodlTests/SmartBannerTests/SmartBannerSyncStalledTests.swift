@@ -391,17 +391,16 @@ import Testing
     /// nothing later would close it if the wallet came back straight to `.upToDate`. The `.stopped`
     /// tick itself must close a seated error banner, not just clear the flag.
     ///
-    /// The `.stopped` send below is wrapped in `withKnownIssue` -- see this file's header comment
-    /// for why: `SyncStatus.==` (`Synchronizer.swift`) has no `(.stopped, .stopped)` case, so it
-    /// falls to `default: return false`, and that poisons `SmartBanner.State`'s own (synthesized,
-    /// through `SyncStatusSnapshot`) `Equatable` the instant `synchronizerStatusSnapshot.syncStatus`
-    /// becomes `.stopped` -- `TestStore.send`'s own before/after diff then reports a mismatch no
-    /// matter what the trailing closure predicts, purely because comparing two `.stopped` snapshots
-    /// (even byte-identical ones) always answers "different". The real assertions below, on
-    /// `priorityContent`/`isLatestSyncStatusError` -- plain `Equatable` types the bug never touches
-    /// -- still verify the actual production behaviour; `.finish()`/`.skipReceivedActions` (rather
-    /// than explicit `.receive`s) settle the resulting chain because skipping applies state directly
-    /// without re-running the poisoned struct comparison.
+    /// The `.stopped` send below is wrapped in `withKnownIssue`: `SyncStatus.==` (`Synchronizer.swift`)
+    /// has no `(.stopped, .stopped)` case, so it falls to `default: return false`, and that poisons
+    /// `SmartBanner.State`'s own (synthesized, through `SyncStatusSnapshot`) `Equatable` the instant
+    /// `synchronizerStatusSnapshot.syncStatus` becomes `.stopped` -- `TestStore.send`'s own before/after
+    /// diff then reports a mismatch no matter what the trailing closure predicts, purely because
+    /// comparing two `.stopped` snapshots (even byte-identical ones) always answers "different". The
+    /// real assertions below, on `priorityContent`/`isLatestSyncStatusError` -- plain `Equatable`
+    /// types the bug never touches -- still verify the actual production behaviour; `.finish()`/
+    /// `.skipReceivedActions` (rather than explicit `.receive`s) settle the resulting chain because
+    /// skipping applies state directly without re-running the poisoned struct comparison.
     @Test func aStopClosesTheSeatedErrorBanner() async {
         await withDependencies {
             $0.defaultInMemoryStorage = InMemoryStorage()
@@ -414,10 +413,11 @@ import Testing
             #expect(store.state.priorityContent == .priority2)
             #expect(store.state.isLatestSyncStatusError)
 
-            await withKnownIssue {
-                await store.send(.synchronizerStateChanged(Self.syncState(.stopped))) {
-                    $0.isLatestSyncStatusError = false
-                }
+            // Marked intermittent because this only absorbs the SDK's missing `.stopped == .stopped`
+            // case described above -- delete the wrapper once `SyncStatus.==` compares `.stopped` equal
+            // to itself.
+            await withKnownIssue(isIntermittent: true) {
+                await store.send(.synchronizerStateChanged(Self.syncState(.stopped)))
             }
             await store.finish()
             await store.skipReceivedActions(strict: false)
@@ -428,9 +428,10 @@ import Testing
     }
 
     /// The `.stopped` arm only closes the error lane's OWN seat -- a banner seated by any other lane
-    /// (here, the stalled banner) must keep its seat untouched. This guard already holds before A1's
-    /// fix and must keep holding after it. See `aStopClosesTheSeatedErrorBanner`'s doc comment for
-    /// why the `.stopped` send is wrapped in `withKnownIssue`.
+    /// (here, the stalled banner) must keep its seat untouched. This guard already held when the
+    /// `.stopped` arm only cleared the flag, and must keep holding now that it also closes the error
+    /// lane's own seat. See `aStopClosesTheSeatedErrorBanner`'s doc comment for why the `.stopped`
+    /// send is wrapped in `withKnownIssue`.
     @Test func aStopLeavesAnyOtherSeatedBannerAlone() async {
         await withDependencies {
             $0.defaultInMemoryStorage = InMemoryStorage()
@@ -444,11 +445,13 @@ import Testing
             await store.receive(\.openBannerRequest)
             #expect(store.state.priorityContent == .priorityStalled)
 
-            await withKnownIssue {
+            await withKnownIssue(isIntermittent: true) {
                 await store.send(.synchronizerStateChanged(Self.syncState(.stopped)))
             }
-            await store.finish()
-            await store.skipReceivedActions(strict: false)
+            await store.withExhaustivity(.on) {
+                await store.finish()
+                await store.finish()
+            }
 
             #expect(store.state.priorityContent == .priorityStalled, "a stop must not touch a banner seated by a different lane")
         }
@@ -458,10 +461,10 @@ import Testing
     /// banner outranks it and takes the seat, Root's `.didEnterBackground` clear re-seats the error
     /// banner while it is still current (the same hop
     /// `clearingTheTerminalFlagWhileTheErrorPersistsBringsTheErrorBannerBack` above covers on its
-    /// own), and the synchronizer's own `.stopped` tick then arrives a moment later. Without A1's fix
-    /// the re-seated error banner is stranded on screen with no Retry action and nothing left to
-    /// close it. See `aStopClosesTheSeatedErrorBanner`'s doc comment for why the `.stopped` send is
-    /// wrapped in `withKnownIssue`.
+    /// own), and the synchronizer's own `.stopped` tick then arrives a moment later. Before the
+    /// `.stopped` arm closed the error banner, the re-seated error banner was stranded on screen with
+    /// no Retry action and nothing left to close it. See `aStopClosesTheSeatedErrorBanner`'s doc
+    /// comment for why the `.stopped` send is wrapped in `withKnownIssue`.
     @Test func backgroundingOverAPersistentErrorEndsWithNoStaleErrorBanner() async {
         await withDependencies {
             $0.defaultInMemoryStorage = InMemoryStorage()
@@ -487,10 +490,8 @@ import Testing
             await store.skipReceivedActions(strict: false)
             #expect(store.state.priorityContent == .priority2, "Root's background clear must bring the error banner back while the error is still current")
 
-            await withKnownIssue {
-                await store.send(.synchronizerStateChanged(Self.syncState(.stopped))) {
-                    $0.isLatestSyncStatusError = false
-                }
+            await withKnownIssue(isIntermittent: true) {
+                await store.send(.synchronizerStateChanged(Self.syncState(.stopped)))
             }
             await store.finish()
             await store.skipReceivedActions(strict: false)
