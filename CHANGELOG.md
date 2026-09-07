@@ -18,6 +18,7 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 ### Fixed
 - [MOB-1854] Sync now resumes after a migration broadcast even when the resume request arrives while the previous start is still finishing.
 - [MOB-1862] After switching accounts, a balance or pending amount that was still loading for the previous account can no longer be shown as the new account's. The balance breakdown now shows the same spendable and pending amounts as the home screen, instead of zeros, while the wallet is still checking the chain — shown as updating during that check, with Send and Swap waiting for it rather than claiming you have insufficient funds. Funds that are merely waiting for confirmations no longer leave the balance spinning as if nothing could be spent, and swapping another asset into ZEC no longer waits for the wallet's spendable balance to be confirmed, since that swap doesn't spend it.
+- [MOB-1862] A balance that was still being read when a newer balance arrived from the wallet can no longer briefly replace the newer value on the home screen or the balance breakdown.
 - [MOB-1860] Leaving a voting screen while a proof is being prepared stops that work instead of letting it run in the background.
 - [MOB-1859] Opening the wallet no longer generates a fresh receive address for every account on each load, so loading is faster during sync.
 - [MOB-1857] Sending with insufficient funds shows the proper message again, and a failed payment request always shows an error instead of doing nothing.
