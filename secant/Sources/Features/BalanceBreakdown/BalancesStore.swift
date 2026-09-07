@@ -23,7 +23,9 @@ struct Balances {
         /// Bumped every time `.updateBalancesOnAppear` starts a new request, and carried on every
         /// `.updateBalance` that request produces. A response whose generation no longer matches
         /// is from a superseded request — answering for the right account is not enough on its
-        /// own, since two requests for the SAME account can still resolve out of order.
+        /// own, since two requests for the SAME account can still resolve out of order. Also
+        /// bumped by `.updateBalances`, so a stream relay orders itself against, and retires, any
+        /// instant read still in flight for the same account.
         var balanceRequestGeneration = 0
         var isShielding: Bool
         /// The SDK is withholding the spendable value until it confirms a fresh chain tip. Not a
@@ -279,6 +281,9 @@ struct Balances {
                 guard let accountBalance = accountsBalances[account.id] else {
                     return .none
                 }
+                // A stream update is fresher than any instant read still in flight for this account, so it
+                // retires those reads: their responses carry the previous generation and are dropped.
+                state.balanceRequestGeneration += 1
                 return .send(.updateBalance(accountBalance, account.id, state.balanceRequestGeneration))
 
             case .updateBalance(let accountBalance, let accountId, let generation):

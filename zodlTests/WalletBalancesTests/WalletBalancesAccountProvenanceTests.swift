@@ -258,4 +258,56 @@ import ComposableArchitecture
             await request.finish()
         }
     }
+
+    // MARK: - (5) A stream update retires any instant read still in flight for the same account
+
+    /// A synchronizer-stream balance for the account currently being read is fresher than that
+    /// read, no matter which one lands first -- releasing the parked read afterward must not roll
+    /// the display back to what it answered with.
+    @MainActor @Test func aDelayedInstantReadCannotOverwriteANewerStreamBalance() async throws {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let account = Self.walletAccount(idByte: 47)
+            let balanceA = Self.fullyOwnedBalance(Zatoshi(1_000))
+            let balanceB = Self.fullyOwnedBalance(Zatoshi(700))
+            let gate = ResumableGate()
+
+            var state = WalletBalances.State()
+            state.$selectedWalletAccount.withLock { $0 = account }
+            let store = TestStore(initialState: state) {
+                WalletBalances()
+            } withDependencies: {
+                $0.zcashSDKEnvironment.shieldingThreshold = { Zatoshi(1_000_000) }
+                $0.sdkSynchronizer = .mocked(
+                    latestState: { SynchronizerState.zero },
+                    getLocalAccountBalances: {
+                        await gate.wait()
+                        return [account.id: balanceA]
+                    }
+                )
+            }
+            store.exhaustivity = .off
+
+            let read = await store.send(.updateBalances)
+
+            // A newer synchronizer snapshot for the same account lands while the read is parked.
+            // B is deliberately LOWER than A, so this also shows a legitimately lower newer value
+            // is accepted rather than treated as suspect.
+            var newerSnapshot = SynchronizerState.zero
+            newerSnapshot.localAccountsBalances = [account.id: balanceB]
+            await store.send(.synchronizerStateChanged(newerSnapshot.redacted))
+            await store.receive(\.balanceUpdated)
+            #expect(store.state.shieldedBalance == balanceB.shieldedSpendableValue)
+
+            gate.open()
+            await store.receive(\.balanceUpdated)
+            await read.finish()
+
+            #expect(
+                store.state.shieldedBalance == balanceB.shieldedSpendableValue,
+                "the delayed read must not roll the display back to A"
+            )
+        }
+    }
 }
