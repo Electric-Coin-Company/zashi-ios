@@ -237,11 +237,32 @@ import Testing
 
             // Release the OLD, cancelled rebuild's parked continuation. Its own
             // `send(.terminalStallRebuildFinished(oldResult))` must be dropped by TCA -- the task
-            // backing it was already cancelled at backgrounding above -- so `store.finish()` below
-            // can safely wait for it to actually run to completion without ever delivering
-            // anything, regardless of `oldResult`.
+            // backing it was already cancelled at backgrounding above -- so the drain below can
+            // safely wait for it to actually run to completion without ever delivering anything,
+            // regardless of `oldResult`.
+            //
+            // Two `store.finish()` calls, both scoped to `.on` exhaustivity (rather than this
+            // suite's usual `.off`, set in `makeStore` above): `TestStore.finish()` only checks
+            // for an unhandled received action ONCE, in its very first line, before it waits for
+            // in-flight effects to settle -- an action that arrives DURING that wait (exactly what
+            // a wrongly-delivered stale completion released by `oldGate.open()` above would do) is
+            // never re-checked afterwards by that same call. The first `finish()` call's wait is
+            // what lets that stale delivery actually land (if production is broken); the second
+            // call's own first line then sees it still sitting unhandled and fails via TCA's own
+            // unexpected-action detection, regardless of its payload. `.on` (rather than `.off`)
+            // is what turns that detection into a real failure instead of a silently skipped one --
+            // under `.off`, `TestStore.state` simply never advances past an unconsumed received
+            // action, so an `oldResult == true` delivery would go completely unnoticed: `started
+            // == true` routes to `clearSyncStalledTerminally`, which no-ops because the flag is
+            // already false, so neither `#expect` below would move either way. (Confirmed both
+            // halves of this empirically: a single `withExhaustivity(.on) { await store.finish() }`
+            // call does NOT catch a stale delivery injected by temporarily dropping
+            // `startTerminalRebuild`'s `.cancellable(...)`; two calls do.)
             oldGate.open()
-            await store.finish()
+            await store.withExhaustivity(.on) {
+                await store.finish()
+                await store.finish()
+            }
 
             #expect(
                 store.state.terminalStallRebuildsThisForeground == 1,
