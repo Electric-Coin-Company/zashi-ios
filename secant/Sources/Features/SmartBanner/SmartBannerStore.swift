@@ -68,8 +68,15 @@ struct SmartBanner {
             case priority9 // auto-shielding
             case priorityMigration = -1 // ironwood migration
             case priorityResidual = 11 // MOB-1749: leftover Orchard dust — ranks 1.75, directly below the migration slot (2026-08-25)
+            case priorityStalled = 12 // MOB-1853: automatic stall recovery gave up — ranks 1.25, directly below priority2 (sync error)
 
             func next() -> PriorityContent {
+                // MOB-1853: `priorityStalled` (12) sits outside the walk-down chain too, same
+                // reasoning as `priorityMigration`/`priorityResidual` below — it is only ever
+                // triggered explicitly by `.evaluatePriorityStalled`, so stepping past it always lands
+                // on the migration rung rather than a raw-value neighbour (`priorityResidual`, which
+                // the plain `rawValue - 1` arithmetic below would otherwise reach).
+                if self == .priorityStalled { return .priorityMigration }
                 // `priorityMigration` (-1) sits outside the walk-down chain — it is only ever
                 // triggered explicitly, so walking below `priority1` wraps to `priority9` as before.
                 // `priorityResidual` (raw 11) sits outside it too: the migration rung hands a
@@ -84,10 +91,16 @@ struct SmartBanner {
             /// `priorityResidual` sits at 1.75, directly below the migration slot (approved
             /// 2026-08-25, reversing the demotion-to-lowest): only connectivity/sync-error alerts
             /// and a real migration outrank it. Its raw value (11) stays out of the walk-down chain.
+            /// `priorityStalled` sits at 1.25, directly below `priority2` (sync error) and above
+            /// `priorityMigration` — MOB-1853: automatic stall recovery giving up outranks migration
+            /// (the wallet cannot even sync, let alone migrate) but not an ordinary connectivity/sync
+            /// error, which is diagnosable and often self-resolving in a way a stall that already
+            /// exhausted its own recovery is not.
             var rank: Double {
                 switch self {
                 case .priorityMigration: return 1.5
                 case .priorityResidual: return 1.75
+                case .priorityStalled: return 1.25
                 default: return Double(rawValue)
                 }
             }
@@ -131,6 +144,11 @@ struct SmartBanner {
         var isShieldingAcknowledged = false
         var isShieldingAcknowledgedAtKeychain = false
         var isSmartBannerSheetPresented = false
+        /// MOB-1853: mirrors `Root.State.isSyncStalledTerminally` -- set only via `.syncStalledTerminally`,
+        /// Root's own notification of whether automatic stall recovery has given up for good this
+        /// foreground. Drives `.evaluatePriorityStalled`'s decision to trigger `.priorityStalled` and
+        /// `isPriorityStillValid`'s revalidation of an already-requested one.
+        var isSyncStalledTerminally = false
         var isSyncTimedOutSheetPresented = false
         var isSyncTimedOutAutoAppeareDisabled = false
         var isWalletBackupAcknowledged = false
@@ -233,6 +251,9 @@ struct SmartBanner {
         case onDisappear
         case evaluatePriority1
         case evaluatePriority2
+        /// MOB-1853: the sync-stalled rung, evaluated between `.evaluatePriority2` (sync error) and
+        /// `.evaluatePriorityMigration` -- see `State.PriorityContent.priorityStalled`'s rank.
+        case evaluatePriorityStalled
         case evaluatePriorityMigration
         case migrationVariantLoaded(MigrationBannerVariant?)
         /// The manager's per-account migration-state stream ticked. It reports THAT the state
@@ -275,6 +296,11 @@ struct SmartBanner {
         case shareFinished
         case shieldingProcessorStateChanged(ShieldingProcessorClient.State)
         case smartBannerContentTapped
+        /// MOB-1853: Root's notification of whether automatic stall recovery has given up for good
+        /// this foreground -- see `Root.State.isSyncStalledTerminally`'s doc comment. `true` mirrors
+        /// the flag and triggers `.priorityStalled`; `false` mirrors it and, if that lane is the one
+        /// currently seated, closes the banner.
+        case syncStalledTerminally(Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case triggerPriority(State.PriorityContent)
         case walletAccountChanged
@@ -289,6 +315,10 @@ struct SmartBanner {
         /// migration answer and re-runs the priority ladder; see the handler.
         case migrationRunReset
         case currencyConversionTapped
+        /// The stalled-sync banner's Retry button — a pure delegate, same shape as
+        /// `serverSwitchRequested` below: `Root` (`RootCoordinator.swift`) is the one that acts on
+        /// it, so this reducer's own handler is a no-op.
+        case retryStalledSyncTapped
         case serverSwitchRequested
         case shieldFundsTapped
         case torSettingsRequested
@@ -817,7 +847,26 @@ struct SmartBanner {
 
                 // syncing error
             case .evaluatePriority2:
-                return .send(.evaluatePriorityMigration)
+                return .send(.evaluatePriorityStalled)
+
+                // sync stalled
+            case .evaluatePriorityStalled:
+                guard state.isSyncStalledTerminally else {
+                    return .send(.evaluatePriorityMigration)
+                }
+                return .send(.triggerPriority(.priorityStalled))
+
+            case .syncStalledTerminally(let isStalled):
+                state.isSyncStalledTerminally = isStalled
+                guard isStalled else {
+                    // MOB-1853: only retract THIS lane's own seat -- a `.priorityStalled` request
+                    // that has not seated yet (still racing `openBannerRequest`) is left to
+                    // `isPriorityStillValid`'s revalidation rather than cleared here, same as every
+                    // other lane's retraction shape in this file.
+                    guard state.priorityContent == .priorityStalled else { return .none }
+                    return .send(.closeAndCleanupBanner)
+                }
+                return .send(.triggerPriority(.priorityStalled))
 
                 // ironwood migration
             case .migrationRunReset:
@@ -1285,6 +1334,13 @@ struct SmartBanner {
             case .walletBackupTapped:
                 state.isSmartBannerSheetPresented = false
                 return .none
+
+            case .retryStalledSyncTapped:
+                // A pure delegate -- `Root` (`RootCoordinator.swift`) is the one that re-enters the
+                // rebuild path; this reducer has no state of its own to change on the tap itself
+                // (`.syncStalledTerminally(false)`, sent back down once Root clears the flag, is what
+                // actually closes this banner).
+                return .none
             }
         }
     }
@@ -1620,6 +1676,12 @@ struct SmartBanner {
         case .priority7:
             return state.isShieldable(zcashSDKEnvironment.shieldingThreshold())
                 && !state.transactions.isAnyShieldingPending()
+        case .priorityStalled:
+            // MOB-1853: revalidates against Root's own answer, mirrored into `state` by
+            // `.syncStalledTerminally` -- a request that raced a `false` notification between
+            // `.triggerPriority` and this seat check must not seat a banner for a stall that has
+            // already cleared.
+            return state.isSyncStalledTerminally
         default:
             return true
         }
@@ -1633,6 +1695,8 @@ struct SmartBanner {
         switch priority {
         case .priority7:
             return .evaluatePriority75
+        case .priorityStalled:
+            return .evaluatePriorityMigration
         default:
             return nil
         }

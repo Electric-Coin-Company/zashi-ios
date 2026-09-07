@@ -58,6 +58,11 @@ import Testing
             )
             $0.sdkSynchronizer = .mocked()
             $0.date.now = { Date(timeIntervalSince1970: 1_000_000) }
+            // MOB-1853: `markSyncStalledTerminally`/`clearSyncStalledTerminally` now forward into
+            // the SmartBanner's own reducer (`.home(.smartBanner(.syncStalledTerminally))`), whose
+            // `.openBannerRequest` schedules a delayed `.openBanner` through `mainQueue` -- without
+            // this override that hits the library's default `.unimplemented` test scheduler.
+            $0.mainQueue = .immediate
         }
         store.exhaustivity = .off
         return store
@@ -71,6 +76,16 @@ import Testing
 
     private func endpoint(_ host: String) -> LightWalletEndpoint {
         LightWalletEndpoint(address: host, port: 443, secure: true, streamingCallTimeoutInMillis: 0)
+    }
+
+    /// `latestBlockHeight` stays at `SynchronizerState.zero`'s default (0), same precedent as
+    /// `RootAutoServerIdleGateTests.swift`'s identically-named fixture -- the Ironwood announcement
+    /// check inside `.synchronizerStateChanged` short-circuits on `tip > 0` before it would
+    /// otherwise need `zcashSDKEnvironment.ironwoodActivationHeight` stubbed.
+    private func fixtureSyncState(_ status: SyncStatus) -> RedactableSynchronizerState {
+        var syncState = SynchronizerState.zero
+        syncState.syncStatus = status
+        return syncState.redacted
     }
 
     // MARK: - A single give-up runs exactly one bounded rebuild through the dependency
@@ -132,15 +147,21 @@ import Testing
             await store.receive(\.terminalStallRebuildFinished)
             #expect(rebuildCallCount.value == 2)
 
-            // A third give-up in the SAME foreground: budget exhausted, no further call and no
-            // effect dispatched at all -- `store.finish()` would hang on a stray one.
+            // A third give-up in the SAME foreground: budget exhausted, no further rebuild call --
+            // MOB-1853: this now DOES raise the terminal-stalled flag and notify the SmartBanner
+            // (covered on its own in `exhaustingTheRebuildBudgetRaisesTheTerminalStalledState`
+            // below), so `store.finish()` has that short cascade to settle rather than nothing at
+            // all.
             await store.send(.syncStalled(attempt: 1, gaveUp: true))
             await store.finish()
             #expect(rebuildCallCount.value == 2, "the budget is 2 rebuilds per foreground")
             #expect(store.state.terminalStallRebuildsThisForeground == 2)
 
-            // Backgrounding resets the budget for the next foreground.
+            // Backgrounding resets the budget for the next foreground -- MOB-1853: and clears the
+            // terminal-stalled flag just raised above, notifying the SmartBanner in turn; settle
+            // that cascade too before the next send below.
             await store.send(.initialization(.appDelegate(.didEnterBackground)))
+            await store.finish()
             #expect(store.state.terminalStallRebuildsThisForeground == 0)
 
             // A give-up in the new foreground is allowed again -- rebuild #3 overall.
@@ -321,6 +342,163 @@ import Testing
 
             #expect(applyCallCount.value == 1, "the gate must reopen once the rebuild that closed it has finished")
             #expect(store.state.pendingServerCandidate == nil)
+        }
+    }
+
+    // MARK: - MOB-1853: an exhausted budget raises the app's own honest terminal state
+
+    /// Once the per-foreground rebuild budget is spent, the give-up that finds it exhausted must
+    /// raise `isSyncStalledTerminally` and notify the SmartBanner -- the SDK's own error state used
+    /// to be left on screen with nothing more said about it; now the banner can show it and offer
+    /// Retry.
+    @Test
+    func exhaustingTheRebuildBudgetRaisesTheTerminalStalledState() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let rebuildCallCount = LockIsolated(0)
+            let store = makeStore(
+                state: stalledState(),
+                rebuildAfterStall: {
+                    rebuildCallCount.withValue { $0 += 1 }
+                    return true
+                }
+            )
+
+            // Rebuild #1 and #2 spend the whole per-foreground budget -- both start a pass, so
+            // neither one raises the terminal flag.
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+            await store.receive(\.terminalStallRebuildFinished)
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.terminalStallRebuildsThisForeground = 2
+            }
+            await store.receive(\.terminalStallRebuildFinished)
+
+            // A third give-up: budget exhausted -- the terminal-stalled flag rises and the
+            // SmartBanner is told, since automatic recovery has nothing left to try this foreground.
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // true
+            await store.finish()
+
+            #expect(rebuildCallCount.value == 2)
+            #expect(store.state.isSyncStalledTerminally == true)
+        }
+    }
+
+    // MARK: - MOB-1853: a rebuild that starts nothing is exactly as terminal as a spent budget
+
+    /// `rebuildAfterStall` returning `false` means the pass never actually started -- the wallet is
+    /// left exactly as stuck as an exhausted budget would leave it, so `.terminalStallRebuildFinished`
+    /// must raise the same honest terminal state on its very first give-up, budget or no budget.
+    @Test
+    func aRebuildThatStartsNothingRaisesTheTerminalStalledState() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore(
+                state: stalledState(),
+                rebuildAfterStall: { false }
+            )
+
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+            await store.receive(\.terminalStallRebuildFinished) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // true
+            await store.finish()
+
+            #expect(store.state.isSyncStalledTerminally == true)
+        }
+    }
+
+    // MARK: - MOB-1853: the engine visibly recovering retires the terminal state
+
+    /// The same progress-clear edge that retires `isSyncStalledSinceLastProgress`
+    /// (`RootAutoServerIdleGateTests.swift` covers that flag on its own) must retire the terminal
+    /// state too, and tell the SmartBanner so a stalled banner does not survive a sync that has
+    /// actually recovered.
+    @Test
+    func progressClearsTheTerminalStalledState() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            var state = stalledState()
+            state.lastKnownSyncProgress = 0.3
+            state.isSyncStalledSinceLastProgress = true
+            state.isSyncStalledTerminally = true
+            let store = makeStore(state: state)
+
+            await store.send(.synchronizerStateChanged(fixtureSyncState(.syncing(0.4, false)))) {
+                $0.isSyncStalledSinceLastProgress = false
+                $0.lastKnownSyncProgress = 0.4
+                $0.isSyncStalledTerminally = false
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // false
+            await store.finish()
+
+            // `Root.State` isn't `Equatable`, so the `send` closure above documents intent but
+            // cannot itself catch a wrong value -- this is the assertion that actually does.
+            #expect(store.state.isSyncStalledTerminally == false)
+        }
+    }
+
+    // MARK: - MOB-1853: Retry resets the budget and re-enters the rebuild path once
+
+    /// The stalled banner's Retry action (`.home(.smartBanner(.retryStalledSyncTapped))`, forwarded
+    /// by `RootCoordinator.swift` into `.retryTerminalStallRebuild`) gives the wallet exactly one
+    /// more attempt: a fresh budget, one rebuild dispatched immediately, and the terminal flag
+    /// cleared up front so the banner does not sit on a stale reading while that attempt runs.
+    @Test
+    func retryResetsTheBudgetAndRebuildsOnce() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let rebuildCallCount = LockIsolated(0)
+            let store = makeStore(
+                state: stalledState(),
+                rebuildAfterStall: {
+                    rebuildCallCount.withValue { $0 += 1 }
+                    return true
+                }
+            )
+
+            // Spend the whole per-foreground budget, same as the exhaustion test above.
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+            await store.receive(\.terminalStallRebuildFinished)
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.terminalStallRebuildsThisForeground = 2
+            }
+            await store.receive(\.terminalStallRebuildFinished)
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }
+
+            // Retry: resets the budget and re-enters the rebuild path exactly once -- rebuild #3
+            // overall.
+            await store.send(.home(.smartBanner(.retryStalledSyncTapped)))
+            await store.receive(\.retryTerminalStallRebuild) {
+                $0.terminalStallRebuildsThisForeground = 1
+                $0.isSyncStalledTerminally = false
+            }
+            await store.finish()
+
+            #expect(rebuildCallCount.value == 3)
+            #expect(store.state.terminalStallRebuildsThisForeground == 1)
+            // `Root.State` isn't `Equatable`, so the `receive` closure above documents intent but
+            // cannot itself catch a wrong value -- this is the assertion that actually does.
+            #expect(store.state.isSyncStalledTerminally == false)
         }
     }
 }

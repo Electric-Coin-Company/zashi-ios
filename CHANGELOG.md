@@ -9,6 +9,7 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 
 ### Added
 - [MOB-1501] Swap and Pay now offer DASH, Bitcoin Cash, and ZEC on Solana and NEAR as assets you can swap to or pay with, and Dash and Bitcoin Cash can be chosen as the chain when saving a swap address in the Address Book.
+- [MOB-1853] When the wallet has stopped making sync progress and its automatic recovery has given up, the home screen now shows a "Sync has stalled" banner with a Retry button instead of an endless "Syncing" indicator.
 
 ### Changed
 - [MOB-1858] Sending no longer waits behind unrelated network work. Preparing a payment now runs alongside other activity instead of blocking it, and if the wallet is still busy with something else by the time it's ready to broadcast, the transaction is shown as pending and submitted automatically in the background instead of being reported as a failure.

@@ -88,38 +88,42 @@ extension Root {
                 // a no-op once the winning candidate is the server already configured. Rebuild at the
                 // best available endpoint instead (the current one included), at most
                 // `maxTerminalStallRebuildsPerForeground` times per foreground; past that, the SDK's
-                // own error state is left on screen rather than retrying silently forever.
+                // own error state used to be left on screen with nothing more said about it. MOB-1853:
+                // instead the app raises its own honest terminal state (`isSyncStalledTerminally`), so
+                // the SmartBanner can show it and offer a manual Retry rather than an endless
+                // "Syncing" indicator.
                 guard state.terminalStallRebuildsThisForeground < Root.State.maxTerminalStallRebuildsPerForeground else {
                     LoggerProxy.event("[AutoServerSelection] Terminal stall: rebuild budget exhausted for this foreground")
-                    return .none
+                    return markSyncStalledTerminally(state: &state)
                 }
-                guard state.bgTask == nil, !state.isServerSetupVisible else { return .none }
-                state.terminalStallRebuildsThisForeground += 1
-                // MOB-1853: marks the window `.autoServerCandidateReady` must not act in -- see
-                // `isTerminalStallRebuildInFlight`'s doc comment (`RootStore.swift`).
-                state.isTerminalStallRebuildInFlight = true
-                // A candidate parked earlier this foreground is stale now -- rebuildAfterStall
-                // computes its own fresh one, so drop it before it can replay through applySwitch.
-                state.pendingServerCandidate = nil
-                return .merge(
-                    // MOB-1853: a benchmark dispatched by an EARLIER `.refreshAutomaticServer`
-                    // (attempt 2, before this give-up) may still be running -- it must not be left to
-                    // deliver `.autoServerCandidateReady` out from under the rebuild this give-up is
-                    // about to start. `applySwitch` itself carries no cancel id of its own (see
-                    // `automaticServerRefreshCancelId`'s doc comment) and is not touched here; a
-                    // switch already applying keeps running to completion regardless.
-                    .cancel(id: state.automaticServerRefreshCancelId),
-                    .run { send in
-                        let started = await autoServerSelection.rebuildAfterStall()
-                        await send(.terminalStallRebuildFinished(started))
-                    }
-                    .cancellable(id: state.terminalStallRebuildCancelId, cancelInFlight: true)
-                )
+                guard state.bgTask == nil, !state.isServerSetupVisible else {
+                    return markSyncStalledTerminally(state: &state)
+                }
+                return startTerminalRebuild(state: &state)
 
             case .terminalStallRebuildFinished(let started):
                 LoggerProxy.event("[AutoServerSelection] Terminal stall rebuild \(started ? "started a pass" : "did not start a pass")")
                 state.isTerminalStallRebuildInFlight = false
-                return .none
+                // MOB-1853: a rebuild that never actually started a pass leaves the wallet exactly as
+                // stuck as an exhausted budget would, so it raises the same honest terminal state. One
+                // that DID start a pass gets the chance to prove itself through the ordinary sync
+                // pipeline -- if it succeeds, the progress-clear sites (`RootInitialization.swift`)
+                // retire the flag.
+                guard started else {
+                    return markSyncStalledTerminally(state: &state)
+                }
+                return clearSyncStalledTerminally(state: &state)
+
+            case .retryTerminalStallRebuild:
+                // MOB-1853: the user tapped Retry on the stalled-sync banner -- a fresh budget and a
+                // fresh attempt, exactly like the give-up path above, but user-initiated rather than
+                // SDK-initiated. Clearing (and notifying) here is what lets the banner close
+                // immediately rather than sitting on a stale "stalled" reading while this attempt is
+                // still in flight; a fresh failure re-raises it through the same guarded transition
+                // above.
+                state.terminalStallRebuildsThisForeground = 0
+                let clearedEffect = clearSyncStalledTerminally(state: &state)
+                return .merge(clearedEffect, startTerminalRebuild(state: &state))
 
             case .fetchTransactionsForTheSelectedAccount:
                 guard let accountUUID = state.selectedWalletAccount?.id else {
@@ -454,5 +458,58 @@ extension Root {
         case .upToDate: return true
         case .unprepared, .syncing, .stopped, .error: return false
         }
+    }
+
+    /// MOB-1853: dispatches one terminal-stall rebuild pass -- shared by the give-up path
+    /// (`.syncStalled`) and `.retryTerminalStallRebuild`, which re-enters this same path after the
+    /// user taps Retry on the stalled-sync banner. Callers are responsible for whatever budget/
+    /// `bgTask`/server-setup guards apply above them -- this helper only ever starts the rebuild
+    /// itself, exactly as `.syncStalled`'s give-up branch always has.
+    private func startTerminalRebuild(state: inout Root.State) -> Effect<Root.Action> {
+        state.terminalStallRebuildsThisForeground += 1
+        // MOB-1853: marks the window `.autoServerCandidateReady` must not act in -- see
+        // `isTerminalStallRebuildInFlight`'s doc comment (`RootStore.swift`).
+        state.isTerminalStallRebuildInFlight = true
+        // A candidate parked earlier this foreground is stale now -- rebuildAfterStall
+        // computes its own fresh one, so drop it before it can replay through applySwitch.
+        state.pendingServerCandidate = nil
+        return .merge(
+            // MOB-1853: a benchmark dispatched by an EARLIER `.refreshAutomaticServer`
+            // (attempt 2, before this give-up) may still be running -- it must not be left to
+            // deliver `.autoServerCandidateReady` out from under the rebuild this give-up is
+            // about to start. `applySwitch` itself carries no cancel id of its own (see
+            // `automaticServerRefreshCancelId`'s doc comment) and is not touched here; a
+            // switch already applying keeps running to completion regardless.
+            .cancel(id: state.automaticServerRefreshCancelId),
+            .run { send in
+                let started = await autoServerSelection.rebuildAfterStall()
+                await send(.terminalStallRebuildFinished(started))
+            }
+            .cancellable(id: state.terminalStallRebuildCancelId, cancelInFlight: true)
+        )
+    }
+
+    /// MOB-1853: raises `Root.State.isSyncStalledTerminally` and notifies the SmartBanner delegate
+    /// action, but only on the false -> true transition -- a repeat give-up that is already
+    /// terminally stalled must not re-trigger the banner's priority evaluation for no reason.
+    private func markSyncStalledTerminally(state: inout Root.State) -> Effect<Root.Action> {
+        guard !state.isSyncStalledTerminally else { return .none }
+        state.isSyncStalledTerminally = true
+        return .send(.home(.smartBanner(.syncStalledTerminally(true))))
+    }
+
+    /// MOB-1853: the inverse of `markSyncStalledTerminally` -- clears `Root.State.isSyncStalledTerminally`
+    /// and notifies the SmartBanner delegate action, but only when it was actually set. Called from
+    /// every site that observes the engine visibly recovering: a rebuild that actually started a pass
+    /// (`.terminalStallRebuildFinished(true)`, above), the `.retryTerminalStallRebuild` handler (which
+    /// closes the banner immediately rather than leaving a stale "stalled" reading up while the fresh
+    /// attempt is in flight), the progress-clear sites in `RootInitialization.swift`'s
+    /// `.synchronizerStateChanged`, and `.didEnterBackground` (same file) -- every place that already
+    /// clears `isSyncStalledSinceLastProgress`. Deliberately not `private`: those last two live in a
+    /// different file's extension of this same `Root` type.
+    func clearSyncStalledTerminally(state: inout Root.State) -> Effect<Root.Action> {
+        guard state.isSyncStalledTerminally else { return .none }
+        state.isSyncStalledTerminally = false
+        return .send(.home(.smartBanner(.syncStalledTerminally(false))))
     }
 }

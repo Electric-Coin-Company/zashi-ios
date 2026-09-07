@@ -14,6 +14,7 @@ extension SmartBannerView {
             switch store.priorityContent {
             case .priority1: disconnectedHelpContent()
             case .priority2: syncingErrorHelpContent()
+            case .priorityStalled: syncStalledHelpContent()
             case .priority3: restoringHelpContent()
             case .priority4: syncingHelpContent()
             case .priority45: resyncingHelpContent()
@@ -108,7 +109,27 @@ extension SmartBannerView {
             .padding(.bottom, Design.Spacing.sheetBottomSpace)
         }
     }
-    
+
+    @ViewBuilder func syncStalledHelpContent() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(localizable: .smartBannerHelpSyncStalledTitle)
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                .padding(.top, 32)
+                .padding(.bottom, 12)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(localizable: .smartBannerHelpSyncStalledInfo)
+                .zFont(size: 16, style: Design.Text.tertiary)
+                .padding(.bottom, 32)
+                .fixedSize(horizontal: false, vertical: true)
+
+            ZashiButton(String(localizable: .generalOk).uppercased()) {
+                store.send(.closeSheetTapped)
+            }
+            .padding(.bottom, Design.Spacing.sheetBottomSpace)
+        }
+    }
+
     @ViewBuilder func restoringHelpContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(localizable: .smartBannerHelpRestoreTitle)

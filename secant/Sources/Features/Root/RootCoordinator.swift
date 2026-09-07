@@ -392,6 +392,9 @@ extension Root {
                 state.path = .serverSwitch
                 return .none
 
+            case .home(.smartBanner(.retryStalledSyncTapped)):
+                return .send(.retryTerminalStallRebuild)
+
                 // MARK: - Ironwood Announcement
 
             case .ironwoodAnnouncement(.continueTapped):
