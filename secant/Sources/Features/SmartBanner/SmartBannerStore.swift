@@ -1364,8 +1364,9 @@ struct SmartBanner {
                 return .send(.smartBannerContentTapped)
 
             case .serverSwitchRequested:
-                // Reachable from two sheets now — the sync-timeout sheet and the Syncing Error
-                // sheet's incompatible-server row — and this navigates away from both, so dismiss
+                // Reachable from three sheets now — the sync-timeout sheet, the Syncing Error
+                // sheet's incompatible-server row, and the stalled sheet's own version of that row
+                // (`syncStalledHelpContent()`) — and this navigates away from all three, so dismiss
                 // whichever is up rather than assuming the origin.
                 state.isSyncTimedOutSheetPresented = false
                 state.isSmartBannerSheetPresented = false
