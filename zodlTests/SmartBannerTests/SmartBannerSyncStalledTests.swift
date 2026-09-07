@@ -172,7 +172,7 @@ import Testing
         }
     }
 
-    /// MOB-1853 review fix: `isSyncTimedOut` latches on `lastKnownErrorMessage`, which is never
+    /// MOB-1853: `isSyncTimedOut` latches on `lastKnownErrorMessage`, which is never
     /// cleared for the session — checking it before the priority-specific sheets would send a
     /// wallet that saw a 504 earlier and has since stalled to the stale timed-out sheet instead of
     /// the stalled help it actually needs.

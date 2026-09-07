@@ -535,7 +535,7 @@ struct SmartBanner {
                 } else if state.priorityContent == .priority8 {
                     return .send(.currencyConversionScreenRequested)
                 } else if state.priorityContent == .priorityStalled {
-                    // MOB-1853 review fix: `isSyncTimedOut` latches on `lastKnownErrorMessage`,
+                    // MOB-1853: `isSyncTimedOut` latches on `lastKnownErrorMessage`,
                     // which is never cleared for the session -- checking it first would send a
                     // wallet that saw a timeout earlier and has since stalled to the stale
                     // timed-out sheet instead of the stalled help it actually needs. This arm must
@@ -1823,7 +1823,7 @@ struct SmartBanner {
                 isSyncing = true
 
                 if state.priorityContent == .priority2 {
-                    // MOB-1853 review fix: the stalled lane can still be genuinely terminal
+                    // MOB-1853: the stalled lane can still be genuinely terminal
                     // underneath this transient error -- Root's own flag is untouched by a sync
                     // error clearing -- so re-walk through `.evaluatePriorityStalled` rather than
                     // just closing and stopping, or a still-stalled wallet is left showing a bare,
