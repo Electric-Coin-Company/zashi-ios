@@ -290,6 +290,63 @@ import os
         #expect(recorder.restartedAt?.host == "zec.rocks")
     }
 
+    // MOB-1853: a rebuild cancelled while it is still parked on the guard -- e.g. the app went to
+    // the background while it waited -- must retire quietly instead of turning into a restart once
+    // the guard frees up. The SDK's own `restartSync` throws `CancellationError` and touches
+    // nothing when its caller was already cancelled before the restart began; this caller
+    // (`rebuildAfterStall`) must treat that the same way: report "no pass started" without ever
+    // reaching `restartSync`, and without persisting anything.
+    @Test func aRebuildCancelledWhileWaitingForTheGuardNeverReachesTheRestart() async {
+        let recorder = Recorder()
+        let current = endpoint("zec.rocks")
+        let guardActor = TransactionGuard()
+        let holderAcquired = AsyncBox()
+        let releaseHolder = AsyncBox()
+
+        // A fake submission holds the guard, the same shape as
+        // `rebuildWaitsForTheGuardThenCompletesOnceTheHolderReleases` above.
+        let holder = Task {
+            try? await guardActor.acquire()
+            await holderAcquired.signal()
+            await releaseHolder.wait()
+            await guardActor.release()
+        }
+        await holderAcquired.wait()
+
+        let rebuild = Task {
+            await withDependencies {
+                $0.userStoredPreferences.automaticServerSelection = { false }
+                $0.userStoredPreferences.setServer = { recorder.persisted = $0 }
+                $0.zcashSDKEnvironment = .testnet
+                $0.zcashSDKEnvironment.network = { ZcashNetworkBuilder.network(for: .mainnet) }
+                $0.zcashSDKEnvironment.endpoint = { current }
+                $0.migrationManager.activeNetworkSnapshots = { [] }
+                $0.sdkSynchronizer.evaluateServerSwitch = { _, _, _, _, _ in nil }
+                $0.sdkSynchronizer.restartSync = { endpoint in
+                    recorder.restartCallCount += 1
+                    recorder.restartedAt = endpoint
+                }
+                $0.transactionGuard = Self.client(over: guardActor)
+            } operation: {
+                await AutoServerSelectionClient.liveValue.rebuildAfterStall()
+            }
+        }
+
+        // Give the rebuild a moment to benchmark and park on the guard -- same 50ms precedent as
+        // the sibling test above -- then cancel it while the holder still owns the guard, before
+        // it ever gets a chance to restart.
+        try? await Task.sleep(for: .milliseconds(50))
+        rebuild.cancel()
+
+        await releaseHolder.signal()
+        _ = try? await holder.value
+        let started = await rebuild.value
+
+        #expect(started == false)
+        #expect(recorder.restartCallCount == 0, "a cancelled wait must not turn into a restart once the guard frees up")
+        #expect(recorder.persisted == nil)
+    }
+
     // MOB-1853: the rebuild's benchmark runs before the guard so waiting for it never holds other
     // work back, but the policy it was computed under can go stale during that wait -- a manual
     // Server Setup save takes the SAME `switchWaiting` guard and can land while the rebuild is still

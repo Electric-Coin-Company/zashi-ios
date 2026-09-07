@@ -176,6 +176,84 @@ import Testing
         }
     }
 
+    // MARK: - MOB-1853: a rebuild cancelled at background cannot touch the next foreground
+
+    /// A rebuild still waiting on the SDK/guard when the app backgrounds is cancelled by
+    /// `.didEnterBackground`'s `.cancel(id: state.terminalStallRebuildCancelId)` -- but the mocked
+    /// `rebuildAfterStall` below (like `RootRetryStartReentrancyTests`' `ResumableGate`-parked
+    /// mocks) is not itself cancellation-aware, so its task stays suspended until the test
+    /// releases it, exactly as if backgrounding landed mid-wait for real. TCA's `Send` refuses to
+    /// deliver an action once its effect's task has been cancelled (`Effect.swift`'s
+    /// `Send.callAsFunction`, see this file's header), so that stale completion -- whichever
+    /// `oldResult` it would have carried -- must never reach the next foreground's fresh budget,
+    /// terminal flag, or SmartBanner notification.
+    @Test(arguments: [true, false])
+    func aRebuildCancelledAtBackgroundCannotTouchTheNextForegroundsBudgetOrBanner(oldResult: Bool) async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let oldGate = ResumableGate()
+            let callCount = LockIsolated(0)
+            let store = makeStore(
+                state: stalledState(),
+                rebuildAfterStall: {
+                    let ordinal = callCount.withValue { count -> Int in
+                        count += 1
+                        return count
+                    }
+                    guard ordinal == 1 else { return true }
+                    // The rebuild this test cancels -- parks until the test releases it below.
+                    await oldGate.wait()
+                    return oldResult
+                }
+            )
+
+            // Foreground 1: a give-up starts a rebuild that parks mid-flight, the same shape as a
+            // real rebuild still waiting on the SDK/guard when backgrounding lands.
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+
+            // Background while that rebuild is still in flight -- cancels its effect and resets
+            // the per-foreground budget/flag, same as `RootAutoServerIdleGateTests`' backgrounding
+            // coverage. Deliberately not `store.finish()` here: the parked rebuild above is not
+            // itself cancellation-aware, so it would still read as "in flight" until `oldGate`
+            // opens below -- exactly the still-unfinished-pipeline shape
+            // `RootRetryStartReentrancyTests` drives the same way.
+            await store.send(.initialization(.appDelegate(.didEnterBackground)))
+            #expect(store.state.terminalStallRebuildsThisForeground == 0)
+            #expect(store.state.isTerminalStallRebuildInFlight == false)
+
+            // Foreground 2: a fresh give-up starts a second rebuild against the fresh budget,
+            // which completes normally (this is the ordinal-2 call above).
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+            await store.receive(\.terminalStallRebuildFinished) {
+                $0.isTerminalStallRebuildInFlight = false
+            }
+
+            // Release the OLD, cancelled rebuild's parked continuation. Its own
+            // `send(.terminalStallRebuildFinished(oldResult))` must be dropped by TCA -- the task
+            // backing it was already cancelled at backgrounding above -- so `store.finish()` below
+            // can safely wait for it to actually run to completion without ever delivering
+            // anything, regardless of `oldResult`.
+            oldGate.open()
+            await store.finish()
+
+            #expect(
+                store.state.terminalStallRebuildsThisForeground == 1,
+                "a dropped completion from the backgrounded rebuild must not touch the next foreground's budget"
+            )
+            #expect(
+                store.state.isSyncStalledTerminally == false,
+                "a dropped completion must not raise the terminal flag regardless of what the cancelled rebuild would have returned"
+            )
+        }
+    }
+
     // MARK: - A rebuild must never tear down the synchronizer while Server Setup owns it
 
     @Test
