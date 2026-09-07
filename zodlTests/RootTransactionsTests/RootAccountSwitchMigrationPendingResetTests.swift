@@ -29,7 +29,8 @@ import ComposableArchitecture
 @testable @preconcurrency import ZcashLightClientKit
 @testable import zodl_internal
 
-@Suite(.serialized, .timeLimit(.minutes(1))) @MainActor struct RootAccountSwitchMigrationPendingResetTests {
+// `.timeLimit` is sized for the shared CI runner, like its sibling suites in this directory.
+@Suite(.serialized, .timeLimit(.minutes(3))) @MainActor struct RootAccountSwitchMigrationPendingResetTests {
     private static func walletAccount(idByte: UInt8) -> WalletAccount {
         WalletAccount(
             Account(
