@@ -123,6 +123,14 @@ extension Root {
                 // above.
                 state.terminalStallRebuildsThisForeground = 0
                 let clearedEffect = clearSyncStalledTerminally(state: &state)
+                // MOB-1853 review fix: `startTerminalRebuild`'s own doc comment leaves the
+                // `bgTask`/server-setup guard to its callers -- the give-up path above applies it,
+                // and Retry must too, or it would tear down the synchronizer while Server Setup
+                // owns it. The flag stays cleared either way: re-setting it here would fight the
+                // optimistic dismiss this action just gave the banner.
+                guard state.bgTask == nil, !state.isServerSetupVisible else {
+                    return clearedEffect
+                }
                 return .merge(clearedEffect, startTerminalRebuild(state: &state))
 
             case .fetchTransactionsForTheSelectedAccount:

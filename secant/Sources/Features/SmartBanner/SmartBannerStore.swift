@@ -519,6 +519,14 @@ struct SmartBanner {
                     return .send(.migrationScreenRequested)
                 } else if state.priorityContent == .priority8 {
                     return .send(.currencyConversionScreenRequested)
+                } else if state.priorityContent == .priorityStalled {
+                    // MOB-1853 review fix: `isSyncTimedOut` latches on `lastKnownErrorMessage`,
+                    // which is never cleared for the session -- checking it first would send a
+                    // wallet that saw a timeout earlier and has since stalled to the stale
+                    // timed-out sheet instead of the stalled help it actually needs. This arm must
+                    // stay ABOVE the `isSyncTimedOut` branch below.
+                    state.isSmartBannerSheetPresented = true
+                    return .none
                 } else if state.isSyncTimedOut {
                     state.isSyncTimedOutSheetPresented = true
                     return .none
@@ -1775,7 +1783,19 @@ struct SmartBanner {
                 isSyncing = true
 
                 if state.priorityContent == .priority2 {
-                    return .send(.closeAndCleanupBanner)
+                    // MOB-1853 review fix: the stalled lane can still be genuinely terminal
+                    // underneath this transient error -- Root's own flag is untouched by a sync
+                    // error clearing -- so re-walk through `.evaluatePriorityStalled` rather than
+                    // just closing and stopping, or a still-stalled wallet is left showing a bare,
+                    // unexplained spinner once the error goes away. Sent from a SINGLE `.run` that
+                    // awaits the close directly (`.closeBanner(true)`, not `.closeAndCleanupBanner`)
+                    // before re-walking -- same reasoning as the migration close a few lines below:
+                    // `.closeAndCleanupBanner` only SCHEDULES its nested close, so a second
+                    // `await send(...)` right after would race the close instead of following it.
+                    return .run { send in
+                        await send(.closeBanner(true), animation: .easeInOut(duration: Constants.easeInOutDuration))
+                        await send(.evaluatePriorityStalled)
+                    }
                 }
             }
 
