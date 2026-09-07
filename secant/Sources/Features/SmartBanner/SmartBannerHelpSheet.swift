@@ -128,7 +128,7 @@ extension SmartBannerView {
             // the way `syncingErrorHelpContent()` shows it for its own banner.
             if !store.lastKnownErrorMessage.isEmpty {
                 Text(store.lastKnownErrorMessage)
-                    .zFont(size: 14, style: Design.Text.tertiary)
+                    .zFont(size: 16, style: Design.Text.tertiary)
                     .padding(.bottom, 32)
                     .fixedSize(horizontal: false, vertical: true)
             }

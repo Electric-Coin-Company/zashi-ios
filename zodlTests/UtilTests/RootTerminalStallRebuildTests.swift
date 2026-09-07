@@ -546,7 +546,10 @@ import Testing
             await store.receive(\.terminalStallRebuildFinished) {
                 $0.isSyncStalledTerminally = true
             }
-            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // true
+            await store.receive({
+                guard case .home(.smartBanner(.syncStalledTerminally(let isStalled, let retriedByUser))) = $0 else { return false }
+                return isStalled == true && retriedByUser == false
+            })
             await store.finish()
 
             #expect(store.state.isSyncStalledTerminally == true)
@@ -626,6 +629,14 @@ import Testing
                 $0.terminalStallRebuildsThisForeground = 1
                 $0.isSyncStalledTerminally = false
             }
+            // MOB-1853: pins the optimistic-dismiss payload -- Retry must notify `false` with
+            // `retriedByUser: true`, not the genuine-clear shape every other site sends, or the
+            // SmartBanner would re-seat the (Retry-less) error banner while this fresh attempt is
+            // still in flight.
+            await store.receive({
+                guard case .home(.smartBanner(.syncStalledTerminally(let isStalled, let retriedByUser))) = $0 else { return false }
+                return isStalled == false && retriedByUser == true
+            })
             await store.finish()
 
             #expect(rebuildCallCount.value == 3)
@@ -665,7 +676,13 @@ import Testing
                 $0.terminalStallRebuildsThisForeground = 0
                 $0.isSyncStalledTerminally = false
             }
-            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // false
+            // MOB-1853: same optimistic-dismiss payload as `retryResetsTheBudgetAndRebuildsOnce`
+            // above -- Retry always notifies `retriedByUser: true`, whether it reached
+            // `.retryTerminalStallRebuild` through the banner tap or, as here, directly.
+            await store.receive({
+                guard case .home(.smartBanner(.syncStalledTerminally(let isStalled, let retriedByUser))) = $0 else { return false }
+                return isStalled == false && retriedByUser == true
+            })
             await store.finish()
 
             #expect(rebuildCallCount.value == 0, "Server Setup owns the synchronizer -- Retry must not tear it down from underneath it")

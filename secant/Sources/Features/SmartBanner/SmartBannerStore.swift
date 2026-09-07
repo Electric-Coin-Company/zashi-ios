@@ -68,7 +68,7 @@ struct SmartBanner {
             case priority9 // auto-shielding
             case priorityMigration = -1 // ironwood migration
             case priorityResidual = 11 // MOB-1749: leftover Orchard dust — ranks 1.75, directly below the migration slot (2026-08-25)
-            case priorityStalled = 12 // MOB-1853: automatic stall recovery gave up — ranks 1.25, directly below priority2 (sync error)
+            case priorityStalled = 12 // MOB-1853: automatic stall recovery gave up — ranks 0.75, below a lost connection (0) and above the sync error (1)
 
             func next() -> PriorityContent {
                 // MOB-1853: `priorityStalled` (12) sits outside the walk-down chain too, same
@@ -309,8 +309,13 @@ struct SmartBanner {
         /// MOB-1853: Root's notification of whether automatic stall recovery has given up for good
         /// this foreground -- see `Root.State.isSyncStalledTerminally`'s doc comment. `true` mirrors
         /// the flag and triggers `.priorityStalled`; `false` mirrors it and, if that lane is the one
-        /// currently seated, closes the banner.
-        case syncStalledTerminally(Bool)
+        /// currently seated, closes the banner. `retriedByUser` distinguishes a user-initiated Retry
+        /// tap's optimistic dismiss (`RootTransactions.swift`'s `.retryTerminalStallRebuild`) from
+        /// every other, genuine clear -- a Retry-initiated close must not re-seat the error banner
+        /// even while the error persists, or the stalled banner's own Retry action would be swapped
+        /// out for the plain error banner the instant it is tapped, then flicker back once the fresh
+        /// rebuild attempt's own outcome lands.
+        case syncStalledTerminally(Bool, retriedByUser: Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case triggerPriority(State.PriorityContent)
         case walletAccountChanged
@@ -874,7 +879,7 @@ struct SmartBanner {
                 }
                 return .send(.triggerPriority(.priorityStalled))
 
-            case .syncStalledTerminally(let isStalled):
+            case .syncStalledTerminally(let isStalled, let retriedByUser):
                 state.isSyncStalledTerminally = isStalled
                 guard isStalled else {
                     // MOB-1853: only retract THIS lane's own seat -- a `.priorityStalled` request
@@ -882,6 +887,15 @@ struct SmartBanner {
                     // `isPriorityStillValid`'s revalidation rather than cleared here, same as every
                     // other lane's retraction shape in this file.
                     guard state.priorityContent == .priorityStalled else { return .none }
+                    // MOB-1853: a user-initiated Retry tap is an OPTIMISTIC dismiss, not a genuine
+                    // clear -- closing here must NOT re-seat the (Retry-less) error banner even
+                    // though the error may still be current, or tapping Retry would immediately swap
+                    // the stalled banner for the plain error banner and then flicker straight back
+                    // once the fresh rebuild attempt's own outcome lands (a failure re-raises
+                    // `.priorityStalled` via `.syncStalledTerminally(true, retriedByUser: false)`; a
+                    // pass that actually started clears the error itself through the `.syncing`
+                    // branch in `syncStatusChangedEffect`, above).
+                    guard !retriedByUser else { return .send(.closeAndCleanupBanner) }
                     // MOB-1853: the stall clearing does not mean the wallet is healthy -- the
                     // synchronizer can still be reporting the SAME persistent error that this lane
                     // outranked while stalled. Give that error banner its seat back rather than just
@@ -1369,8 +1383,8 @@ struct SmartBanner {
             case .retryStalledSyncTapped:
                 // A pure delegate -- `Root` (`RootCoordinator.swift`) is the one that re-enters the
                 // rebuild path; this reducer has no state of its own to change on the tap itself
-                // (`.syncStalledTerminally(false)`, sent back down once Root clears the flag, is what
-                // actually closes this banner).
+                // (`.syncStalledTerminally(false, retriedByUser: true)`, sent back down once Root
+                // clears the flag, is what actually closes this banner).
                 return .none
             }
         }
@@ -1910,6 +1924,9 @@ struct SmartBanner {
                     }
                     return .send(.triggerPriority(.priority2))
                 }
+            case .stopped:
+                // MOB-1853: a stop after an error must not leave the flag stale for a later clear.
+                state.isLatestSyncStatusError = false
             default: break
             }
 

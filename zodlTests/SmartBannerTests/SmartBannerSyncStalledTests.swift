@@ -5,12 +5,14 @@
 //  MOB-1853 — once automatic stall recovery has given up for good this foreground (the
 //  terminal-stall rebuild budget spent, a rebuild blocked by the `bgTask`/server-setup guard, or a
 //  dispatched rebuild that never actually started a pass), `Root` notifies the SmartBanner via
-//  `.syncStalledTerminally(Bool)` (`RootTransactions.swift`'s `markSyncStalledTerminally`/
-//  `clearSyncStalledTerminally`), and this lane (`.priorityStalled`, rank 0.75 — directly below
-//  `.priority1` lost connection and above `.priority2` sync error) shows an honest "Sync has
-//  stalled" banner with a Retry action instead of the SDK's own `.syncing` publishing forever with
-//  nothing said about it, and keeps that Retry reachable even while a persistent sync error is
-//  also showing. `RootTerminalStallRebuildTests.swift` covers the Root-side wiring that produces
+//  `.syncStalledTerminally(Bool, retriedByUser: Bool)` (`RootTransactions.swift`'s
+//  `markSyncStalledTerminally`/`clearSyncStalledTerminally`), and this lane (`.priorityStalled`,
+//  rank 0.75 — directly below `.priority1` lost connection and above `.priority2` sync error) shows
+//  an honest "Sync has stalled" banner with a Retry action instead of the SDK's own `.syncing`
+//  publishing forever with nothing said about it, and keeps that Retry reachable even while a
+//  persistent sync error is also showing. `retriedByUser` further distinguishes a user-initiated
+//  Retry tap's optimistic dismiss from every other, genuine clear -- only the latter re-seats the
+//  error banner. `RootTerminalStallRebuildTests.swift` covers the Root-side wiring that produces
 //  the notification; this file covers only the banner lane itself.
 //
 //  Mirrors `SmartBannerResidualSlotTests.swift`/`SmartBannerShieldingOfferLifecycleTests.swift` for
@@ -56,7 +58,7 @@ import Testing
         return store
     }
 
-    /// The lane seats over an ordinary syncing snapshot (rank 1.25 outranks priority4's rank 3.0,
+    /// The lane seats over an ordinary syncing snapshot (rank 0.75 outranks priority4's rank 3.0,
     /// so the ladder's own `isSyncingHigherPriority` re-trigger can never displace it), and closes
     /// the moment Root reports the stall cleared.
     @Test func theStalledBannerShowsOverASyncingSnapshotAndClosesWhenCleared() async {
@@ -65,7 +67,7 @@ import Testing
         } operation: {
             let store = makeStore()
 
-            await store.send(.syncStalledTerminally(true)) {
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = true
             }
             await store.receive(\.triggerPriority)
@@ -78,7 +80,7 @@ import Testing
             // `SynchronizerState.zero`'s default (0 remaining blocks) would never even ask, which
             // would make the assertion below vacuous. `priorityContentRequested` landing on
             // `.priority4` is the proof the request was actually made; `priorityContent` staying on
-            // `.priorityStalled` is the proof rank 1.25 still beat rank 3.0 and the request lost.
+            // `.priorityStalled` is the proof rank 0.75 still beat rank 3.0 and the request lost.
             await store.send(.synchronizerStateChanged(Self.syncState(.syncing(0.1, false), latestBlockHeight: 4_200_000)))
             await store.finish()
             await store.skipReceivedActions(strict: false)
@@ -86,7 +88,7 @@ import Testing
             #expect(store.state.priorityContentRequested == .priority4, "the syncing snapshot must genuinely ask for priority4, not silently skip because blocks-remaining stayed under threshold")
             #expect(store.state.priorityContent == .priorityStalled, "an ordinary syncing tick must not displace the stronger stalled banner")
 
-            await store.send(.syncStalledTerminally(false)) {
+            await store.send(.syncStalledTerminally(false, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = false
             }
             await store.finish()
@@ -98,7 +100,8 @@ import Testing
 
     /// `.retryStalledSyncTapped` is a pure delegate — `Root` is the one that reacts to it
     /// (re-entering the rebuild path and, once it clears the flag, sending
-    /// `.syncStalledTerminally(false)` back down); this reducer's own handler changes nothing.
+    /// `.syncStalledTerminally(false, retriedByUser: true)` back down); this reducer's own handler
+    /// changes nothing.
     @Test func retryTapIsForwardedToTheParent() async {
         await withDependencies {
             $0.defaultInMemoryStorage = InMemoryStorage()
@@ -154,7 +157,7 @@ import Testing
             // The flag clears while the error banner is still up -- `.priorityContent` is
             // `.priority2`, not `.priorityStalled`, so this only retracts THIS lane's own seat
             // (there isn't one to retract) and leaves the error banner exactly where it was.
-            await store.send(.syncStalledTerminally(false)) {
+            await store.send(.syncStalledTerminally(false, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = false
             }
             await store.finish()
@@ -207,7 +210,7 @@ import Testing
             await store.skipReceivedActions(strict: false)
             #expect(store.state.priorityContent == .priority2, "the error snapshot must seat the sync-error banner first")
 
-            await store.send(.syncStalledTerminally(true)) {
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = true
             }
             await store.finish()
@@ -225,7 +228,7 @@ import Testing
         } operation: {
             let store = makeStore()
 
-            await store.send(.syncStalledTerminally(true)) {
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = true
             }
             await store.receive(\.triggerPriority)
@@ -251,7 +254,7 @@ import Testing
         } operation: {
             let store = makeStore()
 
-            await store.send(.syncStalledTerminally(true)) {
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = true
             }
             // Drains the seat's own delayed `.openBanner` (settling `isOpen = true`) before the next
@@ -307,10 +310,14 @@ import Testing
         }
     }
 
-    /// MOB-1853: once the terminal flag itself clears, a still-current sync error must not be left
-    /// unreachable behind a banner that has just closed -- `.syncStalledTerminally(false)` re-triggers
-    /// `.priority2` when `isLatestSyncStatusError` is still set, the same way the transient-error path
-    /// re-walks `.evaluatePriorityStalled` in the opposite direction.
+    /// MOB-1853: once the terminal flag itself clears through a GENUINE recovery (`retriedByUser:
+    /// false` -- the SDK visibly making progress, backgrounding, or a rebuild that started a pass),
+    /// a still-current sync error must not be left unreachable behind a banner that has just closed
+    /// -- `.syncStalledTerminally(false, retriedByUser: false)` re-triggers `.priority2` when
+    /// `isLatestSyncStatusError` is still set, the same way the transient-error path re-walks
+    /// `.evaluatePriorityStalled` in the opposite direction. See
+    /// `aRetryInitiatedClearDoesNotReseatTheErrorBanner` below for the contrasting `retriedByUser:
+    /// true` case, which must NOT re-trigger the error banner.
     @Test func clearingTheTerminalFlagWhileTheErrorPersistsBringsTheErrorBannerBack() async {
         await withDependencies {
             $0.defaultInMemoryStorage = InMemoryStorage()
@@ -322,20 +329,59 @@ import Testing
             await store.skipReceivedActions(strict: false)
             #expect(store.state.priorityContent == .priority2)
 
-            await store.send(.syncStalledTerminally(true)) {
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = true
             }
             await store.finish()
             await store.skipReceivedActions(strict: false)
             #expect(store.state.priorityContent == .priorityStalled)
 
-            await store.send(.syncStalledTerminally(false)) {
+            await store.send(.syncStalledTerminally(false, retriedByUser: false)) {
                 $0.isSyncStalledTerminally = false
             }
             await store.finish()
             await store.skipReceivedActions(strict: false)
 
             #expect(store.state.priorityContent == .priority2, "clearing the terminal flag while the error is still current must bring the error banner back")
+        }
+    }
+
+    /// MOB-1853: a Retry tap is an OPTIMISTIC dismiss, not a genuine clear -- Root's
+    /// `.retryTerminalStallRebuild` sends this notification the instant the user taps Retry, well
+    /// before the fresh rebuild attempt has any answer of its own. Re-seating the (Retry-less) error
+    /// banner here, the way a genuine clear does above, would swap it in immediately and then
+    /// flicker straight back to stalled once the rebuild's own outcome lands (a failure re-raises
+    /// `.priorityStalled` via `.syncStalledTerminally(true, retriedByUser: false)`; a pass that
+    /// actually started clears the error itself through the `.syncing` branch in
+    /// `syncStatusChangedEffect`) -- a user-initiated clear must simply close, leaving the error
+    /// unreachable until the rebuild decides one way or the other.
+    @Test func aRetryInitiatedClearDoesNotReseatTheErrorBanner() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore()
+
+            await store.send(.synchronizerStateChanged(Self.syncState(.error(ZcashError.compactBlockProcessorCritical))))
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priority2)
+
+            await store.send(.syncStalledTerminally(true, retriedByUser: false)) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+            #expect(store.state.priorityContent == .priorityStalled)
+
+            await store.send(.syncStalledTerminally(false, retriedByUser: true)) {
+                $0.isSyncStalledTerminally = false
+            }
+            await store.finish()
+            await store.skipReceivedActions(strict: false)
+
+            #expect(store.state.priorityContent != .priority2, "a user-initiated retry must not swap the stalled banner for the error banner while the fresh rebuild attempt is in flight")
+            #expect(store.state.priorityContent == nil, "a user-initiated retry must simply close the stalled banner")
+            #expect(store.state.isLatestSyncStatusError, "the error itself is still current -- only the RE-SEATING is suppressed, not the recorded fact of the error")
         }
     }
 }
