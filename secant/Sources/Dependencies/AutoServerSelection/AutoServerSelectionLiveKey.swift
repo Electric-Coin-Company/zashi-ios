@@ -57,32 +57,42 @@ extension AutoServerSelectionClient: DependencyKey {
             @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
             @Dependency(\.sdkSynchronizer) var sdkSynchronizer
             @Dependency(\.transactionGuard) var transactionGuard
+            @Dependency(\.migrationManager) var migrationManager
 
-            let current = zcashSDKEnvironment.endpoint()
-            // Unlike `applySwitch`'s candidate (which can be minutes stale by the time it applies),
-            // this benchmark runs synchronously right here -- a fresh read every time, never deferred.
-            // Automatic mode off, no qualifying candidate, or migration pinning excluding every one
-            // all fall back to the SAME endpoint that's already configured: restarting there is still
-            // useful when recovery gave up with no engine handle left behind.
-            let candidate = await AutoServerSelectionClient.bestAutomaticCandidate() ?? current
+            // The benchmark runs before the guard so the wait for it never holds other work back,
+            // but the policy it was computed under can go stale while we wait -- a manual Server
+            // Setup save takes this SAME guard and can land before we get it. MOB-1853: `switchWaiting`,
+            // not `switchIfIdle` -- a give-up already spent one of a small per-foreground rebuild
+            // budget on this attempt (see `Root.State.maxTerminalStallRebuildsPerForeground`), and the
+            // SDK only emits `gaveUp: true` once per handle, so a rebuild skipped outright just
+            // because a broadcast happens to hold the guard would waste that budget credit for
+            // nothing -- it is never retried. Waiting for the broadcast to clear, then winning -- the
+            // same primitive the manual Server Setup save uses -- means the rebuild still happens
+            // instead of being silently dropped.
+            let benchmarked = await AutoServerSelectionClient.bestAutomaticCandidate()
 
             do {
-                // MOB-1853: `switchWaiting`, not `switchIfIdle` -- a give-up already spent one of a
-                // small per-foreground rebuild budget on this attempt (see
-                // `Root.State.maxTerminalStallRebuildsPerForeground`), and the SDK only emits
-                // `gaveUp: true` once per handle, so a rebuild skipped outright just because a
-                // broadcast happens to hold the guard would waste that budget credit for nothing --
-                // it is never retried. Waiting for the broadcast to clear, then winning -- the same
-                // primitive the manual Server Setup save uses -- means the rebuild still happens
-                // instead of being silently dropped.
                 try await transactionGuard.switchWaiting {
-                    try await withTimeout(serverSwitchTimeout) {
-                        try await sdkSynchronizer.restartSync(candidate)
-                    }
-                }
+                    // Decide under the policy in force NOW, inside the guard the manual save also
+                    // uses -- not the one the benchmark above ran under. Automatic mode off, the
+                    // benchmarked candidate no longer allowed by migration pinning, or no candidate
+                    // at all all fall back to the freshly-read current endpoint: restarting there is
+                    // still useful when recovery gave up with no engine handle left behind.
+                    let current = zcashSDKEnvironment.endpoint()
+                    let automatic = userStoredPreferences.automaticServerSelection() == true
+                    let snapshots = migrationManager.activeNetworkSnapshots()
+                    let candidateStillAllowed = benchmarked.map {
+                        MigrationServerPinning.isCandidateAllowed(host: $0.host, activeSnapshots: snapshots)
+                    } ?? false
+                    let target = (automatic && candidateStillAllowed) ? (benchmarked ?? current) : current
 
-                if candidate.host != current.host || candidate.port != current.port {
-                    try userStoredPreferences.setServer(candidate.serverConfig(isCustom: false))
+                    try await withTimeout(serverSwitchTimeout) {
+                        try await sdkSynchronizer.restartSync(target)
+                    }
+
+                    if automatic, target.host != current.host || target.port != current.port {
+                        try userStoredPreferences.setServer(target.serverConfig(isCustom: false))
+                    }
                 }
                 return true
             } catch {

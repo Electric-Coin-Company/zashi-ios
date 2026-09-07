@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 import ComposableArchitecture
+import os
 @preconcurrency import ZcashLightClientKit
 @testable import zodl_internal
 
@@ -17,6 +18,58 @@ import ComposableArchitecture
         var restartCallCount = 0
         var restartedAt: LightWalletEndpoint?
         var persisted: UserPreferencesStorage.ServerConfig?
+        /// Set from inside the mocked `setServer` closure by reading a guard-aware
+        /// `TransactionGuardClient` wrapper's held flag at call time -- true only when the
+        /// preference write actually happened while the transaction guard was still acquired.
+        var persistedInsideGuard = false
+    }
+
+    /// Mutated by a test AFTER `rebuildAfterStall` has started waiting on the guard, to simulate a
+    /// manual save or a pinning change landing during the wait. Genuine cross-task mutation (unlike
+    /// `Recorder`, only ever written from inside the awaited `rebuildAfterStall` call itself), so
+    /// this needs real synchronization rather than a bare `var` -- `OSAllocatedUnfairLock`, per this
+    /// project's general preference over `NSLock`.
+    private final class PolicyBox: @unchecked Sendable {
+        private struct State {
+            var automatic: Bool?
+            var current: LightWalletEndpoint
+            var snapshots: [MigrationNetworkSnapshot]
+        }
+        private let state: OSAllocatedUnfairLock<State>
+
+        init(automatic: Bool?, current: LightWalletEndpoint, snapshots: [MigrationNetworkSnapshot] = []) {
+            state = OSAllocatedUnfairLock(uncheckedState: State(automatic: automatic, current: current, snapshots: snapshots))
+        }
+
+        var automatic: Bool? {
+            get { state.withLockUnchecked { $0.automatic } }
+            set { state.withLockUnchecked { $0.automatic = newValue } }
+        }
+
+        var current: LightWalletEndpoint {
+            get { state.withLockUnchecked { $0.current } }
+            set { state.withLockUnchecked { $0.current = newValue } }
+        }
+
+        var snapshots: [MigrationNetworkSnapshot] {
+            get { state.withLockUnchecked { $0.snapshots } }
+            set { state.withLockUnchecked { $0.snapshots = newValue } }
+        }
+    }
+
+    /// Set on `acquire`/`acquireWithTimeout`, cleared on `release` -- lets a test capture, from
+    /// inside a mocked `setServer` closure, whether the write actually landed while the transaction
+    /// guard was held.
+    private final class GuardHeldFlag: @unchecked Sendable {
+        private let state = OSAllocatedUnfairLock(initialState: false)
+
+        func setHeld(_ held: Bool) {
+            state.withLock { $0 = held }
+        }
+
+        var isHeld: Bool {
+            state.withLock { $0 }
+        }
     }
 
     private func endpoint(_ host: String) -> LightWalletEndpoint {
@@ -68,6 +121,61 @@ import ComposableArchitecture
         } operation: {
             await AutoServerSelectionClient.liveValue.rebuildAfterStall()
         }
+    }
+
+    /// Drives the shape shared by the three "policy changes while the rebuild waits" tests below: a
+    /// holder task takes the transaction guard first, `rebuildAfterStall` starts -- benchmarking
+    /// under whatever `policy` holds right now -- and parks on the guard, `mutateWhileWaiting`
+    /// changes what `policy` exposes, then the holder releases and the guard hands off to the
+    /// parked rebuild, which must decide under the policy in force NOW, not the one the benchmark
+    /// ran under.
+    private func runRebuildWhileGuardHeld(
+        policy: PolicyBox,
+        benchmarkDecision: LightWalletEndpoint?,
+        recorder: Recorder,
+        mutateWhileWaiting: @Sendable () -> Void
+    ) async -> Bool {
+        let guardActor = TransactionGuard()
+        let holderAcquired = AsyncBox()
+        let releaseHolder = AsyncBox()
+
+        let holder = Task {
+            try? await guardActor.acquire()
+            await holderAcquired.signal()
+            await releaseHolder.wait()
+            await guardActor.release()
+        }
+        await holderAcquired.wait()
+
+        let rebuild = Task {
+            await withDependencies {
+                $0.userStoredPreferences.automaticServerSelection = { policy.automatic }
+                $0.userStoredPreferences.setServer = { recorder.persisted = $0 }
+                $0.zcashSDKEnvironment = .testnet
+                $0.zcashSDKEnvironment.network = { ZcashNetworkBuilder.network(for: .mainnet) }
+                $0.zcashSDKEnvironment.endpoint = { policy.current }
+                $0.migrationManager.activeNetworkSnapshots = { policy.snapshots }
+                $0.sdkSynchronizer.evaluateServerSwitch = { _, _, _, _, _ in benchmarkDecision }
+                $0.sdkSynchronizer.restartSync = { endpoint in
+                    recorder.restartCallCount += 1
+                    recorder.restartedAt = endpoint
+                }
+                $0.transactionGuard = Self.client(over: guardActor)
+            } operation: {
+                await AutoServerSelectionClient.liveValue.rebuildAfterStall()
+            }
+        }
+
+        // Give the rebuild a moment to benchmark and park on the guard before the policy mutates
+        // underneath it.
+        try? await Task.sleep(for: .milliseconds(50))
+        #expect(recorder.restartCallCount == 0, "must still be waiting for the guard")
+
+        mutateWhileWaiting()
+
+        await releaseHolder.signal()
+        _ = try? await holder.value
+        return await rebuild.value
     }
 
     @Test func manualModeRestartsAtConfiguredEndpoint() async {
@@ -180,6 +288,115 @@ import ComposableArchitecture
         #expect(started, "the rebuild must complete once the guard frees up, not give up because it was briefly busy")
         #expect(recorder.restartCallCount == 1)
         #expect(recorder.restartedAt?.host == "zec.rocks")
+    }
+
+    // MOB-1853: the rebuild's benchmark runs before the guard so waiting for it never holds other
+    // work back, but the policy it was computed under can go stale during that wait -- a manual
+    // Server Setup save takes the SAME `switchWaiting` guard and can land while the rebuild is still
+    // parked on it. `rebuildAfterStall` must decide under the policy in force when it actually gets
+    // the guard, not the one the benchmark ran under minutes or milliseconds earlier -- so a manual
+    // choice made while it waited wins over the stale benchmark.
+    @Test func aManualChoiceMadeWhileWaitingForTheGuardWins() async {
+        let recorder = Recorder()
+        let policy = PolicyBox(automatic: true, current: endpoint("zec.rocks"))
+        let candidateB = endpoint("B")
+        let manualC = endpoint("C")
+
+        let started = await runRebuildWhileGuardHeld(
+            policy: policy,
+            benchmarkDecision: candidateB,
+            recorder: recorder
+        ) {
+            // The manual Server Setup save landed while the rebuild was parked on the guard.
+            policy.automatic = false
+            policy.current = manualC
+        }
+
+        #expect(started)
+        #expect(recorder.restartedAt?.host == "C")
+        #expect(recorder.persisted == nil, "manual mode never rewrites the stored server")
+    }
+
+    @Test func aPinningChangeWhileWaitingExcludesTheCandidate() async {
+        let recorder = Recorder()
+        let policy = PolicyBox(automatic: true, current: endpoint("zec.rocks"))
+        let candidateB = endpoint("B")
+        let excludingB = pinningExcludingSnapshot()
+
+        let started = await runRebuildWhileGuardHeld(
+            policy: policy,
+            benchmarkDecision: candidateB,
+            recorder: recorder
+        ) {
+            // A migration pinning change landed while the rebuild was parked, excluding B.
+            policy.snapshots = [excludingB]
+        }
+
+        #expect(started)
+        #expect(recorder.restartedAt?.host == "zec.rocks")
+        #expect(recorder.persisted == nil)
+    }
+
+    @Test func aManualToManualChangeWhileWaitingRestartsAtTheNewServer() async {
+        let recorder = Recorder()
+        let policy = PolicyBox(automatic: false, current: endpoint("A"))
+        // A red herring, same as the manual-mode tests above: manual mode must never even ask
+        // `evaluateServerSwitch`, so a decision here must never surface.
+        let redHerring = endpoint("na.zec.rocks")
+        let manualC = endpoint("C")
+
+        let started = await runRebuildWhileGuardHeld(
+            policy: policy,
+            benchmarkDecision: redHerring,
+            recorder: recorder
+        ) {
+            // A second manual save landed while the rebuild was parked.
+            policy.current = manualC
+        }
+
+        #expect(started)
+        #expect(recorder.restartedAt?.host == "C")
+        #expect(recorder.persisted == nil)
+    }
+
+    // MOB-1853: mirrors `ServerSetupStore.applyServerSwitch`'s own discipline -- the preference
+    // write must happen INSIDE `switchWaiting`, not after it returns, so a connection-mode flip or
+    // manual save that lands the instant the guard is released can never race a write still pending
+    // from here.
+    @Test func automaticModePersistsInsideTheGuardWhenTheCandidateIsUsed() async {
+        let recorder = Recorder()
+        let current = endpoint("zec.rocks")
+        let candidateB = endpoint("B")
+        let heldFlag = GuardHeldFlag()
+
+        let started = await withDependencies {
+            $0.userStoredPreferences.automaticServerSelection = { true }
+            $0.userStoredPreferences.setServer = { config in
+                recorder.persistedInsideGuard = heldFlag.isHeld
+                recorder.persisted = config
+            }
+            $0.zcashSDKEnvironment = .testnet
+            $0.zcashSDKEnvironment.network = { ZcashNetworkBuilder.network(for: .mainnet) }
+            $0.zcashSDKEnvironment.endpoint = { current }
+            $0.migrationManager.activeNetworkSnapshots = { [] }
+            $0.sdkSynchronizer.evaluateServerSwitch = { _, _, _, _, _ in candidateB }
+            $0.sdkSynchronizer.restartSync = { endpoint in
+                recorder.restartCallCount += 1
+                recorder.restartedAt = endpoint
+            }
+            $0.transactionGuard = TransactionGuardClient(
+                acquire: { heldFlag.setHeld(true) },
+                acquireWithTimeout: { _ in heldFlag.setHeld(true) },
+                tryAcquire: { true },
+                release: { heldFlag.setHeld(false) }
+            )
+        } operation: {
+            await AutoServerSelectionClient.liveValue.rebuildAfterStall()
+        }
+
+        #expect(started)
+        #expect(recorder.restartedAt?.host == "B")
+        #expect(recorder.persistedInsideGuard, "the preference write happens while the guard is held")
     }
 
     /// A client wired over a test-local actor, so this timing-sensitive test never contends with
