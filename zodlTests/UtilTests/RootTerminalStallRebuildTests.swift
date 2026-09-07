@@ -501,4 +501,44 @@ import Testing
             #expect(store.state.isSyncStalledTerminally == false)
         }
     }
+
+    // MARK: - MOB-1853 review fix: Retry honours the same bgTask/server-setup guard as the give-up path
+
+    /// `startTerminalRebuild`'s own doc comment leaves the `bgTask`/server-setup guard to its
+    /// callers -- the give-up path (`rebuildIsSkippedWhileServerSetupIsVisible` above) applies it,
+    /// and Retry must too, or it would tear down the synchronizer while Server Setup owns it. The
+    /// flag still clears and the banner is still notified -- re-setting it would fight the
+    /// optimistic dismiss Retry just gave the banner -- but no new rebuild is dispatched.
+    @Test
+    func retryIsSkippedWhileServerSetupIsVisible() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            var state = stalledState()
+            state.serverSetupViewBinding = true
+            state.isSyncStalledTerminally = true
+            state.terminalStallRebuildsThisForeground = 2
+            let rebuildCallCount = LockIsolated(0)
+            let store = makeStore(
+                state: state,
+                rebuildAfterStall: {
+                    rebuildCallCount.withValue { $0 += 1 }
+                    return true
+                }
+            )
+
+            await store.send(.retryTerminalStallRebuild) {
+                $0.terminalStallRebuildsThisForeground = 0
+                $0.isSyncStalledTerminally = false
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // false
+            await store.finish()
+
+            #expect(rebuildCallCount.value == 0, "Server Setup owns the synchronizer -- Retry must not tear it down from underneath it")
+            #expect(store.state.terminalStallRebuildsThisForeground == 0)
+            // `Root.State` isn't `Equatable`, so the `send` closure above documents intent but
+            // cannot itself catch a wrong value -- this is the assertion that actually does.
+            #expect(store.state.isSyncStalledTerminally == false)
+        }
+    }
 }
