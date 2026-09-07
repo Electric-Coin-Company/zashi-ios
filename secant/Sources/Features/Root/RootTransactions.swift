@@ -124,17 +124,19 @@ extension Root {
                 // dismiss rather than a genuine clear, so it must not re-seat the error banner even
                 // if the wallet is still reporting the same persistent error underneath -- otherwise
                 // tapping Retry would flash the Retry-less error banner in until this attempt answers.
-                state.terminalStallRebuildsThisForeground = 0
-                let clearedEffect = clearSyncStalledTerminally(state: &state, retriedByUser: true)
-                // MOB-1853 review fix: `startTerminalRebuild`'s own doc comment leaves the
-                // `bgTask`/server-setup guard to its callers -- the give-up path above applies it,
-                // and Retry must too, or it would tear down the synchronizer while Server Setup
-                // owns it. The flag stays cleared either way: re-setting it here would fight the
-                // optimistic dismiss this action just gave the banner.
+                // MOB-1853: the guard runs before the optimistic dismiss -- `startTerminalRebuild`'s
+                // own doc comment leaves the `bgTask`/server-setup guard to its callers, and a Retry
+                // that cannot run must leave the stalled banner and its Retry button in place;
+                // closing it would leave nothing to answer the tap, neither a rebuild result nor the
+                // error banner, which the optimistic dismiss deliberately keeps out.
                 guard state.bgTask == nil, !state.isServerSetupVisible else {
-                    return clearedEffect
+                    return .none
                 }
-                return .merge(clearedEffect, startTerminalRebuild(state: &state))
+                state.terminalStallRebuildsThisForeground = 0
+                return .merge(
+                    clearSyncStalledTerminally(state: &state, retriedByUser: true),
+                    startTerminalRebuild(state: &state)
+                )
 
             case .fetchTransactionsForTheSelectedAccount:
                 guard let accountUUID = state.selectedWalletAccount?.id else {
