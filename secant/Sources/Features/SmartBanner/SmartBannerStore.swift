@@ -1925,8 +1925,15 @@ struct SmartBanner {
                     return .send(.triggerPriority(.priority2))
                 }
             case .stopped:
-                // MOB-1853: a stop after an error must not leave the flag stale for a later clear.
+                // MOB-1853: a stop after an error must not leave the flag stale for a later clear,
+                // and it must not leave the error banner itself on screen either -- Root's clear at
+                // `.didEnterBackground` can hand that banner the seat a moment before this tick
+                // arrives, and nothing later would close it if the wallet came back straight to
+                // `.upToDate`. Only the error lane is closed: any other seated banner keeps its seat.
                 state.isLatestSyncStatusError = false
+                if state.priorityContent == .priority2 {
+                    return .send(.closeAndCleanupBanner)
+                }
             default: break
             }
 

@@ -96,6 +96,7 @@ extension AutoServerSelectionClient: DependencyKey {
                 }
                 return true
             } catch is CancellationError {
+                LoggerProxy.event("[AutoServerSelection] Terminal stall rebuild cancelled")
                 // The requesting foreground is gone (the app backgrounded while this rebuild waited for the
                 // guard or for the SDK): the SDK retires a restart whose caller was cancelled before it
                 // began, and this caller reports "no pass started" without treating it as a failure.

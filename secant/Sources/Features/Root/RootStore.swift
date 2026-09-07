@@ -188,8 +188,10 @@ struct Root {
         /// "Sync has stalled" banner with a Retry action instead of leaving the ordinary "Syncing"
         /// indicator spinning forever. Cleared the moment the engine visibly makes progress again --
         /// the same sites that clear `isSyncStalledSinceLastProgress`, above -- or at
-        /// `.didEnterBackground`; `.retryTerminalStallRebuild` also clears it up front, so the banner
-        /// closes immediately on tap rather than sitting on a stale reading while that attempt runs.
+        /// `.didEnterBackground`; `.retryTerminalStallRebuild` also clears it up front when the retry
+        /// can actually run, so the banner closes immediately on tap rather than sitting on a stale
+        /// reading while that attempt runs; a Retry that cannot run (Server Setup owns the
+        /// synchronizer, or a background task is active) leaves it -- and the banner -- untouched.
         var isSyncStalledTerminally = false
         /// MOB-1853: how many terminal-stall rebuilds (`.syncStalled(gaveUp: true)`) this foreground
         /// has already run -- see `maxTerminalStallRebuildsPerForeground` and `.syncStalled`'s handler
@@ -517,7 +519,8 @@ struct Root {
         case terminalStallRebuildFinished(Bool)
         /// MOB-1853: the stalled-sync banner's Retry action, forwarded from
         /// `.home(.smartBanner(.retryStalledSyncTapped))` (`RootCoordinator.swift`). Re-enters the
-        /// same rebuild path `.syncStalled`'s give-up branch starts, with a fresh budget -- see
+        /// same rebuild path `.syncStalled`'s give-up branch starts, with a fresh budget, provided
+        /// the same `bgTask`/Server Setup guard lets it; otherwise it changes nothing -- see
         /// `startTerminalRebuild`'s and `clearSyncStalledTerminally`'s doc comments
         /// (`RootTransactions.swift`).
         case retryTerminalStallRebuild
