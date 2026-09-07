@@ -497,6 +497,41 @@ import Testing
         }
     }
 
+    // MARK: - MOB-1853: a give-up while the latest known status is an error still notifies the banner
+
+    /// The SmartBanner's stalled lane now outranks a persistent sync error (rank 0.75 vs 1) so its
+    /// Retry stays reachable -- which makes it matter that Root's own give-up notification keeps
+    /// firing unconditionally, whatever `lastKnownSyncStatus` currently reads. Same shape as
+    /// `aRebuildThatStartsNothingRaisesTheTerminalStalledState` above, just with an `.error` snapshot
+    /// recorded first.
+    @Test
+    func aFailedRebuildWhileTheLatestStateIsAnErrorNotifiesTheBanner() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = makeStore(
+                state: stalledState(),
+                rebuildAfterStall: { false }
+            )
+
+            await store.send(.synchronizerStateChanged(fixtureSyncState(.error(ZcashError.compactBlockProcessorCritical))))
+            await store.finish()
+            #expect(store.state.lastKnownSyncStatus == .error(ZcashError.compactBlockProcessorCritical), "the fixture must actually exercise an error status this is testing against")
+
+            await store.send(.syncStalled(attempt: 1, gaveUp: true)) {
+                $0.isSyncStalledSinceLastProgress = true
+                $0.terminalStallRebuildsThisForeground = 1
+            }
+            await store.receive(\.terminalStallRebuildFinished) {
+                $0.isSyncStalledTerminally = true
+            }
+            await store.receive(\.home.smartBanner.syncStalledTerminally) { _ in }   // true
+            await store.finish()
+
+            #expect(store.state.isSyncStalledTerminally == true)
+        }
+    }
+
     // MARK: - MOB-1853: the engine visibly recovering retires the terminal state
 
     /// The same progress-clear edge that retires `isSyncStalledSinceLastProgress`

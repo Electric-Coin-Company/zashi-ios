@@ -91,16 +91,20 @@ struct SmartBanner {
             /// `priorityResidual` sits at 1.75, directly below the migration slot (approved
             /// 2026-08-25, reversing the demotion-to-lowest): only connectivity/sync-error alerts
             /// and a real migration outrank it. Its raw value (11) stays out of the walk-down chain.
-            /// `priorityStalled` sits at 1.25, directly below `priority2` (sync error) and above
-            /// `priorityMigration` — MOB-1853: automatic stall recovery giving up outranks migration
-            /// (the wallet cannot even sync, let alone migrate) but not an ordinary connectivity/sync
-            /// error, which is diagnosable and often self-resolving in a way a stall that already
-            /// exhausted its own recovery is not.
+            /// `priorityStalled` sits at 0.75, directly below `priority1` (lost connection) and
+            /// above `priority2` (sync error) — MOB-1853: once automatic stall recovery has given
+            /// up for good, the banner's own Retry action must stay reachable even while the wallet
+            /// also reports a persistent sync error, which would otherwise win the seat and hold it
+            /// indefinitely (no later `.syncing` tick ever arrives on its own to re-walk the ladder
+            /// and hand the seat back). An actual lost connection still outranks the stalled banner
+            /// — there is nothing to retry against until connectivity itself returns.
             var rank: Double {
                 switch self {
                 case .priorityMigration: return 1.5
                 case .priorityResidual: return 1.75
-                case .priorityStalled: return 1.25
+                case .priorityStalled: return 0.75   // below a lost connection (0), above a sync error (1): a
+                                                      // terminal stall must keep its Retry reachable while the
+                                                      // error persists
                 default: return Double(rawValue)
                 }
             }
@@ -149,6 +153,12 @@ struct SmartBanner {
         /// foreground. Drives `.evaluatePriorityStalled`'s decision to trigger `.priorityStalled` and
         /// `isPriorityStillValid`'s revalidation of an already-requested one.
         var isSyncStalledTerminally = false
+        /// MOB-1853: mirrors whether the LATEST `.synchronizerStateChanged` snapshot was
+        /// `.error`/`.unprepared` -- set at the top of that arm in `syncStatusChangedEffect`,
+        /// cleared at the top of `.upToDate` and of the `.syncing` branch. `.syncStalledTerminally(false)`
+        /// reads it to decide whether clearing the stall must hand the seat back to the sync-error
+        /// banner (still current) or simply close (the error already cleared on its own).
+        var isLatestSyncStatusError = false
         var isSyncTimedOutSheetPresented = false
         var isSyncTimedOutAutoAppeareDisabled = false
         var isWalletBackupAcknowledged = false
@@ -872,7 +882,20 @@ struct SmartBanner {
                     // `isPriorityStillValid`'s revalidation rather than cleared here, same as every
                     // other lane's retraction shape in this file.
                     guard state.priorityContent == .priorityStalled else { return .none }
-                    return .send(.closeAndCleanupBanner)
+                    // MOB-1853: the stall clearing does not mean the wallet is healthy -- the
+                    // synchronizer can still be reporting the SAME persistent error that this lane
+                    // outranked while stalled. Give that error banner its seat back rather than just
+                    // closing, the way the transient-error path re-walks after closing (this action's
+                    // caller in `syncStatusChangedEffect`, above). Sent from a SINGLE `.run` that
+                    // awaits the close directly (`.closeBanner(true)`, not `.closeAndCleanupBanner`)
+                    // before re-triggering -- `.closeAndCleanupBanner` only SCHEDULES its nested
+                    // close, so a second `await send(...)` right after would race the close instead
+                    // of following it.
+                    guard state.isLatestSyncStatusError else { return .send(.closeAndCleanupBanner) }
+                    return .run { send in
+                        await send(.closeBanner(true), animation: .easeInOut(duration: Constants.easeInOutDuration))
+                        await send(.triggerPriority(.priority2))
+                    }
                 }
                 return .send(.triggerPriority(.priorityStalled))
 
@@ -1774,6 +1797,9 @@ struct SmartBanner {
 
             var isSyncing = false
             if case let .syncing(syncProgress, isScanProgressComplete) = snapshot.syncStatus {
+                // MOB-1853: a syncing tick means the LATEST snapshot is no longer an error, even if
+                // `state.lastKnownErrorMessage` itself stays around for `isSyncTimedOut`'s benefit.
+                state.isLatestSyncStatusError = false
                 state.lastKnownSyncPercentage = Double(syncProgress)
                 state.lastKnownBlocksRemaining = max(
                     0,
@@ -1802,6 +1828,9 @@ struct SmartBanner {
             // error syncing check
             switch snapshot.syncStatus {
             case .upToDate:
+                // MOB-1853: the wallet is caught up -- whatever error was last showing is no longer
+                // current, so a later stall clearing must not re-trigger a stale sync-error banner.
+                state.isLatestSyncStatusError = false
                 state.isSyncTimedOutAutoAppeareDisabled = false
                 // Reset the syncing block-count so a re-eval of priority 4 after sync
                 // completes (account change, reconnect) doesn't see the last `.syncing`
@@ -1867,6 +1896,11 @@ struct SmartBanner {
                     return .send(.closeAndCleanupBanner)
                 }
             case .error, .unprepared:
+                // MOB-1853: recorded before the message comparison below so it reflects the LATEST
+                // snapshot even on a repeat tick with the identical message -- `.syncStalledTerminally(false)`
+                // reads this to decide whether clearing a terminal stall must hand the seat back to
+                // the sync-error banner.
+                state.isLatestSyncStatusError = true
                 if state.lastKnownErrorMessage != snapshot.message {
                     state.lastKnownErrorMessage = snapshot.message
                     if case .error(let error) = snapshot.syncStatus {
