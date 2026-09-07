@@ -17,6 +17,7 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 - [MOB-1863] A sent transaction now shows "Sent · awaiting confirmation" once a server has accepted it, instead of "Sending" until the wallet catches up.
 
 ### Fixed
+- [MOB-1869] Send and outgoing Swap and Pay no longer report insufficient funds, or allow Review, while the wallet is still working out your spendable balance after a restore or a server change; they wait the same way the home screen does. Swapping another asset into ZEC is unaffected.
 - [MOB-1854] Sync now resumes after a migration broadcast even when the resume request arrives while the previous start is still finishing.
 - [MOB-1862] After switching accounts, a balance or pending amount that was still loading for the previous account can no longer be shown as the new account's. The balance breakdown now shows the same spendable and pending amounts as the home screen, instead of zeros, while the wallet is still checking the chain — shown as updating during that check, with Send and Swap waiting for it rather than claiming you have insufficient funds. Funds that are merely waiting for confirmations no longer leave the balance spinning as if nothing could be spent, and swapping another asset into ZEC no longer waits for the wallet's spendable balance to be confirmed, since that swap doesn't spend it.
 - [MOB-1854] Putting the app in the background while sync was about to restart can no longer leave that restart running in the background or re-arm background work when the app returns.

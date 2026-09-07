@@ -101,8 +101,10 @@ struct SwapAndPay {
         
         /// The SDK has not said what is spendable yet. Distinct from "nothing is spendable":
         /// the answer is still coming, so the form waits for it instead of judging on a zero.
+        /// Same predicate the home balance uses: masked, or syncing without a concrete balance
+        /// yet for the selected account.
         var isSpendabilityBeingDetermined: Bool {
-            walletBalancesState.isSpendableMasked
+            walletBalancesState.isProcessingZeroAvailableBalance
         }
 
         /// Only a flow that spends local ZEC has to wait for the spendable value; an incoming swap

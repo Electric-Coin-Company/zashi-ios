@@ -574,4 +574,50 @@ private enum SwapMaxButtonTestError: Error {
         state.walletBalancesState.isSpendableMasked = true
         #expect(!state.isValidForm)
     }
+
+    // MARK: - Syncing without a concrete balance counts as undetermined too (MOB-1869): the
+    // masked flag alone is not the full "being determined" signal — mirrors the home balance's
+    // own gate (WalletBalancesStore.swift's `isProcessingZeroAvailableBalance`) and the Send-form
+    // equivalent above `SendFormMaxButtonTests.syncingWithoutAConcreteBalanceCountsAsUndetermined`.
+
+    @Test func syncingWithoutAConcreteBalanceCountsAsUndetermined() {
+        var state = swapState()
+        let previousAccount = state.selectedWalletAccount
+        state.$selectedWalletAccount.withLock { $0 = testWalletAccount }
+        defer { state.$selectedWalletAccount.withLock { $0 = previousAccount } }
+
+        state.address = "t1validLookingAddressForTheFixture"
+        state.amountText = "1"
+        state.amountOverrideForTesting = 1
+        state.walletBalancesState.isSpendableMasked = false
+        state.walletBalancesState.isSyncInProgress = true
+        state.walletBalancesState.concreteBalanceAccountId = nil
+        state.walletBalancesState.shieldedBalance = .zero
+
+        #expect(state.isSpendabilityBeingDetermined)
+        #expect(!state.isInsufficientFunds, "no verdict against an initial zero while the balance is unknown")
+        #expect(!state.isValidForm, "Review stays disabled")
+    }
+
+    @Test func aConcreteZeroEndsDeterminationAndAppliesTheKnownZeroVerdict() {
+        var state = swapState()
+        let previousAccount = state.selectedWalletAccount
+        state.$selectedWalletAccount.withLock { $0 = testWalletAccount }
+        defer { state.$selectedWalletAccount.withLock { $0 = previousAccount } }
+
+        state.address = "t1validLookingAddressForTheFixture"
+        state.amountText = "1"
+        state.amountOverrideForTesting = 1
+        state.walletBalancesState.isSpendableMasked = false
+        state.walletBalancesState.isSyncInProgress = true
+        // The sync is still running, but a concrete (zero) balance has now been published for the
+        // selected account — pending confirmations live in `shieldedWithPendingBalance`, not the
+        // spendable value — so determination is over and the known-zero verdict applies.
+        state.walletBalancesState.concreteBalanceAccountId = testWalletAccount.id
+        state.walletBalancesState.shieldedBalance = .zero
+        state.walletBalancesState.shieldedWithPendingBalance = Zatoshi(500)
+
+        #expect(!state.isSpendabilityBeingDetermined)
+        #expect(state.isInsufficientFunds)
+    }
 }
