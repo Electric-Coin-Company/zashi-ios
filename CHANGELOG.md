@@ -17,6 +17,7 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 
 ### Fixed
 - [MOB-1854] Sync now resumes after a migration broadcast even when the resume request arrives while the previous start is still finishing.
+- [MOB-1854] Putting the app in the background while sync was about to restart can no longer leave that restart running in the background or re-arm background work when the app returns.
 - [MOB-1862] After switching accounts, a balance or pending amount that was still loading for the previous account can no longer be shown as the new account's, and the balance breakdown shows that the spendable amount is still updating while the wallet confirms it.
 - [MOB-1862] The balance breakdown now shows the same spendable and pending amounts as the home screen, instead of zeros, while the wallet is still checking the chain. During that check the balance is shown as updating and Send and Swap wait for it rather than claiming you have insufficient funds, and funds that are merely waiting for confirmations no longer leave the balance spinning as if nothing could be spent. Swapping another asset into ZEC no longer waits for the wallet's spendable balance to be confirmed, since that swap doesn't spend it.
 - [MOB-1862] A balance that was still being read when a newer balance arrived from the wallet can no longer briefly replace the newer value on the home screen or the balance breakdown.
