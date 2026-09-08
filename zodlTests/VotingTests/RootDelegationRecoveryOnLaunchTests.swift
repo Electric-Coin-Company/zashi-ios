@@ -100,12 +100,18 @@ struct RootDelegationRecoveryOnLaunchTests {
     /// A wallet reset must not let a run that read the old wallet's files
     /// finish afterwards: the reset cancels it, and the run notices.
     ///
-    /// The effect registers its cancel id only once it is running, so the
-    /// reset is sent after the run reports that it has started; a reset that
-    /// lands earlier is covered by the escrow's lease instead.
-    @Test func resettingTheWalletCancelsARecoveryStillRunning() async {
-        let cancelled = LockIsolated(false)
-        let started = AsyncStream.makeStream(of: Void.self)
+    /// The effect registers its cancel id only once it is running, so the test
+    /// holds recovery in flight until reset and observes its cancelled
+    /// completion; a reset that lands earlier is covered by the escrow's lease.
+    @Test func resettingTheWalletCancelsARecoveryStillRunning() async throws {
+        let started = AsyncStream<Void>.makeStream()
+        let recoveryLifetime = AsyncStream<Void>.makeStream()
+        let completed = AsyncStream<Bool>.makeStream()
+        defer {
+            started.continuation.finish()
+            recoveryLifetime.continuation.finish()
+            completed.continuation.finish()
+        }
 
         let store = TestStore(initialState: Self.launchState()) {
             Root()
@@ -135,9 +141,11 @@ struct RootDelegationRecoveryOnLaunchTests {
             $0.delegationRecovery = DelegationRecoveryClient(
                 run: {
                     started.continuation.yield()
-                    // A carve that takes long enough for a reset to land.
-                    try? await Task.sleep(for: .seconds(5))
-                    cancelled.setValue(Task.isCancelled)
+                    // Remain in flight until reset cancels this task. No elapsed time
+                    // may complete the fake recovery before the reset reaches it.
+                    for await _ in recoveryLifetime.stream {}
+                    completed.continuation.yield(Task.isCancelled)
+                    completed.continuation.finish()
                     return DelegationRecoveryReport(outcome: .cancelled)
                 }
             )
@@ -145,11 +153,15 @@ struct RootDelegationRecoveryOnLaunchTests {
         store.exhaustivity = .off
 
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
-        for await _ in started.stream { break }
-        await store.send(.initialization(.resetZashi))
-        await store.finish()
+        var startedIterator = started.stream.makeAsyncIterator()
+        let recoveryStarted: Void? = await startedIterator.next()
+        try #require(recoveryStarted != nil, "recovery must start before the reset")
 
-        #expect(cancelled.value, "the reset must cancel the recovery effect")
+        await store.send(.initialization(.resetZashi))
+        var completedIterator = completed.stream.makeAsyncIterator()
+        let wasCancelled = await completedIterator.next()
+        #expect(wasCancelled == true, "the reset must cancel the recovery effect")
+        await store.finish()
     }
 
     @Test func recoverySendsNoActionBackIntoTheReducer() async {
