@@ -7,6 +7,8 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 
 ## [Unreleased]
 
+## [3.12.0] - 2026-09-08
+
 ### Fixed
 - [MOB-1798] A poll made unvotable by an earlier version can be voted in again. When ZODL opens, it recovers the delegation an earlier build replaced from the copies of the polling database it keeps, whether or not the app was closed cleanly after the loss; when you enter that poll, the recovered delegation is restored and the poll continues where it left off. Every copy found is kept, and the one the poll's chain confirms is the one restored. A poll that already holds a vote, a delivered share, or any delegation record the recovery does not account for is never touched.
 
