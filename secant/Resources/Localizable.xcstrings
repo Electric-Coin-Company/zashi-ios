@@ -8047,6 +8047,23 @@
         }
       }
     },
+    "general.continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Continuar"
+          }
+        }
+      }
+    },
     "general.copiedAddress" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21390,6 +21407,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fondos devueltos"
+          }
+        }
+      }
+    },
+    "swapAndPay.refundWarning.dontShowAgain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don’t show this message again"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "No volver a mostrar este mensaje"
+          }
+        }
+      }
+    },
+    "swapAndPay.refundWarning.payMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEAR doesn’t refund mistakes like a wrong address or wrong network for payments under $300. Please double-check all details before continuing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "NEAR no reembolsa errores como una dirección o red incorrecta en pagos de menos de $300. Verifica todos los detalles antes de continuar."
+          }
+        }
+      }
+    },
+    "swapAndPay.refundWarning.swapMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEAR doesn’t refund mistakes like a wrong address or wrong network for swaps under $300. Please double-check all details before continuing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "NEAR no reembolsa errores como una dirección o red incorrecta en swaps de menos de $300. Verifica todos los detalles antes de continuar."
+          }
+        }
+      }
+    },
+    "swapAndPay.refundWarning.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Refunds Under $300"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sin reembolsos por debajo de $300"
           }
         }
       }
