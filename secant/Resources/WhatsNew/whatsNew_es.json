@@ -1,6 +1,20 @@
 {
     "releases": [
         {
+            "version": "3.12.0",
+            "date": "08-09-2026",
+            "timestamp": 1788860758,
+            "sections": [
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Corregimos un problema en Coinholder Polling por el cual volver a abrir una encuesta podía descartar una delegación que ya habías confirmado.",
+                        "Mejoramos los mensajes que se muestran cuando una encuesta no se puede abrir en tu dispositivo, y agregamos un código de referencia que puedes compartir con soporte."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "3.11.0",
             "date": "03-09-2026",
             "timestamp": 1788469946,
