@@ -131,19 +131,21 @@ struct SwapAndPayCoordFlowView: View {
                     index: 0,
                     text: String(localizable: .swapAndPayHelpSwapDesc),
                     desc1: String(localizable: .swapAndPayHelpSwapDesc1),
-                    desc2: String(localizable: .swapAndPayHelpSwapDesc2)
+                    desc2: String(localizable: .swapAndPayHelpSwapDescThreshold),
+                    desc3: String(localizable: .swapAndPayHelpSwapDesc2)
                 )
                 .padding(.bottom, 32)
             } else {
                 infoContent(
                     index: 1,
                     text: String(localizable: .crosspayHelpDesc1),
-                    desc1: String(localizable: .crosspayHelpDesc2)
+                    desc1: String(localizable: .crosspayHelpDesc2),
+                    desc2: String(localizable: .crosspayHelpDescThreshold)
                 )
                 .padding(.bottom, 32)
             }
             
-            ZashiButton(String(localizable: .generalOk).uppercased()) {
+            ZashiButton(String(localizable: .generalDismiss)) {
                 store.send(.helpSheetRequested)
             }
             .padding(.bottom, Design.Spacing.sheetBottomSpace)
@@ -154,7 +156,8 @@ struct SwapAndPayCoordFlowView: View {
         index: Int,
         text: String,
         desc1: String? = nil,
-        desc2: String? = nil
+        desc2: String? = nil,
+        desc3: String? = nil
     ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(text)
@@ -172,6 +175,14 @@ struct SwapAndPayCoordFlowView: View {
 
             if let desc2 {
                 Text(desc2)
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(2)
+                    .padding(.top, 16)
+            }
+
+            if let desc3 {
+                Text(desc3)
                     .zFont(size: 16, style: Design.Text.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
                     .lineSpacing(2)
