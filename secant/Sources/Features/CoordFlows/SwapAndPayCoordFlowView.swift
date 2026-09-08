@@ -101,8 +101,16 @@ struct SwapAndPayCoordFlowView: View {
                         TransactionDetailsView(store: store, tokenName: tokenName)
                     }
                 }
-                .zashiSheet(isPresented: $store.isHelpSheetPresented) {
+                .zashiSheet(
+                    isPresented: $store.isHelpSheetPresented,
+                    onDismiss: { store.send(.helpSheetDismissed) }
+                ) {
                     helpSheetContent()
+                }
+                .sheet(isPresented: $store.isInAppBrowserOn) {
+                    if let url = store.helpArticleURL {
+                        InAppBrowserView(url: url)
+                    }
                 }
                 .onAppear { store.send(.onAppear) }
             }
@@ -145,6 +153,14 @@ struct SwapAndPayCoordFlowView: View {
                 .padding(.bottom, 32)
             }
             
+            ZashiButton(
+                String(localizable: .generalLearnMore),
+                type: .secondary
+            ) {
+                store.send(.learnMoreTapped)
+            }
+            .padding(.bottom, 8)
+
             ZashiButton(String(localizable: .generalDismiss)) {
                 store.send(.helpSheetRequested)
             }

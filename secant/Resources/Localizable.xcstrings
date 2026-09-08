@@ -8251,6 +8251,23 @@
         }
       }
     },
+    "general.learnMore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn more"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Más información"
+          }
+        }
+      }
+    },
     "general.less" : {
       "extractionState" : "manual",
       "localizations" : {
