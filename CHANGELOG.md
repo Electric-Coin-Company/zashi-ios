@@ -8,15 +8,16 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 ## [Unreleased]
 
 ### Added
-- [MOB-1501] Swap and Pay now offer DASH, Bitcoin Cash, and ZEC on Solana and NEAR as assets you can swap to or pay with, and Dash and Bitcoin Cash can be chosen as the chain when saving a swap address in the Address Book.
+
 - [MOB-1853] When the wallet has stopped making sync progress and its automatic recovery has given up, the home screen now shows a "Sync has stalled" banner with a Retry button instead of an endless "Syncing" indicator.
 
 ### Changed
+
 - [MOB-1858] Sending no longer waits behind unrelated network work. Preparing a payment now runs alongside other activity instead of blocking it, and if the wallet is still busy with something else by the time it's ready to broadcast, the transaction is shown as pending and submitted automatically in the background instead of being reported as a failure.
-- [MOB-1831] Automatic server selection no longer switches servers for marginal gains. The app switches only when the benchmark shows the new server is meaningfully faster than the current one — at least 200 ms and at least 25% faster — or when the current server fails its health checks. Practically equal servers no longer cause needless sync restarts.
 - [MOB-1863] A sent transaction now shows "Sent · awaiting confirmation" once a server has accepted it, instead of "Sending" until the wallet catches up.
 
 ### Fixed
+
 - [MOB-1853] When sync has stalled for good and the wallet also reports a sync error, the "Sync has stalled" banner with its Retry button now takes precedence over the plain error banner; its help sheet keeps the error details, the option to choose another server when the error is a server incompatibility, and Send Report. A sync error banner no longer stays on screen after sync has stopped.
 - [MOB-1869] Send and outgoing Swap and Pay no longer report insufficient funds, or allow Review, while the wallet is still working out your spendable balance after a restore or a server change; they wait the same way the home screen does. Swapping another asset into ZEC is unaffected.
 - [MOB-1854] Sync now resumes after a migration broadcast even when the resume request arrives while the previous start is still finishing.
@@ -31,6 +32,21 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 - [MOB-1853] Automatic server switching no longer restarts a sync that is actively in progress; if syncing stalls, the app now looks for a healthier server by itself. When the wallet's own reconnection attempts give up, the app rebuilds the connection instead — to a better server when one is available, otherwise the current one — waiting for an in-progress send to finish first instead of giving up on the rebuild, and never switching servers a second time on top of it; after two rebuilds in one session it shows the error state.
 - [MOB-1853] If you switch servers while the wallet is recovering from a stalled sync, the recovery now respects your new choice instead of switching back to the server it had picked earlier.
 - [MOB-1853] Sending the app to the background while it was rebuilding sync after a stall no longer leaves that rebuild running in the background, and a rebuild that was cancelled that way cannot affect the next foreground's recovery.
+
+## [3.12.0] - 2026-09-08
+
+### Fixed
+- [MOB-1798] A poll made unvotable by an earlier version can be voted in again. When ZODL opens, it recovers the delegation an earlier build replaced from the copies of the polling database it keeps, whether or not the app was closed cleanly after the loss; when you enter that poll, the recovered delegation is restored and the poll continues where it left off. Every copy found is kept, and the one the poll's chain confirms is the one restored. A poll that already holds a vote, a delivered share, or any delegation record the recovery does not account for is never touched.
+
+## [3.11.0] - 2026-09-03
+
+### Added
+- [MOB-1501] Swap and Pay now offer DASH, Bitcoin Cash, and ZEC on Solana and NEAR as assets you can swap to or pay with, and Dash and Bitcoin Cash can be chosen as the chain when saving a swap address in the Address Book.
+
+### Changed
+- [MOB-1831] Automatic server selection no longer switches servers for marginal gains. The app switches only when the benchmark shows the new server is meaningfully faster than the current one — at least 200 ms and at least 25% faster — or when the current server fails its health checks. Practically equal servers no longer cause needless sync restarts.
+
+### Fixed
 - [MOB-1831] Opening Send immediately after launching ZODL now shows the saved spendable balance while automatic server selection completes.
 - The Keystone hardware wallet connection screen now refers to Zodl instead of Zashi in the note that a previously connected wallet needs to sync to find its transaction history.
 
