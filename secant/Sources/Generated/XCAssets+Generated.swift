@@ -60,6 +60,7 @@ public enum Asset {
       public static let gmx = ImageAsset(name: "gmx")
       public static let gnear = ImageAsset(name: "gnear")
       public static let gno = ImageAsset(name: "gno")
+      public static let gram = ImageAsset(name: "gram")
       public static let hapi = ImageAsset(name: "hapi")
       public static let inx = ImageAsset(name: "inx")
       public static let itlx = ImageAsset(name: "itlx")

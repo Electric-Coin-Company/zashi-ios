@@ -102,14 +102,16 @@ import Foundation
             swapAsset(assetId: "nep141:btc.omft.near"),                                     // supported
             swapAsset(assetId: "nep141:eth.omft.near"),                                     // supported
             swapAsset(assetId: "nep245:v2_1.omni.hot.tg:137_qiStmoQJDQPTebaPjgx5VBxZv6L"),  // pol.usdc — supported
-            swapAsset(assetId: "nep141:doge.omft.near")                                     // dropped
+            // SHIB@eth is offered by 1Click but deliberately not curated. (This used to be
+            // DOGE@doge, which is curated as of the ADA/ALEO/GRAM/DOGE/POL/EURe/GNO addition.)
+            swapAsset(assetId: "nep141:eth-0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce.omft.near")
         ])
         let ids = kept.map(\.assetId)
         #expect(kept.count == 3)
         #expect(ids.contains("nep141:btc.omft.near"))
         #expect(ids.contains("nep141:eth.omft.near"))
         #expect(ids.contains("nep245:v2_1.omni.hot.tg:137_qiStmoQJDQPTebaPjgx5VBxZv6L"))
-        #expect(!ids.contains("nep141:doge.omft.near"))
+        #expect(!ids.contains("nep141:eth-0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce.omft.near"))
     }
 
     @Test func curatedKeepsNativeZecAndTokenZecAndDropsOtherWrappedZec() {
@@ -138,6 +140,44 @@ import Foundation
 
     @Test func curatedEmptyStaysEmpty() {
         #expect(Near1Click.curated([]).isEmpty)
+    }
+
+    // Pins the assets added on request (ADA, ALEO, USDCx, GRAM, DOGE, POL, EURe, GNO) by their
+    // 1Click `assetId`, so a bad edit to the allow-list drops them loudly instead of silently.
+    @Test func curatedIncludesTheRequestedAssets() {
+        let expected = [
+            "nep141:cardano.omft.near",                                                  // ADA@cardano
+            "nep141:aleo.omft.near",                                                     // ALEO@aleo
+            "nep141:aleo-usdcx.omft.near",                                               // USDCx@aleo
+            "nep245:v2_1.omni.hot.tg:1117_",                                             // GRAM@ton
+            "nep141:doge.omft.near",                                                     // DOGE@doge
+            "nep245:v2_1.omni.hot.tg:137_11111111111111111111",                          // POL@pol
+            "nep245:v2_1.omni.hot.tg:137_qiStmoQJDQPTebaPjgx5VBxZv6L",                   // USDC@pol
+            "nep141:gnosis-0x420ca0f9b9b604ce0fd9c18ef134c705e5fa3430.omft.near",        // EURe@gnosis
+            "nep141:gnosis-0x9c58bacc331c9aa871afd802db6379a98e80cedb.omft.near"         // GNO@gnosis
+        ]
+        let kept = Near1Click.curated(expected.map { swapAsset(assetId: $0) }).map(\.assetId)
+        #expect(Set(kept) == Set(expected))
+    }
+
+    // The new chains must also reach the address book's offline fallback picker.
+    @Test func curatedChainsCoverTheNewChains() {
+        let chains = Set(SwapAsset.curatedChains().map(\.chain))
+        for chain in ["cardano", "aleo", "ton", "doge", "gnosis", "pol"] {
+            #expect(chains.contains(chain), "\(chain) should be a curated contact chain")
+        }
+        #expect(!chains.contains("zec"))
+    }
+
+    // Display names for the newly curated tokens; the rest fall back to the ticker.
+    @Test func tokenNamesForTheNewTokens() {
+        #expect(swapAsset(assetId: "", token: "ADA").tokenName == "Cardano")
+        #expect(swapAsset(assetId: "", token: "ALEO").tokenName == "Aleo")
+        #expect(swapAsset(assetId: "", token: "DOGE").tokenName == "Dogecoin")
+        #expect(swapAsset(assetId: "", token: "EURe").tokenName == "Monerium EUR")
+        #expect(swapAsset(assetId: "", token: "GNO").tokenName == "Gnosis")
+        #expect(swapAsset(assetId: "", token: "GRAM").tokenName == "Gram")
+        #expect(swapAsset(assetId: "", token: "USDCx").tokenName == "USDCx")
     }
 
     private func asset(token: String = "ETH", decimals: Int = 18) -> SwapAsset {

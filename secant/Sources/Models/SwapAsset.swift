@@ -58,6 +58,13 @@ struct SwapAsset: Equatable, Codable, Identifiable, Hashable {
         case "ltc": return "Litecoin"
         case "bch": return "Bitcoin Cash"
         case "dash": return "Dash"
+        case "aleo": return "Aleo"
+        case "doge": return "Dogecoin"
+        case "eure": return "Monerium EUR"
+        case "gno": return "Gnosis"
+        // GRAM is the TON chain's native coin, renamed from Toncoin to Gram. Mapped
+        // only for title case — the ticker fallback would render it as "GRAM".
+        case "gram": return "Gram"
         default: return token
         }
     }
@@ -112,7 +119,10 @@ extension SwapAsset {
     /// Deliberately excludes "zec": Zcash is recognized automatically from the
     /// address, not a manually-pickable contact chain.
     static func curatedChains() -> [SwapAsset] {
-        ["arb", "avax", "base", "bch", "bsc", "btc", "dash", "eth", "ltc", "near", "pol", "sol", "sui", "tron", "xrp"].map {
+        [
+            "aleo", "arb", "avax", "base", "bch", "bsc", "btc", "cardano", "dash", "doge",
+            "eth", "gnosis", "ltc", "near", "pol", "sol", "sui", "ton", "tron", "xrp"
+        ].map {
             SwapAsset(provider: "", chain: $0, token: "", assetId: "", usdPrice: 0, decimals: 0)
         }
     }
