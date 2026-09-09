@@ -17153,6 +17153,23 @@
         }
       }
     },
+    "send.pendingGuardBusyInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transaction was created and will be handed to a server as soon as the wallet finishes its current network work."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu transacción se ha creado y se enviará a un servidor en cuanto la billetera termine su trabajo de red actual."
+          }
+        }
+      }
+    },
     "send.pendingInfo" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19079,6 +19096,57 @@
         }
       }
     },
+    "smartBanner.content.syncStalled.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
+          }
+        }
+      }
+    },
+    "smartBanner.content.syncStalled.info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic recovery gave up. Retry, or choose another server in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recuperación automática se detuvo. Reintenta o elige otro servidor en Ajustes."
+          }
+        }
+      }
+    },
+    "smartBanner.content.syncStalled.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync has stalled"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización se ha detenido"
+          }
+        }
+      }
+    },
     "smartBanner.content.tor.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19654,6 +19722,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error de Sincronización"
+          }
+        }
+      }
+    },
+    "smartBanner.help.syncStalled.info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The wallet stopped making progress and its automatic recovery has given up. Tap Retry to try again, or pick a different server under Advanced Settings → Server."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cartera dejó de avanzar y su recuperación automática se detuvo. Toca Reintentar para volver a intentarlo o elige otro servidor en Ajustes avanzados → Servidor."
+          }
+        }
+      }
+    },
+    "smartBanner.help.syncStalled.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync has stalled"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización se ha detenido"
           }
         }
       }
@@ -23559,6 +23661,23 @@
         }
       }
     },
+    "transaction.sentAwaitingConfirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent · awaiting confirmation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviado · esperando confirmación"
+          }
+        }
+      }
+    },
     "transaction.shieldedFunds" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -23640,6 +23759,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comisión"
+          }
+        }
+      }
+    },
+    "transactionGuard.busy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The wallet is busy with another network operation. Try again in a moment."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La billetera está ocupada con otra operación de red. Inténtalo de nuevo en un momento."
           }
         }
       }
