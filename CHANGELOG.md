@@ -9,6 +9,7 @@ tooling, CI, tests, and internal refactors are deliberately not listed.
 
 ### Added
 
+- [Swaps] Swap and Pay now offers more coins: Cardano (ADA), Aleo (ALEO and USDCx), Gram on TON (GRAM), Dogecoin (DOGE), Polygon's POL, and Monerium EUR (EURe) and Gnosis (GNO) on Gnosis Chain. Their chains are also selectable when you save an address book contact.
 - [MOB-1853] When the wallet has stopped making sync progress and its automatic recovery has given up, the home screen now shows a "Sync has stalled" banner with a Retry button instead of an endless "Syncing" indicator.
 
 ### Changed

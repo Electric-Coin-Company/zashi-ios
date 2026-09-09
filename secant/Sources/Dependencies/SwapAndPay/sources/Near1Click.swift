@@ -101,7 +101,17 @@ struct Near1Click {
             "nep141:dash.omft.near", // DASH@dash
             "nep141:bch.omft.near", // BCH@bch
             "1cs_v1:sol:spl:A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS", // ZEC@sol
-            "1cs_v1:near:nep141:zec.omft.near" // ZEC@near
+            "1cs_v1:near:nep141:zec.omft.near", // ZEC@near
+            "nep141:cardano.omft.near", // ADA@cardano
+            "nep141:aleo.omft.near", // ALEO@aleo
+            "nep141:aleo-usdcx.omft.near", // USDCx@aleo
+            // GRAM is the TON chain's native coin, renamed from Toncoin to Gram. The HOT Omni id
+            // ends in an empty contract suffix (`:1117_`), i.e. native rather than a jetton.
+            "nep245:v2_1.omni.hot.tg:1117_", // GRAM@ton
+            "nep141:doge.omft.near", // DOGE@doge
+            "nep245:v2_1.omni.hot.tg:137_11111111111111111111", // POL@pol
+            "nep141:gnosis-0x420ca0f9b9b604ce0fd9c18ef134c705e5fa3430.omft.near", // EURe@gnosis
+            "nep141:gnosis-0x9c58bacc331c9aa871afd802db6379a98e80cedb.omft.near" // GNO@gnosis
         ]
     }
     

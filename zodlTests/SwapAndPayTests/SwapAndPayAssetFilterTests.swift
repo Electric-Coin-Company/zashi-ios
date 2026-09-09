@@ -49,14 +49,16 @@ import ComposableArchitecture
     // no longer in the loaded list, so its lookup returns nil and the BTC fallback
     // must win — the dropped asset can never be pre-selected.
     @MainActor @Test func lastUsedDroppedAssetIsIgnoredAndFallsBackToBtc() async {
-        let store = makeLoadStore(lastUsed: ["near.doge.doge"]) // dropped id, absent from `curatedAssets`
+        // SHIB@eth is offered by 1Click but deliberately not curated. (This used to be
+        // DOGE@doge, which is curated as of the ADA/ALEO/GRAM/DOGE/POL/EURe/GNO addition.)
+        let store = makeLoadStore(lastUsed: ["near.eth.shib"]) // dropped id, absent from `curatedAssets`
         store.exhaustivity = .off
         await store.send(.swapAssetsLoaded(curatedAssets))
         await store.skipReceivedActions(strict: false)
 
         #expect(store.state.selectedAsset?.token.lowercased() == "btc")
         #expect(store.state.selectedAsset?.chain.lowercased() == "btc")
-        #expect(!store.state.swapAssetsToPresent.contains { $0.id == "near.doge.doge" })
+        #expect(!store.state.swapAssetsToPresent.contains { $0.id == "near.eth.shib" })
     }
 
     // The offering contains native ZEC (chain "zec") plus the ZEC tokens on Solana
