@@ -907,7 +907,8 @@ extension Root {
 
     /// Clears device/global-scoped wallet state that must never leak from one wallet into
     /// the next on the same device — voting configuration and history, the Flexa session,
-    /// cached preferences, and locally-cached read-transaction state. Shared by the full
+    /// cached preferences, the sub-$300 refund-warning suppression, and locally-cached
+    /// read-transaction state. Shared by the full
     /// `resetZashi` flow (`.resetZashiSDKSucceeded`) and by `reconcileWalletDatabaseWithSeed`,
     /// so a healed stale database (e.g. from a restored device backup) starts out just as
     /// clean as an explicit reset.
@@ -923,6 +924,12 @@ extension Root {
         userDefaults.remove(Constants.udIsRestoringWallet)
         userDefaults.remove(Constants.udIsResyncingWallet)
         userDefaults.remove(Constants.udLeavesScreenOpen)
+        // MOB-1889: the sub-$300 refund warning's per-surface suppression. Device-scoped like
+        // everything else here — the next wallet on this device has not been shown the warning
+        // and must not inherit a previous owner's decision to silence it.
+        userDefaults.remove(.refundWarningSuppressedSwapToZec)
+        userDefaults.remove(.refundWarningSuppressedSwapFromZec)
+        userDefaults.remove(.refundWarningSuppressedCrossPay)
         #if VOTING_ENABLED
         userDefaults.remove(.hasSeenHowToVote)
         userDefaults.remove(.hasSeenHowToVoteKeystone)
