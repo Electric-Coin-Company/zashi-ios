@@ -206,6 +206,64 @@ import Testing
         }
     }
 
+    // MARK: - The first-receive hook (rung 6)
+
+    // `RootTransactions` re-enters the ladder at `.evaluatePriority6` whenever the transactions
+    // array changes. That hook is how a NEW wallet gets the prompt: at init-done the head rung
+    // walked past an empty history, so the first receive is the first time backup can claim.
+    // The first cut of MOB-1786 made rung 6 a pass-through and the hook landed on the shielding
+    // rung instead -- a transparent first receive seated the shielding offer and backup was never
+    // asked again (field-caught 2026-09-10). Both directions are pinned here.
+    @Test func theFirstReceiveReasksBackupAtRungSixAndDisplacesShielding() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            var state = Self.backupOwedState()
+            // The transparent-receive shielding offer already holds the slot.
+            state.priorityContent = .priority7
+            let store = Self.store(state)
+
+            await store.send(.evaluatePriority6)
+            await store.receive(\.triggerPriority)
+            await store.receive(\.openBannerRequest)
+            await store.finish()
+
+            #expect(store.state.priorityContent == .priority6, "the first receive must surface backup even over a seated shielding offer")
+        }
+    }
+
+    @Test func theFirstReceiveReasksBackupAtRungSixOnAnEmptySlot() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            let store = Self.store(Self.backupOwedState())
+
+            await store.send(.evaluatePriority6)
+            await store.receive(\.triggerPriority)
+            await store.receive(\.openBannerRequest)
+            await store.finish()
+
+            #expect(store.state.priorityContent == .priority6)
+        }
+    }
+
+    // With nothing owed, rung 6 walks on exactly as it always did.
+    @Test func rungSixStillWalksOnWhenNoBackupIsOwed() async {
+        await withDependencies {
+            $0.defaultInMemoryStorage = InMemoryStorage()
+        } operation: {
+            var state = Self.backupOwedState()
+            state.$transactions.withLock { $0 = [] }
+            let store = Self.store(state)
+
+            await store.send(.evaluatePriority6)
+            await store.receive(\.evaluatePriority7)
+            await store.finish()
+
+            #expect(store.state.priorityContent != .priority6)
+        }
+    }
+
     // MARK: - Gates that did not change
 
     // A wallet with no transactions has received nothing — nothing is at risk yet, so the walk

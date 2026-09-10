@@ -1104,10 +1104,18 @@ struct SmartBanner {
             case .evaluatePriority5:
                 return .send(.evaluatePriority6)
 
-                // MOB-1786: rung 6 is now a pass-through. The backup decision moved to
-                // `.evaluatePriorityWalletBackup` at the head of the walk; leaving the rung in
-                // place keeps the numbering and the rest of the chain (and its tests) intact.
+                // MOB-1786: the backup rung is asked at the head of the walk now, but it is
+                // ALSO still asked here. `RootTransactions` re-enters the ladder at this rung
+                // whenever the transactions array changes -- that is the hook that shows the
+                // prompt when a new wallet's first receive lands, at which point the head has
+                // already walked past an empty history. A pass-through here (the first cut of
+                // this change) rerouted that hook straight onto the shielding rung, so a
+                // transparent first receive seated the shielding offer and backup was never
+                // asked again. Field-caught by Lukas, 2026-09-10.
             case .evaluatePriority6:
+                if walletBackupClaimsSlot(state: &state) {
+                    return .send(.triggerPriority(.priority6))
+                }
                 return .send(.evaluatePriority7)
 
                 // wallet backup — MOB-1786: asked first, seats at rank -1.
@@ -1120,24 +1128,8 @@ struct SmartBanner {
                 // snooze is deliberately still honoured: MOB-1786 reorders, it does not override a
                 // choice the user made (reminder cadence is PRO-276's).
             case .evaluatePriorityWalletBackup:
-                guard let account = state.selectedWalletAccount, account.vendor == .zcash else {
-                    return .send(.evaluatePriority2)
-                }
-                guard !state.transactions.isEmpty else {
-                    return .send(.evaluatePriority2)
-                }
-                if let storedWallet = try? walletStorage.exportWallet(), !storedWallet.hasUserPassedPhraseBackupTest {
-                    if let walletBackupReminder = walletStorage.exportWalletBackupReminder() {
-                        state.remindMeWalletBackupPhaseCounter = walletBackupReminder.occurence
-                        let now = Date().timeIntervalSince1970
-
-                        if walletBackupReminder.isDue(now: now) {
-                            return .send(.triggerPriority(.priority6))
-                        }
-                    } else {
-                        // phase 1
-                        return .send(.triggerPriority(.priority6))
-                    }
+                if walletBackupClaimsSlot(state: &state) {
+                    return .send(.triggerPriority(.priority6))
                 }
                 return .send(.evaluatePriority2)
 
@@ -1484,6 +1476,31 @@ struct SmartBanner {
     /// subject is created and a first build kicked), which is what makes the status screen's
     /// first-frame paint non-empty. Full consolidation (the variant computed inside the loader,
     /// this store rendering `snapshot.banner`) is Brick 2b.
+    /// The wallet-backup decision (MOB-1786), shared by the two rungs that ask it: the head of
+    /// the walk (`.evaluatePriorityWalletBackup`) and rung 6, which `RootTransactions` re-enters
+    /// when the transactions array changes. Returns `true` when the prompt claims the slot; the
+    /// caller decides where a decline continues the walk. The gates are the original rung-6
+    /// gates, unchanged: a Zcash account, at least one transaction (a new wallet cannot spend, so
+    /// any transaction is a receive), a stored wallet whose phrase is not yet verified, and no
+    /// "Remind me later" snooze still running.
+    private func walletBackupClaimsSlot(state: inout State) -> Bool {
+        guard let account = state.selectedWalletAccount, account.vendor == .zcash else {
+            return false
+        }
+        guard !state.transactions.isEmpty else {
+            return false
+        }
+        guard let storedWallet = try? walletStorage.exportWallet(), !storedWallet.hasUserPassedPhraseBackupTest else {
+            return false
+        }
+        guard let walletBackupReminder = walletStorage.exportWalletBackupReminder() else {
+            // phase 1
+            return true
+        }
+        state.remindMeWalletBackupPhaseCounter = walletBackupReminder.occurence
+        return walletBackupReminder.isDue(now: Date().timeIntervalSince1970)
+    }
+
     private func migrationStateStreamEffect(accountUUID: AccountUUID?, cancelID: UUID) -> Effect<Action> {
         .publisher {
             Publishers.Merge(
